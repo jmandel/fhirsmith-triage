@@ -1410,6 +1410,106 @@ const tolerances = [
   },
 
   {
+    id: 'snomed-expression-parse-message-diff',
+    description: 'SNOMED expression parse error message differs: prod says "and neither could it be parsed as an expression...at character 1", dev says "and could not be parsed as an expression...at character 0". Both convey the same parse failure for invalid SNOMED codes. Normalizes dev issue text to prod text. Affects 2 records (batch-validate-code and validate-code for code "freetext").',
+    kind: 'temp-tolerance',
+    bugId: '36675d4',
+    tags: ['normalize', 'message-text', 'snomed', 'expression-parse'],
+    match({ prod, dev }) {
+      // Check all OperationOutcome issues in both top-level and nested (batch) parameters
+      function hasExprParseDiff(prodBody, devBody) {
+        const prodIssues = collectAllIssues(prodBody);
+        const devIssues = collectAllIssues(devBody);
+        for (let i = 0; i < Math.min(prodIssues.length, devIssues.length); i++) {
+          const pt = prodIssues[i]?.details?.text || '';
+          const dt = devIssues[i]?.details?.text || '';
+          if (pt !== dt &&
+              pt.includes('neither could it be parsed as an expression') &&
+              dt.includes('could not be parsed as an expression')) {
+            return true;
+          }
+        }
+        return false;
+      }
+      function collectAllIssues(body) {
+        const issues = [];
+        if (!body?.parameter) return issues;
+        for (const p of body.parameter) {
+          if (p.name === 'issues' && p.resource?.issue) {
+            issues.push(...p.resource.issue);
+          }
+          if (p.name === 'validation' && p.resource?.parameter) {
+            for (const vp of p.resource.parameter) {
+              if (vp.name === 'issues' && vp.resource?.issue) {
+                issues.push(...vp.resource.issue);
+              }
+            }
+          }
+        }
+        return issues;
+      }
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      if (hasExprParseDiff(prod, dev)) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function canonicalizeIssues(prodBody, devBody) {
+        // Build a map of prod issue texts for matching
+        function getIssueTexts(body) {
+          const texts = [];
+          if (!body?.parameter) return texts;
+          for (const p of body.parameter) {
+            if (p.name === 'issues' && p.resource?.issue) {
+              for (const iss of p.resource.issue) texts.push(iss.details?.text || '');
+            }
+            if (p.name === 'validation' && p.resource?.parameter) {
+              for (const vp of p.resource.parameter) {
+                if (vp.name === 'issues' && vp.resource?.issue) {
+                  for (const iss of vp.resource.issue) texts.push(iss.details?.text || '');
+                }
+              }
+            }
+          }
+          return texts;
+        }
+        const prodTexts = getIssueTexts(prodBody);
+
+        function fixIssue(iss, idx) {
+          const dt = iss.details?.text || '';
+          if (!dt.includes('could not be parsed as an expression')) return iss;
+          const pt = prodTexts[idx] || '';
+          if (!pt.includes('neither could it be parsed as an expression')) return iss;
+          return { ...iss, details: { ...iss.details, text: pt } };
+        }
+
+        function fixParams(params, issueIdx) {
+          if (!params) return { params, issueIdx };
+          let idx = issueIdx;
+          const newParams = params.map(p => {
+            if (p.name === 'issues' && p.resource?.issue) {
+              const newIssues = p.resource.issue.map(iss => fixIssue(iss, idx++));
+              return { ...p, resource: { ...p.resource, issue: newIssues } };
+            }
+            if (p.name === 'validation' && p.resource?.parameter) {
+              const result = fixParams(p.resource.parameter, idx);
+              idx = result.issueIdx;
+              return { ...p, resource: { ...p.resource, parameter: result.params } };
+            }
+            return p;
+          });
+          return { params: newParams, issueIdx: idx };
+        }
+
+        if (!devBody?.parameter) return devBody;
+        const { params } = fixParams(devBody.parameter, 0);
+        return { ...devBody, parameter: params };
+      }
+
+      return { prod, dev: canonicalizeIssues(prod, dev) };
+    },
+  },
+
+  {
     id: 'validate-code-undefined-system-missing-params',
     description: 'POST $validate-code result=false: dev missing code/system/display params and has extra issues due to undefined system extraction. Both agree result=false (display text is wrong) but dev response shape differs because it failed to extract the system from the POST body. Dev diagnostics show "undefined" system. Same root cause as bug 19283df (result-disagrees variant). Affects 3 records.',
     kind: 'temp-tolerance',

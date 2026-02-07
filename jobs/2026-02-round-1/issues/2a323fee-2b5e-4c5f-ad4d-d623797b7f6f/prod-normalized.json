@@ -1,0 +1,81 @@
+{
+  "parameter": [
+    {
+      "name": "validation",
+      "resource": {
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": false
+          },
+          {
+            "name": "system",
+            "valueUri": "http://snomed.info/sct"
+          },
+          {
+            "name": "code",
+            "valueCode": "freetext"
+          },
+          {
+            "name": "message",
+            "valueString": "Unknown code 'freetext' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20250201' (International Edition)"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "issue": [
+                {
+                  "code": "code-invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "code": "invalid-code",
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                      }
+                    ],
+                    "text": "Unknown code 'freetext' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20250201' (International Edition)"
+                  },
+                  "expression": [
+                    "Coding.code"
+                  ],
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Unknown_Code_in_Version"
+                    }
+                  ],
+                  "location": [
+                    "Coding.code"
+                  ],
+                  "severity": "error"
+                },
+                {
+                  "code": "code-invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "code": "invalid-code",
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                      }
+                    ],
+                    "text": "Code freetext is not a valid SNOMED CT Term, and neither could it be parsed as an expression (Concept not found (next char = \"f\", in \"freetext\") at character 1)"
+                  },
+                  "expression": [
+                    "Coding.code"
+                  ],
+                  "location": [
+                    "Coding.code"
+                  ],
+                  "severity": "information"
+                }
+              ],
+              "resourceType": "OperationOutcome"
+            }
+          }
+        ],
+        "resourceType": "Parameters"
+      }
+    }
+  ],
+  "resourceType": "Parameters"
+}

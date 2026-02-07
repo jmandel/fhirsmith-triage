@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_34 bugs (31 open, 3 closed)_
+_35 bugs (32 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1842,6 +1842,37 @@ Tolerance `validate-code-undefined-system-missing-params` matches POST $validate
 #####Related bugs
 
 Same root cause as bug 19283df (result-disagrees variant, 89 records) and bug 4cdcd85 (crash variant, 1 record). All three stem from dev failing to extract system/code from POST request body.
+
+---
+
+### [ ] `67df517` Dev  includes warning-experimental expansion parameter that prod omits
+
+Records-Impacted: 1
+Tolerance-ID: expand-dev-warning-experimental-param
+Record-ID: 5d1cbf41-db75-4663-8f3a-c492eb8a33aa
+
+#####What differs
+
+Dev $expand for http://hl7.org/fhir/ValueSet/languages includes an extra expansion.parameter `{"name":"warning-experimental","valueUri":"http://hl7.org/fhir/ValueSet/languages|4.0.1"}` that prod omits entirely.
+
+The ValueSet has `experimental: true` in its metadata (both sides agree). Dev adds a `warning-experimental` parameter to the expansion to flag this fact; prod does not emit this warning parameter.
+
+#####How widespread
+
+Only 1 record in the dataset contains this difference. Searched for:
+- `grep -c 'warning-experimental' comparison.ndjson` → 1
+- All expand records checked for dev-only `warning-*` parameters → only this one record
+- Prod never emits any `warning-*` expansion parameters in any record
+
+The pattern is specific to this ValueSet, though the behavior could in principle affect any experimental ValueSet expansion.
+
+#####What the tolerance covers
+
+Tolerance `expand-dev-warning-experimental-param` matches $expand responses (ValueSet resourceType) where dev has `warning-experimental` parameter and prod does not. Strips the extra parameter from dev. Eliminates 1 record.
+
+#####Representative record
+
+`5d1cbf41-db75-4663-8f3a-c492eb8a33aa` — GET /r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Flanguages&count=50
 
 ---
 

@@ -1521,5 +1521,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "67df5171bd59d1d40627c5d47068435afb167a642f49043892ba658cf4eccfe7",
+        "human_id": "67df517",
+        "create_time": {
+            "timestamp": 1770493680,
+            "time": "2026-02-07T13:48:00-06:00",
+            "lamport": 36
+        },
+        "edit_time": {
+            "timestamp": 1770493685,
+            "time": "2026-02-07T13:48:05-06:00",
+            "lamport": 175
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev  includes warning-experimental expansion parameter that prod omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
