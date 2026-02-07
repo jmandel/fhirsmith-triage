@@ -1,0 +1,3 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+oo-missing-location-field: normalize

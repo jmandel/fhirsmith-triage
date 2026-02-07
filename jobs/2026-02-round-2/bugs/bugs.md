@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_15 bugs (14 open, 1 closed)_
+_16 bugs (15 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -799,6 +799,20 @@ Records-Impacted: 36
 Tolerance-ID: snomed-implicit-valueset-expand-404
 Record-ID: 871b3f66-9e31-4b6c-9774-adb378e935df
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&filter=diabetes&count=5' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&filter=diabetes&count=5' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 200 with a valid ValueSet expansion containing 5 SNOMED CT concepts matching "diabetes". Dev returns HTTP 404 with OperationOutcome: `"ValueSet not found: http://snomed.info/sct?fhir_vs"`.
+
 #####What differs
 
 When expanding SNOMED CT implicit ValueSets using the standard `fhir_vs` URL pattern, prod returns 200 with a valid ValueSet expansion, while dev returns 404 with OperationOutcome "ValueSet not found: http://snomed.info/sct?fhir_vs".
@@ -834,6 +848,43 @@ It skips these records entirely since no meaningful comparison is possible (dev 
 #####Representative record
 
 `871b3f66-9e31-4b6c-9774-adb378e935df` — GET /r4/ValueSet/$expand?url=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&filter=diabetes&count=5
+
+---
+
+### [ ] `e02b03e` Prod HGVS timeout: 62 records have prod=500 due to external service timeout, comparison invalid
+
+Records-Impacted: 62
+Tolerance-ID: skip-prod-hgvs-timeout
+Record-ID: 286d30a9-e2b8-4967-8c56-265b3f6160a6
+
+#####What differs
+
+Prod returns HTTP 500 with an OperationOutcome error: "Error parsing HGVS response: Read timed out." Dev returns HTTP 200 with a proper Parameters response (result=false, code not found in http://varnomen.hgvs.org version 2.0).
+
+Prod's 500 is a transient failure — the prod server timed out calling an external HGVS validation service during data collection. Dev processes the same code locally and returns a valid terminology response.
+
+#####How widespread
+
+62 records in the comparison dataset. All share:
+- System: http://varnomen.hgvs.org
+- Operation: $validate-code (POST /r4/CodeSystem/$validate-code?)
+- Status: prod=500, dev=200
+- Category: status-mismatch
+- Prod body contains "Error parsing HGVS response: Read timed out."
+
+Search: `grep -c 'Read timed out' results/deltas/deltas.ndjson` → 62
+
+There are 124 total HGVS records in the dataset; the other 62 did not timeout and have prod=200, dev=200.
+
+#####What the tolerance covers
+
+Tolerance `skip-prod-hgvs-timeout` skips any record where prod returned 500 and the prod body contains "Read timed out". These records have unreliable comparison data since prod failed to complete the operation. Eliminates 62 records.
+
+#####Representative record
+
+286d30a9-e2b8-4967-8c56-265b3f6160a6
+
+This is a data collection artifact — the comparison data is tainted because prod experienced transient external service timeouts during the collection run. These records should be recollected in a future run.
 
 ---
 

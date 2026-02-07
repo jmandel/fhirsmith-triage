@@ -1,0 +1,310 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "urn:ietf:bcp:13"
+          },
+          {
+            "name": "code",
+            "valueCode": "application/dicom"
+          },
+          {
+            "name": "display",
+            "valueString": "application/dicom"
+          },
+          {
+            "name": "message",
+            "valueString": "Wrong Display Name 'DICOM' for urn:ietf:bcp:13#application/dicom. Valid display is 'application/dicom' (for the language(s) 'en, en-US')"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "resourceType": "OperationOutcome",
+              "issue": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                    }
+                  ],
+                  "severity": "warning",
+                  "code": "invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                        "code": "invalid-display"
+                      }
+                    ],
+                    "text": "Wrong Display Name 'DICOM' for urn:ietf:bcp:13#application/dicom. Valid display is 'application/dicom' (for the language(s) 'en, en-US')"
+                  },
+                  "location": [
+                    "Coding.display"
+                  ],
+                  "expression": [
+                    "Coding.display"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "urn:ietf:bcp:13"
+          },
+          {
+            "name": "code",
+            "valueCode": "application/fhir+json"
+          },
+          {
+            "name": "display",
+            "valueString": "application/fhir+json"
+          },
+          {
+            "name": "message",
+            "valueString": "Wrong Display Name 'FHIR (JSON)' for urn:ietf:bcp:13#application/fhir+json. Valid display is 'application/fhir+json' (for the language(s) 'en, en-US')"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "resourceType": "OperationOutcome",
+              "issue": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                    }
+                  ],
+                  "severity": "warning",
+                  "code": "invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                        "code": "invalid-display"
+                      }
+                    ],
+                    "text": "Wrong Display Name 'FHIR (JSON)' for urn:ietf:bcp:13#application/fhir+json. Valid display is 'application/fhir+json' (for the language(s) 'en, en-US')"
+                  },
+                  "location": [
+                    "Coding.display"
+                  ],
+                  "expression": [
+                    "Coding.display"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "urn:ietf:bcp:13"
+          },
+          {
+            "name": "code",
+            "valueCode": "application/fhir+xml"
+          },
+          {
+            "name": "display",
+            "valueString": "application/fhir+xml"
+          },
+          {
+            "name": "message",
+            "valueString": "Wrong Display Name 'FHIR (XML)' for urn:ietf:bcp:13#application/fhir+xml. Valid display is 'application/fhir+xml' (for the language(s) 'en, en-US')"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "resourceType": "OperationOutcome",
+              "issue": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                    }
+                  ],
+                  "severity": "warning",
+                  "code": "invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                        "code": "invalid-display"
+                      }
+                    ],
+                    "text": "Wrong Display Name 'FHIR (XML)' for urn:ietf:bcp:13#application/fhir+xml. Valid display is 'application/fhir+xml' (for the language(s) 'en, en-US')"
+                  },
+                  "location": [
+                    "Coding.display"
+                  ],
+                  "expression": [
+                    "Coding.display"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "urn:ietf:bcp:13"
+          },
+          {
+            "name": "code",
+            "valueCode": "image/jpeg"
+          },
+          {
+            "name": "display",
+            "valueString": "image/jpeg"
+          },
+          {
+            "name": "message",
+            "valueString": "Wrong Display Name 'JPEG Image' for urn:ietf:bcp:13#image/jpeg. Valid display is 'image/jpeg' (for the language(s) 'en, en-US')"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "resourceType": "OperationOutcome",
+              "issue": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                    }
+                  ],
+                  "severity": "warning",
+                  "code": "invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                        "code": "invalid-display"
+                      }
+                    ],
+                    "text": "Wrong Display Name 'JPEG Image' for urn:ietf:bcp:13#image/jpeg. Valid display is 'image/jpeg' (for the language(s) 'en, en-US')"
+                  },
+                  "location": [
+                    "Coding.display"
+                  ],
+                  "expression": [
+                    "Coding.display"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "urn:ietf:bcp:13"
+          },
+          {
+            "name": "code",
+            "valueCode": "image/png"
+          },
+          {
+            "name": "display",
+            "valueString": "image/png"
+          },
+          {
+            "name": "message",
+            "valueString": "Wrong Display Name 'PNG Portable Network Graphics' for urn:ietf:bcp:13#image/png. Valid display is 'image/png' (for the language(s) 'en, en-US')"
+          },
+          {
+            "name": "issues",
+            "resource": {
+              "resourceType": "OperationOutcome",
+              "issue": [
+                {
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                      "valueString": "Display_Name_for__should_be_one_of__instead_of"
+                    }
+                  ],
+                  "severity": "warning",
+                  "code": "invalid",
+                  "details": {
+                    "coding": [
+                      {
+                        "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                        "code": "invalid-display"
+                      }
+                    ],
+                    "text": "Wrong Display Name 'PNG Portable Network Graphics' for urn:ietf:bcp:13#image/png. Valid display is 'image/png' (for the language(s) 'en, en-US')"
+                  },
+                  "location": [
+                    "Coding.display"
+                  ],
+                  "expression": [
+                    "Coding.display"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -15,3 +15,4 @@
 {"pickedAt":"2026-02-07T22:34:24.276Z","recordId":"871b3f66-9e31-4b6c-9774-adb378e935df","total":3811,"analyzed":0,"remaining":3811,"category":"missing-resource"}
 {"pickedAt":"2026-02-07T22:38:58.638Z","recordId":"1697b0cd-971b-475c-8075-f249215b1205","total":3775,"analyzed":0,"remaining":3775,"category":"content-differs"}
 {"pickedAt":"2026-02-07T22:47:14.610Z","recordId":"286d30a9-e2b8-4967-8c56-265b3f6160a6","total":3737,"analyzed":0,"remaining":3737,"category":"status-mismatch"}
+{"pickedAt":"2026-02-07T22:51:35.328Z","recordId":"4d48d398-714d-4a71-969a-f0b018c50e61","total":3675,"analyzed":0,"remaining":3675,"category":"content-differs"}
