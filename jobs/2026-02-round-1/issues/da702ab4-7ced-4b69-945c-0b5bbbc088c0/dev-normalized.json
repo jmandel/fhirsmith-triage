@@ -1,0 +1,21 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "en-US"
+    },
+    {
+      "name": "display",
+      "valueString": "English (Region=United States)"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

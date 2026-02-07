@@ -47,7 +47,7 @@ function both(ctx, fn) {
 
 const tolerances = [
 
-  // Skip: not FHIR terminology content
+  // Skips: drop non-FHIR-terminology records
   {
     id: 'skip-metadata-ops',
     description: 'CapabilityStatement/metadata responses differ by design between implementations',
@@ -81,7 +81,7 @@ const tolerances = [
     },
   },
 
-  // Strip: trace output that differs by design
+  // Normalizations
   {
     id: 'strip-diagnostics',
     description: 'Trace diagnostics parameter has completely different formats between implementations (by design).',
@@ -94,7 +94,6 @@ const tolerances = [
     },
   },
 
-  // Phase D: Sort — stable ordering after all transforms
   {
     id: 'sort-parameters-by-name',
     description: 'Parameters.parameter array ordering differs between implementations but has no semantic meaning in FHIR.',
@@ -115,7 +114,6 @@ const tolerances = [
     },
   },
 
-  // Phase B: Structural — clean up structure before content transforms
   {
     id: 'dev-empty-string-expression-location',
     description: 'Dev returns expression:[""] and location:[""] on OperationOutcome issues that have no specific location (e.g. TX_GENERAL_CC_ERROR_MESSAGE, MSG_DRAFT, MSG_DEPRECATED). Prod correctly omits these fields. Empty strings are invalid FHIR. Affects 318 validate-code records.',
@@ -163,7 +161,6 @@ const tolerances = [
     },
   },
 
-  // Phase C: Content — temp-tolerances for known bugs
   {
     id: 'invalid-display-message-format',
     description: 'Wrong Display Name error messages differ in format: prod may list duplicate display options (e.g. "6 choices"), dev de-duplicates and appends language tags like "(en)". Core validation result agrees. Affects ~44 validate-code records with invalid-display issues.',
@@ -223,6 +220,39 @@ const tolerances = [
       }
 
       return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
+    id: 'bcp47-display-format',
+    description: 'BCP-47 display text format differs: prod returns "English (United States)", dev returns "English (Region=United States)". Dev uses explicit subtag labels ("Region=") which is non-standard. Affects 7 validate-code records for urn:ietf:bcp:47.',
+    kind: 'temp-tolerance',
+    bugId: 'e09cff6',
+    tags: ['normalize', 'display-text', 'bcp47'],
+    match({ record, prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      if (prodSystem !== 'urn:ietf:bcp:47') return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (!prodDisplay && !devDisplay) return null;
+      if (prodDisplay === devDisplay) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev, record }) {
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      const canonical = prodDisplay || devDisplay;
+      function setDisplay(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'display' ? { ...p, valueString: canonical } : p
+          ),
+        };
+      }
+      return { prod: setDisplay(prod), dev: setDisplay(dev) };
     },
   },
 

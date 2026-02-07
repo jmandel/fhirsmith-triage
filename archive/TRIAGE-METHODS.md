@@ -35,8 +35,8 @@ We use an agent-driven triage process:
 - **Job-directory isolation**: Each triage round lives in `jobs/<job-name>/` with its own comparison data, tolerances, results, and issue workspaces
 - **Sequential processing**: Records are processed in order from the delta file, not randomly sampled
 - **Single unified delta file**: All non-OK/non-SKIP records go to one `deltas.ndjson` with priority embedded in each record's comparison metadata
-- **Issue directories**: Each record gets a workspace at `issues/<md5>/` with pre-prepared files (raw, normalized, applied tolerances)
-- **MD5 hashing for stable record identity**: Since comparison reruns change record positions, we hash the raw NDJSON line to create a stable identifier that survives reruns
+- **Issue directories**: Each record gets a workspace at `issues/<record-uuid>/` with pre-prepared files (raw, normalized, applied tolerances)
+- **UUID-based record identity**: Issue directories are keyed by the record's `id` field (a UUID assigned during data collection), which is stable across comparison reruns
 - **Iterative tolerance development with validation**: New heuristics are validated by sampling eliminated records to catch false positives
 - **Minimal baseline**: New jobs start from `baseline/tolerances.js` (only inarguably correct tolerances), not from the previous round's accumulated set
 - **Bug archival**: When starting a new job, existing git-bugs are dumped (JSON + MD + HTML) to the previous job's `bugs/` dir before wiping
@@ -130,15 +130,7 @@ Each tolerance is a self-contained object:
 - **`equiv-autofix`**: Non-substantive difference. Permanent.
 - **`temp-tolerance`**: Real difference suppressed for triage efficiency. Has a `bugId` linking to a git-bug issue.
 
-**Tolerance ordering** (applied sequentially; ordering matters):
-
-| Phase | Purpose | Examples |
-|-------|---------|---------|
-| A: Skip | Drop entire records | URL patterns, XML responses |
-| B: Structural | Clean up structure before content transforms | Extension sorting, coding order |
-| C: Content | Strip or transform specific fields | Strip diagnostics, expansion metadata |
-| D: Sort | Stable ordering after all transforms | Sort parameters, issues, expansion contains |
-| E: Bundle | Bundle-level normalization | Empty searchset Bundles |
+**Tolerance ordering** (applied sequentially; ordering matters): skip tolerances first (they short-circuit the pipeline), then normalizations ordered so earlier transforms don't interfere with later ones. Tolerances support an optional `tags` array for descriptive metadata (e.g., `['skip', 'non-fhir']`, `['normalize', 'message-format']`).
 
 #### Running the Comparison
 
@@ -175,9 +167,9 @@ The loop:
 
 ### Record Selection
 
-`engine/next-record.js` reads the delta file sequentially (top to bottom) and returns the first record whose MD5 hash doesn't have an `analysis.md` in its issue directory. No randomization — deterministic ordering for reproducibility.
+`engine/next-record.js` reads the delta file sequentially (top to bottom) and returns the first record whose UUID doesn't have an `analysis.md` in its issue directory. No randomization — deterministic ordering for reproducibility.
 
-For each selected record, it creates a prepared issue directory at `<job-dir>/issues/<md5>/` containing:
+For each selected record, it creates a prepared issue directory at `<job-dir>/issues/<record-uuid>/` containing:
 - `record.json` — Full delta record (pretty-printed)
 - `prod-raw.json` / `dev-raw.json` — Parsed response bodies
 - `prod-normalized.json` / `dev-normalized.json` — After tolerance pipeline
@@ -215,7 +207,7 @@ When a record is categorized as `equiv-autofix` or `temp-tolerance`, the agent e
 
 ### Analysis Files
 
-Each record's analysis lives in its issue directory (`<job-dir>/issues/<md5>/`):
+Each record's analysis lives in its issue directory (`<job-dir>/issues/<record-uuid>/`):
 
 - **`analysis.md`** — The agent's analysis. Its existence signals "analyzed" to the record picker.
 

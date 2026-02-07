@@ -66,7 +66,9 @@ while true; do
   set +o pipefail
   timeout 1200 claude -p --dangerously-skip-permissions --model opus \
     --output-format stream-json \
-    "Read and follow the instructions in prompts/triage-prompt.md exactly. Job directory: $1. Issue directory: $ISSUE_DIR" \
+    "$(cat prompts/triage-prompt.md)
+
+Job directory: $1. Issue directory: $ISSUE_DIR" \
     2>&1 | tee "$OUT_LOG" | python3 "$TRIAGE_DIR/engine/stream-filter.py"
   CLAUDE_EXIT=${PIPESTATUS[0]}
   set -o pipefail

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FHIRsmith tx-compare Bug Report</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-surface: #f6f8fa;
+  --bg-card: #ffffff;
+  --border: #d1d9e0;
+  --border-light: #e8ecf0;
+  --text: #1f2328;
+  --text-secondary: #59636e;
+  --text-muted: #818b98;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --pill-p0-bg: #fee2e2; --pill-p0-fg: #991b1b; --pill-p0-border: #fca5a5;
+  --pill-p1-bg: #ffedd5; --pill-p1-fg: #9a3412; --pill-p1-border: #fdba74;
+  --pill-p2-bg: #fef3c7; --pill-p2-fg: #92400e; --pill-p2-border: #fcd34d;
+  --pill-p3-bg: #dbeafe; --pill-p3-fg: #1e40af; --pill-p3-border: #93c5fd;
+  --pill-p4-bg: #f1f5f9; --pill-p4-fg: #475569; --pill-p4-border: #cbd5e1;
+  --pill-temp-bg: #f3e8ff; --pill-temp-fg: #6b21a8; --pill-temp-border: #c4b5fd;
+  --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
+  --pill-other-bg: #f3f4f6; --pill-other-fg: #4b5563; --pill-other-border: #d1d5db;
+
+  --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
+  --status-closed-bg: #f3f4f6; --status-closed-fg: #6b7280; --status-closed-border: #d1d5db;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --bg-surface: #161b22;
+    --bg-card: #1c2128;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+
+    --pill-p0-bg: #3b1318; --pill-p0-fg: #fca5a5; --pill-p0-border: #7f1d1d;
+    --pill-p1-bg: #3b1f0b; --pill-p1-fg: #fdba74; --pill-p1-border: #7c2d12;
+    --pill-p2-bg: #3b2f0b; --pill-p2-fg: #fcd34d; --pill-p2-border: #78350f;
+    --pill-p3-bg: #172554; --pill-p3-fg: #93c5fd; --pill-p3-border: #1e3a5f;
+    --pill-p4-bg: #1e293b; --pill-p4-fg: #94a3b8; --pill-p4-border: #334155;
+    --pill-temp-bg: #2e1065; --pill-temp-fg: #c4b5fd; --pill-temp-border: #3b0764;
+    --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
+    --pill-other-bg: #1f2937; --pill-other-fg: #9ca3af; --pill-other-border: #374151;
+
+    --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
+    --status-closed-bg: #1f2937; --status-closed-fg: #9ca3af; --status-closed-border: #374151;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+/* Search and filter bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 240px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-box:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.search-box::placeholder {
+  color: var(--text-muted);
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s, transform 0.1s;
+  border: 1px solid;
+}
+
+.filter-pill:hover {
+  transform: translateY(-1px);
+}
+
+.filter-pill.dimmed {
+  opacity: 0.35;
+}
+
+.filter-pill .count {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Priority group headers */
+.group-header {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-header .group-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.group-header.hidden {
+  display: none;
+}
+
+/* Bug cards */
+.bug-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  overflow: hidden;
+}
+
+.bug-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border);
+}
+
+.bug-card.hidden {
+  display: none;
+}
+
+.bug-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bug-header:hover {
+  background: var(--bg-surface);
+}
+
+.bug-expand-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.bug-card.expanded .bug-expand-icon {
+  transform: rotate(90deg);
+}
+
+.bug-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bug-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.bug-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.pill-status-open {
+  background: var(--status-open-bg);
+  color: var(--status-open-fg);
+  border-color: var(--status-open-border);
+}
+
+.pill-status-closed {
+  background: var(--status-closed-bg);
+  color: var(--status-closed-fg);
+  border-color: var(--status-closed-border);
+}
+
+.pill-p0 { background: var(--pill-p0-bg); color: var(--pill-p0-fg); border-color: var(--pill-p0-border); }
+.pill-p1 { background: var(--pill-p1-bg); color: var(--pill-p1-fg); border-color: var(--pill-p1-border); }
+.pill-p2 { background: var(--pill-p2-bg); color: var(--pill-p2-fg); border-color: var(--pill-p2-border); }
+.pill-p3 { background: var(--pill-p3-bg); color: var(--pill-p3-fg); border-color: var(--pill-p3-border); }
+.pill-p4 { background: var(--pill-p4-bg); color: var(--pill-p4-fg); border-color: var(--pill-p4-border); }
+.pill-temp { background: var(--pill-temp-bg); color: var(--pill-temp-fg); border-color: var(--pill-temp-border); }
+.pill-tx-compare { background: var(--pill-tx-bg); color: var(--pill-tx-fg); border-color: var(--pill-tx-border); }
+.pill-other { background: var(--pill-other-bg); color: var(--pill-other-fg); border-color: var(--pill-other-border); }
+
+.bug-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.bug-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bug-body {
+  display: none;
+  padding: 0 16px 16px 44px;
+  border-top: 1px solid var(--border-light);
+}
+
+.bug-card.expanded .bug-body {
+  display: block;
+}
+
+/* Markdown rendered content */
+.bug-body h1, .bug-body h2, .bug-body h3,
+.bug-body h4, .bug-body h5, .bug-body h6 {
+  margin: 16px 0 8px 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.bug-body h1 { font-size: 18px; }
+.bug-body h2 { font-size: 16px; }
+.bug-body h3 { font-size: 14px; }
+.bug-body h4, .bug-body h5, .bug-body h6 { font-size: 13px; }
+
+.bug-body p {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.bug-body ul, .bug-body ol {
+  margin: 8px 0;
+  padding-left: 24px;
+  font-size: 13px;
+}
+
+.bug-body li {
+  margin: 4px 0;
+  line-height: 1.55;
+}
+
+.bug-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+.bug-body pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.bug-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bug-body hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 16px 0;
+}
+
+.bug-body strong {
+  font-weight: 700;
+}
+
+.bug-body em {
+  font-style: italic;
+}
+
+.bug-body a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.bug-body a:hover {
+  text-decoration: underline;
+}
+
+.no-results {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.no-results.hidden {
+  display: none;
+}
+
+/* Status filter buttons */
+.status-filters {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.status-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+}
+
+.status-btn:hover {
+  background: var(--bg-surface);
+}
+
+.status-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .container { padding: 16px 12px; }
+  .stats-bar { padding: 12px; gap: 6px; }
+  .stat-divider { display: none; }
+  .filter-bar { flex-direction: column; }
+  .search-box { min-width: 100%; }
+  .bug-body { padding: 0 12px 12px 12px; }
+  .bug-header { padding: 10px 12px; }
+  .status-filters { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FHIRsmith tx-compare Bugs</h1>
+  <p class="subtitle">Generated from git-bug &middot; <span id="gen-time"></span></p>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="filter-bar">
+    <input type="text" class="search-box" id="search" placeholder="Search bugs by title or body..." autocomplete="off">
+    <div class="filter-pills" id="priority-filters"></div>
+    <div class="status-filters" id="status-filters">
+      <button class="status-btn expand-toggle" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
+      <button class="status-btn active" data-status="all">All</button>
+      <button class="status-btn" data-status="open">Open</button>
+      <button class="status-btn" data-status="closed">Closed</button>
+    </div>
+  </div>
+
+  <div id="bug-list"></div>
+  <div class="no-results hidden" id="no-results">No bugs match your filters.</div>
+</div>
+
+<script>
+const BUGS = [{"id": "d3b49ff", "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:13", "date_iso": "2026-02-07T10:13:12-06:00", "body_md": "## What differs\n\n$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:\n\n1. **Version**: prod returns `version: \"2.0.0\"`, dev returns `version: \"3.0.0\"`\n2. **Definition parameter**: dev returns a top-level `definition` parameter (`\"Registered Nurse\"`); prod returns the definition only as a property (code=definition)\n3. **Designation parameter**: dev returns a `designation` parameter with `preferredForLanguage` use coding; prod does not include designation\n\nThese differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.\n\n## How widespread\n\nAll 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.\n\n```\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c 'v2-0360'\n# 157\n```\n\nRequest properties that predict this difference:\n- Operation: $lookup\n- System: http://terminology.hl7.org/CodeSystem/v2-0360\n- FHIR version: /r4/\n\n## Tolerance\n\nTolerance ID: `v2-0360-lookup-version-skew`\nMatches: $lookup requests on v2-0360 system\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides\nAffects: 157 records\n\n## Representative record\n\nID: `80a780e6-8842-43a9-a260-889ce87f76ac`\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN", "body_html": "<h2>What differs</h2>\n<p>$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:</p>\n<ol><li><strong>Version</strong>: prod returns <code>version: &amp;quot;2.0.0&amp;quot;</code>, dev returns <code>version: &amp;quot;3.0.0&amp;quot;</code></li><li><strong>Definition parameter</strong>: dev returns a top-level <code>definition</code> parameter (<code>&amp;quot;Registered Nurse&amp;quot;</code>); prod returns the definition only as a property (code=definition)</li><li><strong>Designation parameter</strong>: dev returns a <code>designation</code> parameter with <code>preferredForLanguage</code> use coding; prod does not include designation</li></ol>\n<p>These differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.</p>\n<h2>How widespread</h2>\n<p>All 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.</p>\n<pre><code>grep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c &#x27;v2-0360&#x27;\n# 157</code></pre>\n<p>Request properties that predict this difference:</p>\n<ul><li>Operation: $lookup</li><li>System: http://terminology.hl7.org/CodeSystem/v2-0360</li><li>FHIR version: /r4/</li></ul>\n<h2>Tolerance</h2>\n<p>Tolerance ID: <code>v2-0360-lookup-version-skew</code><br>\nMatches: $lookup requests on v2-0360 system<br>\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides<br>\nAffects: 157 records</p>\n<h2>Representative record</h2>\n<p>ID: <code>80a780e6-8842-43a9-a260-889ce87f76ac</code><br>\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&amp;code=RN</p>"}, {"id": "e9c7e58", "title": "Dev returns empty-string expression/location in OperationOutcome issues", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:17", "date_iso": "2026-02-07T10:17:43-06:00", "body_md": "Dev returns `\"expression\": [\"\"]` and `\"location\": [\"\"]` on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.\n\n## What differs\n\nIn $validate-code responses (both ValueSet and CodeSystem), dev includes `\"expression\": [\"\"]` and `\"location\": [\"\"]` on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string `\"\"` is invalid FHIR.\n\nThis occurs on issues with these message IDs:\n- TX_GENERAL_CC_ERROR_MESSAGE (311 records)\n- MSG_DRAFT (4 records)\n- MSG_DEPRECATED (3 records)\n\n## How widespread\n\n318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.\n\nSearch: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.\n\n## What the tolerance covers\n\nTolerance ID: `dev-empty-string-expression-location`. Normalizes by removing `expression: [\"\"]` and `location: [\"\"]` from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.\n\n## Representative record IDs\n\n- `7de52d92-3166-495e-ac5e-af262b1019e4` (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)\n- `dcdd2b94-db9...` (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)", "body_html": "<p>Dev returns <code>&amp;quot;expression&amp;quot;: [&amp;quot;&amp;quot;]</code> and <code>&amp;quot;location&amp;quot;: [&amp;quot;&amp;quot;]</code> on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.</p>\n<h2>What differs</h2>\n<p>In $validate-code responses (both ValueSet and CodeSystem), dev includes <code>&amp;quot;expression&amp;quot;: [&amp;quot;&amp;quot;]</code> and <code>&amp;quot;location&amp;quot;: [&amp;quot;&amp;quot;]</code> on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string <code>&amp;quot;&amp;quot;</code> is invalid FHIR.</p>\n<p>This occurs on issues with these message IDs:</p>\n<ul><li>TX_GENERAL_CC_ERROR_MESSAGE (311 records)</li><li>MSG_DRAFT (4 records)</li><li>MSG_DEPRECATED (3 records)</li></ul>\n<h2>How widespread</h2>\n<p>318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.</p>\n<p>Search: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>dev-empty-string-expression-location</code>. Normalizes by removing <code>expression: [&amp;quot;&amp;quot;]</code> and <code>location: [&amp;quot;&amp;quot;]</code> from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>7de52d92-3166-495e-ac5e-af262b1019e4</code> (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li><li><code>dcdd2b94-db9...</code> (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li></ul>"}, {"id": "cf90495", "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:22", "date_iso": "2026-02-07T10:22:21-06:00", "body_md": "## What differs\n\nWhen $validate-code detects a wrong display name, prod and dev return different error message text in both the `message` parameter and `issues` OperationOutcome `details.text`.\n\nSpecific differences:\n- **Display option count**: Prod may list duplicate display options (e.g., \"6 choices\" with repeats), while dev de-duplicates (e.g., \"3 choices\" with unique entries)\n- **Language tags**: Dev appends language tags like `(en)` after each display option; prod does not\n- **Example**: For `urn:ietf:bcp:47#en-US`:\n  - Prod: \"Valid display is one of 6 choices: 'English (Region=United States)', 'English (United States)', 'English (Region=United States)', ...\"\n  - Dev: \"Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) ...\"\n\nThe core validation result (`result: false`) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.\n\n## How widespread\n\n44 delta records have `invalid-display` issue type with only `message` and `issues` diffs. 41 records contain \"Wrong Display Name\" in the delta text.\n\nSearch: `grep -c 'Wrong Display Name' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 41\nSearch: `grep -c 'invalid-display' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 53 (44 with only message/issues diffs)\n\nAffected operations: $validate-code on both CodeSystem and ValueSet\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others\n\n## What the tolerance covers\n\nTolerance ID: `invalid-display-message-format`\nMatches: validate-code records where both prod and dev have `invalid-display` issue type and only the message/issues text differs. Normalizes the message and issues text to prod's version.\nExpected elimination: ~44 records.\n\n## Representative record ID\n\n`beb4276b-f937-46c3-81ab-7f63cb7798b7` — grep -n 'beb4276b-f937-46c3-81ab-7f63cb7798b7' jobs/2026-02-round-1/comparison.ndjson", "body_html": "<h2>What differs</h2>\n<p>When $validate-code detects a wrong display name, prod and dev return different error message text in both the <code>message</code> parameter and <code>issues</code> OperationOutcome <code>details.text</code>.</p>\n<p>Specific differences:</p>\n<ul><li><strong>Display option count</strong>: Prod may list duplicate display options (e.g., &quot;6 choices&quot; with repeats), while dev de-duplicates (e.g., &quot;3 choices&quot; with unique entries)</li><li><strong>Language tags</strong>: Dev appends language tags like <code>(en)</code> after each display option; prod does not</li><li><strong>Example</strong>: For <code>urn:ietf:bcp:47#en-US</code>:</li><li>Prod: &quot;Valid display is one of 6 choices: &#x27;English (Region=United States)&#x27;, &#x27;English (United States)&#x27;, &#x27;English (Region=United States)&#x27;, ...&quot;</li><li>Dev: &quot;Valid display is one of 3 choices: &#x27;English (Region=United States)&#x27; (en), &#x27;English (United States)&#x27; (en) or &#x27;English (Region=United States)&#x27; (en) ...&quot;</li></ul>\n<p>The core validation result (<code>result: false</code>) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.</p>\n<h2>How widespread</h2>\n<p>44 delta records have <code>invalid-display</code> issue type with only <code>message</code> and <code>issues</code> diffs. 41 records contain &quot;Wrong Display Name&quot; in the delta text.</p>\n<p>Search: <code>grep -c &amp;#x27;Wrong Display Name&amp;#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 41<br>\nSearch: <code>grep -c &amp;#x27;invalid-display&amp;#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 53 (44 with only message/issues diffs)</p>\n<p>Affected operations: $validate-code on both CodeSystem and ValueSet<br>\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>invalid-display-message-format</code><br>\nMatches: validate-code records where both prod and dev have <code>invalid-display</code> issue type and only the message/issues text differs. Normalizes the message and issues text to prod&#x27;s version.<br>\nExpected elimination: ~44 records.</p>\n<h2>Representative record ID</h2>\n<p><code>beb4276b-f937-46c3-81ab-7f63cb7798b7</code> — grep -n &#x27;beb4276b-f937-46c3-81ab-7f63cb7798b7&#x27; jobs/2026-02-round-1/comparison.ndjson</p>"}];
+const STATS = {"total": 3, "open": 3, "closed": 0, "priorities": {"P0": 0, "P1": 0, "P2": 0, "P3": 0, "P4": 0, "Temp Tolerances": 3, "Other": 0}};
+const PRIORITY_ORDER = ["P0", "P1", "P2", "P3", "P4", "Temp Tolerances", "Other"];
+
+const PILL_CLASS_MAP = {
+  "P0": "pill-p0", "P1": "pill-p1", "P2": "pill-p2",
+  "P3": "pill-p3", "P4": "pill-p4",
+  "Temp Tolerances": "pill-temp",
+  "tx-compare": "pill-tx-compare"
+};
+
+function pillClass(label) {
+  return PILL_CLASS_MAP[label] || "pill-other";
+}
+
+function labelToPillClass(label) {
+  const upper = label.toUpperCase();
+  if (PILL_CLASS_MAP[upper]) return PILL_CLASS_MAP[upper];
+  if (PILL_CLASS_MAP[label]) return PILL_CLASS_MAP[label];
+  if (label === "tx-compare") return "pill-tx-compare";
+  return "pill-other";
+}
+
+// Render generation time
+document.getElementById("gen-time").textContent = new Date().toLocaleString();
+
+// Render stats bar
+(function() {
+  const bar = document.getElementById("stats-bar");
+  let html = `<div class="stat"><span class="stat-value">${STATS.total}</span> total</div>`;
+  html += `<div class="stat-divider"></div>`;
+  html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${STATS.open}</span> open</div>`;
+  html += `<div class="stat"><span class="stat-value">${STATS.closed}</span> closed</div>`;
+  html += `<div class="stat-divider"></div>`;
+  for (const p of PRIORITY_ORDER) {
+    const c = STATS.priorities[p] || 0;
+    if (c > 0) {
+      html += `<div class="stat"><span class="stat-value">${c}</span> ${p}</div>`;
+    }
+  }
+  bar.innerHTML = html;
+})();
+
+// Build priority filter pills
+(function() {
+  const container = document.getElementById("priority-filters");
+  let html = "";
+  for (const p of PRIORITY_ORDER) {
+    const c = STATS.priorities[p] || 0;
+    if (c > 0) {
+      html += `<span class="filter-pill ${pillClass(p)}" data-priority="${p}">${p} <span class="count">${c}</span></span>`;
+    }
+  }
+  container.innerHTML = html;
+})();
+
+// State
+let activePriorities = new Set();
+let activeStatus = "all";
+let searchQuery = "";
+
+// Build bug cards grouped by priority
+(function() {
+  const list = document.getElementById("bug-list");
+  let html = "";
+
+  for (const p of PRIORITY_ORDER) {
+    const groupBugs = BUGS.filter(b => b.priority === p);
+    if (groupBugs.length === 0) continue;
+
+    html += `<div class="group-header" data-group="${p}">${p} <span class="group-count">${groupBugs.length}</span></div>`;
+
+    for (const bug of groupBugs) {
+      const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
+      const labels = bug.labels.map(l => `<span class="pill ${labelToPillClass(l)}">${l}</span>`).join("");
+
+      html += `<div class="bug-card" data-priority="${bug.priority}" data-status="${bug.status}" data-id="${bug.id}">
+        <div class="bug-header" onclick="toggleBug(this)">
+          <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
+          </svg>
+          <div class="bug-info">
+            <div class="bug-title">${bug.title}</div>
+            <div class="bug-meta">
+              <span class="pill ${statusClass}">${bug.status}</span>
+              ${labels}
+              <span class="bug-id">${bug.id}</span>
+              <span class="bug-date">${bug.date}</span>
+            </div>
+          </div>
+        </div>
+        <div class="bug-body">${bug.body_html}</div>
+      </div>`;
+    }
+  }
+
+  list.innerHTML = html;
+})();
+
+function toggleBug(header) {
+  header.parentElement.classList.toggle("expanded");
+}
+
+let allExpanded = false;
+function toggleExpandAll() {
+  allExpanded = !allExpanded;
+  const cards = document.querySelectorAll(".bug-card:not(.hidden)");
+  cards.forEach(c => c.classList.toggle("expanded", allExpanded));
+  document.getElementById("expand-all-btn").textContent = allExpanded ? "Collapse all" : "Expand all";
+}
+
+// Filtering logic
+function applyFilters() {
+  const cards = document.querySelectorAll(".bug-card");
+  const groups = document.querySelectorAll(".group-header");
+  const query = searchQuery.toLowerCase();
+  let visibleCount = 0;
+  const visibleGroups = new Set();
+
+  cards.forEach(card => {
+    const priority = card.dataset.priority;
+    const status = card.dataset.status;
+    const bugId = card.dataset.id;
+    const bug = BUGS.find(b => b.id === bugId);
+
+    let show = true;
+
+    // Priority filter
+    if (activePriorities.size > 0 && !activePriorities.has(priority)) {
+      show = false;
+    }
+
+    // Status filter
+    if (activeStatus !== "all" && status !== activeStatus) {
+      show = false;
+    }
+
+    // Search filter
+    if (query && show && bug) {
+      const searchable = (bug.title + " " + bug.body_md).toLowerCase();
+      if (!searchable.includes(query)) {
+        show = false;
+      }
+    }
+
+    card.classList.toggle("hidden", !show);
+    if (show) {
+      visibleCount++;
+      visibleGroups.add(priority);
+    }
+  });
+
+  // Show/hide group headers
+  groups.forEach(g => {
+    g.classList.toggle("hidden", !visibleGroups.has(g.dataset.group));
+  });
+
+  document.getElementById("no-results").classList.toggle("hidden", visibleCount > 0);
+}
+
+// Search
+document.getElementById("search").addEventListener("input", function() {
+  searchQuery = this.value;
+  applyFilters();
+});
+
+// Priority filter pills
+document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {
+  pill.addEventListener("click", function() {
+    const p = this.dataset.priority;
+    if (activePriorities.has(p)) {
+      activePriorities.delete(p);
+      this.classList.remove("dimmed");
+    } else {
+      // If clicking to add filter: dim all others, activate this one
+      if (activePriorities.size === 0) {
+        // First click: activate only this one, dim the rest
+        document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
+          if (pp.dataset.priority !== p) pp.classList.add("dimmed");
+        });
+        activePriorities.add(p);
+      } else {
+        // Subsequent click: toggle this one
+        activePriorities.add(p);
+        this.classList.remove("dimmed");
+      }
+    }
+
+    // If nothing is active, un-dim everything
+    if (activePriorities.size === 0) {
+      document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
+        pp.classList.remove("dimmed");
+      });
+    }
+
+    applyFilters();
+  });
+});
+
+// Status filter buttons
+document.querySelectorAll(".status-btn[data-status]").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    activeStatus = this.dataset.status;
+    applyFilters();
+  });
+});
+</script>
+</body>
+</html>

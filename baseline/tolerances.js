@@ -47,7 +47,7 @@ function both(ctx, fn) {
 
 const tolerances = [
 
-  // Skip: not FHIR terminology content
+  // Skips: drop non-FHIR-terminology records
   {
     id: 'skip-metadata-ops',
     description: 'CapabilityStatement/metadata responses differ by design between implementations',
@@ -81,7 +81,7 @@ const tolerances = [
     },
   },
 
-  // Strip: trace output that differs by design
+  // Normalizations
   {
     id: 'strip-diagnostics',
     description: 'Trace diagnostics parameter has completely different formats between implementations (by design).',

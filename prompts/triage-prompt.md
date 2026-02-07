@@ -11,7 +11,7 @@ Consult these when you need to understand what a field means, what parameters an
 
 **Your job: analyze ONE record from the prepared issue directory.**
 
-The issue directory path is provided when this prompt is invoked (e.g., "Issue directory: /path/to/issues/<md5>").
+The issue directory path is provided when this prompt is invoked (e.g., "Issue directory: /path/to/issues/<record-uuid>"). Issue directories are keyed by the record's UUID (the `id` field from comparison.ndjson), which is stable across comparison reruns.
 
 ## Step 1: Read the issue directory
 
@@ -134,11 +134,11 @@ normalize(ctx) {
 
 ### Tolerance development loop
 
-See "Tolerance Pipeline" in AGENTS.md for the full tolerance object shape, ctx documentation, and phase ordering.
+See "Tolerance Pipeline" in AGENTS.md for the full tolerance object shape and ctx documentation.
 
 a. Read the job's `tolerances.js` to understand the existing pipeline.
 
-b. Add a new tolerance object in the correct phase.
+b. Add a new tolerance object in an appropriate position (skips first, then normalizations).
 
 c. Archive the current delta file:
    ```

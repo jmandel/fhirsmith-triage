@@ -1,0 +1,134 @@
+[
+    {
+        "id": "d3b49ff1399b16026f83d237de972dfdb10638bbe2d83690b787fdfd6ada9cc7",
+        "human_id": "d3b49ff",
+        "create_time": {
+            "timestamp": 1770480792,
+            "time": "2026-02-07T10:13:12-06:00",
+            "lamport": 2
+        },
+        "edit_time": {
+            "timestamp": 1770480797,
+            "time": "2026-02-07T10:13:17-06:00",
+            "lamport": 4
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e9c7e58d78d0c0d7440c0f5f58ba8fab66f50e8adcdab85fa6231b061e2e8631",
+        "human_id": "e9c7e58",
+        "create_time": {
+            "timestamp": 1770481063,
+            "time": "2026-02-07T10:17:43-06:00",
+            "lamport": 3
+        },
+        "edit_time": {
+            "timestamp": 1770481068,
+            "time": "2026-02-07T10:17:48-06:00",
+            "lamport": 7
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Dev returns empty-string expression/location in OperationOutcome issues",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "cf9049554372eec421234b156ccaf61d9e3f7de95daab9bf3ae1713748b36cd6",
+        "human_id": "cf90495",
+        "create_time": {
+            "timestamp": 1770481341,
+            "time": "2026-02-07T10:22:21-06:00",
+            "lamport": 4
+        },
+        "edit_time": {
+            "timestamp": 1770481346,
+            "time": "2026-02-07T10:22:26-06:00",
+            "lamport": 10
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    }
+]

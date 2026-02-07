@@ -172,6 +172,7 @@ Add an object to the `tolerances` array in `tolerances.js`:
   description: 'What this tolerance does and why',
   kind: 'equiv-autofix',               // or 'temp-tolerance'
   bugId: 'abc1234',                     // only for temp-tolerance
+  tags: ['normalize', 'display-text'],  // optional descriptive metadata
   match({ record, prod, dev }) {
     // return 'skip', 'normalize', or null
   },
@@ -181,17 +182,12 @@ Add an object to the `tolerances` array in `tolerances.js`:
 }
 ```
 
-Tolerances are applied sequentially — ordering matters. Place in the correct phase (see comments in `tolerances.js`):
+Tolerances are applied sequentially — ordering matters. General guidelines:
+- Place skip tolerances first (they short-circuit the pipeline)
+- Place normalizations after skips, ordered so earlier transforms don't interfere with later ones
+- Scope tolerances as narrowly as possible — match only the request/response patterns you've actually observed
 
-| Phase | Purpose | Examples |
-|-------|---------|---------|
-| A: Skip | Drop entire records | URL patterns, XML responses |
-| B: Structural | Clean up structure before content transforms | Extension sorting, coding order |
-| C: Content | Strip or transform specific fields | Strip diagnostics, expansion metadata |
-| D: Sort | Stable ordering after all transforms | Sort parameters, issues, expansion contains |
-| E: Bundle | Bundle-level normalization | Empty searchset Bundles |
-
-Scope tolerances as narrowly as possible — match only the request/response patterns you've actually observed.
+Tolerances support an optional `tags` array for descriptive metadata. Tags are freeform strings that describe what the tolerance does — they have no effect on execution. Examples: `['skip', 'non-fhir']`, `['normalize', 'message-format']`, `['sort']`, `['version-skew', 'v2-tables']`.
 
 ### Tolerance development loop
 
@@ -206,9 +202,9 @@ When developing a new tolerance (whether `equiv-autofix` or `temp-tolerance`):
 
 For `temp-tolerance`: file a `git-bug` first, then be extra judicious in validation since a too-broad heuristic could mask unrelated bugs.
 
-## MD5 Hashing for Record Identity
+## Record Identity
 
-Since comparison reruns regenerate delta files (records get new positions), we use the MD5 hash of the raw NDJSON line as a stable identifier. This hash maps to an issue directory (`issues/<md5>/`) containing the record's analysis workspace. The hash survives reruns as long as the underlying record hasn't changed.
+Issue directories are keyed by the record's `id` field (a UUID assigned during data collection), not by position in the delta file. This UUID is stable across comparison reruns — when tolerances change and the comparison is rerun, previously analyzed records are still recognized because their UUID hasn't changed. Issue directories live at `issues/<record-uuid>/`.
 
 ## File Locations
 
@@ -242,7 +238,7 @@ Each triage round lives in its own job directory, created by `prompts/start-tria
 - `tolerances.js` - Working tolerances (copied from baseline, built up during triage)
 - `results/summary.json` - Comparison stats
 - `results/deltas/deltas.ndjson` - All non-OK/non-SKIP records with priority in comparison metadata
-- `issues/<md5>/` - Per-record triage workspace:
+- `issues/<record-uuid>/` - Per-record triage workspace:
   - `record.json` - Full delta record (pretty-printed)
   - `prod-raw.json` / `dev-raw.json` - Parsed response bodies
   - `prod-normalized.json` / `dev-normalized.json` - After tolerance pipeline

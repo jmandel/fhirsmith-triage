@@ -11,7 +11,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const readline = require('readline');
 
 function getArg(flag, def) {
@@ -85,9 +84,11 @@ async function main() {
     if (!raw) continue;
     total++;
 
-    const md5 = crypto.createHash('md5').update(raw).digest('hex');
-    const issueDir = path.join(ISSUES_DIR, md5);
-    const analysisFile = path.join(issueDir, 'analysis.md');
+    const record = JSON.parse(raw);
+    const recordId = record.id;
+    if (!recordId) continue;
+
+    const analysisFile = path.join(ISSUES_DIR, recordId, 'analysis.md');
 
     if (fs.existsSync(analysisFile)) {
       analyzed++;
@@ -95,7 +96,7 @@ async function main() {
     }
 
     if (!found) {
-      found = { raw, md5, lineno: total };
+      found = { raw, recordId, lineno: total };
     }
   }
 
@@ -109,9 +110,9 @@ async function main() {
   }
 
   // Create the issue directory and write files
-  const { raw, md5, lineno } = found;
+  const { raw, recordId, lineno } = found;
   const record = JSON.parse(raw);
-  const issueDir = path.join(ISSUES_DIR, md5);
+  const issueDir = path.join(ISSUES_DIR, recordId);
   fs.mkdirSync(issueDir, { recursive: true });
 
   // Write record.json
@@ -154,12 +155,17 @@ async function main() {
       : '(none)\n'
   );
 
-  // Print summary
+  // Write pick context so we can track delta count trajectory across rounds
   const remaining = total - analyzed;
   const priority = record.comparison?.priority || '?';
+  fs.writeFileSync(
+    path.join(issueDir, 'pick-context.json'),
+    JSON.stringify({ pickedAt: new Date().toISOString(), total, analyzed, remaining, priority }, null, 2)
+  );
+
+  // Print summary
   console.log(`Record: ${lineno}/${total} (${analyzed} analyzed, ${remaining} remaining)`);
   console.log(`Priority: ${priority}`);
-  console.log(`MD5: ${md5}`);
   console.log(`Issue dir: ${issueDir}`);
   console.log(`Record ID: ${record.id || '?'}`);
   console.log(`URL: ${record.url || '?'}`);
