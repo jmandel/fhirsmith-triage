@@ -412,6 +412,35 @@ const tolerances = [
   },
 
   {
+    id: 'temp-issue-text-package-provenance',
+    description: 'Dev omits package provenance suffix (e.g. "from hl7.fhir.r4.core#4.0.1") in OperationOutcome issue details.text for draft CodeSystem status-check messages. Affects 4 P6 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '1e3f335',
+    match({ prod, dev }) {
+      return hasOperationOutcome(prod, dev) ? 'normalize' : null;
+    },
+    normalize(ctx) {
+      function stripProvenance(oo) {
+        if (!oo.issue) return oo;
+        return {
+          ...oo,
+          issue: oo.issue.map(issue => {
+            const text = issue.details?.text;
+            if (typeof text !== 'string') return issue;
+            const stripped = text.replace(/ from \S+#\S+$/, '');
+            if (stripped === text) return issue;
+            return {
+              ...issue,
+              details: { ...issue.details, text: stripped },
+            };
+          }),
+        };
+      }
+      return both(ctx, body => transformOperationOutcomes(body, stripProvenance));
+    },
+  },
+
+  {
     id: 'strip-expansion-metadata',
     description: 'Expansion metadata (timestamp, identifier, includeDefinition=false default, empty id) are cosmetic server-generated differences.',
     kind: 'equiv-autofix',
