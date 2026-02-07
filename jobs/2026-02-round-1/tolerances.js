@@ -1003,6 +1003,53 @@ const tolerances = [
   },
 
   {
+    id: 'expand-display-text-differs',
+    description: 'Expand display text differs between prod and dev for the same codes in expansion.contains[].display. Reflects version skew and different preferred term selection across SNOMED (134 records), ISO 3166 (22), and UCUM (1). Normalizes both sides to prod display value. Affects 157 expand records.',
+    kind: 'temp-tolerance',
+    bugId: 'b9e3cfd',
+    tags: ['normalize', 'expand', 'display-text'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      const prodMap = new Map();
+      for (const c of prod.expansion.contains) {
+        prodMap.set(c.system + '|' + c.code, c.display);
+      }
+      for (const c of dev.expansion.contains) {
+        const key = c.system + '|' + c.code;
+        const prodDisplay = prodMap.get(key);
+        if (prodDisplay !== undefined && prodDisplay !== c.display) return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Build canonical display map from prod
+      const displayMap = new Map();
+      for (const c of (prod.expansion?.contains || [])) {
+        displayMap.set(c.system + '|' + c.code, c.display);
+      }
+      function setDisplays(body) {
+        if (!body?.expansion?.contains) return body;
+        return {
+          ...body,
+          expansion: {
+            ...body.expansion,
+            contains: body.expansion.contains.map(c => {
+              const key = c.system + '|' + c.code;
+              const canonical = displayMap.get(key);
+              if (canonical !== undefined && c.display !== canonical) {
+                return { ...c, display: canonical };
+              }
+              return c;
+            }),
+          },
+        };
+      }
+      return both({ prod, dev }, setDisplays);
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

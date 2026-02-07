@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_21 bugs (19 open, 2 closed)_
+_22 bugs (20 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1160,6 +1160,40 @@ There are also 71 content-differs and 8 status-mismatch records for CPT (124 tot
 #####What the tolerance covers
 
 Tolerance `cpt-validate-code-result-disagrees` skips all validate-code records where system is http://www.ama-assn.org/go/cpt and prod=true/dev=false (result-disagrees). Eliminates 45 records.
+
+---
+
+### [ ] `de8b2f7` Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages
+
+Records-Impacted: 26
+Tolerance-ID: unknown-version-valid-versions-message
+Record-ID: a3cf69a7-48f3-47b8-a29d-cd6453647621
+
+#####What differs
+
+When a requested CodeSystem version is not found, both prod and dev return an UNKNOWN_CODESYSTEM_VERSION error listing available versions. Dev appends " and undefined" at the end of this version list in 26 of 40 such records.
+
+Example from dev message:
+"...http://snomed.info/xsct/900000000000207008/version/20250814 and undefined"
+
+Prod message ends cleanly:
+"...http://snomed.info/xsct/900000000000207008/version/20250814"
+
+This appears to be a JS undefined value being concatenated into the version list string, likely from an off-by-one or array join issue.
+
+#####How widespread
+
+26 records in deltas.ndjson contain "and undefined" in the devBody. All are validate-code operations. The pattern appears across SNOMED and other code systems when the requested version is not found.
+
+Search: grep -c 'and undefined' deltas.ndjson => 26
+
+#####What the tolerance covers
+
+Tolerance `unknown-version-valid-versions-message` normalizes the message and issues text in UNKNOWN_CODESYSTEM_VERSION responses by stripping "Valid versions:" lists from both sides. This covers both the "and undefined" bug and the version list differences caused by different editions being loaded.
+
+#####Representative record
+
+a3cf69a7-48f3-47b8-a29d-cd6453647621 — POST /r4/CodeSystem/$validate-code for SNOMED 2017-09, both return result=false
 
 ---
 

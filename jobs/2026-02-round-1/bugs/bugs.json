@@ -922,5 +922,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "de8b2f71efa60490959bd379abda812a3a45e1cf3871095aef0bd004ba881e51",
+        "human_id": "de8b2f7",
+        "create_time": {
+            "timestamp": 1770489811,
+            "time": "2026-02-07T12:43:31-06:00",
+            "lamport": 23
+        },
+        "edit_time": {
+            "timestamp": 1770489815,
+            "time": "2026-02-07T12:43:35-06:00",
+            "lamport": 95
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

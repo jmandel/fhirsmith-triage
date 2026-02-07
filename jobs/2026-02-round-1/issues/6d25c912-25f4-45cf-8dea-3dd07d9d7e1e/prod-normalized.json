@@ -1,0 +1,48 @@
+{
+  "expansion": {
+    "contains": [
+      {
+        "code": "25217009",
+        "display": "Pituitary follicle stimulating hormone",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "29552007",
+        "display": "Hydroxymethylglutaryl-CoA reductase (NADPH)",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "61285001",
+        "display": "Ovulation induction",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "116101001",
+        "display": "Product containing gonadotropin releasing hormone receptor antagonist (product)",
+        "system": "http://snomed.info/sct"
+      }
+    ],
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+      }
+    ],
+    "total": 4
+  },
+  "resourceType": "ValueSet",
+  "status": "active"
+}
