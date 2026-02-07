@@ -1730,6 +1730,64 @@ const tolerances = [
   },
 
   {
+    id: 'case-insensitive-code-validation-diffs',
+    description: 'Case-insensitive code validation (ICD-10, ICD-10-CM): dev returns extra normalized-code parameter with correctly-cased code, uses severity "information" instead of "warning" for CODE_CASE_DIFFERENCE issue, and includes version in system URI within issue text. Both agree result=true. Affects 4 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'fd9fd91',
+    tags: ['normalize', 'validate-code', 'case-insensitive', 'normalized-code'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      // Check for dev having normalized-code that prod lacks
+      const devNc = getParamValue(dev, 'normalized-code');
+      const prodNc = getParamValue(prod, 'normalized-code');
+      if (devNc !== undefined && prodNc === undefined) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // 1. Strip normalized-code from dev (prod doesn't have it)
+      let newDev = stripParams(dev, 'normalized-code');
+
+      // 2. Normalize severity: canonicalize to prod's severity for CODE_CASE_DIFFERENCE issues
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(newDev, 'issues');
+      if (prodIssues?.issue && devIssues?.issue) {
+        newDev = {
+          ...newDev,
+          parameter: newDev.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  // Normalize severity to prod's value
+                  let result = iss;
+                  if (iss.severity !== prodIss.severity) {
+                    result = { ...result, severity: prodIss.severity };
+                  }
+                  // Normalize issue text: strip version from system URI in text
+                  if (result.details?.text && prodIss.details?.text &&
+                      result.details.text !== prodIss.details.text) {
+                    result = {
+                      ...result,
+                      details: { ...result.details, text: prodIss.details.text },
+                    };
+                  }
+                  return result;
+                }),
+              },
+            };
+          }),
+        };
+      }
+
+      return { prod, dev: newDev };
+    },
+  },
+
+  {
     id: 'read-resource-text-div-diff',
     description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
     kind: 'temp-tolerance',

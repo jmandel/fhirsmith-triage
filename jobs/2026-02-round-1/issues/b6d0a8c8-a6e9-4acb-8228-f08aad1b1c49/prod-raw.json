@@ -1,0 +1,66 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/icd-10-cm"
+    },
+    {
+      "name": "code",
+      "valueCode": "M80.00xA"
+    },
+    {
+      "name": "version",
+      "valueString": "2024"
+    },
+    {
+      "name": "display",
+      "valueString": "Age-rel osteopor w current path fracture, unsp site, init"
+    },
+    {
+      "name": "message",
+      "valueString": "The code 'M80.00xA' differs from the correct code 'M80.00XA' by case. Although the code system 'http://hl7.org/fhir/sid/icd-10-cm' is case insensitive, implementers are strongly encouraged to use the correct case anyway"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "CODE_CASE_DIFFERENCE"
+              }
+            ],
+            "severity": "warning",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "code-rule"
+                }
+              ],
+              "text": "The code 'M80.00xA' differs from the correct code 'M80.00XA' by case. Although the code system 'http://hl7.org/fhir/sid/icd-10-cm' is case insensitive, implementers are strongly encouraged to use the correct case anyway"
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en, en-US, default-to-latest\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://hl7.org/fhir/sid/icd-10-cm#M80.00xA (\"\")]\"\r\n0 0     : 0ms  : Check \"http://hl7.org/fhir/sid/icd-10-cm#M80.00xA\"\r\n0 0     : 0ms  : Using CodeSystem \"http://hl7.org/fhir/sid/icd-10-cm|2024 (from fhir.tx.support.r4#0.32.0)\" (content = complete)\r\n"
+    }
+  ]
+}

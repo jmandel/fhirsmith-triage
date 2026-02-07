@@ -1794,5 +1794,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "9d6a37e971b074a7a488890f45608e452d0d9177cfc970ade4c323a692e5abf1",
+        "human_id": "9d6a37e",
+        "create_time": {
+            "timestamp": 1770495650,
+            "time": "2026-02-07T14:20:50-06:00",
+            "lamport": 42
+        },
+        "edit_time": {
+            "timestamp": 1770495655,
+            "time": "2026-02-07T14:20:55-06:00",
+            "lamport": 211
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "CPT validate-code: dev omits informational 'Code X not found in CPT' issue",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

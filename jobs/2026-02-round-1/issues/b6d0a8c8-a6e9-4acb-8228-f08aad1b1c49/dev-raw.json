@@ -1,0 +1,66 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/icd-10-cm"
+    },
+    {
+      "name": "normalized-code",
+      "valueCode": "M80.00XA"
+    },
+    {
+      "name": "code",
+      "valueCode": "M80.00xA"
+    },
+    {
+      "name": "version",
+      "valueString": "2024"
+    },
+    {
+      "name": "display",
+      "valueString": "Age-rel osteopor w current path fracture, unsp site, init"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "text": "The code 'M80.00xA' differs from the correct code 'M80.00XA' by case. Although the code system 'http://hl7.org/fhir/sid/icd-10-cm|2024' is case insensitive, implementers are strongly encouraged to use the correct case anyway",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "code-rule"
+                }
+              ]
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "CODE_CASE_DIFFERENCE"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/sid/icd-10-cm/vs|2024: Validate \"[undefined#M80.00xA (\"undefined\")]\"\n0ms http://hl7.org/fhir/sid/icd-10-cm/vs|2024: Check \"http://hl7.org/fhir/sid/icd-10-cm#M80.00xA\"\n0ms http://hl7.org/fhir/sid/icd-10-cm/vs|2024: CodeSystem found: http://hl7.org/fhir/sid/icd-10-cm|2024 for http://hl7.org/fhir/sid/icd-10-cm|2024\n0ms http://hl7.org/fhir/sid/icd-10-cm/vs|2024: check code in () at Coding\n0ms http://hl7.org/fhir/sid/icd-10-cm/vs|2024: Code \"M80.00xA\" found in http://hl7.org/fhir/sid/icd-10-cm|2024"
+    }
+  ]
+}

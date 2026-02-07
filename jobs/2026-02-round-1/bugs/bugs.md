@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_40 bugs (37 open, 3 closed)_
+_41 bugs (38 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2247,6 +2247,38 @@ Tolerance ID: validate-code-missing-message-on-true. Matches validate-code Param
 #####Representative record
 
 e934228b-f819-4119-bdd2-dcf4a72988bc — POST /r4/CodeSystem/$validate-code for ICD-9-CM code 441.
+
+---
+
+### [ ] `9d6a37e` CPT validate-code: dev omits informational 'Code X not found in CPT' issue
+
+Records-Impacted: 10
+Tolerance-ID: cpt-validate-code-missing-info-issue
+Record-ID: e8127050-3f19-4115-bf45-a50dfea09d40
+
+#####What differs
+
+When validating an unknown CPT code (result=false), prod returns two OperationOutcome issues:
+1. severity=error: "Unknown code 'X' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'"
+2. severity=information: "Code 'X' not found in CPT"
+
+Dev returns only the first (error) issue and omits the second (informational) issue.
+
+For ValueSet/$validate-code (2 of the 10 records), this also affects the message parameter: prod prefixes the message with "Code 'X' not found in CPT; " while dev omits this prefix.
+
+Both sides agree on result=false, system, code, and the primary error issue text.
+
+#####How widespread
+
+10 records total: 8 POST /r4/CodeSystem/$validate-code and 2 POST /r4/ValueSet/$validate-code. All involve system http://www.ama-assn.org/go/cpt, result=false, where the code is unknown in CPT version 2023.
+
+Search: checked all 57 delta records for cases where prod has more OperationOutcome issues than dev — found exactly 10 CPT records matching this pattern.
+
+Codes affected: 19304 (2 records), 98000 (2 records), 99201 (6 records).
+
+#####What the tolerance covers
+
+Tolerance ID: cpt-validate-code-missing-info-issue. Matches CPT validate-code records where result=false and prod has an extra informational "not found in CPT" issue. Normalizes by stripping the extra informational issue from prod and removing the corresponding message prefix. Eliminates 10 records.
 
 ---
 

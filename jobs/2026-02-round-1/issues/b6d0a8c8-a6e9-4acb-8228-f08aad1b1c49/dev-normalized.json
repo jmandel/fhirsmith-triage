@@ -1,0 +1,56 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "M80.00xA"
+    },
+    {
+      "name": "display",
+      "valueString": "Age-rel osteopor w current path fracture, unsp site, init"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "code-rule",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The code 'M80.00xA' differs from the correct code 'M80.00XA' by case. Although the code system 'http://hl7.org/fhir/sid/icd-10-cm|2024' is case insensitive, implementers are strongly encouraged to use the correct case anyway"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "normalized-code",
+      "valueCode": "M80.00XA"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/icd-10-cm"
+    },
+    {
+      "name": "version",
+      "valueString": "2024"
+    }
+  ],
+  "resourceType": "Parameters"
+}
