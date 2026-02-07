@@ -1,0 +1,58 @@
+{
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'https://eformsdesigner.ontariohealth.ca/fhir/StructureDefinition/sdc-questionnaire-layout' could not be found, so the code cannot be validated"
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "location": [
+              "Coding.system"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://eformsdesigner.ontariohealth.ca/fhir/StructureDefinition/sdc-questionnaire-layout' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "system",
+      "valueUri": "https://eformsdesigner.ontariohealth.ca/fhir/StructureDefinition/sdc-questionnaire-layout"
+    },
+    {
+      "name": "code",
+      "valueCode": "Flat"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://eformsdesigner.ontariohealth.ca/fhir/StructureDefinition/sdc-questionnaire-layout"
+    }
+  ],
+  "resourceType": "Parameters"
+}

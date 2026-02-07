@@ -94,6 +94,27 @@ const tolerances = [
     },
   },
 
+  // Phase D: Sort — stable ordering after all transforms
+  {
+    id: 'sort-parameters-by-name',
+    description: 'Parameters.parameter array ordering differs between implementations but has no semantic meaning in FHIR.',
+    kind: 'equiv-autofix',
+    match({ prod, dev }) {
+      return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
+    },
+    normalize(ctx) {
+      return both(ctx, body => {
+        if (!body?.parameter || !Array.isArray(body.parameter)) return body;
+        return {
+          ...body,
+          parameter: [...body.parameter].sort((a, b) =>
+            (a.name || '').localeCompare(b.name || '')
+          ),
+        };
+      });
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
