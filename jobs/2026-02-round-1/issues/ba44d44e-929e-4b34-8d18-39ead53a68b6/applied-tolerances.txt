@@ -1,0 +1,5 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+strip-oo-message-id-extension: normalize
+bcp47-display-format: normalize
+validate-code-display-echo-on-unknown-system: normalize

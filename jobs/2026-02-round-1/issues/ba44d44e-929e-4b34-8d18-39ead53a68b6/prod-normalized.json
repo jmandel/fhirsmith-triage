@@ -1,0 +1,67 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "en-us"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unable to recognise part 2 (\"us\") as a valid language part"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

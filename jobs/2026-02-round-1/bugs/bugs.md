@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_25 bugs (23 open, 2 closed)_
+_26 bugs (24 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1325,6 +1325,37 @@ Tolerance `expand-dev-crash-on-valid` matches POST /r4/ValueSet/$expand where pr
 
 - `7598431b-1c90-409c-b8f2-2be8358e8be3` (parameter is not iterable)
 - `9ec233b5-f523-4ec4-b4f9-fcdf8b63d17f` (addParamUri)
+
+---
+
+### [ ] `4cdcd85` Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'
+
+Records-Impacted: 1
+Tolerance-ID: validate-code-crash-undefined-system-code
+Record-ID: 6b937ddc-13c0-49e1-bd96-24ef10f06543
+
+#####What differs
+
+Prod returns 200 with a successful $validate-code Parameters response (result=true, system=urn:oid:2.16.840.1.113883.6.238, code=2108-9, display="European", version="1.2"). Dev returns 500 with an OperationOutcome error: "No Match for undefined|undefined".
+
+The error message "undefined|undefined" indicates that dev failed to extract the system and code parameters from the POST request body, receiving them as JavaScript `undefined` values instead.
+
+The request is POST /r4/ValueSet/$validate-code against the http://hl7.org/fhir/us/core/ValueSet/detailed-race ValueSet (US Core detailed race codes). The request body was not captured in the comparison data, but two other POST $validate-code requests involving the same ValueSet (detailed-race) succeeded on both sides, suggesting this may be related to a specific combination of request parameters rather than the ValueSet itself.
+
+#####How widespread
+
+Only 1 record in the comparison dataset exhibits this exact pattern. Searched:
+- `grep -c 'undefined|undefined' comparison.ndjson` → 1
+- All dev=500/prod=200 validate-code records → only this one
+- All detailed-race records → 3 total, 2 succeed on both sides
+
+#####What the tolerance covers
+
+Tolerance `validate-code-crash-undefined-system-code` matches POST /r4/ValueSet/$validate-code where prod=200, dev=500, and dev error contains "undefined|undefined". Skips the record. Eliminates 1 record.
+
+#####Representative record
+
+6b937ddc-13c0-49e1-bd96-24ef10f06543
 
 ---
 

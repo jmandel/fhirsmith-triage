@@ -1,0 +1,17 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "en-us"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

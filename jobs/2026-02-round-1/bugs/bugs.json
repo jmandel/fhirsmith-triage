@@ -1098,5 +1098,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "4cdcd85f9d97e8cb19f362875468cee2bc2233e44be902b9103fe35338f7cf72",
+        "human_id": "4cdcd85",
+        "create_time": {
+            "timestamp": 1770491049,
+            "time": "2026-02-07T13:04:09-06:00",
+            "lamport": 27
+        },
+        "edit_time": {
+            "timestamp": 1770491053,
+            "time": "2026-02-07T13:04:13-06:00",
+            "lamport": 107
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

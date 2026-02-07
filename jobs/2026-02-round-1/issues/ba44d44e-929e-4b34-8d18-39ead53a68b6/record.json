@@ -1,0 +1,27 @@
+{
+  "id": "ba44d44e-929e-4b34-8d18-39ead53a68b6",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1709,
+    "hash": "f4765ef940c76ba7e5ff202238ee71dd"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 635,
+    "hash": "f3217979669670af8975bb1ef673dc18"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": false,
+    "devResult": true,
+    "system": "urn:ietf:bcp:47",
+    "code": "en-us"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"urn:ietf:bcp:47\"},{\"name\" : \"code\",\"valueCode\" : \"en-us\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47' version ''\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47' version ''\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]},{\"severity\" : \"information\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unable to recognise part 2 (\\\"us\\\") as a valid language part\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[urn:ietf:bcp:47#en-us (\\\"English (Region=United States)\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"urn:ietf:bcp:47#en-us\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"urn:ietf:bcp:47|\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"urn:ietf:bcp:47\"},{\"name\":\"code\",\"valueCode\":\"en-us\"},{\"name\":\"display\",\"valueString\":\"English (Region=United States)\"},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms urn:ietf:bcp:47/vs: Validate \\\"[undefined#en-us (\\\"English (Region=United States)\\\")]\\\"\\n0ms urn:ietf:bcp:47/vs: Check \\\"urn:ietf:bcp:47#en-us\\\"\\n0ms urn:ietf:bcp:47/vs: CodeSystem found: urn:ietf:bcp:47|null for urn:ietf:bcp:47\\n0ms urn:ietf:bcp:47/vs: check code in () at Coding\\n0ms urn:ietf:bcp:47/vs: Code \\\"en-us\\\" found in urn:ietf:bcp:47|null\"}]}"
+}

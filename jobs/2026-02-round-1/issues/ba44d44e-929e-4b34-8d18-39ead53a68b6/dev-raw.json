@@ -1,0 +1,25 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    },
+    {
+      "name": "code",
+      "valueCode": "en-us"
+    },
+    {
+      "name": "display",
+      "valueString": "English (Region=United States)"
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms urn:ietf:bcp:47/vs: Validate \"[undefined#en-us (\"English (Region=United States)\")]\"\n0ms urn:ietf:bcp:47/vs: Check \"urn:ietf:bcp:47#en-us\"\n0ms urn:ietf:bcp:47/vs: CodeSystem found: urn:ietf:bcp:47|null for urn:ietf:bcp:47\n0ms urn:ietf:bcp:47/vs: check code in () at Coding\n0ms urn:ietf:bcp:47/vs: Code \"en-us\" found in urn:ietf:bcp:47|null"
+    }
+  ]
+}

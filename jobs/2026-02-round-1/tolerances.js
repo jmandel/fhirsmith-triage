@@ -1130,6 +1130,23 @@ const tolerances = [
   },
 
   {
+    id: 'bcp47-case-sensitive-validation',
+    description: 'BCP-47 $validate-code: dev accepts lowercase regional variant "en-us" as valid (result=true), prod correctly rejects it (result=false) because BCP-47 is case-sensitive in FHIR and the valid form is "en-US". Affects 2 result-disagrees records (1 CodeSystem, 1 ValueSet validate-code).',
+    kind: 'temp-tolerance',
+    bugId: '85d0977',
+    tags: ['skip', 'result-disagrees', 'bcp47', 'case-sensitivity'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'urn:ietf:bcp:47') return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult === false && devResult === true) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',
