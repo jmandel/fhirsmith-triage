@@ -1,6 +1,6 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T18:07:57.875Z",
+  "timestamp": "2026-02-07T18:19:27.870Z",
   "totalRecords": 7245,
   "skipped": 2130,
   "skippedByKind": {
@@ -19,9 +19,9 @@
     "skip-root-page": 359
   },
   "categories": {
-    "OK": 4248,
-    "content-differs": 590,
+    "OK": 4321,
     "result-disagrees": 246,
+    "content-differs": 517,
     "dev-crash-on-valid": 16,
     "status-mismatch": 12,
     "missing-resource": 3
@@ -29,13 +29,13 @@
   "okBreakdown": {
     "strict": 0,
     "equiv-autofix": 2451,
-    "temp-tolerance": 1797
+    "temp-tolerance": 1870
   },
   "operationBreakdown": {
     "validate-code": {
-      "OK": 3116,
-      "content-differs": 375,
+      "OK": 3189,
       "result-disagrees": 246,
+      "content-differs": 302,
       "dev-crash-on-valid": 1
     },
     "lookup": {

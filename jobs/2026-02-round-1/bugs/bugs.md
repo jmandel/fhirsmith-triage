@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_17 bugs (17 open, 0 closed)_
+_17 bugs (15 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -108,6 +108,20 @@ Records-Impacted: 157
 Tolerance-ID: v2-0360-lookup-version-skew
 Record-ID: 80a780e6-8842-43a9-a260-889ce87f76ac
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `version: "2.0.0"` with no top-level `definition` or `designation` parameters. Dev returns `version: "3.0.0"` with an extra `definition` parameter ("Registered Nurse") and an extra `designation` parameter (use=preferredForLanguage).
+
 #####What differs
 
 $lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:
@@ -149,7 +163,7 @@ URL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-
 
 ---
 
-### [ ] `e9c7e58` Dev returns empty-string expression/location in OperationOutcome issues
+### [x] `e9c7e58` Dev returns empty-string expression/location in OperationOutcome issues
 
 Records-Impacted: 318
 Tolerance-ID: dev-empty-string-expression-location
@@ -206,6 +220,24 @@ Tolerance ID: `dev-empty-string-expression-location`. Normalizes by removing `ex
 Records-Impacted: 44
 Tolerance-ID: invalid-display-message-format
 Record-ID: beb4276b-f937-46c3-81ab-7f63cb7798b7
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-US"},{"name":"display","valueString":"English"},{"name":"displayLanguage","valueCode":"en-US"}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-US"},{"name":"display","valueString":"English"},{"name":"displayLanguage","valueCode":"en-US"}]}'
+```
+
+Prod returns "one of 6 choices" with duplicate display options and no language tags; dev returns "one of 3 choices" with de-duplicated options and `(en)` language tags appended to each.
 
 #####What differs
 
@@ -441,7 +473,7 @@ Normalizes the `version` parameter to prod's value on both sides when both conta
 
 ---
 
-### [ ] `2abe02d` Dev $expand returns empty string id on ValueSet response
+### [x] `2abe02d` Dev $expand returns empty string id on ValueSet response
 
 Records-Impacted: 690
 Tolerance-ID: expand-dev-empty-id
@@ -588,6 +620,24 @@ Records-Impacted: 37
 Tolerance-ID: expand-used-codesystem-version-skew
 Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"160245001"}]}]}}},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/731000124108"}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"160245001"}]}]}}},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/731000124108"}]}'
+```
+
+Prod returns `used-codesystem` version `20250901`, dev returns `20230301` for SNOMED US edition.
+
 Dev $expand responses report different code system versions in the `used-codesystem` expansion parameter compared to prod. This is the $expand counterpart of the existing SNOMED version skew bug (da50d17), but affects multiple code systems and is specific to expansion metadata rather than validate-code Parameters.
 
 #####What differs
@@ -633,6 +683,24 @@ for line in sys.stdin:
 Records-Impacted: 186
 Tolerance-ID: expand-dev-crash-on-error
 Record-ID: f39ee3d3-8249-4e0c-a8a6-c2d5d1ffdcbd
+
+#####Repro
+
+```bash
+####Prod (returns 422 with clear error: "is a fragment")
+curl -s -w '\nHTTP_STATUS:%{http_code}\n' 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://hl7.org/fhir/sid/icd-9-cm"}]}}}]}'
+
+####Dev (returns 500 with JS source code leak: "is a contentMode() { return this.codeSystem.content; }")
+curl -s -w '\nHTTP_STATUS:%{http_code}\n' 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://hl7.org/fhir/sid/icd-9-cm"}]}}}]}'
+```
+
+Prod returns HTTP 422 with `"is a fragment, so this expansion is not permitted"`. Dev returns HTTP 500 with `"is a contentMode() {\r\n    return this.codeSystem.content;\r\n  }, so this expansion is not permitted"` — a JavaScript function body leaked into the error message.
 
 #####What differs
 

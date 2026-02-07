@@ -1,0 +1,62 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "https://codesystem.x12.org/005010/1338"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://codesystem.x12.org/005010/1338"
+    },
+    {
+      "name": "code",
+      "valueCode": "U"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated"
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[https://codesystem.x12.org/005010/1338#U (\"Urgent\")]\"\r\n0 0     : 0ms  : Check \"https://codesystem.x12.org/005010/1338#U\"\r\n0 0     : 0ms  : Didn't find CodeSystem \"https://codesystem.x12.org/005010/1338\"\r\n"
+    }
+  ]
+}

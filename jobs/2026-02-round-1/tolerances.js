@@ -794,6 +794,26 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-display-echo-on-unknown-system',
+    description: 'Dev echoes back input display parameter on $validate-code when result=false and CodeSystem is unknown. Prod correctly omits display when it cannot validate it. FHIR spec says output display is "a valid display for the concept" — inapplicable when the system is unknown. Affects 74 validate-code records across 38+ unknown code systems.',
+    kind: 'temp-tolerance',
+    bugId: '9390fe4',
+    tags: ['normalize', 'validate-code', 'display-echo'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const result = getParamValue(prod, 'result');
+      if (result !== false) return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (prodDisplay !== undefined || devDisplay === undefined) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      return { prod, dev: stripParams(dev, 'display') };
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

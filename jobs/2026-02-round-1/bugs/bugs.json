@@ -8,9 +8,9 @@
             "lamport": 2
         },
         "edit_time": {
-            "timestamp": 1770485463,
-            "time": "2026-02-07T11:31:03-06:00",
-            "lamport": 32
+            "timestamp": 1770487562,
+            "time": "2026-02-07T12:06:02-06:00",
+            "lamport": 70
         },
         "status": "open",
         "labels": [
@@ -52,11 +52,11 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770487383,
-            "time": "2026-02-07T12:03:03-06:00",
-            "lamport": 64
+            "timestamp": 1770487517,
+            "time": "2026-02-07T12:05:17-06:00",
+            "lamport": 69
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "P6",
             "tx-compare"
@@ -96,9 +96,9 @@
             "lamport": 4
         },
         "edit_time": {
-            "timestamp": 1770485493,
-            "time": "2026-02-07T11:31:33-06:00",
-            "lamport": 34
+            "timestamp": 1770487643,
+            "time": "2026-02-07T12:07:23-06:00",
+            "lamport": 72
         },
         "status": "open",
         "labels": [
@@ -448,11 +448,11 @@
             "lamport": 12
         },
         "edit_time": {
-            "timestamp": 1770487368,
-            "time": "2026-02-07T12:02:48-06:00",
-            "lamport": 63
+            "timestamp": 1770487513,
+            "time": "2026-02-07T12:05:13-06:00",
+            "lamport": 68
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "content-differs",
             "tx-compare"
@@ -536,9 +536,9 @@
             "lamport": 14
         },
         "edit_time": {
-            "timestamp": 1770485533,
-            "time": "2026-02-07T11:32:13-06:00",
-            "lamport": 45
+            "timestamp": 1770487671,
+            "time": "2026-02-07T12:07:51-06:00",
+            "lamport": 73
         },
         "status": "open",
         "labels": [
@@ -580,9 +580,9 @@
             "lamport": 15
         },
         "edit_time": {
-            "timestamp": 1770485906,
-            "time": "2026-02-07T11:38:26-06:00",
-            "lamport": 52
+            "timestamp": 1770487639,
+            "time": "2026-02-07T12:07:19-06:00",
+            "lamport": 71
         },
         "status": "open",
         "labels": [

@@ -1,0 +1,29 @@
+{
+  "id": "d9457f4d-39c0-445a-96d4-0721961e169d",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1640,
+    "hash": "35804e2ed1918b60e219da574eb33145"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1016,
+    "hash": "0091cb3bc657a3877f86ff169dc2c175"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "extra-in-dev",
+        "param": "display"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"https://codesystem.x12.org/005010/1338\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"https://codesystem.x12.org/005010/1338\"},{\"name\" : \"code\",\"valueCode\" : \"U\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[https://codesystem.x12.org/005010/1338#U (\\\"Urgent\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"https://codesystem.x12.org/005010/1338#U\\\"\\r\\n0 0     : 0ms  : Didn't find CodeSystem \\\"https://codesystem.x12.org/005010/1338\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"location\":[\"Coding.system\"],\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'https://codesystem.x12.org/005010/1338' could not be found, so the code cannot be validated\"},{\"name\":\"system\",\"valueUri\":\"https://codesystem.x12.org/005010/1338\"},{\"name\":\"code\",\"valueCode\":\"U\"},{\"name\":\"display\",\"valueString\":\"Urgent\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"https://codesystem.x12.org/005010/1338\"}]}"
+}
