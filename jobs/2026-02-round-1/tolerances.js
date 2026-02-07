@@ -764,6 +764,27 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-extra-contact-metadata',
+    description: 'Dev $expand includes ValueSet contact field (publisher contact info) that prod omits. The contact data is source ValueSet metadata passed through by dev but stripped by prod. Affects 12 expand records in deltas (59 in full comparison).',
+    kind: 'temp-tolerance',
+    bugId: '3967e97',
+    tags: ['normalize', 'expand', 'extra-metadata'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!dev?.expansion) return null;
+      if (dev.contact && !prod.contact) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (dev.contact && !prod.contact) {
+        const { contact, ...devRest } = dev;
+        return { prod, dev: devRest };
+      }
+      return { prod, dev };
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

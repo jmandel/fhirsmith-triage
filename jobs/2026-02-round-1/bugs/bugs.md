@@ -244,6 +244,20 @@ Records-Impacted: 491
 Tolerance-ID: searchset-bundle-format
 Record-ID: c97f36a4-973b-42c5-8b6d-58464195cfd5
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns a searchset Bundle with `total: 0`, no `entry` field, a single `self` link with a relative URL, and server-generated `id`/`meta.lastUpdated`. Dev returns a searchset Bundle with `total: 0`, an empty `entry: []` array, three links (`self`/`first`/`last`) with absolute URLs and `_offset=0`, and no `id` or `meta`.
+
 #####What differs
 
 Dev's searchset Bundle responses differ from prod in several ways:
@@ -260,7 +274,7 @@ Dev's searchset Bundle responses differ from prod in several ways:
 
 Affects all searchset Bundle responses for ValueSet and CodeSystem searches:
 - 337 empty ValueSet search Bundles
-- 154 empty CodeSystem search Bundles  
+- 154 empty CodeSystem search Bundles
 - 7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)
 
 Total: **498 records** in the deltas file.
@@ -300,6 +314,20 @@ Search: grep -c 'vsacOpModifier' results/deltas/deltas.ndjson → 3
 Records-Impacted: 220
 Tolerance-ID: ucum-display-code-as-display
 Record-ID: 6ae99904-538b-4241-89db-b15eab6e637e
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http://unitsofmeasure.org&code=%5Bin_i%5D' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http://unitsofmeasure.org&code=%5Bin_i%5D' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `display: "[in_i]"` (the UCUM code itself), dev returns `display: "(inch)"` (human-readable name).
 
 #####What differs
 
