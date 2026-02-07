@@ -1,0 +1,63 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "text": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. No versions of this code system are known",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ]
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION_NONE"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+      "name": "system",
+      "valueUri": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory"
+    },
+    {
+      "name": "version",
+      "valueString": "9"
+    },
+    {
+      "name": "code",
+      "valueCode": "M119.5"
+    },
+    {
+      "name": "display",
+      "valueString": "Multi Target NGS Panel Small"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory"
+    }
+  ]
+}

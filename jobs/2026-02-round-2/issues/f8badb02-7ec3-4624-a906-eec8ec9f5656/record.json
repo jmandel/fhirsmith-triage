@@ -1,0 +1,38 @@
+{
+  "id": "f8badb02-7ec3-4624-a906-eec8ec9f5656",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1956,
+    "hash": "e67b6d0669aec6a7301095dc20da2a1f"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1258,
+    "hash": "ba71c28dfc25e9e9bdabc466945bc245"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      },
+      {
+        "type": "value-differs",
+        "param": "x-caused-by-unknown-system"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9\"},{\"name\" : \"code\",\"valueCode\" : \"M119.5\"},{\"name\" : \"version\",\"valueString\" : \"9\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM_VERSION\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-GB, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/83821000000107\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9#M119.5 (\\\"Multi Target NGS Panel Small\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9#M119.5\\\"\\r\\n0 0     : 0ms  : Didn't find CodeSystem \\\"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. No versions of this code system are known\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION_NONE\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. No versions of this code system are known\"},{\"name\":\"system\",\"valueUri\":\"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory\"},{\"name\":\"version\",\"valueString\":\"9\"},{\"name\":\"code\",\"valueCode\":\"M119.5\"},{\"name\":\"display\",\"valueString\":\"Multi Target NGS Panel Small\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory\",\"version\":\"9\",\"code\":\"M119.5\",\"display\":\"Multi Target NGS Panel Small\"}},{\"name\":\"displayLanguage\",\"valueString\":\"en-GB\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"7743c2e6-5b90-4b62-bcd2-6695b993e76b\"},{\"name\":\"system-version\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/83821000000107\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

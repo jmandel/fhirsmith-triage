@@ -2950,6 +2950,64 @@ const tolerances = [
   },
 
   {
+    id: 'unknown-version-no-versions-known',
+    description: 'When validating a code against a CodeSystem version that does not exist, prod says "Valid versions: X" (listing known versions) while dev says "No versions of this code system are known" (even though dev does know other versions). Also, x-caused-by-unknown-system includes version suffix in prod but not dev, and message-id is UNKNOWN_CODESYSTEM_VERSION (prod) vs UNKNOWN_CODESYSTEM_VERSION_NONE (dev). Both agree result=false. Affects 50 records, all England-GenomicTestDirectory with requested versions 7 or 9.',
+    kind: 'temp-tolerance',
+    bugId: 'b36a12b',
+    tags: ['normalize', 'validate-code', 'unknown-version', 'message-text'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      if (prodMsg.includes('Valid versions:') && devMsg.includes('No versions of this code system are known')) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Normalize message parameter to prod's value
+      const prodMsg = getParamValue(prod, 'message');
+
+      function normalizeBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            // Normalize message text
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: prodMsg };
+            }
+            // Normalize x-caused-by-unknown-system to include version suffix (prod's value)
+            if (p.name === 'x-caused-by-unknown-system') {
+              const prodXCaused = getParamValue(prod, 'x-caused-by-unknown-system');
+              if (prodXCaused) {
+                return { ...p, valueCanonical: prodXCaused };
+              }
+            }
+            // Normalize OperationOutcome issues
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => ({
+                    ...iss,
+                    details: iss.details ? { ...iss.details, text: prodMsg } : iss.details,
+                  })),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+
+      return both({ prod, dev }, normalizeBody);
+    },
+  },
+
+  {
     id: 'snomed-implicit-valueset-expand-404',
     description: 'Dev returns 404 for SNOMED CT implicit ValueSet URLs (fhir_vs pattern). These are FHIR-standard implicit ValueSet URLs that prod handles correctly but dev does not recognize.',
     kind: 'temp-tolerance',

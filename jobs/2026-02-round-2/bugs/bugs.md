@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_16 bugs (15 open, 1 closed)_
+_17 bugs (16 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -896,6 +896,39 @@ Tolerance `skip-prod-hgvs-timeout` skips any record where prod returned 500 and 
 286d30a9-e2b8-4967-8c56-265b3f6160a6
 
 This is a data collection artifact — the comparison data is tainted because prod experienced transient external service timeouts during the collection run. These records should be recollected in a future run.
+
+---
+
+### [ ] `80ce6b2` Dev message parameter omits issue texts when validating CodeableConcept with multiple coding errors
+
+Records-Impacted: 10
+Tolerance-ID: message-concat-selective-issues
+Record-ID: c350392e-d535-45e3-83cf-924b05e26a14
+
+#####What differs
+
+When $validate-code is called on a CodeableConcept containing multiple codings that each fail validation, the `message` output parameter should concatenate all error/warning issue texts with "; ". Prod does this correctly. Dev only includes one of the error texts in the message, omitting the others.
+
+For example, with a CodeableConcept containing two codings (GenomicClinicalIndication#R210 and SNOMED#1365861003), both invalid:
+- **Prod message**: "Unknown code '1365861003' in the CodeSystem 'http://snomed.info/sct'...; Unknown Code 'R210' in the CodeSystem 'https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication'..."
+- **Dev message**: "Unknown code '1365861003' in the CodeSystem 'http://snomed.info/sct'..."
+
+Dev omits the second error about the GenomicClinicalIndication code. The structured OperationOutcome `issues` resource is identical between prod and dev (both have all 3 issues). Only the `message` parameter text is incomplete.
+
+#####How widespread
+
+10 delta records, all POST /r4/CodeSystem/$validate-code, all validating the same GenomicClinicalIndication CodeableConcept with SNOMED coding. Identified by searching for records where the only diff is `message` value-differs and prod's message contains more semicolon-separated segments than dev's.
+
+This is a variant of the same underlying bug as tolerance `message-concat-missing-issues` (which handles a different set of 8 records where prod message = all issue texts joined, dev message = first issue text only). The root cause is the same: dev doesn't properly concatenate all relevant issue texts into the message parameter.
+
+#####What the tolerance covers
+
+Tolerance `message-concat-selective-issues` matches validate-code records where:
+- Both sides have identical OperationOutcome issues
+- Messages differ
+- Dev's message is a proper substring of prod's message (prod includes more issue texts)
+
+Canonicalizes dev's message to prod's value. Eliminates 10 records.
 
 ---
 

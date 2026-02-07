@@ -718,5 +718,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "80ce6b20ebc2ee58e53e1c127a453b834b8941e544e859f2ff26bdcf6856eb9c",
+        "human_id": "80ce6b2",
+        "create_time": {
+            "timestamp": 1770505771,
+            "time": "2026-02-07T17:09:31-06:00",
+            "lamport": 18
+        },
+        "edit_time": {
+            "timestamp": 1770505775,
+            "time": "2026-02-07T17:09:35-06:00",
+            "lamport": 93
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev message parameter omits issue texts when validating CodeableConcept with multiple coding errors",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

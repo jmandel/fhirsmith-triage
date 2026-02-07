@@ -1,0 +1,53 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "M119.5"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory"
+    },
+    {
+      "name": "version",
+      "valueString": "9"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9"
+    }
+  ],
+  "resourceType": "Parameters"
+}

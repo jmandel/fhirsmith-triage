@@ -1,0 +1,66 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9"
+    },
+    {
+      "name": "code",
+      "valueCode": "M119.5"
+    },
+    {
+      "name": "version",
+      "valueString": "9"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory' version '9' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en-GB, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/83821000000107\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9#M119.5 (\"Multi Target NGS Panel Small\")]\"\r\n0 0     : 0ms  : Check \"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9#M119.5\"\r\n0 0     : 0ms  : Didn't find CodeSystem \"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory|9\"\r\n"
+    }
+  ]
+}
