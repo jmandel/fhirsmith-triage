@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_14 bugs (14 open, 0 closed)_
+_15 bugs (15 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -553,6 +553,39 @@ Search: `grep '"dev-crash-on-error"' results/deltas/deltas.ndjson | wc -l` → 1
 #####What the tolerance covers
 
 Tolerance `expand-dev-crash-on-error` skips all records matching POST /r4/ValueSet/$expand with prod.status=422 and dev.status=500. Eliminates all 186 records.
+
+---
+
+### [ ] `241f1d8` Draft CodeSystem message missing provenance suffix in dev
+
+Records-Impacted: 4
+Tolerance-ID: draft-codesystem-message-provenance-suffix
+Record-ID: dcdd2b94-db92-4e95-973c-5ced19783bef
+
+#####What differs
+
+When validating codes against draft CodeSystems, both prod and dev return an informational OperationOutcome issue with code "status-check" and message ID "MSG_DRAFT". The details.text differs:
+
+- **Prod**: `Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1 from hl7.fhir.r4.core#4.0.1`
+- **Dev**: `Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1`
+
+Dev omits the ` from <package>#<version>` provenance suffix that identifies which FHIR package the CodeSystem was loaded from.
+
+#####How widespread
+
+4 records in the comparison dataset, all POST /r4/CodeSystem/$validate-code against draft CodeSystems from hl7.fhir.r4.core#4.0.1:
+- http://hl7.org/fhir/event-status
+- http://hl7.org/fhir/narrative-status
+- http://hl7.org/fhir/CodeSystem/medicationrequest-status
+- http://hl7.org/fhir/CodeSystem/medicationrequest-intent
+
+Found via: `grep -c 'from hl7.fhir' results/deltas/deltas.ndjson` (4 matches out of 910 deltas).
+
+All 4 records agree on result (true), system, code, version, and display. The only remaining difference after normalization is the details.text provenance suffix.
+
+#####What the tolerance covers
+
+Tolerance ID: `draft-codesystem-message-provenance-suffix`. Matches validate-code Parameters responses where OperationOutcome issue text in prod ends with ` from <package>#<version>` and dev has the same text without that suffix. Normalizes both sides to the prod text (which includes provenance). Eliminates 4 records.
 
 ---
 

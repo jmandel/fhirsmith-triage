@@ -254,7 +254,8 @@ async function main() {
     // Track stats
     summary.categories[category] = (summary.categories[category] || 0) + 1;
     if (category === 'OK') {
-      const bucket = comparison.normalizedBy || 'strict';
+      // Use original match field for strict; key-sorting counts as equiv-autofix
+      const bucket = record.match === true ? 'strict' : (comparison.normalizedBy || 'equiv-autofix');
       summary.okBreakdown[bucket] = (summary.okBreakdown[bucket] || 0) + 1;
     }
     const op = comparison.op || 'unknown';

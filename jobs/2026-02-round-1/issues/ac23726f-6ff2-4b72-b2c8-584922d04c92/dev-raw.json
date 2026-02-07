@@ -1,0 +1,70 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/ndc"
+    },
+    {
+      "name": "code",
+      "valueCode": "0777-3105-02"
+    },
+    {
+      "name": "version",
+      "valueString": "2021-11-01"
+    },
+    {
+      "name": "display",
+      "valueString": "Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)"
+    },
+    {
+      "name": "inactive",
+      "valueBoolean": true
+    },
+    {
+      "name": "message",
+      "valueString": "The concept '0777-3105-02' has a status of null and its use should be reviewed"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "warning",
+            "code": "business-rule",
+            "details": {
+              "text": "The concept '0777-3105-02' has a status of null and its use should be reviewed",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "code-comment"
+                }
+              ]
+            },
+            "location": [
+              "Coding"
+            ],
+            "expression": [
+              "Coding"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "INACTIVE_CONCEPT_FOUND"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Validate \"[undefined#0777-3105-02 (\"undefined\")]\"\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Check \"http://hl7.org/fhir/sid/ndc#0777-3105-02\"\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: CodeSystem found: http://hl7.org/fhir/sid/ndc|2021-11-01 for http://hl7.org/fhir/sid/ndc|2021-11-01\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: check code in () at Coding\n503ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Code \"0777-3105-02\" found in http://hl7.org/fhir/sid/ndc|2021-11-01"
+    }
+  ]
+}

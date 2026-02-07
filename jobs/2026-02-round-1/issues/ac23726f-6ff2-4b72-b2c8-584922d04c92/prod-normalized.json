@@ -1,0 +1,21 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "0777-3105-02"
+    },
+    {
+      "name": "display",
+      "valueString": "Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/ndc"
+    }
+  ],
+  "resourceType": "Parameters"
+}

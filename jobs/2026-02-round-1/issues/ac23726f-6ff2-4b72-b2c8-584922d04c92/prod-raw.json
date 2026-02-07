@@ -1,0 +1,25 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/ndc"
+    },
+    {
+      "name": "code",
+      "valueCode": "0777-3105-02"
+    },
+    {
+      "name": "display",
+      "valueString": "Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)"
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://hl7.org/fhir/sid/ndc#0777-3105-02 (\"\")]\"\r\n0 0     : 0ms  : Check \"http://hl7.org/fhir/sid/ndc#0777-3105-02\"\r\n0 0     : 0ms  : Using CodeSystem \"http://hl7.org/fhir/sid/ndc|\" (content = complete)\r\n"
+    }
+  ]
+}

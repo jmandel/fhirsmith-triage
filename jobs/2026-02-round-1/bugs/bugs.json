@@ -614,5 +614,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "241f1d8f7feff6091487d9f25633b60f6b1e5a9069938b5f1e4e5bed31174bde",
+        "human_id": "241f1d8",
+        "create_time": {
+            "timestamp": 1770486188,
+            "time": "2026-02-07T11:43:08-06:00",
+            "lamport": 16
+        },
+        "edit_time": {
+            "timestamp": 1770486193,
+            "time": "2026-02-07T11:43:13-06:00",
+            "lamport": 55
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Draft CodeSystem message missing provenance suffix in dev",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

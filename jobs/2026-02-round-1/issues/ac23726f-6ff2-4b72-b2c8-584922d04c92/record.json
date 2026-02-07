@@ -1,0 +1,41 @@
+{
+  "id": "ac23726f-6ff2-4b72-b2c8-584922d04c92",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 904,
+    "hash": "6d57272ab6f86db7fc21d7b7f53718fc"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1563,
+    "hash": "7e0cd4a9e26106f3fa7d2603d540b064"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "extra-in-dev",
+        "param": "inactive"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "issues"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "message"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "version"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://hl7.org/fhir/sid/ndc\"},{\"name\" : \"code\",\"valueCode\" : \"0777-3105-02\"},{\"name\" : \"display\",\"valueString\" : \"Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)\"},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://hl7.org/fhir/sid/ndc#0777-3105-02 (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://hl7.org/fhir/sid/ndc#0777-3105-02\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://hl7.org/fhir/sid/ndc|\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://hl7.org/fhir/sid/ndc\"},{\"name\":\"code\",\"valueCode\":\"0777-3105-02\"},{\"name\":\"version\",\"valueString\":\"2021-11-01\"},{\"name\":\"display\",\"valueString\":\"Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)\"},{\"name\":\"inactive\",\"valueBoolean\":true},{\"name\":\"message\",\"valueString\":\"The concept '0777-3105-02' has a status of null and its use should be reviewed\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"warning\",\"code\":\"business-rule\",\"details\":{\"text\":\"The concept '0777-3105-02' has a status of null and its use should be reviewed\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"code-comment\"}]},\"location\":[\"Coding\"],\"expression\":[\"Coding\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"INACTIVE_CONCEPT_FOUND\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Validate \\\"[undefined#0777-3105-02 (\\\"undefined\\\")]\\\"\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Check \\\"http://hl7.org/fhir/sid/ndc#0777-3105-02\\\"\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: CodeSystem found: http://hl7.org/fhir/sid/ndc|2021-11-01 for http://hl7.org/fhir/sid/ndc|2021-11-01\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: check code in () at Coding\\n503ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Code \\\"0777-3105-02\\\" found in http://hl7.org/fhir/sid/ndc|2021-11-01\"}]}"
+}

@@ -175,9 +175,8 @@ def markdown_to_html(text):
 
 
 def read_job_stats(job_dir):
-    """Read pipeline stats from a job's summary.json and delta line count."""
+    """Read pipeline stats from a job's summary.json."""
     summary_path = os.path.join(job_dir, "results", "summary.json")
-    deltas_path = os.path.join(job_dir, "results", "deltas", "deltas.ndjson")
 
     if not os.path.exists(summary_path):
         return None
@@ -185,18 +184,17 @@ def read_job_stats(job_dir):
     with open(summary_path) as f:
         summary = json.load(f)
 
-    deltas_count = 0
-    if os.path.exists(deltas_path):
-        with open(deltas_path) as f:
-            deltas_count = sum(1 for line in f if line.strip())
-
+    ok = summary.get("okBreakdown", {})
+    skip_by_kind = summary.get("skippedByKind", {})
     categories = summary.get("categories", {})
+    deltas = sum(v for k, v in categories.items() if k != "OK")
+
     return {
-        "totalRecords": summary.get("totalRecords", 0),
-        "strictMatch": categories.get("OK", 0),
-        "skipped": summary.get("skipped", 0),
-        "deltasRemaining": deltas_count,
-        "categories": {k: v for k, v in categories.items() if k != "OK"},
+        "total": summary.get("totalRecords", 0),
+        "matchedPerfectly": ok.get("strict", 0),
+        "matchedEquiv": ok.get("equiv-autofix", 0) + skip_by_kind.get("equiv-autofix", 0),
+        "knownIssues": ok.get("temp-tolerance", 0) + skip_by_kind.get("temp-tolerance", 0),
+        "untriaged": deltas,
     }
 
 
@@ -710,6 +708,55 @@ h1 {{
   display: none;
 }}
 
+.pipeline-bar {{
+  display: flex;
+  gap: 0;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  font-size: 12px;
+  line-height: 1.3;
+}}
+
+.pipeline-bar:empty {{
+  display: none;
+}}
+
+.pipeline-seg {{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  min-width: 0;
+  text-align: center;
+}}
+
+.pipeline-seg .seg-value {{
+  font-weight: 700;
+  font-size: 16px;
+  font-family: var(--font-mono);
+}}
+
+.pipeline-seg .seg-label {{
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 2px;
+}}
+
+.seg-perfect {{ background: #dcfce7; color: #166534; }}
+.seg-equiv {{ background: #dbeafe; color: #1e40af; }}
+.seg-known {{ background: #fef3c7; color: #92400e; }}
+.seg-untriaged {{ background: #fee2e2; color: #991b1b; }}
+
+@media (prefers-color-scheme: dark) {{
+  .seg-perfect {{ background: #052e16; color: #86efac; }}
+  .seg-equiv {{ background: #172554; color: #93c5fd; }}
+  .seg-known {{ background: #3b2f0b; color: #fcd34d; }}
+  .seg-untriaged {{ background: #450a0a; color: #fca5a5; }}
+}}
+
 @media (max-width: 640px) {{
   .container {{ padding: 16px 12px; }}
   .stats-bar {{ padding: 12px; gap: 6px; }}
@@ -719,6 +766,8 @@ h1 {{
   .bug-body {{ padding: 0 12px 12px 12px; }}
   .bug-header {{ padding: 10px 12px; }}
   .controls {{ margin-left: 0; }}
+  .pipeline-bar {{ font-size: 10px; }}
+  .pipeline-seg .seg-value {{ font-size: 13px; }}
 }}
 </style>
 </head>
@@ -727,6 +776,7 @@ h1 {{
   <h1>FHIRsmith tx-compare Bugs</h1>
   <p class="subtitle">Generated from git-bug &middot; <span id="gen-time"></span></p>
 
+  <div class="pipeline-bar" id="pipeline-bar"></div>
   <div class="stats-bar" id="stats-bar"></div>
 
   <div class="filter-bar">
@@ -754,6 +804,30 @@ const BUGS = {bugs_json};
 const STATS = {stats};
 
 document.getElementById("gen-time").textContent = new Date().toLocaleString();
+
+// Pipeline overview bar
+(function() {{
+  const job = STATS.job;
+  if (!job) return;
+  const bar = document.getElementById("pipeline-bar");
+  const segs = [
+    {{ value: job.matchedPerfectly, label: "matched perfectly", cls: "seg-perfect" }},
+    {{ value: job.matchedEquiv, label: "matched after judgment calls", cls: "seg-equiv" }},
+    {{ value: job.knownIssues, label: "known issues", cls: "seg-known" }},
+    {{ value: job.untriaged, label: "untriaged", cls: "seg-untriaged" }},
+  ];
+  const total = job.total;
+  let html = "";
+  for (const s of segs) {{
+    if (s.value === 0) continue;
+    const pct = (s.value / total * 100);
+    html += `<div class="pipeline-seg ${{s.cls}}" style="flex:${{s.value}}">
+      <span class="seg-value">${{s.value.toLocaleString()}}</span>
+      <span class="seg-label">${{s.label}}</span>
+    </div>`;
+  }}
+  bar.innerHTML = html;
+}})();
 
 // Stats bar
 (function() {{
@@ -954,7 +1028,20 @@ def main():
 
     os.chdir(repo_root)
 
-    out_path = sys.argv[1] if len(sys.argv) > 1 else None
+    # Parse args
+    out_path = None
+    job_dir = None
+    args = sys.argv[1:]
+    i = 0
+    while i < len(args):
+        if args[i] == "--job" and i + 1 < len(args):
+            job_dir = args[i + 1]
+            i += 2
+        elif not args[i].startswith("-"):
+            out_path = args[i]
+            i += 1
+        else:
+            i += 1
 
     if not out_path:
         out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
@@ -967,8 +1054,12 @@ def main():
     bugs = run_git_bug()
     print(f"Found {len(bugs)} bugs", file=sys.stderr)
 
+    job_stats = None
+    if job_dir:
+        job_stats = read_job_stats(job_dir)
+
     bug_data = build_bug_data(bugs)
-    html = generate_html(bug_data)
+    html = generate_html(bug_data, job_stats)
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)

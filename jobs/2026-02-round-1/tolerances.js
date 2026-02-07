@@ -615,6 +615,34 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'ndc-validate-code-extra-inactive-params',
+    description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
+    kind: 'temp-tolerance',
+    bugId: '7258b41',
+    tags: ['normalize', 'ndc', 'validate-code', 'extra-params'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'http://hl7.org/fhir/sid/ndc') return null;
+      // Check if dev has inactive param that prod lacks
+      const devInactive = getParamValue(dev, 'inactive');
+      const prodInactive = getParamValue(prod, 'inactive');
+      if (devInactive !== undefined && prodInactive === undefined) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Strip the extra dev-only params: inactive, version, message, issues
+      // Only strip from dev when prod lacks them, to avoid hiding real diffs
+      const prodParamNames = new Set((prod?.parameter || []).map(p => p.name));
+      const extraNames = ['inactive', 'version', 'message', 'issues'].filter(n => !prodParamNames.has(n));
+      return {
+        prod,
+        dev: stripParams(dev, ...extraNames),
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
