@@ -188,16 +188,61 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770499685,
-            "time": "2026-02-07T15:28:05-06:00",
-            "lamport": 27
+            "timestamp": 1770499952,
+            "time": "2026-02-07T15:32:32-06:00",
+            "lamport": 29
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
         "title": "Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "6edc96c3f55a15b11b80fe9e2eee95f5c6112ab454a4407b39f407e05eff8a47",
+        "human_id": "6edc96c",
+        "create_time": {
+            "timestamp": 1770500014,
+            "time": "2026-02-07T15:33:34-06:00",
+            "lamport": 7
+        },
+        "edit_time": {
+            "timestamp": 1770500018,
+            "time": "2026-02-07T15:33:38-06:00",
+            "lamport": 32
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

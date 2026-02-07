@@ -1,0 +1,3 @@
+expand-metadata-identifier-timestamp: normalize
+expand-used-codesystem-version-skew: normalize
+expand-dev-extra-contact-metadata: normalize

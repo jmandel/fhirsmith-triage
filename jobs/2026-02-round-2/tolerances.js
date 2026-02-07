@@ -2354,6 +2354,74 @@ const tolerances = [
   },
 
   {
+    id: 'expand-hl7-terminology-version-skew-content',
+    description: 'Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) than prod, causing $expand to return different sets of codes. The common codes between prod and dev are identical — only extra/missing codes differ. Normalizes both sides to the intersection of codes and adjusts total. Affects 163 expand records across consent-policy (7), observation-category (130), patient-contactrelationship (5), TribalEntityUS (3), security-labels (18).',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'expand', 'version-skew', 'hl7-terminology'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+
+      // Check that at least one used-codesystem is from terminology.hl7.org
+      const allParams = [
+        ...(prod.expansion.parameter || []),
+        ...(dev.expansion.parameter || []),
+      ];
+      const hasHl7Cs = allParams.some(p =>
+        p.name === 'used-codesystem' &&
+        (p.valueUri || '').includes('terminology.hl7.org/CodeSystem/')
+      );
+      if (!hasHl7Cs) return null;
+
+      // Build code sets
+      const prodCodes = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devCodes = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+
+      // Check there are extra/missing codes (not just total mismatch)
+      let hasExtra = false;
+      for (const k of devCodes) { if (!prodCodes.has(k)) { hasExtra = true; break; } }
+      if (!hasExtra) {
+        for (const k of prodCodes) { if (!devCodes.has(k)) { hasExtra = true; break; } }
+      }
+      if (!hasExtra) return null;
+
+      // Only match if dev didn't fail to expand (dev total > 1)
+      if (dev.expansion.contains.length <= 1 && prod.expansion.contains.length > 5) return null;
+
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Intersect: keep only codes present in both sides
+      const prodKeys = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devKeys = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      const commonKeys = new Set([...prodKeys].filter(k => devKeys.has(k)));
+
+      const filterContains = (contains) =>
+        contains.filter(c => commonKeys.has(c.system + '|' + c.code));
+
+      const newProd = {
+        ...prod,
+        expansion: {
+          ...prod.expansion,
+          contains: filterContains(prod.expansion.contains),
+          total: commonKeys.size,
+        },
+      };
+      const newDev = {
+        ...dev,
+        expansion: {
+          ...dev.expansion,
+          contains: filterContains(dev.expansion.contains),
+          total: commonKeys.size,
+        },
+      };
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

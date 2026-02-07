@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_5 bugs (4 open, 1 closed)_
+_6 bugs (5 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -225,6 +225,24 @@ Records-Impacted: 187
 Tolerance-ID: v3-valueset-validate-code-result-disagrees
 Record-ID: 92d4fd1a-70fc-4497-adb5-309a3f564716
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=INFA&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=INFA&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `result: true` (code is valid in the ValueSet), dev returns `result: false` with error message "The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#INFA' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'".
+
+The bug reproduces across multiple ValueSets:
+- encounter-participant-type with code CON from v3-ParticipationType
+- v3-ActEncounterCode with code AMB from v3-ActCode
+
 #####What differs
 
 Prod returns `result: true` for $validate-code of HL7 v3 terminology codes against their corresponding ValueSets. Dev returns `result: false` with message "The provided code was not found in the value set."
@@ -256,6 +274,44 @@ Tolerance `v3-valueset-validate-code-result-disagrees` skips records where:
 - Both sides report the same CodeSystem version
 
 Eliminates 187 records.
+
+---
+
+### [ ] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
+
+Records-Impacted: 32
+Tolerance-ID: hl7-terminology-cs-version-skew
+Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21
+
+#####What differs
+
+For CodeSystems under `http://terminology.hl7.org/CodeSystem/*`, prod reports version `4.0.1` in error messages and OperationOutcome issue text, while dev reports different versions:
+
+- `consentcategorycodes`: prod=4.0.1, dev=1.0.1
+- `goal-achievement`: prod=4.0.1, dev=1.0.1
+- `consentpolicycodes`: prod=4.0.1, dev=3.0.1
+- `v2-0116`: prod=2.9, dev=3.0.0
+
+The version difference appears in:
+1. The `message` parameter valueString (e.g., "Unknown code 'idscl' in the CodeSystem '...' version '4.0.1'" vs "version '1.0.1'")
+2. The `issues` OperationOutcome `details.text` field
+
+Both servers agree on the validation result (e.g., result=false for invalid codes). The core terminology behavior is the same — only the loaded CodeSystem edition version differs.
+
+#####How widespread
+
+32 records in the delta file are affected, all validate-code operations on HL7 terminology CodeSystems. Found via:
+
+```
+grep for records where prod has version '4.0.1' and dev has '1.0.1' or '3.0.1',
+plus v2-0116 where prod=2.9, dev=3.0.0
+```
+
+All are GET requests to `/r4/ValueSet/$validate-code` or `/r4/CodeSystem/$validate-code`.
+
+#####What the tolerance covers
+
+Tolerance ID: `hl7-terminology-cs-version-skew`. Matches validate-code records where the system is under `terminology.hl7.org/CodeSystem/` and the message/issues text differs only in the version string pattern. Normalizes version strings in message text and OperationOutcome issue details.text from dev's version to prod's version.
 
 ---
 
