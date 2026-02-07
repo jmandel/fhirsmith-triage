@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_30 bugs (27 open, 3 closed)_
+_31 bugs (28 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1657,6 +1657,15 @@ Records-Impacted: 12
 Tolerance-ID: validate-code-extra-filter-miss-message
 Record-ID: 7c3bf322-7db7-42f5-82d6-dd1ef9bd9588
 
+#####Repro
+
+**Status: Inconclusive** -- the IPS ValueSets (e.g. `allergies-intolerances-uv-ips|2.0.0`) used in all 12 affected records are not loaded on the public tx.fhir.org / tx-dev.fhir.org servers, so the original requests cannot be replayed. The request bodies were not stored in the comparison records.
+
+Attempted:
+1. Reconstructed POST to `/r4/ValueSet/$validate-code` for SNOMED 716186003 against `http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips` (with and without version) -- both servers return "value Set could not be found"
+2. Checked 33 related delta records -- only IPS ValueSet records (not publicly available) match the exact bug pattern (result=true on both, dev extra message, prod no message)
+3. Non-IPS records (medication-form-codes, us-core-encounter-type) show a different pattern (result=false on both sides, different message content)
+
 #####What differs
 
 On $validate-code requests against ValueSets with multiple include filters (e.g. IPS allergies-intolerances, medical-devices), when the code is valid (result=true, found in at least one filter), dev returns an extra `message` parameter containing "Code X is not in the specified filter" for each filter the code did NOT match. Prod omits the `message` parameter entirely when the overall result is true.
@@ -1682,6 +1691,47 @@ The remaining 11 are different patterns (multiple diffs, result=false, or differ
 Tolerance ID: validate-code-extra-filter-miss-message
 Matches: validate-code where result=true on both sides, dev has a `message` parameter that prod lacks, and the dev message matches the pattern "is not in the specified filter".
 Normalizes: strips the extra `message` parameter from dev.
+
+---
+
+### [ ] `19283df` POST -code: dev returns result=false due to undefined system in request body extraction
+
+Records-Impacted: 89
+Tolerance-ID: validate-code-undefined-system-result-disagrees
+Record-ID: a27be88a-8e1e-4ce8-8167-af0515f294d3
+
+#####What differs
+
+Dev returns `result: false` on POST $validate-code requests where prod returns `result: true`. Dev's diagnostics reveal the system URI is "undefined" during validation:
+
+- Validate trace shows: `Validate "[undefined#CODE (...)]"` instead of `[http://snomed.info/sct#CODE (...)]`
+- ValueSet include filters show as empty `()` instead of actual SNOMED/LOINC filter expressions (e.g. `(http://snomed.info/sct)(concept<763158003)`)
+- CodeSystem/$validate-code returns "Unknown code 'undefined' in the CodeSystem ..." for 14 LOINC records
+
+Both servers use the same SNOMED/LOINC editions (version strings match). Prod correctly validates the codes; dev fails to extract the system parameter from the POST request body and receives it as JavaScript `undefined`.
+
+#####How widespread
+
+89 result-disagrees records, ALL with prodResult=true and devResult=false:
+
+- 74 POST /r4/ValueSet/$validate-code (42 IPS lab results, 15 @all, 9 VSAC, 7 CTS medication, 6 IPS procedures, 3 IPS medication, 2 CTS medication v2)
+- 15 POST /r4/CodeSystem/$validate-code (14 LOINC property components, 1 SNOMED with display validation)
+
+Code systems affected: LOINC (56), SNOMED (24), RxNorm (9).
+
+Search used: `grep 'result-disagrees' results/deltas/deltas.ndjson > /tmp/result-disagrees.ndjson` then analyzed by URL, system, and ValueSet.
+
+All 89 records show "undefined" in dev diagnostics trace.
+
+Related to bug 4cdcd85 which covers the crash (500) variant of the same root cause — dev fails to extract system/code from POST body. These 89 records are the non-crash variant where dev returns 200 but with wrong result.
+
+#####What the tolerance covers
+
+Tolerance `validate-code-undefined-system-result-disagrees` matches POST $validate-code records where prod result=true, dev result=false, and dev diagnostics contain the literal string "undefined". This covers all 89 records.
+
+#####Representative record
+
+`a27be88a-8e1e-4ce8-8167-af0515f294d3` — POST /r4/ValueSet/$validate-code, SNOMED 48546005 in IPS medication ValueSet. Prod: result=true, display="Product containing diazepam (medicinal product)". Dev: result=false, "No valid coding was found for the value set".
 
 ---
 

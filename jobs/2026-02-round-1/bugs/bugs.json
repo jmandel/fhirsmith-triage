@@ -1310,16 +1310,61 @@
             "lamport": 31
         },
         "edit_time": {
-            "timestamp": 1770492192,
-            "time": "2026-02-07T13:23:12-06:00",
-            "lamport": 156
+            "timestamp": 1770492501,
+            "time": "2026-02-07T13:28:21-06:00",
+            "lamport": 160
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "19283df431e5663fefc604a6db0e774df48c00048baead85745afcedfc0bde7e",
+        "human_id": "19283df",
+        "create_time": {
+            "timestamp": 1770492549,
+            "time": "2026-02-07T13:29:09-06:00",
+            "lamport": 32
+        },
+        "edit_time": {
+            "timestamp": 1770492553,
+            "time": "2026-02-07T13:29:13-06:00",
+            "lamport": 163
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "POST -code: dev returns result=false due to undefined system in request body extraction",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

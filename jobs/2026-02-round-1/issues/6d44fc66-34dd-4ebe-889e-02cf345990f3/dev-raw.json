@@ -1,0 +1,91 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "Code 385049006 is not in the specified filter; No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "385049006",
+            "display": "Capsule"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://snomed.info/sct#385049006 ('Capsule')' was not found in the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              ""
+            ],
+            "expression": [
+              ""
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: Analysing http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1 for validation purposes\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: Prepare include[0]: \"()\"\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: Validate \"[undefined#385049006 (\"Capsule\")]\"\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: Check \"http://snomed.info/sct#385049006\"\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: check code in () at CodeableConcept.coding[0]\n0ms http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1: Filter undefined: Code \"385049006\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201: Code 385049006 is not in the specified filter"
+    }
+  ]
+}

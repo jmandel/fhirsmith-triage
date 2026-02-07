@@ -1219,6 +1219,40 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-filter-miss-message-prefix',
+    description: 'Dev $validate-code prepends "Code X is not in the specified filter; " (once per include filter) to the message parameter when result=false. Prod returns only the standard error message. Same root cause as validate-code-extra-filter-miss-message (bug eaeccdd). Affects 32 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '40c3ecc',
+    tags: ['normalize', 'validate-code', 'message-text', 'filter-miss'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      if (prodMsg === devMsg) return null;
+      if (!devMsg.includes('is not in the specified filter')) return null;
+      if (!devMsg.endsWith(prodMsg)) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodMsg = getParamValue(prod, 'message');
+      function setMessage(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        };
+      }
+      return { prod, dev: setMessage(dev) };
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',
