@@ -1,0 +1,58 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://www.ama-assn.org/go/cpt"
+    },
+    {
+      "name": "code",
+      "valueCode": "19304"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code '19304' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code '19304' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://www.ama-assn.org/go/cpt/vs|2023: Validate \"[undefined#19304 (\"undefined\")]\"\n0ms http://www.ama-assn.org/go/cpt/vs|2023: Check \"http://www.ama-assn.org/go/cpt#19304\"\n1ms http://www.ama-assn.org/go/cpt/vs|2023: CodeSystem found: http://www.ama-assn.org/go/cpt|2023 for http://www.ama-assn.org/go/cpt|2023\n1ms http://www.ama-assn.org/go/cpt/vs|2023: check code in () at Coding\n1ms http://www.ama-assn.org/go/cpt/vs|2023: Code \"19304\" not found in http://www.ama-assn.org/go/cpt|2023: undefined"
+    }
+  ]
+}

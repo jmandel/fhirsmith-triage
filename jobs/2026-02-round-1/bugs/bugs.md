@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_39 bugs (36 open, 3 closed)_
+_40 bugs (37 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2061,6 +2061,26 @@ Records-Impacted: 3
 Tolerance-ID: multi-coding-cc-system-code-version-disagree
 Record-ID: 65fabdc4-930b-49e8-9ff1-60c176cbbfee
 
+#####Repro
+
+The custom CodeSystem `http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs` is no longer loaded on either server, so the original request conditions cannot be recreated. Both servers now return `result=false` with "A definition for CodeSystem could not be found".
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs","code":"physical.evaluation.alertnessAndOrientation.disorientatedtime","display":"Patient is not alert & oriented to time"},{"system":"http://snomed.info/sct","code":"19657006","display":"Disorientated in time (finding)"}]}}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs","code":"physical.evaluation.alertnessAndOrientation.disorientatedtime","display":"Patient is not alert & oriented to time"},{"system":"http://snomed.info/sct","code":"19657006","display":"Disorientated in time (finding)"}]}}]}'
+```
+
+Both servers now return `result=false` with unknown CodeSystem error. The bug cannot be reproduced live because the custom CodeSystem package is no longer loaded.
+
 #####What differs
 
 When POST /r4/CodeSystem/$validate-code is called with a CodeableConcept containing two codings (one from a custom CodeSystem `http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs` and one from SNOMED CT), both servers return result=true and return identical codeableConcept parameters. However, the scalar output parameters (system, code, version) disagree on which coding to report:
@@ -2148,6 +2168,24 @@ Records-Impacted: 45
 Tolerance-ID: cpt-expand-empty-results
 Record-ID: d03ce6c0-d498-4c96-9165-261fdecc484c
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt","concept":[{"code":"83036"}]}]}}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt","concept":[{"code":"83036"}]}]}}'
+```
+
+Prod returns `total: 1` with CPT code 83036 ("Hemoglobin; glycosylated (A1C)") in `expansion.contains`. Dev returns `total: 0` with no `contains` array. Both report `used-codesystem: http://www.ama-assn.org/go/cpt|2023`.
+
 #####What differs
 
 Dev returns `total: 0` with no `expansion.contains` array for $expand requests involving CPT codes (`http://www.ama-assn.org/go/cpt|2023`). Prod returns `total: 1` (or more) with the expected CPT codes in `expansion.contains`.
@@ -2173,6 +2211,42 @@ Same root cause as bug f559b53 (CPT validate-code returns "Unknown code"). Dev's
 #####What the tolerance covers
 
 Tolerance `cpt-expand-empty-results` matches POST /r4/ValueSet/$expand where dev returns total=0 and prod returns total>0, and the expansion uses CPT as a code system. Skips these records entirely since comparison is meaningless when dev has no CPT data.
+
+---
+
+### [ ] `8f148da` validate-code: dev omits message parameter when result=true
+
+Records-Impacted: 150
+Tolerance-ID: validate-code-missing-message-on-true
+Record-ID: e934228b-f819-4119-bdd2-dcf4a72988bc
+
+#####What differs
+
+Dev omits the `message` output parameter on $validate-code responses when `result=true`. Prod includes it. The FHIR spec explicitly states that when result is true, the message parameter "carries hints and warnings."
+
+In this dataset, all 150 affected records have `result=true` and prod returns a `message` containing warnings like "Unknown Code '441' in the CodeSystem 'http://hl7.org/fhir/sid/icd-9-cm' version '2015' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment."
+
+When `result=false`, dev correctly includes the `message` parameter.
+
+#####How widespread
+
+150 records in comparison.ndjson (38 in current deltas after other tolerances):
+- 111 POST /r4/ValueSet/$validate-code
+- 39 POST /r4/CodeSystem/$validate-code
+
+All 150 have `result=true` in both prod and dev. The pattern is: validate-code + result=true + prod has message + dev omits message.
+
+Search: `grep 'missing-in-dev.*message' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 48 lines (38 with actual message param diff after filtering false positives from grep matching "message" elsewhere in the line).
+
+Verified in full comparison.ndjson: all 150 records where prod has a message param and dev doesn't have dev result=true (0 with result=false, 0 with no result).
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-missing-message-on-true. Matches validate-code Parameters responses where result=true, prod has a message parameter, and dev does not. Normalizes by stripping the message parameter from prod (since dev doesn't have it and we can't fabricate it). This is a lossy normalization — it hides the missing warning, but the warning content is already present in the issues OperationOutcome.
+
+#####Representative record
+
+e934228b-f819-4119-bdd2-dcf4a72988bc — POST /r4/CodeSystem/$validate-code for ICD-9-CM code 441.
 
 ---
 

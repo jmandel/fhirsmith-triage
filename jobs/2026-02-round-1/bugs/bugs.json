@@ -1625,13 +1625,14 @@
             "lamport": 38
         },
         "edit_time": {
-            "timestamp": 1770494370,
-            "time": "2026-02-07T13:59:30-06:00",
-            "lamport": 193
+            "timestamp": 1770495189,
+            "time": "2026-02-07T14:13:09-06:00",
+            "lamport": 203
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "CodeSystem/-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params",
@@ -1714,16 +1715,61 @@
             "lamport": 40
         },
         "edit_time": {
-            "timestamp": 1770495049,
-            "time": "2026-02-07T14:10:49-06:00",
-            "lamport": 201
+            "timestamp": 1770495285,
+            "time": "2026-02-07T14:14:45-06:00",
+            "lamport": 205
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "8f148daad88d6588d65317dd70dfcbd5580b648a16082726781b482e3508d896",
+        "human_id": "8f148da",
+        "create_time": {
+            "timestamp": 1770495361,
+            "time": "2026-02-07T14:16:01-06:00",
+            "lamport": 41
+        },
+        "edit_time": {
+            "timestamp": 1770495366,
+            "time": "2026-02-07T14:16:06-06:00",
+            "lamport": 208
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes",
+        "title": "validate-code: dev omits message parameter when result=true",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

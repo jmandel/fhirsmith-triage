@@ -1673,6 +1673,63 @@ const tolerances = [
   },
 
   {
+    id: 'cpt-validate-code-missing-info-issue',
+    description: 'CPT $validate-code result=false: dev omits informational "Code X not found in CPT" OperationOutcome issue that prod includes. For ValueSet validate-code, prod also prefixes message with this text. Both agree on result=false and the primary error issue. Normalizes by stripping the extra informational issue from prod and removing the message prefix. Affects 10 records (8 CodeSystem, 2 ValueSet).',
+    kind: 'temp-tolerance',
+    bugId: '9d6a37e',
+    tags: ['normalize', 'validate-code', 'cpt', 'missing-info-issue'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'http://www.ama-assn.org/go/cpt') return null;
+      const result = getParamValue(prod, 'result');
+      if (result !== false) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      if (prodIssues.issue.length <= devIssues.issue.length) return null;
+      // Check for extra informational "not found in CPT" issue in prod
+      const hasExtraInfo = prodIssues.issue.some(iss =>
+        iss.severity === 'information' &&
+        iss.details?.text?.match(/^Code '.+' not found in CPT$/)
+      );
+      if (!hasExtraInfo) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      function stripExtraInfoIssue(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.filter(iss =>
+                    !(iss.severity === 'information' &&
+                      iss.details?.text?.match(/^Code '.+' not found in CPT$/))
+                  ),
+                },
+              };
+            }
+            if (p.name === 'message' && p.valueString) {
+              // Strip "Code 'X' not found in CPT; " prefix from message
+              const stripped = p.valueString.replace(/^Code '[^']+' not found in CPT; /, '');
+              if (stripped !== p.valueString) {
+                return { ...p, valueString: stripped };
+              }
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod: stripExtraInfoIssue(prod), dev };
+    },
+  },
+
+  {
     id: 'read-resource-text-div-diff',
     description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
     kind: 'temp-tolerance',
