@@ -2689,6 +2689,24 @@ Records-Impacted: 1
 Tolerance-ID: ucum-error-message-format
 Record-ID: 392830d5-650f-42a4-9149-a8f7a1246016
 
+##### Repro
+
+```bash
+# Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$batch-validate-code' \
+  -H 'Accept: application/fhir+json' \
+  -H 'Content-Type: application/fhir+json' \
+  -d '{"resourceType":"Parameters","parameter":[{"name":"validation","resource":{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://unitsofmeasure.org"},{"name":"code","valueCode":"Torr"}]}}]}'
+
+# Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$batch-validate-code' \
+  -H 'Accept: application/fhir+json' \
+  -H 'Content-Type: application/fhir+json' \
+  -d '{"resourceType":"Parameters","parameter":[{"name":"validation","resource":{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://unitsofmeasure.org"},{"name":"code","valueCode":"Torr"}]}}]}'
+```
+
+Prod returns `Error processing Unit: 'Torr': The unit "Torr" is unknown at character 1`, dev returns `Error processing unit 'Torr': The unit 'Torr' is unknown at character 1`.
+
 #####What differs
 
 UCUM $validate-code (via batch-validate-code) for unknown code "Torr": the informational OperationOutcome issue text for UCUM parsing errors has different formatting between prod and dev.

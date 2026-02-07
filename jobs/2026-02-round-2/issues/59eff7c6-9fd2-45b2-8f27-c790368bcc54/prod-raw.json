@@ -1,0 +1,66 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "22.1"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://nucc.org/provider-taxonomy"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://nucc.org/provider-taxonomy|24.1"
+    },
+    {
+      "name": "code",
+      "valueCode": "1223P0106X"
+    },
+    {
+      "name": "display",
+      "valueString": "Oral and Maxillofacial Pathology Dentist"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1"
+            },
+            "location": [
+              "system"
+            ],
+            "expression": [
+              "system"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

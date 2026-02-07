@@ -1,0 +1,29 @@
+{
+  "id": "59eff7c6-9fd2-45b2-8f27-c790368bcc54",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.114222.4.11.1066&code=1223P0106X&_format=json&system=http:%2F%2Fnucc.org%2Fprovider-taxonomy",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1216,
+    "hash": "05bcfab7b987a63fe96a670a472eb8da"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1130,
+    "hash": "9e4f9e29561c1a5bdeec2821ed746a42"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"version\",\"valueString\" : \"22.1\"},{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://nucc.org/provider-taxonomy\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"http://nucc.org/provider-taxonomy|24.1\"},{\"name\" : \"code\",\"valueCode\" : \"1223P0106X\"},{\"name\" : \"display\",\"valueString\" : \"Oral and Maxillofacial Pathology Dentist\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM_VERSION\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1\"},\"location\" : [\"system\"],\"expression\" : [\"system\"]}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"version\",\"valueString\":\"22.1\"},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://nucc.org/provider-taxonomy\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"http://nucc.org/provider-taxonomy|24.1\"},{\"name\":\"code\",\"valueCode\":\"1223P0106X\"},{\"name\":\"display\",\"valueString\":\"Oral and Maxillofacial Pathology Dentist\"},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://nucc.org/provider-taxonomy' version '24.1' could not be found, so the code cannot be validated. Valid versions: 22.1\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]}]}}]}"
+}

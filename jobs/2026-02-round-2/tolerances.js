@@ -183,6 +183,56 @@ const tolerances = [
   },
 
   {
+    id: 'oo-missing-location-field',
+    description: 'Dev omits deprecated `location` field on OperationOutcome issues that prod includes. In FHIR R4, `location` is deprecated in favor of `expression`, but prod still populates both. In all observed cases, `location` exactly equals `expression`. Normalizes by stripping `location` from prod when dev lacks it. Affects 3019 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'a9cf20c',
+    tags: ['normalize', 'operationoutcome', 'missing-location'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const pi = prodIssues.issue[i];
+        const di = devIssues.issue[i];
+        if (!di) continue;
+        if (pi.location && !di.location &&
+            JSON.stringify(pi.location) === JSON.stringify(pi.expression)) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function stripLocation(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map(iss => {
+                  if (!iss.location) return iss;
+                  if (JSON.stringify(iss.location) === JSON.stringify(iss.expression)) {
+                    const { location, ...rest } = iss;
+                    return rest;
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod: stripLocation(prod), dev };
+    },
+  },
+
+  {
     id: 'dev-null-expression-location',
     description: 'Dev returns expression:[null] and location:[null] on OperationOutcome issues that have no specific location. Prod correctly omits these fields. Null values in arrays are invalid FHIR. Same root cause as empty-string variant (bug e9c7e58). Affects 5 records total (2 in deltas).',
     kind: 'temp-tolerance',

@@ -2196,6 +2196,22 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'loinc-answer-list-expand-404',
+    description: 'Dev returns 404 for LOINC answer list ValueSet $expand, appending |4.0.1 to canonical URL during resolution',
+    kind: 'temp-tolerance',
+    bugId: 'e18fdef',
+    tags: ['skip', 'missing-resource', 'loinc'],
+    match({ record, dev }) {
+      if (record.prod.status === 200 && record.dev.status === 404 &&
+          record.url.includes('ValueSet/$expand') &&
+          dev?.issue?.[0]?.diagnostics?.includes('|4.0.1')) {
+        return 'skip';
+      }
+      return null;
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
