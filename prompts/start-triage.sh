@@ -52,7 +52,7 @@ if [[ -n "$PREV_JOB" ]]; then
     echo "1. Dumping $BUG_COUNT bugs to $(basename "$PREV_JOB")/bugs/..."
     mkdir -p "$BUGS_DIR"
     bash engine/dump-bugs.sh "$BUGS_DIR/bugs.md"
-    python3 engine/dump-bugs-html.py "$BUGS_DIR/bugs.html"
+    python3 engine/dump-bugs-html.py "$BUGS_DIR/bugs.html" --job "$PREV_JOB"
     git-bug bug -l tx-compare -f json > "$BUGS_DIR/bugs.json" 2>/dev/null || true
   else
     echo "1. No existing bugs to dump."

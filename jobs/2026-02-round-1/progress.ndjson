@@ -47,3 +47,4 @@
 {"pickedAt":"2026-02-07T20:49:39.360Z","recordId":"e23bae38-016e-46ef-bd71-160ddb1ea35a","total":26,"analyzed":0,"remaining":26,"category":"content-differs"}
 {"pickedAt":"2026-02-07T20:58:24.660Z","recordId":"4546cc1e-92b0-4c0b-9372-9e8c0915ac47","total":22,"analyzed":0,"remaining":22,"category":"content-differs"}
 {"pickedAt":"2026-02-07T21:03:08.646Z","recordId":"392830d5-650f-42a4-9149-a8f7a1246016","total":10,"analyzed":0,"remaining":10,"category":"content-differs"}
+{"pickedAt":"2026-02-07T21:06:56.386Z","recordId":"7cf61657-1a32-4b8f-a4c6-f626df7381e0","total":9,"analyzed":0,"remaining":9,"category":"missing-resource"}

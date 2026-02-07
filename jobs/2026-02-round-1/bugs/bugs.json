@@ -1850,13 +1850,14 @@
             "lamport": 43
         },
         "edit_time": {
-            "timestamp": 1770495874,
-            "time": "2026-02-07T14:24:34-06:00",
-            "lamport": 214
+            "timestamp": 1770497935,
+            "time": "2026-02-07T14:58:55-06:00",
+            "lamport": 246
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Case-insensitive validate-code: dev returns extra normalized-code param, different severity and issue text",
@@ -2074,13 +2075,14 @@
             "lamport": 48
         },
         "edit_time": {
-            "timestamp": 1770497275,
-            "time": "2026-02-07T14:47:55-06:00",
-            "lamport": 229
+            "timestamp": 1770497948,
+            "time": "2026-02-07T14:59:08-06:00",
+            "lamport": 248
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text",
@@ -2118,16 +2120,61 @@
             "lamport": 49
         },
         "edit_time": {
-            "timestamp": 1770497606,
-            "time": "2026-02-07T14:53:26-06:00",
-            "lamport": 232
+            "timestamp": 1770497960,
+            "time": "2026-02-07T14:59:20-06:00",
+            "lamport": 251
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "not-reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev returns x-unknown-system for code system versions that prod recognizes",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4f27f838b3063473e7f8efe61d99f910b77cfd0a217da412ab0984bfc169c642",
+        "human_id": "4f27f83",
+        "create_time": {
+            "timestamp": 1770498307,
+            "time": "2026-02-07T15:05:07-06:00",
+            "lamport": 50
+        },
+        "edit_time": {
+            "timestamp": 1770498312,
+            "time": "2026-02-07T15:05:12-06:00",
+            "lamport": 254
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev returns x-unknown-system for code system versions that prod recognizes",
+        "title": "UCUM error message formatting differs between prod and dev",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

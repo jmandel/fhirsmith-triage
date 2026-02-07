@@ -1,0 +1,56 @@
+{
+  "jobDir": "jobs/2026-02-round-2",
+  "timestamp": "2026-02-07T21:07:09.373Z",
+  "totalRecords": 32233,
+  "skipped": 36,
+  "skippedByKind": {
+    "equiv-autofix": 36
+  },
+  "skippedReasons": {
+    "skip-prod-xml": 36
+  },
+  "categories": {
+    "content-differs": 17391,
+    "status-mismatch": 3616,
+    "result-disagrees": 557,
+    "OK": 10193,
+    "dev-crash-on-error": 344,
+    "missing-resource": 37,
+    "dev-crash-on-valid": 59
+  },
+  "okBreakdown": {
+    "strict": 0,
+    "equiv-autofix": 10193,
+    "temp-tolerance": 0
+  },
+  "operationBreakdown": {
+    "validate-code": {
+      "content-differs": 12237,
+      "status-mismatch": 1536,
+      "result-disagrees": 557,
+      "OK": 10125,
+      "dev-crash-on-valid": 1,
+      "dev-crash-on-error": 1
+    },
+    "expand": {
+      "status-mismatch": 2077,
+      "content-differs": 2099,
+      "dev-crash-on-error": 343,
+      "missing-resource": 37,
+      "OK": 21,
+      "dev-crash-on-valid": 58
+    },
+    "lookup": {
+      "content-differs": 2990,
+      "status-mismatch": 1
+    },
+    "batch-validate-code": {
+      "content-differs": 65,
+      "OK": 46
+    },
+    "subsumes": {
+      "status-mismatch": 2,
+      "OK": 1
+    }
+  }
+}

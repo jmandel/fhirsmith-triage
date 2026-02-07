@@ -1,0 +1,65 @@
+{
+  "resourceType": "ValueSet",
+  "url": "http://loinc.org/vs/LL379-9",
+  "version": "2.77",
+  "name": "LOINCAnswerListLL379_9",
+  "status": "active",
+  "experimental": false,
+  "date": "2026-02-06T23:44:38.862Z",
+  "expansion": {
+    "identifier": "urn:uuid:02c335ff-fbfa-459c-b333-62952fbc1a01",
+    "timestamp": "2026-02-06T23:44:38.862Z",
+    "total": 7,
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US"
+      },
+      {
+        "name": "count",
+        "valueInteger": 0
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://loinc.org|2.81"
+      }
+    ],
+    "contains": [
+      {
+        "system": "http://loinc.org",
+        "code": "LA9658-1",
+        "display": "Wild type"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6692-3",
+        "display": "Deletion"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6686-5",
+        "display": "Duplication"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6687-3",
+        "display": "Insertion"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6688-1",
+        "display": "Insertion/Deletion"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6689-9",
+        "display": "Inversion"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "LA6690-7",
+        "display": "Substitution"
+      }
+    ]
+  }
+}

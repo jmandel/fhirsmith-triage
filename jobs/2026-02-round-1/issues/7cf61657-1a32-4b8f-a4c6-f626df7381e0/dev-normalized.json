@@ -1,0 +1,10 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "diagnostics": "ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

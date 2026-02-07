@@ -1,0 +1,23 @@
+{
+  "id": "7cf61657-1a32-4b8f-a4c6-f626df7381e0",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1062,
+    "hash": "f4e81ff58ef84c3f6cc11ce69e442b3d"
+  },
+  "dev": {
+    "status": 404,
+    "contentType": "application/json; charset=utf-8",
+    "size": 155,
+    "hash": "9f1c497f486510f0f036275df6c6388d"
+  },
+  "comparison": {
+    "category": "missing-resource",
+    "op": "expand"
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"url\" : \"http://loinc.org/vs/LL379-9\",\"version\" : \"2.77\",\"name\" : \"LOINCAnswerListLL379_9\",\"status\" : \"active\",\"experimental\" : false,\"date\" : \"2026-02-06T23:44:38.862Z\",\"expansion\" : {\"identifier\" : \"urn:uuid:02c335ff-fbfa-459c-b333-62952fbc1a01\",\"timestamp\" : \"2026-02-06T23:44:38.862Z\",\"total\" : 7,\"parameter\" : [{\"name\" : \"displayLanguage\",\"valueCode\" : \"en-US\"},{\"name\" : \"count\",\"valueInteger\" : 0},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://loinc.org|2.81\"}],\"contains\" : [{\"system\" : \"http://loinc.org\",\"code\" : \"LA9658-1\",\"display\" : \"Wild type\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6692-3\",\"display\" : \"Deletion\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6686-5\",\"display\" : \"Duplication\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6687-3\",\"display\" : \"Insertion\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6688-1\",\"display\" : \"Insertion/Deletion\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6689-9\",\"display\" : \"Inversion\"},{\"system\" : \"http://loinc.org\",\"code\" : \"LA6690-7\",\"display\" : \"Substitution\"}]}}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"diagnostics\":\"ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1\"}]}"
+}

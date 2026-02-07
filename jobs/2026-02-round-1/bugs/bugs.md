@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_47 bugs (44 open, 3 closed)_
+_49 bugs (45 open, 4 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1288,6 +1288,74 @@ a3cf69a7-48f3-47b8-a29d-cd6453647621 — POST /r4/CodeSystem/$validate-code for 
 
 ---
 
+### [ ] `b9e3cfd` Expand display text differs between prod and dev for same codes
+
+Records-Impacted: 157
+Tolerance-ID: expand-display-text-differs
+Record-ID: 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
+```
+
+Prod returns display `"Product containing gonadotropin releasing hormone receptor antagonist (product)"` (FSN), dev returns `"Gonadotropin releasing hormone antagonist"` (inactive synonym). Same SNOMED version on both servers (20250201).
+
+#####What differs
+
+In $expand responses, display text for the same code differs between prod and dev in
+expansion.contains[].display. Both servers return the same codes in the same order, but
+with different human-readable display strings.
+
+Examples:
+- SNOMED 116101001: prod="Product containing gonadotropin releasing hormone receptor
+antagonist (product)", dev="Gonadotropin releasing hormone antagonist"
+- SNOMED 425901007: prod="IVF - In vitro fertilisation with intracytoplasmic sperm
+injection (ICSI)", dev="In vitro fertilization with intracytoplasmic sperm injection
+(procedure)"
+- SNOMED 60001007: prod="Not pregnant", dev="Non pregnant state"
+- ISO 3166 CUW: prod="Curagao", dev="Curaçao" (character encoding/data edition)
+- ISO 3166 ALA: prod="Eland Islands", dev="Åland Islands"
+
+#####How widespread
+
+157 expand delta records have display text diffs in expansion.contains.
+
+By code system:
+- http://snomed.info/sct: 134 records
+- urn:iso:std:iso:3166: 22 records
+- http://unitsofmeasure.org: 1 record
+
+Search: Compared expansion.contains display values between prodBody and devBody for
+all expand deltas in results/deltas/deltas.ndjson.
+
+#####What the tolerance covers
+
+Tolerance ID: expand-display-text-differs
+Matches: $expand responses (resourceType=ValueSet with expansion) where any
+contains[].display differs between prod and dev for the same code.
+Normalizes: Sets both sides' display to prod's value (canonical), preserving other
+field differences.
+
+#####Representative records
+
+- 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e (SNOMED 116101001)
+- 44f0851b-80e8-4a27-b05e-551c0522e39b (SNOMED 425901007, 161744009)
+- 2ff10aef-7210-489d-bb28-6c7739c27027 (ISO 3166 CUW, ALA, CIV)
+
+---
+
 ### [ ] `e5a78af` ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits
 
 Records-Impacted: 7
@@ -2256,6 +2324,24 @@ Records-Impacted: 4
 Tolerance-ID: case-insensitive-code-validation-diffs
 Record-ID: b6d0a8c8-a6e9-4acb-8228-f08aad1b1c49
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/\$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-10-cm"},{"name":"code","valueCode":"M80.00xA"}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-10-cm"},{"name":"code","valueCode":"M80.00xA"}]}'
+```
+
+Prod returns severity `"warning"`, no `normalized-code` param, and bare system URI in issue text. Dev returns severity `"information"`, extra `normalized-code: "M80.00XA"` param, and versioned system URI (`http://hl7.org/fhir/sid/icd-10-cm|2024`) in issue text.
+
 When validating codes in case-insensitive code systems (ICD-10, ICD-10-CM) where the submitted code has incorrect casing (e.g., "M80.00xA" instead of "M80.00XA", or "i50" instead of "I50"):
 
 1. Dev returns an extra `normalized-code` output parameter containing the correctly-cased code. Prod omits this parameter entirely. The `normalized-code` parameter is a valid $validate-code output per the FHIR spec, so dev is arguably more informative, but the difference needs tracking.
@@ -2488,6 +2574,32 @@ Records-Impacted: 4
 Tolerance-ID: error-operationoutcome-structure-diff
 Record-ID: 1bb4cd9f-c99d-4431-b974-f6b5423eb529
 
+#####Repro
+
+Request bodies were not stored for these POST records. Attempted to reproduce
+by constructing similar validate-code requests against unknown CodeSystem
+`http://hl7.org/fhir/v3/AdministrativeGender`:
+
+```bash
+####Attempt 1: coding + inline ValueSet with unknown system
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://hl7.org/fhir/v3/AdministrativeGender","code":"M"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://hl7.org/fhir/v3/AdministrativeGender"}]}}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://hl7.org/fhir/v3/AdministrativeGender","code":"M"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://hl7.org/fhir/v3/AdministrativeGender"}]}}}]}'
+```
+
+**Result**: Both servers return HTTP 200 with `result: false` (not the original 500
+OperationOutcome). Server behavior has changed since the comparison was captured
+(2026-02-06). Three different request body variations were tried; none reproduced
+the 500/500 pattern.
+
 When both prod and dev return HTTP 500 with OperationOutcome, the response structures
 differ in three ways:
 
@@ -2515,11 +2627,29 @@ the same pattern.
 
 ---
 
-### [ ] `451c583` Dev returns x-unknown-system for code system versions that prod recognizes
+### [x] `451c583` Dev returns x-unknown-system for code system versions that prod recognizes
 
 Records-Impacted: 5
 Tolerance-ID: validate-code-x-unknown-system-extra
 Record-ID: e23bae38-016e-46ef-bd71-160ddb1ea35a
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","version":"v1","code":"2054-5"}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","version":"v1","code":"2054-5"}}]}'
+```
+
+**Not reproduced.** Both servers now return identical behavior for unknown code system versions: both return `x-caused-by-unknown-system` parameter, both return `UNKNOWN_CODESYSTEM_VERSION` issue, and both omit `display`. The original ValueSet (`omb-race-category|4.1.0`) is no longer loaded on the public servers, so the exact original request cannot be replayed, but the underlying code system version handling has converged. The parameter name has also changed from `x-unknown-system` to `x-caused-by-unknown-system` on both servers, confirming a code update that aligned the behavior.
 
 #####What differs
 
@@ -2550,6 +2680,44 @@ Tolerance ID: `validate-code-x-unknown-system-extra`. Matches $validate-code res
 - Canonicalizing display and version to prod's values
 
 Eliminates 5 delta records.
+
+---
+
+### [ ] `4f27f83` UCUM error message formatting differs between prod and dev
+
+Records-Impacted: 1
+Tolerance-ID: ucum-error-message-format
+Record-ID: 392830d5-650f-42a4-9149-a8f7a1246016
+
+#####What differs
+
+UCUM $validate-code (via batch-validate-code) for unknown code "Torr": the informational OperationOutcome issue text for UCUM parsing errors has different formatting between prod and dev.
+
+Prod: `Error processing Unit: 'Torr': The unit "Torr" is unknown at character 1`
+Dev: `Error processing unit 'Torr': The unit 'Torr' is unknown at character 1`
+
+Three formatting differences:
+1. Capitalization: "Unit:" (prod) vs "unit" (dev)
+2. Punctuation: extra colon after unit name in prod ("'Torr':") vs none in dev ("'Torr'")
+3. Quoting style: escaped double quotes in prod (`"Torr"`) vs single quotes in dev (`'Torr'`)
+
+Both agree on result=false, system, code, and the primary error message. The only difference is in this secondary informational issue text about UCUM parsing.
+
+#####How widespread
+
+1 record in the full comparison dataset. Searched with:
+- `grep -c 'Error processing Unit' comparison.ndjson` → 1
+- `grep -c 'Error processing unit' comparison.ndjson` → 1
+
+This is a batch-validate-code request: POST /r4/ValueSet/$batch-validate-code
+
+#####What the tolerance covers
+
+Tolerance ID: `ucum-error-message-format`. Matches batch-validate-code records for unitsofmeasure.org where nested validation issue text differs due to UCUM error message formatting. Normalizes dev issue text to prod value. Eliminates 1 record.
+
+#####Representative record
+
+392830d5-650f-42a4-9149-a8f7a1246016
 
 ---
 
