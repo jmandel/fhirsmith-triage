@@ -1,0 +1,291 @@
+{
+  "date": "2016-08-22T09:53:05+00:00",
+  "expansion": {
+    "contains": [
+      {
+        "code": "ar",
+        "display": "Arabic",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "bn",
+        "display": "Bengali",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "cs",
+        "display": "Czech",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "da",
+        "display": "Danish",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "de",
+        "display": "German",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "de-AT",
+        "display": "German (Region=Austria)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "de-CH",
+        "display": "German (Region=Switzerland)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "de-DE",
+        "display": "German (Region=Germany)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "el",
+        "display": "Modern Greek (1453-)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en",
+        "display": "English",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-AU",
+        "display": "English (Region=Australia)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-CA",
+        "display": "English (Region=Canada)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-GB",
+        "display": "English (Region=United Kingdom)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-IN",
+        "display": "English (Region=India)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-NZ",
+        "display": "English (Region=New Zealand)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-SG",
+        "display": "English (Region=Singapore)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "en-US",
+        "display": "English (Region=United States)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "es",
+        "display": "Spanish",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "es-AR",
+        "display": "Spanish (Region=Argentina)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "es-ES",
+        "display": "Spanish (Region=Spain)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "es-UY",
+        "display": "Spanish (Region=Uruguay)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fi",
+        "display": "Finnish",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fr",
+        "display": "French",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fr-BE",
+        "display": "French (Region=Belgium)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fr-CH",
+        "display": "French (Region=Switzerland)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fr-FR",
+        "display": "French (Region=France)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fy",
+        "display": "Western Frisian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "fy-NL",
+        "display": "Western Frisian (Region=Netherlands)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "hi",
+        "display": "Hindi",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "hr",
+        "display": "Croatian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "it",
+        "display": "Italian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "it-CH",
+        "display": "Italian (Region=Switzerland)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "it-IT",
+        "display": "Italian (Region=Italy)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "ja",
+        "display": "Japanese",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "ko",
+        "display": "Korean",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "nl",
+        "display": "Dutch",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "nl-BE",
+        "display": "Dutch (Region=Belgium)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "nl-NL",
+        "display": "Dutch (Region=Netherlands)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "no",
+        "display": "Norwegian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "no-NO",
+        "display": "Norwegian (Region=Norway)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "pa",
+        "display": "Panjabi",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "pl",
+        "display": "Polish",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "pt",
+        "display": "Portuguese",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "pt-BR",
+        "display": "Portuguese (Region=Brazil)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "ru",
+        "display": "Russian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "ru-RU",
+        "display": "Russian (Region=Russian Federation)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "sr",
+        "display": "Serbian",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "sr-RS",
+        "display": "Serbian (Region=Serbia)",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "sv",
+        "display": "Swedish",
+        "system": "urn:ietf:bcp:47"
+      },
+      {
+        "code": "sv-SE",
+        "display": "Swedish (Region=Sweden)",
+        "system": "urn:ietf:bcp:47"
+      }
+    ],
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "*"
+      },
+      {
+        "name": "count",
+        "valueInteger": 50
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "urn:ietf:bcp:47"
+      }
+    ],
+    "total": 56
+  },
+  "experimental": true,
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.3.20"
+    }
+  ],
+  "meta": {
+    "lastUpdated": "2019-10-31T22:29:23.356+00:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "name": "CommonLanguages",
+  "resourceType": "ValueSet",
+  "status": "draft",
+  "title": "Common Languages",
+  "url": "http://hl7.org/fhir/ValueSet/languages",
+  "version": "4.0.1"
+}

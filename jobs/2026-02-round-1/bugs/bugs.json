@@ -1477,5 +1477,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "530eeb34e20a7f0fdb3ca4131b47c93bdb68324b60865a7efae3557974913d2b",
+        "human_id": "530eeb3",
+        "create_time": {
+            "timestamp": 1770493413,
+            "time": "2026-02-07T13:43:33-06:00",
+            "lamport": 35
+        },
+        "edit_time": {
+            "timestamp": 1770493418,
+            "time": "2026-02-07T13:43:38-06:00",
+            "lamport": 172
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "POST -code: dev missing code/system/display params and extra issues due to undefined system extraction",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

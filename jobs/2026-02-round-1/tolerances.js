@@ -771,6 +771,34 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-warning-experimental-param',
+    description: 'Dev $expand includes warning-experimental expansion parameter (flags experimental ValueSet status) that prod omits. Affects 1 expand record (CommonLanguages ValueSet).',
+    kind: 'temp-tolerance',
+    bugId: '67df517',
+    tags: ['normalize', 'expand', 'extra-param'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!dev?.expansion?.parameter) return null;
+      const devHas = dev.expansion.parameter.some(p => p.name === 'warning-experimental');
+      const prodHas = prod?.expansion?.parameter?.some(p => p.name === 'warning-experimental');
+      if (devHas && !prodHas) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      return {
+        prod,
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: dev.expansion.parameter.filter(p => p.name !== 'warning-experimental'),
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-dev-crash-on-error',
     description: 'Dev crashes (500) on $expand when CodeSystem content mode prevents expansion. Prod returns 422 with clear error. Dev leaks JS source code in error message (contentMode() function body), or crashes with TypeError (addParamUri/TerminologyError). Affects 186 POST /r4/ValueSet/$expand records.',
     kind: 'temp-tolerance',

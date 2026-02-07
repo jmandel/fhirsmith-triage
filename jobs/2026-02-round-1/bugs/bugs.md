@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_33 bugs (30 open, 3 closed)_
+_34 bugs (31 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1804,6 +1804,44 @@ Search: grep 'INACTIVE_DISPLAY_FOUND' deltas.ndjson | wc -l → 3
 
 Tolerance ID: inactive-display-message-extra-synonyms
 Matches validate-code records where OperationOutcome has display-comment issues with differing details.text that share the same prefix up to "The correct display is one of". Normalizes both sides to prod's text. Eliminates 3 records.
+
+---
+
+### [ ] `530eeb3` POST -code: dev missing code/system/display params and extra issues due to undefined system extraction
+
+Records-Impacted: 3
+Tolerance-ID: validate-code-undefined-system-missing-params
+Record-ID: 243e44e8-cafb-44ba-a521-de4aab9d6985
+
+#####What differs
+
+On POST /r4/ValueSet/$validate-code with codeableConcept input, dev fails to return `code`, `system`, and `display` output parameters that prod returns. Dev also returns extra OperationOutcome issues (`this-code-not-in-vs`, `not-in-vs`) that prod does not include. Both servers agree result=false (because the submitted display text is wrong).
+
+Specific differences in the normalized output:
+- **Prod returns**: code=785126002, system=http://snomed.info/sct, display="Methylphenidate hydrochloride 5 mg chewable tablet"
+- **Dev returns**: none of these three parameters
+- **Prod issues**: 1 issue (invalid-display error)
+- **Dev issues**: 3 issues (this-code-not-in-vs information, invalid-display error, not-in-vs error)
+- **Message**: Dev prepends "No valid coding was found for the value set..." to the message; prod has only the invalid-display message (already handled by invalid-display-message-format tolerance)
+
+Dev diagnostics show `Validate "[undefined#785126002 ...]"` — the system is JavaScript "undefined", confirming the same POST body extraction failure as bugs 19283df and 4cdcd85.
+
+#####How widespread
+
+3 records, all POST /r4/ValueSet/$validate-code with the same SNOMED code 785126002 validating against medication-uv-ips ValueSet:
+- 243e44e8-cafb-44ba-a521-de4aab9d6985
+- 683c85d6-b337-4460-a005-df239084339a
+- 1e7a78b8-c2ec-4819-b871-31cd30f5af28
+
+All 3 have result=false on both sides (display text is wrong), same SNOMED version. Pattern identified by searching for validate-code records where dev is missing both code and system parameters.
+
+#####What the tolerance covers
+
+Tolerance `validate-code-undefined-system-missing-params` matches POST $validate-code with result=false where prod has code/system params but dev lacks them, and dev diagnostics contain "undefined". Eliminates all 3 records.
+
+#####Related bugs
+
+Same root cause as bug 19283df (result-disagrees variant, 89 records) and bug 4cdcd85 (crash variant, 1 record). All three stem from dev failing to extract system/code from POST request body.
 
 ---
 
