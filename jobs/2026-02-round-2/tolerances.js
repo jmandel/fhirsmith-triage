@@ -1024,6 +1024,39 @@ const tolerances = [
   },
 
   {
+    id: 'expand-displayLanguage-region-truncated',
+    description: 'Dev $expand echoes displayLanguage with region subtag truncated (e.g., fr-FR becomes fr). Prod echoes the original value from the request. Normalize both to prod value. Affects 2 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '44d6f07',
+    tags: ['normalize', 'expand', 'displayLanguage'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      const prodParams = prod?.expansion?.parameter;
+      const devParams = dev?.expansion?.parameter;
+      if (!prodParams || !devParams) return null;
+      const prodDL = prodParams.find(p => p.name === 'displayLanguage');
+      const devDL = devParams.find(p => p.name === 'displayLanguage');
+      if (prodDL && devDL && prodDL.valueCode !== devDL.valueCode) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodDL = prod.expansion.parameter.find(p => p.name === 'displayLanguage');
+      return {
+        prod,
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: dev.expansion.parameter.map(p =>
+              p.name === 'displayLanguage' ? { ...p, valueCode: prodDL.valueCode } : p
+            ),
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-dev-warning-experimental-param',
     description: 'Dev $expand includes warning-experimental expansion parameter (flags experimental ValueSet status) that prod omits. Affects 1 expand record (CommonLanguages ValueSet).',
     kind: 'temp-tolerance',

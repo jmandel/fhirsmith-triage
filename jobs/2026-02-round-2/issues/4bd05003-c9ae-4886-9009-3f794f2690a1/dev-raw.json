@@ -1,0 +1,428 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "expansion": {
+    "timestamp": "2026-02-07T08:22:23.493Z",
+    "identifier": "urn:uuid:a605496e-3a3a-433a-859b-0fa48a31eef8",
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "fr"
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "includeDefinition",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://loinc.org|2.81"
+      }
+    ],
+    "offset": 0,
+    "total": 78,
+    "contains": [
+      {
+        "system": "http://loinc.org",
+        "code": "11369-6",
+        "display": "History of Immunization note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "11488-4",
+        "display": "Consult note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "11490-0",
+        "display": "Physician Discharge summary"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34112-3",
+        "display": "Hospital Note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "11502-2",
+        "display": "Compte rendu du laboratoire [Recherche] Patient ; Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "11505-5",
+        "display": "Physician procedure note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "11506-3",
+        "display": "Progress note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "15507-7",
+        "display": "Emergency department Progress note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "15508-5",
+        "display": "Labor and delivery records"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "18776-5",
+        "display": "Plan of care note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "18748-4",
+        "display": "Diagnostic imaging study"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "18761-7",
+        "display": "Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "28617-9",
+        "display": "Dentistry Progress note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "28653-4",
+        "display": "Social worker Note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "29274-8",
+        "display": "Vital signs measurements"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34120-6",
+        "display": "Outpatient Initial evaluation note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34133-9",
+        "display": "Summary of episode note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34749-2",
+        "display": "Anesthesiology Outpatient Consult note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34794-8",
+        "display": "Interdisciplinary Note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34842-5",
+        "display": "Social worker Evaluation note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34874-8",
+        "display": "Surgery Surgical operation note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "34875-5",
+        "display": "Surgery Postoperative evaluation and management note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "47420-5",
+        "display": "Functional status assessment note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "51851-4",
+        "display": "Administrative note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "51969-4",
+        "display": "Compte rendu de génétique [Recherche] Sang/Tissu ; Document ; Biologie moléculaire"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "52040-3",
+        "display": "Dental X-rays and other images (not DICOM)"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "55115-0",
+        "display": "Requested imaging studies information Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "56445-0",
+        "display": "Medication summary Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "56446-8",
+        "display": "Appointment summary Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57828-6",
+        "display": "Prescription list"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57832-8",
+        "display": "Prescription for diagnostic or specialist care"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57833-6",
+        "display": "Prescription for medication"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "59283-2",
+        "display": "Well child visit note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "59284-0",
+        "display": "Consent Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "60280-5",
+        "display": "Emergency department Discharge instructions"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "60568-3",
+        "display": "Pathology synoptic report"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "60591-5",
+        "display": "Patient summary Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "60593-1",
+        "display": "Medication dispensed.extended Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "61357-0",
+        "display": "Medication pharmaceutical advice.brief Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "67851-6",
+        "display": "Admission evaluation note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "68599-0",
+        "display": "Psychiatry History and physical note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "68817-6",
+        "display": "Pediatrics History and physical note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "70004-7",
+        "display": "Diagnostic study note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "78341-5",
+        "display": "Emergency department Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "74207-2",
+        "display": "Prehospital summary Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "74465-6",
+        "display": "Questionnaire response Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "75468-9",
+        "display": "Pharmacology Medication management note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "75482-0",
+        "display": "Preventive medicine Note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "75492-9",
+        "display": "Risk assessment and screening note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "75496-0",
+        "display": "Telehealth Note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "77436-4",
+        "display": "Anesthesiology Summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "77604-7",
+        "display": "Medication treatment plan.brief Document"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "78513-9",
+        "display": "Ophthalmology Summary of encounters note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "78601-2",
+        "display": "Pharmacology Education note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "80565-5",
+        "display": "Medication administration record"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "80771-9",
+        "display": "Pediatrics Plan of care note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "80788-3",
+        "display": "Social worker Plan of care note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "80820-4",
+        "display": "Medication reconciliation form"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "83836-7",
+        "display": "Dentistry Summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "83869-8",
+        "display": "Preventive medicine Counseling note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "83901-9",
+        "display": "Psychology History and physical note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "83981-1",
+        "display": "Social worker Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "85208-7",
+        "display": "Telehealth Consult note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "86531-1",
+        "display": "Discharge notification"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "87273-9",
+        "display": "Immunization note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "88348-8",
+        "display": "Nurse Long term care facility Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "89601-9",
+        "display": "Proof of encounter certificate"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "93024-8",
+        "display": "Pharmacist Consult note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "96349-6",
+        "display": "Referral letter"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "96874-3",
+        "display": "COVID-19 Immunization note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "96173-0",
+        "display": "Clinical pathology Evaluation note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57055-6",
+        "display": "Antepartum summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57057-2",
+        "display": "Labor and delivery summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "57075-4",
+        "display": "Newborn delivery information"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "89235-6",
+        "display": "Obstetrics Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "78489-2",
+        "display": "Neonatal perinatal medicine Transfer summary note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "89233-1",
+        "display": "Obstetrics Progress note"
+      },
+      {
+        "system": "http://loinc.org",
+        "code": "101881-1",
+        "display": "Implant card"
+      }
+    ]
+  }
+}

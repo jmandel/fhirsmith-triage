@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_21 bugs (20 open, 1 closed)_
+_22 bugs (21 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1108,13 +1108,28 @@ Records-Impacted: 17
 Tolerance-ID: expand-too-costly-succeeds
 Record-ID: d9734f68-d8b4-475d-9204-632c9b4ccbf0
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r5/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
+
+curl -s 'https://tx-dev.fhir.org/r5/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
+```
+
+Prod returns HTTP 422 with OperationOutcome: `{"resourceType":"OperationOutcome", "issue":[{"severity":"error","code":"too-costly","details":{"text":"The value set '' expansion has too many codes to display (>10000)"}}]}`.
+
+Dev returns HTTP 200 with a ValueSet containing 1000 LOINC codes in the expansion (respecting the `count` parameter for pagination).
+
 
 When expanding ValueSets that include very large code systems (all of LOINC via `http://loinc.org`, or MIME types via `http://hl7.org/fhir/ValueSet/mimetypes`), prod returns HTTP 422 with an OperationOutcome containing `issue.code: "too-costly"` and message "The value set '' expansion has too many codes to display (>10000)". Dev returns HTTP 200 with a ValueSet containing up to 1000 codes (honoring the count parameter for pagination).
 
 Prod correctly enforces an expansion size guard — refusing to expand code systems with >10000 codes even when pagination parameters are present. Dev does not enforce this guard and instead returns a paginated result.
 
-#####How widespread
 
 17 records in the comparison dataset show this pattern:
 - 6 records: POST `/r5/ValueSet/$expand` expanding all of LOINC (`http://loinc.org`, with `inactive: true`)
@@ -1124,14 +1139,57 @@ Search method: `grep 'too-costly' deltas.ndjson` finds 273 records total; filter
 
 Additionally, there are likely records already eliminated by the prior `expand-too-costly-succeeds` tolerance (bug e3fb3f6, which appears to have been removed from git-bug). The current tolerance was scoped too narrowly (exact URL match on `/r4/ValueSet/$expand` only, missing GET requests with query params and /r5/ requests).
 
-#####What the tolerance covers
 
 Tolerance ID: `expand-too-costly-succeeds`. Matches any $expand request (any FHIR version, GET or POST) where prod returns 422 with an OperationOutcome containing `issue.code: "too-costly"` and dev returns 200. Skips these records entirely since the responses are fundamentally incomparable (error vs success).
 
-#####Representative records
 
 - `d9734f68-d8b4-475d-9204-632c9b4ccbf0` (LOINC, POST /r5/ValueSet/$expand)
 - `3a2672db-cb0d-4312-87f1-5d6b685fbfe0` (MIME types, GET /r4/ValueSet/$expand?url=...mimetypes)
+
+---
+
+### [ ] `1bc5e64` Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)
+
+Records-Impacted: 7
+Tolerance-ID: validate-code-x-unknown-system-extra
+Record-ID: f7e61c56-3c3c-4925-8822-f0f4e4406e3f
+
+#####What differs
+
+When validating a code against a ValueSet that includes codes from RxNorm or SNOMED CT, and the request pins a specific CodeSystem version, dev fails to resolve certain versions that prod resolves:
+
+- **RxNorm version `04072025`**: Dev returns "A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found". Prod resolves it (falls back to known version `??`) and performs actual validation, returning "code not found in valueset".
+- **SNOMED US edition version `20220301`** (`http://snomed.info/sct/731000124108/version/20220301`): Same pattern — dev can't find this version, prod resolves it.
+
+Dev returns `x-caused-by-unknown-system` parameter (e.g., `http://www.nlm.nih.gov/research/umls/rxnorm|04072025`) and a single OperationOutcome issue with code `not-found`. Prod omits `x-caused-by-unknown-system` and returns the actual validation result with issues like `this-code-not-in-vs` and `not-in-vs`.
+
+Both return `result=false`, but for completely different reasons: prod says "code not in valueset", dev says "can't validate because CodeSystem version not found."
+
+#####How widespread
+
+7 records in the deltas match this pattern (dev has `x-caused-by-unknown-system`, prod does not):
+- 4 records: RxNorm version 04072025
+- 3 records: SNOMED US edition version 20220301
+
+All are POST /r4/ValueSet/$validate-code operations.
+
+Search: `grep 'x-caused-by-unknown-system' deltas.ndjson` → 8 hits total, 7 where only dev has the parameter.
+
+#####What the tolerance covers
+
+Tolerance `validate-code-x-unknown-system-extra` matches validate-code records where dev has `x-caused-by-unknown-system` but prod does not. It normalizes dev's issues, message, and x-caused-by-unknown-system to match prod's values. Eliminates 7 records.
+
+Note: This tolerance previously existed but had a bug — it matched on parameter name `x-unknown-system` instead of the correct `x-caused-by-unknown-system`, so it matched 0 records. The fix corrects the parameter name.
+
+
+11bbc25 #1 Claude (AI Assistant) <>
+
+Updated scope: tolerance now covers 10 records (not 7). Three additional records use parameter name `x-unknown-system` (not `x-caused-by-unknown-system`) for SNOMED US version 20250301. Same root cause — dev doesn't recognize the CodeSystem version that prod resolves.
+
+Total breakdown:
+- 4 records: RxNorm version 04072025 (x-caused-by-unknown-system)
+- 3 records: SNOMED US version 20220301 (x-caused-by-unknown-system)  
+- 3 records: SNOMED US version 20250301 (x-unknown-system)
 
 ---
 

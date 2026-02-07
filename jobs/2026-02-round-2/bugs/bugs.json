@@ -908,12 +908,13 @@
             "lamport": 22
         },
         "edit_time": {
-            "timestamp": 1770507298,
-            "time": "2026-02-07T17:34:58-06:00",
-            "lamport": 107
+            "timestamp": 1770507618,
+            "time": "2026-02-07T17:40:18-06:00",
+            "lamport": 118
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
@@ -941,6 +942,50 @@
             "login": ""
         },
         "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1bc5e64d7e752e88f0248b3b6ffc338a9c6e63971fe83a0b079179bb081d70a3",
+        "human_id": "1bc5e64",
+        "create_time": {
+            "timestamp": 1770507777,
+            "time": "2026-02-07T17:42:57-06:00",
+            "lamport": 23
+        },
+        "edit_time": {
+            "timestamp": 1770507934,
+            "time": "2026-02-07T17:45:34-06:00",
+            "lamport": 122
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
         "metadata": {}
     }
 ]
