@@ -26,6 +26,8 @@ We compare responses from **prod** (tx.fhir.org Java) vs **dev** (FHIRsmith Node
 POST requests have `url` with trailing `?` (no query params).
 GET requests (like $lookup) have params in the URL.
 
+The comparison engine writes categorized delta files to `results/deltas/`. Each delta line includes the original record fields plus a `comparison` object with priority, reason, and operation. See `results/deltas/*.ndjson`.
+
 ## FHIR Terminology Operations
 
 ### $validate-code
@@ -53,25 +55,57 @@ Direct resource reads. Compare full resource content.
 ### metadata
 CapabilityStatement. Expect differences (different server implementations).
 
+## What Counts as a Real Difference
+
+This is a **terminology server**. Any difference in terminology-related content is meaningful. This includes:
+- **Version/edition differences**: Which SNOMED/LOINC/etc edition is loaded
+- **Code validity**: Whether a code is found, not found, active, inactive
+- **Display text**: The human-readable name for a code
+- **Properties**: Code properties, designations, parent/child relationships
+- **Expansion contents**: Which codes appear in a ValueSet expansion
+- **Validation messages**: Error text, warnings, informational messages
+
+**FHIR conformance matters too.** FHIR requires that strings, if present, are non-empty, and arrays, if present, are non-empty. So `id: ""` vs absent is NOT cosmetic — the empty string is invalid FHIR and represents a real bug. Similarly, `entry: []` (empty array present) is invalid FHIR.
+
+Things that are safe to normalize away are differences with no impact on terminology results AND no conformance violations:
+- JSON key ordering within the same object
+- `null` vs absent for optional fields that carry no information (e.g. `location: [null]` vs absent) — note: this is different from empty string `""` which is invalid
+- Server-generated transient metadata (UUIDs, timestamps, pagination links) unrelated to terminology content
+- Server software version identifiers, implementation-specific metadata
+
+When in doubt, treat a difference as potentially meaningful.
+
 ## Priority Classification
 
-| Priority | What | Action |
-|----------|------|--------|
-| P0 | prod=200, dev=500 (crashes) | File bug immediately |
-| P1 | Both 200, result boolean disagrees | Investigate - likely real bugs |
-| P2 | prod=422, dev=500 (crash on bad input) | Dev should return 422 not crash |
-| P3 | prod=200, dev=404 (missing resources) | Missing content in dev |
-| P4 | Error code differs (422 vs 404) | Error handling differences |
-| P5 | /r4/ root 200 vs 404 | Skipped (cosmetic) |
-| P6 | Same status+result, content differs | Triage via iterative sampling |
+The comparison engine assigns each record a priority based on status codes and content:
+
+| Priority | Condition | What it means | Typical action |
+|----------|-----------|---------------|----------------|
+| P0 | prod=200, dev=500 | Dev crashes on a valid request | File bug — find the crash, add null guard / fix method |
+| P1 | Both 200, `result` boolean disagrees | Core terminology operation gives wrong answer | Investigate — likely logic bug, wrong edition, missing data |
+| P2 | prod=4xx, dev=500 | Dev crashes on bad input (should return error gracefully) | File bug — error handling path crashes |
+| P3 | prod=200, dev=404 | Resource exists in prod but missing from dev | Data/config gap — load missing resource |
+| P4 | Status codes differ (not P0/P2/P3) | Both know it's an error, disagree on HTTP code | Fix status code selection logic |
+| P6 | Same status, same result, content differs | Catch-all after normalization | Could be cosmetic, version skew, or subtle bug — needs triage |
+
+P0-P4 are usually straightforward: group records by error pattern, file bugs. P6 is the hard bucket — a mix of noise, real bugs, and ambiguous differences that requires iterative tolerance development.
+
+For **P0-P4**, the primary goal is grouping records by error pattern and filing bugs. Normalizations are less common since the differences are usually clear bugs (crashes, missing resources, wrong status codes).
+
+For **P6**, focus on whether each difference is cosmetic or substantive, and develop tolerances to clear recognizable patterns.
 
 ## Known Cosmetic Differences (Always Ignore)
 
+These are handled by permanent `equiv-autofix` tolerances:
+
 1. **Parameter ordering** - prod and dev return Parameters in different order
 2. **Diagnostics parameter** - completely different trace formats (by design)
-3. **JSON whitespace** - prod pretty-prints, dev uses compact JSON
+3. **JSON whitespace/key order** - prod pretty-prints, dev uses compact JSON
 4. **Content-Type** - `application/fhir+json` vs `application/json; charset=utf-8`
 5. **metadata responses** - different CapabilityStatements expected
+6. **Expansion metadata** - timestamps, identifiers, includeDefinition defaults
+7. **OperationOutcome extensions** - server-generated message IDs, extension ordering
+8. **Empty searchset Bundles** - server-generated id, meta, link fields
 
 ## Bug Tracking with git-bug
 
@@ -93,7 +127,7 @@ git-bug bug show <BUG_ID>
 
 Always add the `tx-compare` label. Use priority labels like `P0`, `P1`, etc.
 Include in the bug description:
-- The comparison record ID (from comparison.ndjson)
+- The comparison record ID (from comparison.ndjson) so a reader can `grep -n '<ID>' comparison.ndjson`
 - The operation and URL
 - What prod returned vs what dev returned
 - Why this is a real bug (not cosmetic)
@@ -104,8 +138,8 @@ All comparison logic — skipping irrelevant records, normalizing cosmetic diffe
 
 ### Tolerance kinds
 
-- **`equiv-autofix`**: Non-substantive difference. The two responses are semantically equivalent; the tolerance corrects for cosmetic/structural noise (JSON key order, server UUIDs, parameter ordering). Permanent.
-- **`temp-tolerance`**: A real, meaningful difference being suppressed for triage efficiency. Each has a `bugId` linking to a git-bug issue. NOT equivalent — these are known patterns we stop re-triaging until the bug is fixed.
+- **`equiv-autofix`**: Non-substantive difference. The two responses are semantically equivalent; the tolerance corrects for cosmetic/structural noise (JSON key order, server UUIDs, parameter ordering). Permanent — survives across data batches.
+- **`temp-tolerance`**: A real, meaningful difference being suppressed for triage efficiency. Each has a `bugId` linking to a git-bug issue. NOT equivalent — these are known patterns we stop re-triaging until the bug is fixed. Cleared between batches.
 
 ### How tolerances work
 
@@ -147,7 +181,34 @@ Add an object to the `tolerances` array in `tolerances.js`:
 }
 ```
 
-Ordering matters: tolerances are applied sequentially. Place skip tolerances first, structural cleanup next, content-specific transforms after, and sorting last.
+Tolerances are applied sequentially — ordering matters. Place in the correct phase (see comments in `tolerances.js`):
+
+| Phase | Purpose | Examples |
+|-------|---------|---------|
+| A: Skip | Drop entire records | URL patterns, XML responses |
+| B: Structural | Clean up structure before content transforms | Extension sorting, coding order |
+| C: Content | Strip or transform specific fields | Strip diagnostics, expansion metadata |
+| D: Sort | Stable ordering after all transforms | Sort parameters, issues, expansion contains |
+| E: Bundle | Bundle-level normalization | Empty searchset Bundles |
+
+Scope tolerances as narrowly as possible — match only the request/response patterns you've actually observed.
+
+### Tolerance development loop
+
+When developing a new tolerance (whether `equiv-autofix` or `temp-tolerance`):
+
+1. Add the tolerance object to `tolerances.js`
+2. Archive the current delta file: `cp results/deltas/<p>.ndjson results/deltas/<p>.<timestamp>.ndjson`
+3. Rerun comparison: `node compare.js --input comparison.ndjson --out results`
+4. Compare old and new delta file line counts
+5. **Validate**: randomly sample at least 10 eliminated records and verify each is legitimate — the differences match the pattern you're targeting and nothing else is being hidden
+6. If any sampled elimination is inappropriate, restore the archive, revert, rework, and repeat
+
+For `temp-tolerance`: file a `git-bug` first, then be extra judicious in validation since a too-broad heuristic could mask unrelated bugs.
+
+## MD5 Hashing for Record Identity
+
+Since comparison reruns regenerate delta files (records get new positions), we use the MD5 hash of the raw NDJSON line as a stable identifier. This hash survives reruns as long as the underlying record hasn't changed, and is used to track which records have been analyzed.
 
 ## File Locations
 
@@ -156,11 +217,11 @@ Ordering matters: tolerances are applied sequentially. Place skip tolerances fir
 - `tolerances.js` - Tolerance definitions (skip, normalize, metadata)
 - `tolerances-v1/` - Archived full tolerance set from batch 1
 - `results/summary.json` - Latest comparison stats
-- `results/deltas/*.ndjson` - Categorized differences
-- `results/<priority>-analyzed.txt` - One-line triage ledger per sampled record
+- `results/deltas/*.ndjson` - Categorized differences by priority
+- `results/<priority>-analyzed.txt` - One-line triage ledger per analyzed record
 - `results/<priority>-detailed-reports.md` - Full analysis reports per record
 - `next-record.py` - Sequential record sampler for triage
 - `triage-loop.sh` - Automated triage control loop
-- `triage-prompt.md` - Canonical triage agent prompt
+- `triage-prompt.md` - Triage agent prompt
 - `stream-filter.py` - Claude stream-json output filter
 - `dump-bugs.sh`, `dump-bugs-html.py` - Bug report generators

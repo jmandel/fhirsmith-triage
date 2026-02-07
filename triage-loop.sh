@@ -108,7 +108,7 @@ EOF
     fi
 
     # Pause between rounds
-    sleep 10
+    sleep 3
   done
 done
 
