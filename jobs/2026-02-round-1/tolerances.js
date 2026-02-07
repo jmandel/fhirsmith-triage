@@ -273,6 +273,37 @@ const tolerances = [
   },
 
   {
+    id: 'ucum-display-code-as-display',
+    description: 'UCUM $validate-code: dev returns human-readable display (e.g. "(inch)") instead of code-as-display (e.g. "[in_i]"). Per FHIR UCUM guidance, the code itself IS the display. Normalizes both sides to prod display (the code). Affects 220 validate-code records for http://unitsofmeasure.org.',
+    kind: 'temp-tolerance',
+    bugId: '17ad254',
+    tags: ['normalize', 'display-text', 'ucum'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      if (prodSystem !== 'http://unitsofmeasure.org') return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (!prodDisplay || !devDisplay) return null;
+      if (prodDisplay === devDisplay) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodDisplay = getParamValue(prod, 'display');
+      function setDisplay(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'display' ? { ...p, valueString: prodDisplay } : p
+          ),
+        };
+      }
+      return { prod: setDisplay(prod), dev: setDisplay(dev) };
+    },
+  },
+
+  {
     id: 'expand-422-vs-404-codesystem-not-found',
     description: 'Dev returns 404 instead of 422 for $expand when a referenced CodeSystem is not found. Both servers return identical OperationOutcome with issue code "not-found" and message "could not be found, so the value set cannot be expanded". Affects 296 POST /r4/ValueSet/$expand records.',
     kind: 'temp-tolerance',

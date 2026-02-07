@@ -1,6 +1,6 @@
 # Triage Agent Instructions
 
-Read `AGENTS.md` for background on the data format, FHIR operations, priority classification, what counts as a real difference, tolerance pipeline, and git-bug conventions.
+Read `AGENTS.md` for background on the data format, FHIR operations, comparison categories, what counts as a real difference, tolerance pipeline, and git-bug conventions.
 
 **Reference materials**: `reference/` contains FHIR R4 spec content that may help you understand expected behavior and field meanings. See `reference/INDEX.md` for a directory. Key resources:
 - `reference/operations/` — operation specs ($validate-code, $expand, $lookup, etc.) with parameter definitions, plus formal OperationDefinition JSON
@@ -74,12 +74,12 @@ Do **not** include:
 - Guesses about which module or function is responsible
 - Suggested fixes
 
-Always add the `tx-compare` label. Use priority labels (`P0`, `P1`, etc.) matching the record's comparison priority.
+Always add the `tx-compare` label. Also add the record's comparison category as a label (e.g., `content-differs`, `status-mismatch`).
 
 ```bash
 git-bug bug new -t "Title" -m "Description" --non-interactive
 git-bug bug label new <BUG_ID> "tx-compare"
-git-bug bug label new <BUG_ID> "P6"
+git-bug bug label new <BUG_ID> "content-differs"
 ```
 
 ## Step 5: Always write a tolerance
@@ -168,7 +168,7 @@ Format:
 # Analysis: <category-label>
 
 **Operation**: `<METHOD> <URL>`
-**Priority**: <priority>
+**Category**: <comparison category>
 **Status**: prod=<status> dev=<status>
 **Bug**: <bug ID if applicable, or "none">
 **Tolerance**: <tolerance ID>

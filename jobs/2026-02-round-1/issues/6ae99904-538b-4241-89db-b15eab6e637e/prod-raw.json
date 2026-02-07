@@ -1,0 +1,29 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://unitsofmeasure.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "[in_i]"
+    },
+    {
+      "name": "version",
+      "valueString": "2.2"
+    },
+    {
+      "name": "display",
+      "valueString": "[in_i]"
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1 for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n0 0     : 0ms  : Prepare include: \"(http://unitsofmeasure.org)(%,cm,[in_i],kg,g,[lb_av],Cel,[degF],mm[Hg],/min,kg/m2,m2)\"\r\n0 0     : 0ms  : CodeSystem found: \"http://unitsofmeasure.org|2.2\"\r\n0 0     : 0ms  : Validate \"[http://unitsofmeasure.org#[in_i] (\"\")]\"\r\n0 0     : 0ms  : Check \"http://unitsofmeasure.org#[in_i]\"\r\n0 0     : 0ms  : CodeSystem found: http://unitsofmeasure.org|2.2 for http://unitsofmeasure.org\r\n0 0     : 0ms  : check code in (http://unitsofmeasure.org)(%,cm,[in_i],kg,g,[lb_av],Cel,[degF],mm[Hg],/min,kg/m2,m2) at Coding\r\n0 0     : 0ms  : Code \"[in_i]\" found in http://unitsofmeasure.org|2.2\r\n"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T17:06:30.041Z",
+  "timestamp": "2026-02-07T17:20:18.631Z",
   "totalRecords": 7245,
   "skipped": 1941,
   "skippedReasons": {
@@ -12,40 +12,40 @@
     "skip-static-assets": 4,
     "skip-root-page": 359
   },
-  "priorities": {
-    "OK": 3351,
-    "P6": 1490,
-    "P2": 186,
-    "P1": 246,
-    "P0": 16,
-    "P4": 12,
-    "P3": 3
+  "categories": {
+    "OK": 3571,
+    "content-differs": 1270,
+    "dev-crash-on-error": 186,
+    "result-disagrees": 246,
+    "dev-crash-on-valid": 16,
+    "status-mismatch": 12,
+    "missing-resource": 3
   },
   "operationBreakdown": {
     "validate-code": {
-      "OK": 2694,
-      "P6": 800,
-      "P1": 246,
-      "P0": 1
+      "OK": 2914,
+      "content-differs": 580,
+      "result-disagrees": 246,
+      "dev-crash-on-valid": 1
     },
     "lookup": {
       "OK": 157
     },
     "read": {
       "OK": 495,
-      "P6": 9,
-      "P3": 1
+      "content-differs": 9,
+      "missing-resource": 1
     },
     "expand": {
-      "P6": 678,
-      "P2": 186,
-      "P0": 15,
-      "P4": 12,
-      "P3": 2
+      "content-differs": 678,
+      "dev-crash-on-error": 186,
+      "dev-crash-on-valid": 15,
+      "status-mismatch": 12,
+      "missing-resource": 2
     },
     "batch-validate-code": {
       "OK": 5,
-      "P6": 3
+      "content-differs": 3
     }
   }
 }

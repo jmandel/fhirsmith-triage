@@ -156,19 +156,19 @@ async function main() {
   );
 
   const remaining = total - analyzed;
-  const priority = record.comparison?.priority || '?';
+  const category = record.comparison?.category || '?';
 
   // Append to job-level progress log (one line per pick)
   const progressLine = JSON.stringify({
     pickedAt: new Date().toISOString(),
     recordId: recordId,
-    total, analyzed, remaining, priority,
+    total, analyzed, remaining, category,
   }) + '\n';
   fs.appendFileSync(path.join(jobDir, 'progress.ndjson'), progressLine);
 
   // Print summary
   console.log(`Record: ${lineno}/${total} (${analyzed} analyzed, ${remaining} remaining)`);
-  console.log(`Priority: ${priority}`);
+  console.log(`Category: ${category}`);
   console.log(`Issue dir: ${issueDir}`);
   console.log(`Record ID: ${record.id || '?'}`);
   console.log(`URL: ${record.url || '?'}`);

@@ -19,18 +19,18 @@ Both `comparison.ndjson` (input) and `results/deltas/deltas.ndjson` (output) use
   "prodBody": "JSON string of FHIR response",
   "devBody": "JSON string of FHIR response",
   "requestBody": "JSON string of request body (when available)",
-  "comparison": {"priority": "P6", "reason": "content-differs", "op": "validate-code"}
+  "comparison": {"category": "content-differs", "op": "validate-code"}
 }
 ```
 
 **HTTP status codes** are at `record.prod.status` and `record.dev.status` (nested inside the `prod`/`dev` objects). This is the same schema that tolerance `match()` and `normalize()` functions receive in `ctx.record`.
 
-The `comparison` field is added by the comparison engine — it's absent in `comparison.ndjson` but present in `deltas.ndjson`. The `comparison.ndjson` input also has `ts`, `match` fields not carried to deltas.
+The `comparison` field is added by the comparison engine — it's absent in the input `comparison.ndjson` but present in `deltas.ndjson`. It always has `category` and `op` (the detected FHIR operation: expand, validate-code, lookup, read, etc.). Additional fields vary by category (e.g., `result-disagrees` includes `prodResult`/`devResult`/`system`/`code`; `content-differs` includes `diffs`). The input `comparison.ndjson` also has `ts`, `match` fields not carried to deltas.
 
 POST requests have `url` with trailing `?` (no query params).
 GET requests (like $lookup) have params in the URL.
 
-The comparison engine writes all non-OK/non-SKIP records to `results/deltas/deltas.ndjson`. Filtering by priority is done at read time, not write time.
+The comparison engine writes all non-OK/non-SKIP records to `results/deltas/deltas.ndjson`.
 
 ## FHIR Terminology Operations
 
@@ -79,24 +79,21 @@ Things that are safe to normalize away are differences with no impact on termino
 
 When in doubt, treat a difference as potentially meaningful.
 
-## Priority Classification
+## Comparison Categories
 
-The comparison engine assigns each record a priority based on status codes and content:
+The comparison engine assigns each record a descriptive category based on how prod and dev responses differ:
 
-| Priority | Condition | What it means | Typical action |
-|----------|-----------|---------------|----------------|
-| P0 | prod=200, dev=500 | Dev crashes on a valid request | File bug — find the crash, add null guard / fix method |
-| P1 | Both 200, `result` boolean disagrees | Core terminology operation gives wrong answer | Investigate — likely logic bug, wrong edition, missing data |
-| P2 | prod=4xx, dev=500 | Dev crashes on bad input (should return error gracefully) | File bug — error handling path crashes |
-| P3 | prod=200, dev=404 | Resource exists in prod but missing from dev | Data/config gap — load missing resource |
-| P4 | Status codes differ (not P0/P2/P3) | Both know it's an error, disagree on HTTP code | Fix status code selection logic |
-| P6 | Same status, same result, content differs | Catch-all after normalization | Could be cosmetic, version skew, or subtle bug — needs triage |
+| Category | Condition | What it means |
+|----------|-----------|---------------|
+| `dev-crash-on-valid` | prod=200, dev=500 | Dev crashes on a valid request |
+| `dev-crash-on-error` | prod=4xx, dev=500 | Dev crashes on bad input (should return error gracefully) |
+| `result-disagrees` | Both 200, `result` boolean disagrees | Core terminology operation gives wrong answer |
+| `missing-resource` | prod=200, dev=404 | Resource exists in prod but missing from dev |
+| `status-mismatch` | Status codes differ (not covered above) | Both know it's an error, disagree on HTTP code |
+| `parse-error` | One or both bodies failed JSON parsing | Usually a data collection artifact (body truncation) |
+| `content-differs` | Same status, same result, content differs | Catch-all — could be cosmetic, version skew, or subtle bug |
 
-P0-P4 are usually straightforward: group records by error pattern, file bugs. P6 is the hard bucket — a mix of noise, real bugs, and ambiguous differences that requires iterative tolerance development.
-
-For **P0-P4**, the primary goal is grouping records by error pattern and filing bugs. Normalizations are less common since the differences are usually clear bugs (crashes, missing resources, wrong status codes).
-
-For **P6**, focus on whether each difference is cosmetic or substantive, and develop tolerances to clear recognizable patterns.
+These are descriptive labels, not priority rankings. A `content-differs` record may be more urgent than a `status-mismatch` depending on what the actual difference is. All categories need triage.
 
 ## Known Cosmetic Differences (Always Ignore)
 
@@ -129,7 +126,7 @@ git-bug bug
 git-bug bug show <BUG_ID>
 ```
 
-Always add the `tx-compare` label. Use priority labels like `P0`, `P1`, etc.
+Always add the `tx-compare` label. Also add the record's comparison category as a label (e.g., `content-differs`, `status-mismatch`).
 Include in the bug description:
 - The comparison record ID so a reader can `grep -n '<ID>' <job-dir>/comparison.ndjson`
 - The operation and URL
@@ -161,7 +158,7 @@ The `ctx` object passed to both functions:
     dev:  { status, ... },    // dev response metadata — status is record.dev.status
     prodBody, devBody,        // raw response body strings
     requestBody,              // raw request body (when available)
-    comparison: { priority, reason, op },  // only in deltas, not in comparison.ndjson
+    comparison: { category, op, ... },  // added by compare.js — only in deltas
   },
   prod: object | null,        // parsed prodBody (JSON object)
   dev:  object | null,        // parsed devBody (JSON object)
@@ -214,7 +211,7 @@ Issue directories are keyed by the record's `id` field (a UUID assigned during d
 ## File Locations
 
 ### Stable tools (`engine/`)
-- `engine/compare.js` - Comparison engine (pipeline + priority assignment)
+- `engine/compare.js` - Comparison engine (pipeline + category assignment)
 - `engine/next-record.js` - Sequential record picker, creates issue directories
 - `engine/stream-filter.py` - Claude stream-json output filter
 - `engine/dump-bugs.sh`, `engine/dump-bugs-html.py` - Bug report generators
@@ -241,9 +238,9 @@ Issue directories are keyed by the record's `id` field (a UUID assigned during d
 Each triage round lives in its own job directory, created by `prompts/start-triage.sh`:
 - `comparison.ndjson` - Raw paired responses (input data for this job)
 - `tolerances.js` - Working tolerances (copied from baseline, built up during triage)
-- `progress.ndjson` - Append-only log, one line per record pick: `{pickedAt, recordId, total, analyzed, remaining, priority}`
+- `progress.ndjson` - Append-only log, one line per record pick: `{pickedAt, recordId, total, analyzed, remaining, category}`
 - `results/summary.json` - Comparison stats
-- `results/deltas/deltas.ndjson` - All non-OK/non-SKIP records with priority in comparison metadata
+- `results/deltas/deltas.ndjson` - All non-OK/non-SKIP records with category in comparison metadata
 - `issues/<record-uuid>/` - Per-record triage workspace:
   - `record.json` - Full delta record (pretty-printed)
   - `prod-raw.json` / `dev-raw.json` - Parsed response bodies

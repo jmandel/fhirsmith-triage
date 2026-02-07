@@ -39,23 +39,23 @@ def run_git_bug():
     return bugs
 
 
-def classify_priority(bug):
-    """Determine the priority group for a bug."""
+def classify_group(bug):
+    """Determine the display group for a bug based on its labels."""
     labels = [l.lower() for l in bug.get("labels", [])]
 
-    for p in ["p0", "p1", "p2", "p3", "p4"]:
+    # Descriptive category labels (current scheme)
+    category_labels = [
+        "dev-crash-on-valid", "dev-crash-on-error", "result-disagrees",
+        "missing-resource", "status-mismatch", "parse-error", "content-differs",
+    ]
+    for cat in category_labels:
+        if cat in labels:
+            return cat
+
+    # Legacy P-labels (from before the category refactor)
+    for p in ["p0", "p1", "p2", "p3", "p4", "p6"]:
         if p in labels:
             return p.upper()
-
-    # Check for temp tolerance pattern
-    title = bug.get("title", "").lower()
-    body = ""
-    comments = bug.get("comments", [])
-    if isinstance(comments, list) and len(comments) > 0:
-        body = comments[0].get("message", "").lower()
-
-    if "tolerance" in title or "tolerance" in body or "temporary" in title or "temporary" in body:
-        return "Temp Tolerances"
 
     return "Other"
 

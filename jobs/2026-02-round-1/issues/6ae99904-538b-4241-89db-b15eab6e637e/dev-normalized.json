@@ -1,0 +1,25 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "[in_i]"
+    },
+    {
+      "name": "display",
+      "valueString": "(inch)"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://unitsofmeasure.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.2"
+    }
+  ],
+  "resourceType": "Parameters"
+}

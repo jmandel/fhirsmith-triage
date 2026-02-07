@@ -1,0 +1,29 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://unitsofmeasure.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "[in_i]"
+    },
+    {
+      "name": "version",
+      "valueString": "2.2"
+    },
+    {
+      "name": "display",
+      "valueString": "(inch)"
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: Analysing http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1 for validation purposes\n0ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: Prepare include[0]: \"()\"\n0ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: CodeSystem found: \"http://unitsofmeasure.org|2.2\"\n0ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: Validate \"[undefined#[in_i] (\"undefined\")]\"\n1ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: Check \"http://unitsofmeasure.org#[in_i]\"\n1ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: CodeSystem found: http://unitsofmeasure.org|2.2 for http://unitsofmeasure.org\n1ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: check code in () at Coding\n1ms http://hl7.org/fhir/ValueSet/ucum-vitals-common|4.0.1: Code \"[in_i]\" found in http://unitsofmeasure.org|2.2"
+    }
+  ]
+}

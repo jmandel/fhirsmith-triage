@@ -88,7 +88,7 @@ function compareRecord(record) {
   for (const t of tolerances) {
     const action = t.match(ctx);
     if (action === 'skip') {
-      return { priority: 'SKIP', reason: t.id, op };
+      return { category: 'SKIP', reason: t.id, op };
     }
     if (action === 'normalize' && ctx.prod && ctx.dev) {
       const result = t.normalize(ctx);
@@ -102,16 +102,16 @@ function compareRecord(record) {
   // Status code mismatch cases
   if (prodStatus !== devStatus) {
     if (devStatus === 500) {
-      if (prodStatus === 200) return { priority: 'P0', reason: 'dev-crash-on-valid', op };
-      return { priority: 'P2', reason: 'dev-crash-on-error', op, prodStatus, devStatus };
+      if (prodStatus === 200) return { category: 'dev-crash-on-valid', op };
+      return { category: 'dev-crash-on-error', op, prodStatus, devStatus };
     }
-    if (prodStatus === 200 && devStatus === 404) return { priority: 'P3', reason: 'missing-resource', op };
-    return { priority: 'P4', reason: 'status-mismatch', op, prodStatus, devStatus };
+    if (prodStatus === 200 && devStatus === 404) return { category: 'missing-resource', op };
+    return { category: 'status-mismatch', op, prodStatus, devStatus };
   }
 
   // Parse failure
   if (!prod || !dev) {
-    return { priority: 'P6', reason: 'parse-error', op };
+    return { category: 'parse-error', op };
   }
 
   // Check result boolean (for validate-code)
@@ -119,8 +119,7 @@ function compareRecord(record) {
   const devResult = getParamValue(dev, 'result');
   if (prodResult !== undefined && devResult !== undefined && prodResult !== devResult) {
     return {
-      priority: 'P1',
-      reason: 'result-disagrees',
+      category: 'result-disagrees',
       op,
       prodResult,
       devResult,
@@ -131,13 +130,12 @@ function compareRecord(record) {
 
   // Deep compare normalized bodies
   if (deepEqual(prod, dev)) {
-    return { priority: 'OK', reason: 'match-after-normalization', op };
+    return { category: 'OK', reason: 'match-after-normalization', op };
   }
 
   // Find specific differences
   return {
-    priority: 'P6',
-    reason: 'content-differs',
+    category: 'content-differs',
     op,
     diffs: findParameterDiffs(prod, dev),
   };
@@ -175,8 +173,8 @@ class OutputWriter {
     this.counts = {};
   }
 
-  write(priority, record, comparison) {
-    this.counts[priority] = (this.counts[priority] || 0) + 1;
+  write(category, record, comparison) {
+    this.counts[category] = (this.counts[category] || 0) + 1;
     this.stream.write(JSON.stringify({
       id: record.id,
       url: record.url,
@@ -210,7 +208,7 @@ async function main() {
     totalRecords: 0,
     skipped: 0,
     skippedReasons: {},
-    priorities: {},
+    categories: {},
     operationBreakdown: {},
   };
 
@@ -232,24 +230,24 @@ async function main() {
     }
 
     const comparison = compareRecord(record);
-    const priority = comparison.priority;
+    const category = comparison.category;
 
     // Handle skipped records
-    if (priority === 'SKIP') {
+    if (category === 'SKIP') {
       summary.skipped++;
       summary.skippedReasons[comparison.reason] = (summary.skippedReasons[comparison.reason] || 0) + 1;
       continue;
     }
 
     // Track stats
-    summary.priorities[priority] = (summary.priorities[priority] || 0) + 1;
+    summary.categories[category] = (summary.categories[category] || 0) + 1;
     const op = comparison.op || 'unknown';
     if (!summary.operationBreakdown[op]) summary.operationBreakdown[op] = {};
-    summary.operationBreakdown[op][priority] = (summary.operationBreakdown[op][priority] || 0) + 1;
+    summary.operationBreakdown[op][category] = (summary.operationBreakdown[op][category] || 0) + 1;
 
     // Write delta (skip OK matches)
-    if (priority !== 'OK') {
-      writers.write(priority, record, comparison);
+    if (category !== 'OK') {
+      writers.write(category, record, comparison);
     }
 
     if (summary.totalRecords % 1000 === 0) {
@@ -266,13 +264,13 @@ async function main() {
   console.log(`\n\nComparison complete.`);
   console.log(`  Total records: ${summary.totalRecords}`);
   console.log(`  Skipped (tolerance rules): ${summary.skipped}`);
-  console.log(`\nPriority breakdown:`);
-  for (const [p, count] of Object.entries(summary.priorities).sort()) {
-    console.log(`  ${p}: ${count}`);
+  console.log(`\nCategory breakdown:`);
+  for (const [c, count] of Object.entries(summary.categories).sort()) {
+    console.log(`  ${c}: ${count}`);
   }
   console.log(`\nOperation breakdown:`);
-  for (const [op, priorities] of Object.entries(summary.operationBreakdown).sort()) {
-    const parts = Object.entries(priorities).sort().map(([p, c]) => `${p}=${c}`).join(', ');
+  for (const [op, categories] of Object.entries(summary.operationBreakdown).sort()) {
+    const parts = Object.entries(categories).sort().map(([c, n]) => `${c}=${n}`).join(', ');
     console.log(`  ${op}: ${parts}`);
   }
   console.log(`\nResults written to ${outDir}/`);
