@@ -1,0 +1,29 @@
+{
+  "id": "392830d5-650f-42a4-9149-a8f7a1246016",
+  "url": "/r4/ValueSet/$batch-validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1246,
+    "hash": "cee0a37837b5f2acaee57fcf4d830488"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1165,
+    "hash": "0f562d0859d4c052ce2c562bedb03a37"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "batch-validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "validation"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"validation\",\"resource\" : {\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://unitsofmeasure.org\"},{\"name\" : \"code\",\"valueCode\" : \"Torr\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code 'Torr' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'Torr' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]},{\"severity\" : \"information\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Error processing Unit: 'Torr': The unit \\\"Torr\\\" is unknown at character 1\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://unitsofmeasure.org\"},{\"name\":\"code\",\"valueCode\":\"Torr\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'Torr' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'Torr' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"location\":[\"Coding.code\"],\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"information\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Error processing unit 'Torr': The unit 'Torr' is unknown at character 1\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"location\":[\"Coding.code\"],\"expression\":[\"Coding.code\"]}]}}]}}]}"
+}

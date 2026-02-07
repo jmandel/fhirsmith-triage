@@ -1,0 +1,70 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "300916003",
+            "display": "Latex allergy",
+            "system": "http://snomed.info/sct"
+          }
+        ],
+        "text": "Latex allergy"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "this-code-not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#300916003 ('Latex allergy')' was not found in the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8|20180503'"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "severity": "information"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8|20180503'"
+            },
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1186.8|20180503'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

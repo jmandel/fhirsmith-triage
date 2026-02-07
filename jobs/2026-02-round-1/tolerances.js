@@ -504,18 +504,19 @@ const tolerances = [
 
   {
     id: 'snomed-version-skew',
-    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version and display parameters to prod values. Display text changes between editions as preferred terms are updated (e.g. "Rehabilitation - specialty" → "Rehabilitation specialty"). Affects ~279 validate-code records for http://snomed.info/sct.',
+    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version and display parameters to prod values. Display text changes between editions as preferred terms are updated (e.g. "Rehabilitation - specialty" → "Rehabilitation specialty"). Also matches ValueSet $validate-code with result=false where system param is absent but version URIs identify SNOMED. Affects ~292 validate-code records for http://snomed.info/sct.',
     kind: 'temp-tolerance',
     bugId: 'da50d17',
     tags: ['normalize', 'version-skew', 'snomed'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
       const prodSystem = getParamValue(prod, 'system');
-      if (prodSystem !== 'http://snomed.info/sct') return null;
       const prodVersion = getParamValue(prod, 'version');
       const devVersion = getParamValue(dev, 'version');
       if (!prodVersion || !devVersion) return null;
       if (!prodVersion.includes('snomed.info/sct') || !devVersion.includes('snomed.info/sct')) return null;
+      // Match when system is SNOMED, OR when system is absent but version URIs identify SNOMED
+      if (prodSystem && prodSystem !== 'http://snomed.info/sct') return null;
       if (prodVersion === devVersion) return null;
       return 'normalize';
     },
@@ -2080,6 +2081,118 @@ const tolerances = [
         parameter: devNorm.parameter.slice().sort((a, b) => a.name.localeCompare(b.name)),
       };
       return { prod, dev: devNorm };
+    },
+  },
+
+  {
+    id: 'ucum-error-message-format',
+    description: 'UCUM error message formatting differs: prod says "Error processing Unit: \'Torr\': The unit \\"Torr\\" is unknown", dev says "Error processing unit \'Torr\': The unit \'Torr\' is unknown". Different capitalization, punctuation, and quoting style. Both convey the same parse error. Affects 1 batch-validate-code record for http://unitsofmeasure.org.',
+    kind: 'temp-tolerance',
+    bugId: '4f27f83',
+    tags: ['normalize', 'message-text', 'ucum', 'batch-validate-code'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$batch-validate-code') && !record.url.includes('$validate-code')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      // Collect all issue texts from nested validation resources and top-level
+      function collectIssueTexts(body) {
+        const texts = [];
+        if (!body?.parameter) return texts;
+        for (const p of body.parameter) {
+          if (p.name === 'issues' && p.resource?.issue) {
+            for (const iss of p.resource.issue) texts.push(iss.details?.text || '');
+          }
+          if (p.name === 'validation' && p.resource?.parameter) {
+            for (const vp of p.resource.parameter) {
+              if (vp.name === 'issues' && vp.resource?.issue) {
+                for (const iss of vp.resource.issue) texts.push(iss.details?.text || '');
+              }
+            }
+          }
+        }
+        return texts;
+      }
+      const prodTexts = collectIssueTexts(prod);
+      const devTexts = collectIssueTexts(dev);
+      for (let i = 0; i < Math.min(prodTexts.length, devTexts.length); i++) {
+        if (prodTexts[i] !== devTexts[i] &&
+            prodTexts[i].includes('Error processing Unit') &&
+            devTexts[i].includes('Error processing unit')) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Build prod issue text index for canonicalization
+      function collectProdIssueTexts(body) {
+        const texts = [];
+        if (!body?.parameter) return texts;
+        for (const p of body.parameter) {
+          if (p.name === 'issues' && p.resource?.issue) {
+            for (const iss of p.resource.issue) texts.push(iss.details?.text || '');
+          }
+          if (p.name === 'validation' && p.resource?.parameter) {
+            for (const vp of p.resource.parameter) {
+              if (vp.name === 'issues' && vp.resource?.issue) {
+                for (const iss of vp.resource.issue) texts.push(iss.details?.text || '');
+              }
+            }
+          }
+        }
+        return texts;
+      }
+      const prodTexts = collectProdIssueTexts(prod);
+      let textIdx = 0;
+
+      function fixIssues(issues) {
+        return issues.map(iss => {
+          const idx = textIdx++;
+          const dt = iss.details?.text || '';
+          const pt = prodTexts[idx] || '';
+          if (dt !== pt &&
+              pt.includes('Error processing Unit') &&
+              dt.includes('Error processing unit')) {
+            return { ...iss, details: { ...iss.details, text: pt } };
+          }
+          return iss;
+        });
+      }
+
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        textIdx = 0;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: { ...p.resource, issue: fixIssues(p.resource.issue) },
+              };
+            }
+            if (p.name === 'validation' && p.resource?.parameter) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  parameter: p.resource.parameter.map(vp => {
+                    if (vp.name === 'issues' && vp.resource?.issue) {
+                      return {
+                        ...vp,
+                        resource: { ...vp.resource, issue: fixIssues(vp.resource.issue) },
+                      };
+                    }
+                    return vp;
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+
+      return { prod, dev: canonicalize(dev) };
     },
   },
 

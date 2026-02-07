@@ -1288,74 +1288,6 @@ a3cf69a7-48f3-47b8-a29d-cd6453647621 — POST /r4/CodeSystem/$validate-code for 
 
 ---
 
-### [ ] `b9e3cfd` Expand display text differs between prod and dev for same codes
-
-Records-Impacted: 157
-Tolerance-ID: expand-display-text-differs
-Record-ID: 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e
-
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
-```
-
-Prod returns display `"Product containing gonadotropin releasing hormone receptor antagonist (product)"` (FSN), dev returns `"Gonadotropin releasing hormone antagonist"` (inactive synonym). Same SNOMED version on both servers (20250201).
-
-#####What differs
-
-In $expand responses, display text for the same code differs between prod and dev in
-expansion.contains[].display. Both servers return the same codes in the same order, but
-with different human-readable display strings.
-
-Examples:
-- SNOMED 116101001: prod="Product containing gonadotropin releasing hormone receptor
-antagonist (product)", dev="Gonadotropin releasing hormone antagonist"
-- SNOMED 425901007: prod="IVF - In vitro fertilisation with intracytoplasmic sperm
-injection (ICSI)", dev="In vitro fertilization with intracytoplasmic sperm injection
-(procedure)"
-- SNOMED 60001007: prod="Not pregnant", dev="Non pregnant state"
-- ISO 3166 CUW: prod="Curagao", dev="Curaçao" (character encoding/data edition)
-- ISO 3166 ALA: prod="Eland Islands", dev="Åland Islands"
-
-#####How widespread
-
-157 expand delta records have display text diffs in expansion.contains.
-
-By code system:
-- http://snomed.info/sct: 134 records
-- urn:iso:std:iso:3166: 22 records
-- http://unitsofmeasure.org: 1 record
-
-Search: Compared expansion.contains display values between prodBody and devBody for
-all expand deltas in results/deltas/deltas.ndjson.
-
-#####What the tolerance covers
-
-Tolerance ID: expand-display-text-differs
-Matches: $expand responses (resourceType=ValueSet with expansion) where any
-contains[].display differs between prod and dev for the same code.
-Normalizes: Sets both sides' display to prod's value (canonical), preserving other
-field differences.
-
-#####Representative records
-
-- 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e (SNOMED 116101001)
-- 44f0851b-80e8-4a27-b05e-551c0522e39b (SNOMED 425901007, 161744009)
-- 2ff10aef-7210-489d-bb28-6c7739c27027 (ISO 3166 CUW, ALA, CIV)
-
----
-
 ### [ ] `e5a78af` ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits
 
 Records-Impacted: 7
@@ -2220,6 +2152,24 @@ Records-Impacted: 150
 Tolerance-ID: validate-code-missing-message-on-true
 Record-ID: e934228b-f819-4119-bdd2-dcf4a72988bc
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-9-cm"},{"name":"code","valueCode":"441"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-9-cm"},{"name":"code","valueCode":"441"}]}'
+```
+
+Prod returns `result: true` with a `message` parameter: "Unknown Code '441' in the CodeSystem 'http://hl7.org/fhir/sid/icd-9-cm' version '2015' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment". Dev returns `result: true` but omits the `message` parameter entirely.
+
 #####What differs
 
 Dev omits the `message` output parameter on $validate-code responses when `result=true`. Prod includes it. The FHIR spec explicitly states that when result is true, the message parameter "carries hints and warnings."
@@ -2255,6 +2205,24 @@ e934228b-f819-4119-bdd2-dcf4a72988bc — POST /r4/CodeSystem/$validate-code for 
 Records-Impacted: 10
 Tolerance-ID: cpt-validate-code-missing-info-issue
 Record-ID: e8127050-3f19-4115-bf45-a50dfea09d40
+
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"19304"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"19304"}]}'
+```
+
+Prod returns 2 OperationOutcome issues: `severity=error` ("Unknown code '19304' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'") and `severity=information` ("Code '19304' not found in CPT"). Dev returns only the error issue and omits the informational one.
 
 #####What differs
 
@@ -2309,6 +2277,26 @@ Records-Impacted: 4
 Tolerance-ID: cpt-validate-code-unknown-vs-invalid-display
 Record-ID: d6a5e829-c5cc-44f3-b708-9615095c396b
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-H 'Accept-Language: en-US' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"99235"},{"name":"display","valueString":"Observation or inpatient hospital care for problems of moderate severity"}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-H 'Accept-Language: en-US' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"99235"},{"name":"display","valueString":"Observation or inpatient hospital care for problems of moderate severity"}]}'
+```
+
+Prod returns `result=false` with issue `invalid-display` ("Wrong Display Name") — it finds CPT 99235 but rejects the display. Dev returns `result=false` with issue `invalid-code` ("Unknown code '99235'") — it cannot find the code at all. Confirmed 2026-02-07.
+
 #####What differs
 
 On POST /r4/CodeSystem/$validate-code for CPT code 99235, both servers return result=false, but for entirely different reasons:
@@ -2343,6 +2331,24 @@ Eliminates: 4 records.
 Records-Impacted: 2
 Tolerance-ID: validate-code-undefined-code-message-diff
 Record-ID: 712fb856-cb1d-47ca-87a5-3b9d82bfc8cd
+
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/ValueSet/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"coding","valueCoding":{"system":"http://loinc.org"}}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/ValueSet/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"coding","valueCoding":{"system":"http://loinc.org"}}]}'
+```
+
+Prod returns message with `'http://loinc.org#'` (empty code, correct), plus `version: "2.81"`. Dev returns message with `'http://loinc.org#undefined'` (JS undefined coercion), an extra `invalid-code` OperationOutcome issue for "Unknown code 'undefined'", and omits the `version` parameter.
 
 #####What differs
 
@@ -2381,6 +2387,25 @@ Records-Impacted: 8
 Tolerance-ID: message-concat-missing-issues
 Record-ID: 69462376-1a61-4aa3-a8ea-3a140347fb3a
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"SI"}},{"name":"abstract","valueBoolean":false}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"SI"}},{"name":"abstract","valueBoolean":false}]}'
+```
+
+Prod message: `"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated; Coding.system must be an absolute reference, not a local reference"` (both issue texts joined with `; `).
+Dev message: `"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"` (only first issue text). Both servers return identical OperationOutcome `issues` with both errors.
+
 #####What differs
 
 When a $validate-code response has multiple OperationOutcome issues, the `message` parameter should concatenate all issue texts (joined with `; `). Prod does this correctly. Dev only includes the text from the first issue in the `message` parameter, omitting subsequent issue texts.
@@ -2411,6 +2436,28 @@ Tolerance `message-concat-missing-issues` normalizes the `message` parameter to 
 Records-Impacted: 3
 Tolerance-ID: searchset-duplicate-entries
 Record-ID: 71e7b8c5-f8da-4323-b233-575727a2f583
+
+#####Repro
+
+```bash
+####Prod (ValueSet search - returns 2 entries)
+curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
+-H 'Accept: application/fhir+json'
+
+####Dev (ValueSet search - returns 1 entry)
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
+-H 'Accept: application/fhir+json'
+
+####Prod (CodeSystem search - returns 2 entries)
+curl -s 'https://tx.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
+-H 'Accept: application/fhir+json'
+
+####Dev (CodeSystem search - returns 1 entry)
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `total: 2` with duplicate entries for both the ValueSet and CodeSystem searches. Dev returns `total: 1` with a single entry in each case. For the ValueSet, the two prod entries have different `meta.lastUpdated` timestamps (2024-04-29 vs 2025-10-22). For the CodeSystem, the two prod entries are identical copies. Tested 2026-02-07.
 
 #####What differs
 
@@ -2465,6 +2512,44 @@ Found with:
 grep through deltas.ndjson for records where both prod.status=500 and dev.status=500,
 then checked OperationOutcome issue field structure differences. All 4 records show
 the same pattern.
+
+---
+
+### [ ] `451c583` Dev returns x-unknown-system for code system versions that prod recognizes
+
+Records-Impacted: 5
+Tolerance-ID: validate-code-x-unknown-system-extra
+Record-ID: e23bae38-016e-46ef-bd71-160ddb1ea35a
+
+#####What differs
+
+When validating a code against a ValueSet where the requested code system version is not found, dev and prod behave differently:
+
+1. **x-unknown-system parameter**: Dev returns an extra `x-unknown-system` parameter (e.g., `urn:oid:2.16.840.1.113883.6.238|v1`), prod does not.
+2. **Extra OperationOutcome issue**: Dev returns an additional issue with code `not-found`, message-id `UNKNOWN_CODESYSTEM_VERSION`, and text like "A definition for CodeSystem '...' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2". Prod only returns the `not-in-vs` issue.
+3. **Message text**: Dev's message parameter prepends the unknown-system error before the not-in-vs message. Prod only includes the not-in-vs message.
+4. **Display parameter**: Prod returns a display value (e.g., "Black or African American") looked up from its known version. Dev omits display entirely since it considers the system unknown.
+5. **Version parameter**: Prod returns two version parameters — the actual known version (`1.2`) and the requested version (`v1`). Dev only returns the requested version (`v1`).
+
+Both agree `result=false`, so the validation outcome is the same. The difference is in how each server handles the unknown version — prod falls back to a known version and provides display/version details, while dev treats the version as entirely unknown.
+
+#####How widespread
+
+5 records in deltas match this pattern (all POST /r4/ValueSet/$validate-code with `x-unknown-system` in dev response):
+- 4 records involve `urn:oid:2.16.840.1.113883.6.238|v1` (CDC Race and Ethnicity)
+- 1 record involves `http://snomed.info/sct|http://snomed.info/sct/731000124108/version/20250301` (SNOMED edition)
+
+Search: `grep -c 'x-unknown-system' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 5
+Full comparison data has 21 records mentioning x-unknown-system (16 handled by existing tolerances).
+
+#####What the tolerance covers
+
+Tolerance ID: `validate-code-x-unknown-system-extra`. Matches $validate-code responses where dev has `x-unknown-system` parameter that prod lacks. Normalizes by:
+- Stripping `x-unknown-system` from dev
+- Canonicalizing message and issues to prod's values
+- Canonicalizing display and version to prod's values
+
+Eliminates 5 delta records.
 
 ---
 

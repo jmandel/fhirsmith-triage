@@ -1760,13 +1760,14 @@
             "lamport": 41
         },
         "edit_time": {
-            "timestamp": 1770495366,
-            "time": "2026-02-07T14:16:06-06:00",
-            "lamport": 208
+            "timestamp": 1770497813,
+            "time": "2026-02-07T14:56:53-06:00",
+            "lamport": 235
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "validate-code: dev omits message parameter when result=true",
@@ -1804,13 +1805,14 @@
             "lamport": 42
         },
         "edit_time": {
-            "timestamp": 1770495655,
-            "time": "2026-02-07T14:20:55-06:00",
-            "lamport": 211
+            "timestamp": 1770497823,
+            "time": "2026-02-07T14:57:03-06:00",
+            "lamport": 240
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "CPT validate-code: dev omits informational 'Code X not found in CPT' issue",
@@ -1892,13 +1894,14 @@
             "lamport": 44
         },
         "edit_time": {
-            "timestamp": 1770496190,
-            "time": "2026-02-07T14:29:50-06:00",
-            "lamport": 217
+            "timestamp": 1770497829,
+            "time": "2026-02-07T14:57:09-06:00",
+            "lamport": 242
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "CPT validate-code: dev says 'Unknown code' while prod says 'Wrong Display Name' for same CPT codes",
@@ -1936,13 +1939,14 @@
             "lamport": 45
         },
         "edit_time": {
-            "timestamp": 1770496477,
-            "time": "2026-02-07T14:34:37-06:00",
-            "lamport": 220
+            "timestamp": 1770497819,
+            "time": "2026-02-07T14:56:59-06:00",
+            "lamport": 239
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev stringifies undefined code as literal 'undefined' in validate-code error messages",
@@ -1980,13 +1984,14 @@
             "lamport": 46
         },
         "edit_time": {
-            "timestamp": 1770496722,
-            "time": "2026-02-07T14:38:42-06:00",
-            "lamport": 223
+            "timestamp": 1770497837,
+            "time": "2026-02-07T14:57:17-06:00",
+            "lamport": 244
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "validate-code message parameter only includes first issue text instead of all",
@@ -2024,13 +2029,14 @@
             "lamport": 47
         },
         "edit_time": {
-            "timestamp": 1770497007,
-            "time": "2026-02-07T14:43:27-06:00",
-            "lamport": 226
+            "timestamp": 1770497816,
+            "time": "2026-02-07T14:56:56-06:00",
+            "lamport": 237
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Prod returns duplicate entries in searchset Bundle for same resource URL",
@@ -2078,6 +2084,50 @@
             "tx-compare"
         ],
         "title": "500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "451c5832b20121b6edb57390ca9e2b520099d4d0eb445f69fdc8cc9310fe6551",
+        "human_id": "451c583",
+        "create_time": {
+            "timestamp": 1770497601,
+            "time": "2026-02-07T14:53:21-06:00",
+            "lamport": 49
+        },
+        "edit_time": {
+            "timestamp": 1770497606,
+            "time": "2026-02-07T14:53:26-06:00",
+            "lamport": 232
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev returns x-unknown-system for code system versions that prod recognizes",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
