@@ -432,7 +432,7 @@ const tolerances = [
 
   {
     id: 'searchset-bundle-wrapper',
-    description: 'Searchset Bundle wrapper differences: dev includes empty entry:[] arrays (invalid FHIR), extra first/last pagination links, absolute URLs with _offset param. Prod includes server-generated id/meta. Normalizes both sides by stripping id, meta, removing empty entry arrays, and keeping only self link relation with normalized URL. Affects ~498 records (ValueSet and CodeSystem searches). Does NOT hide entry content differences for non-empty results.',
+    description: 'Searchset Bundle wrapper differences: dev includes empty entry:[] arrays (invalid FHIR), extra first/last pagination links, absolute URLs with _offset param, and search.mode on entries. Prod includes server-generated id/meta. Normalizes both sides by stripping id, meta, links, entry-level search elements, and removing empty entry arrays. Affects ~498 records (ValueSet and CodeSystem searches). Does NOT hide entry content differences for non-empty results.',
     kind: 'temp-tolerance',
     bugId: '4233647',
     tags: ['normalize', 'searchset', 'bundle-wrapper'],
@@ -451,6 +451,15 @@ const tolerances = [
         // Remove empty entry arrays (invalid FHIR)
         if (Array.isArray(result.entry) && result.entry.length === 0) {
           delete result.entry;
+        }
+        // Strip search element from entries — dev adds search.mode:"match"
+        // on searchset entries, prod omits it. Both are valid FHIR (optional).
+        if (Array.isArray(result.entry)) {
+          result.entry = result.entry.map(e => {
+            if (!e.search) return e;
+            const { search, ...rest } = e;
+            return rest;
+          });
         }
         // Strip all links — self/first/last links echo back the search URL
         // in different formats (relative vs absolute, encoded vs decoded,

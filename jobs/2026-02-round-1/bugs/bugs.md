@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_16 bugs (16 open, 0 closed)_
+_17 bugs (17 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -49,6 +49,24 @@ Search: `grep 'dicom-cid-29\|sect_CID_29' deltas.ndjson` finds all 10.
 Records-Impacted: 296
 Tolerance-ID: expand-422-vs-404-codesystem-not-found
 Record-ID: eee2c985-52e0-4520-b4e4-01766ede5a7d
+
+#####Repro
+
+```bash
+####Prod (returns 422)
+curl -s -w '\nHTTP Status: %{http_code}\n' 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://ontariohealth.ca/fhir/questionnaire/CodeSystem/breastSiteCodes"}]}}}]}'
+
+####Dev (returns 404)
+curl -s -w '\nHTTP Status: %{http_code}\n' 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://ontariohealth.ca/fhir/questionnaire/CodeSystem/breastSiteCodes"}]}}}]}'
+```
+
+Prod returns HTTP 422, dev returns HTTP 404. Both return the same OperationOutcome error: "A definition for CodeSystem '...' could not be found, so the value set cannot be expanded".
 
 #####What differs
 
@@ -136,6 +154,24 @@ URL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-
 Records-Impacted: 318
 Tolerance-ID: dev-empty-string-expression-location
 Record-ID: 7de52d92-3166-495e-ac5e-af262b1019e4
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"109691-6","display":"Influenza virus A Ag [Measurement] in Nasopharynx"}]}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"109691-6","display":"Influenza virus A Ag [Measurement] in Nasopharynx"}]}}]}'
+```
+
+At data collection time, prod omitted `expression` and `location` on the TX_GENERAL_CC_ERROR_MESSAGE issue (correct), while dev returned `"expression": [""]` and `"location": [""]` (invalid FHIR). As of 2026-02-07, dev no longer returns the empty-string fields — the bug appears fixed on the current dev server.
 
 Dev returns `"expression": [""]` and `"location": [""]` on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.
 
@@ -411,6 +447,36 @@ Records-Impacted: 690
 Tolerance-ID: expand-dev-empty-id
 Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
 
+#####Repro
+
+Attempted to reproduce on 2026-02-07 but the bug appears to have been **fixed** on tx-dev.fhir.org since the data was collected (2026-02-06).
+
+Tried 4 different $expand POST requests — none returned `"id":""` from dev:
+
+```bash
+####Test 1: Inline ValueSet with SNOMED concept
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"160245001"}]}]}}}]}'
+
+####Test 2: Registered ValueSet by URL
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medicationrequest-category"}]}'
+
+####Test 3: Inline ValueSet with LOINC
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"8480-6"}]}]}}}]}'
+```
+
+All three return a ValueSet without `"id":""`. Both inline and registered ValueSet expansions now omit `id` entirely, matching prod behavior.
+
+**Status**: No longer reproducible — likely fixed between 2026-02-06 and 2026-02-07.
+
 Dev $expand responses include `"id": ""` at the top level of the returned ValueSet resource. Prod does not include an `id` field at all.
 
 #####What differs
@@ -452,6 +518,25 @@ Records-Impacted: 677
 Tolerance-ID: expand-dev-includeDefinition-param
 Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
 
+#####Repro
+
+```bash
+####Prod — does NOT echo includeDefinition=false (omits default-value parameter)
+curl -s "https://tx.fhir.org/r4/ValueSet/\$expand" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-status"},{"name":"excludeNested","valueBoolean":true},{"name":"includeDefinition","valueBoolean":false}]}'
+
+####Dev — echoes includeDefinition=false in expansion.parameter
+curl -s "https://tx-dev.fhir.org/r4/ValueSet/\$expand" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-status"},{"name":"excludeNested","valueBoolean":true},{"name":"includeDefinition","valueBoolean":false}]}'
+```
+
+Prod expansion.parameter: `[excludeNested, used-codesystem]` — no includeDefinition.
+Dev expansion.parameter: `[excludeNested, includeDefinition, used-codesystem]` — echoes `{"name":"includeDefinition","valueBoolean":false}`.
+
 Dev $expand responses include an extra `includeDefinition` parameter (value: false) in the expansion.parameter array. Prod does not include this parameter.
 
 #####What differs
@@ -480,7 +565,7 @@ for line in sys.stdin:
 ```json
 "parameter": [
 {"name":"excludeNested","valueBoolean":true},
-{"name":"includeDefinition","valueBoolean":false},  // <-- extra
+{"name":"includeDefinition","valueBoolean":false},
 {"name":"offset","valueInteger":0},
 ...
 ]
@@ -649,6 +734,41 @@ Tolerance `ndc-validate-code-extra-inactive-params` matches validate-code respon
 #####Representative record
 
 ac23726f-6ff2-4b72-b2c8-584922d04c92 — NDC code 0777-3105-02 (Prozac 100 capsule)
+
+---
+
+### [ ] `3967e97` Dev $expand includes extra ValueSet metadata (contact) that prod omits
+
+Records-Impacted: 12
+Tolerance-ID: expand-dev-extra-contact-metadata
+Record-ID: 80d06a63-cebf-4a33-af1b-583b4f6a1c10
+
+#####What differs
+
+Dev $expand responses include the ValueSet `contact` field (publisher contact information) that prod omits from expansion results. The contact data comes from the source ValueSet definition and contains HL7 FHIR contact info such as:
+
+- `{"telecom": [{"system": "url", "value": "http://hl7.org/fhir"}]}`
+- `{"telecom": [{"system": "url", "value": "http://hl7.org/fhir"}, {"system": "email", "value": "fhir@lists.hl7.org"}]}`
+
+Prod strips this metadata from the expansion response; dev passes it through.
+
+#####How widespread
+
+12 records in deltas, 59 in the full comparison dataset (others already eliminated by existing tolerances). All are $expand operations on /r4/ValueSet/$expand. Matched with:
+
+```
+grep '"contact":[' deltas.ndjson  # in devBody
+```
+
+Filtered to cases where dev has contact but prod does not.
+
+#####What the tolerance covers
+
+Tolerance `expand-dev-extra-contact-metadata` matches ValueSet $expand responses where dev has a `contact` field and prod does not. It strips the `contact` field from dev to normalize both sides. Eliminates 12 delta records (9 where contact was the sole remaining difference, 3 where other differences also exist — those 3 will remain in deltas due to the other differences).
+
+#####Representative record
+
+`80d06a63-cebf-4a33-af1b-583b4f6a1c10` — POST /r4/ValueSet/$expand for medicationrequest-category ValueSet. Dev includes `contact: [{telecom: [{system: "url", value: "http://hl7.org/fhir"}]}]`, prod omits it.
 
 ---
 

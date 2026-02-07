@@ -1,0 +1,1 @@
+searchset-bundle-wrapper: normalize

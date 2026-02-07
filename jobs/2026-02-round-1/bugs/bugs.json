@@ -52,9 +52,9 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770485477,
-            "time": "2026-02-07T11:31:17-06:00",
-            "lamport": 33
+            "timestamp": 1770487383,
+            "time": "2026-02-07T12:03:03-06:00",
+            "lamport": 64
         },
         "status": "open",
         "labels": [
@@ -272,9 +272,9 @@
             "lamport": 8
         },
         "edit_time": {
-            "timestamp": 1770485550,
-            "time": "2026-02-07T11:32:30-06:00",
-            "lamport": 47
+            "timestamp": 1770487320,
+            "time": "2026-02-07T12:02:00-06:00",
+            "lamport": 61
         },
         "status": "open",
         "labels": [
@@ -448,9 +448,9 @@
             "lamport": 12
         },
         "edit_time": {
-            "timestamp": 1770485530,
-            "time": "2026-02-07T11:32:10-06:00",
-            "lamport": 41
+            "timestamp": 1770487368,
+            "time": "2026-02-07T12:02:48-06:00",
+            "lamport": 63
         },
         "status": "open",
         "labels": [
@@ -492,9 +492,9 @@
             "lamport": 13
         },
         "edit_time": {
-            "timestamp": 1770485532,
-            "time": "2026-02-07T11:32:12-06:00",
-            "lamport": 43
+            "timestamp": 1770487321,
+            "time": "2026-02-07T12:02:01-06:00",
+            "lamport": 62
         },
         "status": "open",
         "labels": [
@@ -678,6 +678,50 @@
             "tx-compare"
         ],
         "title": "NDC validate-code: dev returns inactive/version/message/issues params that prod omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3967e970c49ab7e6984177cb32d13cf22ec80778c78c5053bb999a6c22368e19",
+        "human_id": "3967e97",
+        "create_time": {
+            "timestamp": 1770487402,
+            "time": "2026-02-07T12:03:22-06:00",
+            "lamport": 18
+        },
+        "edit_time": {
+            "timestamp": 1770487407,
+            "time": "2026-02-07T12:03:27-06:00",
+            "lamport": 67
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev $expand includes extra ValueSet metadata (contact) that prod omits",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
