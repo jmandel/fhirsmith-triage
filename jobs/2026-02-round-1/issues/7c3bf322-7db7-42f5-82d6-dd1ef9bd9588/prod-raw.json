@@ -1,0 +1,41 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "716186003"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "No known allergy (situation)"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "716186003",
+            "display": "No known allergy"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n31 31   : 0ms  : Analysing http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0 for validation purposes\r\n31 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\r\n31 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<105590001)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<373873005)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<420134006)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<<716186003)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 0ms  : Validate \"[http://snomed.info/sct#716186003 (\"No known allergy\")]\"\r\n31 0    : 0ms  : Check \"http://snomed.info/sct#716186003\"\r\n31 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n31 0    : 0ms  : check code in (http://snomed.info/sct)(concept<105590001) at CodeableConcept.coding[0]\r\n31 0    : 0ms  : Filter \"concept<105590001\": Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n31 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n31 0    : 0ms  : check code in (http://snomed.info/sct)(concept<373873005) at CodeableConcept.coding[0]\r\n31 0    : 0ms  : Filter \"concept<373873005\": Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n31 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n31 0    : 0ms  : check code in (http://snomed.info/sct)(concept<420134006) at CodeableConcept.coding[0]\r\n31 0    : 0ms  : Filter \"concept<420134006\": Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n31 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n31 0    : 0ms  : check code in (http://snomed.info/sct)(concept<<716186003) at CodeableConcept.coding[0]\r\n31 0    : 0ms  : Filter \"concept<<716186003\": Code \"716186003\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n"
+    }
+  ]
+}

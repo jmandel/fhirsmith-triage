@@ -770,13 +770,14 @@
             "lamport": 19
         },
         "edit_time": {
-            "timestamp": 1770488343,
-            "time": "2026-02-07T12:19:03-06:00",
-            "lamport": 77
+            "timestamp": 1770491761,
+            "time": "2026-02-07T13:16:01-06:00",
+            "lamport": 144
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev echoes display param on failed validate-code when CodeSystem unknown",
@@ -949,13 +950,14 @@
             "lamport": 23
         },
         "edit_time": {
-            "timestamp": 1770491621,
-            "time": "2026-02-07T13:13:41-06:00",
-            "lamport": 136
+            "timestamp": 1770491650,
+            "time": "2026-02-07T13:14:10-06:00",
+            "lamport": 139
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
@@ -993,13 +995,14 @@
             "lamport": 24
         },
         "edit_time": {
-            "timestamp": 1770490080,
-            "time": "2026-02-07T12:48:00-06:00",
-            "lamport": 98
+            "timestamp": 1770491684,
+            "time": "2026-02-07T13:14:44-06:00",
+            "lamport": 141
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Expand display text differs between prod and dev for same codes",
@@ -1037,13 +1040,14 @@
             "lamport": 25
         },
         "edit_time": {
-            "timestamp": 1770490340,
-            "time": "2026-02-07T12:52:20-06:00",
-            "lamport": 101
+            "timestamp": 1770491815,
+            "time": "2026-02-07T13:16:55-06:00",
+            "lamport": 146
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits",
@@ -1081,13 +1085,14 @@
             "lamport": 26
         },
         "edit_time": {
-            "timestamp": 1770490799,
-            "time": "2026-02-07T12:59:59-06:00",
-            "lamport": 104
+            "timestamp": 1770491751,
+            "time": "2026-02-07T13:15:51-06:00",
+            "lamport": 143
         },
         "status": "open",
         "labels": [
             "dev-crash-on-valid",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on valid $expand requests with JavaScript TypeErrors",
@@ -1125,13 +1130,14 @@
             "lamport": 27
         },
         "edit_time": {
-            "timestamp": 1770491053,
-            "time": "2026-02-07T13:04:13-06:00",
-            "lamport": 107
+            "timestamp": 1770491881,
+            "time": "2026-02-07T13:18:01-06:00",
+            "lamport": 148
         },
         "status": "open",
         "labels": [
             "dev-crash-on-valid",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'",
@@ -1224,6 +1230,50 @@
             "tx-compare"
         ],
         "title": "Dev  succeeds (200) where prod refuses with too-costly (422) for grammar/large code systems",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "8f739e98699644eea5154c6f6cf7ef37558b180c1fcd52f101fce7116a34d4b5",
+        "human_id": "8f739e9",
+        "create_time": {
+            "timestamp": 1770491900,
+            "time": "2026-02-07T13:18:20-06:00",
+            "lamport": 30
+        },
+        "edit_time": {
+            "timestamp": 1770491905,
+            "time": "2026-02-07T13:18:25-06:00",
+            "lamport": 151
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "SNOMED display text differs for same edition version",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

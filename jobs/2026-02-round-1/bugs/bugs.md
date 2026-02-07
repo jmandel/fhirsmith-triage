@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_28 bugs (25 open, 3 closed)_
+_29 bugs (26 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1043,6 +1043,24 @@ Records-Impacted: 74
 Tolerance-ID: validate-code-display-echo-on-unknown-system
 Record-ID: d9457f4d-39c0-445a-96d4-0721961e169d
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"https://codesystem.x12.org/005010/1338"},{"name":"code","valueCode":"U"},{"name":"display","valueString":"Urgent"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"https://codesystem.x12.org/005010/1338"},{"name":"code","valueCode":"U"},{"name":"display","valueString":"Urgent"}]}'
+```
+
+Prod returns `result=false` with parameters: result, system, x-caused-by-unknown-system, code, message, issues -- no `display`. Dev returns all the same plus `display: "Urgent"` echoed from the request input.
+
 #####What differs
 
 When $validate-code returns result=false because the CodeSystem is unknown (x-caused-by-unknown-system), dev echoes back the input `display` parameter in the response while prod omits it.
@@ -1276,6 +1294,24 @@ Records-Impacted: 157
 Tolerance-ID: expand-display-text-differs
 Record-ID: 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"116101001"}]}]}}}]}'
+```
+
+Prod returns display `"Product containing gonadotropin releasing hormone receptor antagonist (product)"` (FSN), dev returns `"Gonadotropin releasing hormone antagonist"` (inactive synonym). Same SNOMED version on both servers (20250201).
+
 #####What differs
 
 In $expand responses, display text for the same code differs between prod and dev in
@@ -1325,6 +1361,20 @@ field differences.
 Records-Impacted: 7
 Tolerance-ID: expand-iso3166-extra-reserved-codes
 Record-ID: 70faaf64-3ca5-4ee1-94f1-7f89ad1cf7ed
+
+#####Repro
+
+```bash
+####Prod (returns result: true — code AA is valid)
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=urn:iso:std:iso:3166&code=AA' \
+-H 'Accept: application/fhir+json'
+
+####Dev (returns result: false — code AA is unknown)
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=urn:iso:std:iso:3166&code=AA' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod validates code `AA` (a reserved/user-assigned code) as valid in `urn:iso:std:iso:3166`, dev rejects it as unknown. This confirms prod's code system includes 42 reserved/user-assigned ISO 3166-1 codes that dev omits. The original bug was observed via `$expand` (291 vs 249 codes); the expand for the canonical `iso3166-1-2` ValueSet now returns 249 on both servers (the ValueSet compose filters to assigned codes only), but the underlying code system data still differs as shown by `$validate-code`.
 
 #####What differs
 
@@ -1406,6 +1456,24 @@ Tolerance `expand-dev-crash-on-valid` matches POST /r4/ValueSet/$expand where pr
 Records-Impacted: 1
 Tolerance-ID: validate-code-crash-undefined-system-code
 Record-ID: 6b937ddc-13c0-49e1-bd96-24ef10f06543
+
+#####Repro
+
+```bash
+####Prod (returns 200 with Parameters response)
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
+
+####Dev (returns 500 with "No Match for undefined|undefined")
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
+```
+
+Prod returns 200 with a Parameters response (result=false, with code system version details). Dev returns 500 with OperationOutcome `"No Match for undefined|undefined"`. The bug triggers when a ValueSet has `compose.exclude` entries with only a `valueSet` reference (no `system`); dev's exclude-processing code path reads `cc.system` and `cc.version` as `undefined` from the exclude entry.
 
 #####What differs
 
@@ -1516,6 +1584,38 @@ Tolerance ID: `expand-too-costly-succeeds`. Matches POST /r4/ValueSet/$expand wh
 - 4fe6282f-ccf2-4340-9758-cbc70b7d2b79 (CPT grammar)
 - d1360bdd-814e-4da9-af67-e4c9e145f3f1 (BCP-13 grammar)
 - 3a9f2a04-94d7-431a-95dd-af16ff2ee3f7 (NDC too many codes)
+
+---
+
+### [ ] `8f739e9` SNOMED display text differs for same edition version
+
+Records-Impacted: 59
+Tolerance-ID: snomed-same-version-display-differs
+Record-ID: 9e9e9c20-cc34-43f8-a0fa-54e8cac48e55
+
+#####What differs
+
+For SNOMED $validate-code requests where both prod and dev report the same SNOMED CT edition version (e.g., 20250201), the display text returned for certain codes differs between the two servers. Examples:
+
+- Code 10019 (Diazepam product): prod="Product containing diazepam (medicinal product)", dev="Diazepam"
+- Code 385049006 (Capsule): prod="Capsule", dev="Capsule (product)"
+- Code 44808001 (Counselling): prod="Counselling", dev="Counseling (regime/therapy)"
+- Code 15188001 (Hearing loss): prod="Hearing loss", dev="Deafness"
+- Code 46635009 (Diabetes type I): prod="Diabetes mellitus type I", dev="Insulin dependent diabetes mellitus"
+
+Both servers agree on result=true, system, code, and version. Only the display (preferred term) differs.
+
+#####How widespread
+
+59 validate-code records show this pattern. All involve http://snomed.info/sct with matching version strings (primarily 20250201). Found via:
+
+grep '"param":"display"' results/deltas/deltas.ndjson | grep 'snomed'
+
+then filtering to records where prod and dev version parameters are identical.
+
+#####What the tolerance covers
+
+Tolerance ID: snomed-same-version-display-differs. Matches SNOMED validate-code Parameters responses where versions are identical but display text differs. Normalizes both sides to prod's display value.
 
 ---
 

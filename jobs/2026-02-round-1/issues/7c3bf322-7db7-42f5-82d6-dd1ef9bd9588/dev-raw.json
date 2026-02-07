@@ -1,0 +1,45 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "716186003"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "No known allergy (situation)"
+    },
+    {
+      "name": "message",
+      "valueString": "Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "716186003",
+            "display": "No known allergy"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Analysing http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0 for validation purposes\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Prepare include[0]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Prepare include[1]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Prepare include[2]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Prepare include[3]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Validate \"[undefined#716186003 (\"No known allergy\")]\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Check \"http://snomed.info/sct#716186003\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n0ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Filter undefined: Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201: Code 716186003 is not in the specified filter\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Filter undefined: Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201: Code 716186003 is not in the specified filter\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Filter undefined: Code \"716186003\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201: Code 716186003 is not in the specified filter\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips|2.0.0: Filter undefined: Code \"716186003\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ]
+}

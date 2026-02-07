@@ -1197,6 +1197,28 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-extra-filter-miss-message',
+    description: 'Dev $validate-code returns extra message parameter with "Code X is not in the specified filter" warnings when validating against ValueSets with multiple include filters. When the code is valid (result=true, found in at least one filter), prod omits the message entirely. Dev reports intermediate filter-miss messages for each include filter the code did not match. Affects 12 validate-code records (all IPS ValueSets with SNOMED codes).',
+    kind: 'temp-tolerance',
+    bugId: 'eaeccdd',
+    tags: ['normalize', 'validate-code', 'extra-message', 'filter-miss'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== true) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (prodMsg !== undefined || devMsg === undefined) return null;
+      if (!devMsg.includes('is not in the specified filter')) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      return { prod, dev: stripParams(dev, 'message') };
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',
