@@ -834,5 +834,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "52ecb75faaef58b4f6ae74310adb618f33621794f949b5e9c9b45e08c5820ae4",
+        "human_id": "52ecb75",
+        "create_time": {
+            "timestamp": 1770488928,
+            "time": "2026-02-07T12:28:48-06:00",
+            "lamport": 21
+        },
+        "edit_time": {
+            "timestamp": 1770488932,
+            "time": "2026-02-07T12:28:52-06:00",
+            "lamport": 89
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "CodeSystem/$validate-code without system: different error message and severity",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

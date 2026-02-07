@@ -1,0 +1,27 @@
+{
+  "id": "d05e7906-16ee-4915-8c8a-92137b4e62c7",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1090,
+    "hash": "42e1de03133d570a47cb523125007df7"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1377,
+    "hash": "b69efd4d36876be6bf42b9816c3c1461"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": true,
+    "devResult": false,
+    "system": "http://www.ama-assn.org/go/cpt",
+    "code": "99214"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://www.ama-assn.org/go/cpt\"},{\"name\" : \"code\",\"valueCode\" : \"99214\"},{\"name\" : \"version\",\"valueString\" : \"2023\"},{\"name\" : \"display\",\"valueString\" : \"Office or other outpatient visit for the evaluation and management of an established patient, which requires a medically appropriate history and/or examination and moderate level of medical decision making. When using time for code selection, 30-39 minutes of total time is spent on the date of the encounter.\"},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://www.ama-assn.org/go/cpt#99214 (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://www.ama-assn.org/go/cpt#99214\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://www.ama-assn.org/go/cpt|2023\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://www.ama-assn.org/go/cpt\"},{\"name\":\"code\",\"valueCode\":\"99214\"},{\"name\":\"message\",\"valueString\":\"Unknown code '99214' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code '99214' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"location\":[\"Coding.code\"],\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms http://www.ama-assn.org/go/cpt/vs|2023: Validate \\\"[undefined#99214 (\\\"undefined\\\")]\\\"\\n1ms http://www.ama-assn.org/go/cpt/vs|2023: Check \\\"http://www.ama-assn.org/go/cpt#99214\\\"\\n1ms http://www.ama-assn.org/go/cpt/vs|2023: CodeSystem found: http://www.ama-assn.org/go/cpt|2023 for http://www.ama-assn.org/go/cpt|2023\\n1ms http://www.ama-assn.org/go/cpt/vs|2023: check code in () at Coding\\n1ms http://www.ama-assn.org/go/cpt/vs|2023: Code \\\"99214\\\" not found in http://www.ama-assn.org/go/cpt|2023: undefined\"}]}"
+}

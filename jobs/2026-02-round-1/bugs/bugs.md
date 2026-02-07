@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_19 bugs (17 open, 2 closed)_
+_20 bugs (18 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1092,6 +1092,41 @@ All 110 prod=false/dev=true records have x-caused-by-unknown-system pointing to 
 #####What the tolerance covers
 
 Tolerance ID: hcpcs-codesystem-availability. Matches validate-code records where prod has x-caused-by-unknown-system for HCPCSReleaseCodeSets and dev returns result=true. Skips these records since the root cause is code system availability, not a logic bug.
+
+---
+
+### [ ] `52ecb75` CodeSystem/$validate-code without system: different error message and severity
+
+Records-Impacted: 1
+Tolerance-ID: cs-validate-code-no-system-error-format
+Record-ID: 9afb9fcf-df5f-4766-a56a-33379c66b90a
+
+#####What differs
+
+POST /r4/CodeSystem/$validate-code with code "OBG" and no system parameter.
+
+Both servers return result=false, but they differ in how they report the error:
+
+- **Prod**: severity=warning, message="Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided", includes details.coding with code "invalid-data" from tx-issue-type system
+- **Dev**: severity=error, message="No CodeSystem specified - provide url parameter or codeSystem resource", no details.coding at all
+
+Three distinct differences:
+1. Severity: warning (prod) vs error (dev)
+2. Message text: completely different wording
+3. Issue detail coding: prod includes structured tx-issue-type coding, dev omits it
+
+#####How widespread
+
+This is the only record in the dataset with this specific pattern. Searched for "No CodeSystem specified" across both comparison.ndjson and deltas.ndjson — found exactly 1 match. The request shape (POST to /r4/CodeSystem/$validate-code without trailing ?) is also unique.
+
+#####What the tolerance covers
+
+Tolerance ID: cs-validate-code-no-system-error-format
+Matches: POST /r4/CodeSystem/$validate-code (without trailing ?), where dev message contains "No CodeSystem specified". Normalizes message and issues to prod's values to suppress this single record.
+
+#####Representative record
+
+9afb9fcf-df5f-4766-a56a-33379c66b90a
 
 ---
 
