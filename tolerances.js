@@ -201,6 +201,19 @@ const tolerances = [
   // ============================================================
 
   {
+    id: 'temp-vsac-op-modifier',
+    description: 'Dev fails on ValueSets with vsacOpModifier extension in exclude[0].filter. Returns business-rule error instead of properly validating the code. Affects 3 P6 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'bb9bee9',
+    match({ record, dev }) {
+      if (!/\$validate-code/.test(record.url)) return null;
+      const devMsg = getParamValue(dev, 'message');
+      if (typeof devMsg === 'string' && devMsg.includes('vsacOpModifier')) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'temp-v2-0360-version-mismatch',
     description: 'v2-0360 CodeSystem version mismatch: prod has 2.0.0, dev has 3.0.0. All 157 $lookup records for this CodeSystem differ only in version, extra definition, and extra designation.',
     kind: 'temp-tolerance',
