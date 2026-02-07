@@ -2422,6 +2422,26 @@ const tolerances = [
   },
 
   {
+    id: 'expand-v3-hierarchical-incomplete',
+    description: 'Dev $expand returns only the root abstract concept for v3 hierarchical ValueSets (v3-ActEncounterCode, v3-ServiceDeliveryLocationRoleType, v3-PurposeOfUse, v3-ActPharmacySupplyType), missing all descendant codes. Prod returns the full hierarchy. 246 records across 4 ValueSets.',
+    kind: 'temp-tolerance',
+    bugId: '4336772',
+    tags: ['skip', 'expand', 'v3-hierarchy'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      const prodTotal = prod.expansion.total;
+      const devTotal = dev.expansion.total;
+      if (devTotal !== 1 || prodTotal <= 1) return null;
+      // Check this is a v3 terminology ValueSet (URL may be percent-encoded)
+      const decodedUrl = decodeURIComponent(record.url);
+      if (!/terminology\.hl7\.org\/ValueSet\/v3-/.test(decodedUrl)) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

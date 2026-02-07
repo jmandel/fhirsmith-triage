@@ -233,13 +233,14 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770500018,
-            "time": "2026-02-07T15:33:38-06:00",
-            "lamport": 32
+            "timestamp": 1770500396,
+            "time": "2026-02-07T15:39:56-06:00",
+            "lamport": 35
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod",
@@ -265,7 +266,7 @@
             "name": "Claude (AI Assistant)",
             "login": ""
         },
-        "comments": 1,
+        "comments": 2,
         "metadata": {}
     }
 ]
