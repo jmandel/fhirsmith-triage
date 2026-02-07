@@ -208,6 +208,36 @@ const tolerances = [
   // ============================================================
 
   {
+    id: 'temp-empty-string-location-expression',
+    description: 'Dev emits location: [""] and expression: [""] on OperationOutcome issues where prod omits these fields. Empty strings are invalid FHIR. Affects 260 P6 records.',
+    kind: 'temp-tolerance',
+    bugId: '92514c0',
+    match({ prod, dev }) {
+      return hasOperationOutcome(prod, dev) ? 'normalize' : null;
+    },
+    normalize(ctx) {
+      function fixIssues(oo) {
+        if (!oo.issue) return oo;
+        return {
+          ...oo,
+          issue: oo.issue.map(issue => {
+            const fixed = { ...issue };
+            if (Array.isArray(fixed.location) && fixed.location.every(l => l === '')) {
+              delete fixed.location;
+            }
+            if (Array.isArray(fixed.expression) && fixed.expression.every(e => e === '')) {
+              delete fixed.expression;
+            }
+            return fixed;
+          }),
+        };
+      }
+      return both(ctx, body => transformOperationOutcomes(body, fixIssues));
+    },
+  },
+
+
+  {
     id: 'normalize-issue-extensions',
     description: 'Strip operationoutcome-message-id extensions (server metadata) and sort remaining extensions by URL for stable comparison.',
     kind: 'equiv-autofix',
