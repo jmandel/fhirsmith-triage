@@ -8,13 +8,14 @@
             "lamport": 2
         },
         "edit_time": {
-            "timestamp": 1770487562,
-            "time": "2026-02-07T12:06:02-06:00",
-            "lamport": 70
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 116
         },
         "status": "open",
         "labels": [
             "P6",
+            "reproduced",
             "tx-compare"
         ],
         "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation",
@@ -96,13 +97,14 @@
             "lamport": 4
         },
         "edit_time": {
-            "timestamp": 1770487643,
-            "time": "2026-02-07T12:07:23-06:00",
-            "lamport": 72
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 117
         },
         "status": "open",
         "labels": [
             "P6",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags",
@@ -140,11 +142,11 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770488358,
-            "time": "2026-02-07T12:19:18-06:00",
-            "lamport": 78
+            "timestamp": 1770491480,
+            "time": "2026-02-07T13:11:20-06:00",
+            "lamport": 112
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "P6",
             "tx-compare"
@@ -172,7 +174,7 @@
             "name": "Claude (AI Assistant)",
             "login": ""
         },
-        "comments": 1,
+        "comments": 2,
         "metadata": {}
     },
     {
@@ -184,13 +186,14 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770488323,
-            "time": "2026-02-07T12:18:43-06:00",
-            "lamport": 74
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 118
         },
         "status": "open",
         "labels": [
             "P3",
+            "reproduced",
             "tx-compare"
         ],
         "title": "DICOM CID 29 AcquisitionModality ValueSet missing from dev",
@@ -228,13 +231,14 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770487226,
-            "time": "2026-02-07T12:00:26-06:00",
-            "lamport": 60
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 119
         },
         "status": "open",
         "labels": [
             "P6",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs",
@@ -272,13 +276,14 @@
             "lamport": 8
         },
         "edit_time": {
-            "timestamp": 1770487320,
-            "time": "2026-02-07T12:02:00-06:00",
-            "lamport": 61
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 120
         },
         "status": "open",
         "labels": [
             "P4",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev returns 404 instead of 422 for  when referenced CodeSystem is not found",
@@ -316,13 +321,14 @@
             "lamport": 9
         },
         "edit_time": {
-            "timestamp": 1770487113,
-            "time": "2026-02-07T11:58:33-06:00",
-            "lamport": 59
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 121
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "UCUM -code: dev returns human-readable display instead of code-as-display",
@@ -360,13 +366,14 @@
             "lamport": 10
         },
         "edit_time": {
-            "timestamp": 1770488607,
-            "time": "2026-02-07T12:23:27-06:00",
-            "lamport": 83
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 122
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "SNOMED CT edition version skew: dev loads older editions than prod",
@@ -404,13 +411,14 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770488377,
-            "time": "2026-02-07T12:19:37-06:00",
-            "lamport": 80
+            "timestamp": 1770491558,
+            "time": "2026-02-07T13:12:38-06:00",
+            "lamport": 123
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev fails to process VSAC ValueSets with vsacOpModifier extension",
@@ -492,13 +500,14 @@
             "lamport": 13
         },
         "edit_time": {
-            "timestamp": 1770487321,
-            "time": "2026-02-07T12:02:01-06:00",
-            "lamport": 62
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 124
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev $expand echoes includeDefinition=false parameter in expansion",
@@ -536,13 +545,14 @@
             "lamport": 14
         },
         "edit_time": {
-            "timestamp": 1770487671,
-            "time": "2026-02-07T12:07:51-06:00",
-            "lamport": 73
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 125
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev $expand reports different used-codesystem versions than prod",
@@ -580,13 +590,14 @@
             "lamport": 15
         },
         "edit_time": {
-            "timestamp": 1770487639,
-            "time": "2026-02-07T12:07:19-06:00",
-            "lamport": 71
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 126
         },
         "status": "open",
         "labels": [
             "dev-crash-on-error",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on $expand when CodeSystem content mode prevents expansion",
@@ -624,13 +635,14 @@
             "lamport": 16
         },
         "edit_time": {
-            "timestamp": 1770488378,
-            "time": "2026-02-07T12:19:38-06:00",
-            "lamport": 81
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 127
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Draft CodeSystem message missing provenance suffix in dev",
@@ -668,13 +680,14 @@
             "lamport": 17
         },
         "edit_time": {
-            "timestamp": 1770488416,
-            "time": "2026-02-07T12:20:16-06:00",
-            "lamport": 82
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 128
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "NDC validate-code: dev returns inactive/version/message/issues params that prod omits",
@@ -712,13 +725,14 @@
             "lamport": 18
         },
         "edit_time": {
-            "timestamp": 1770488377,
-            "time": "2026-02-07T12:19:37-06:00",
-            "lamport": 79
+            "timestamp": 1770491559,
+            "time": "2026-02-07T13:12:39-06:00",
+            "lamport": 129
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev $expand includes extra ValueSet metadata (contact) that prod omits",
@@ -800,12 +814,13 @@
             "lamport": 20
         },
         "edit_time": {
-            "timestamp": 1770488619,
-            "time": "2026-02-07T12:23:39-06:00",
-            "lamport": 86
+            "timestamp": 1770491587,
+            "time": "2026-02-07T13:13:07-06:00",
+            "lamport": 131
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
@@ -844,13 +859,14 @@
             "lamport": 21
         },
         "edit_time": {
-            "timestamp": 1770488932,
-            "time": "2026-02-07T12:28:52-06:00",
-            "lamport": 89
+            "timestamp": 1770491623,
+            "time": "2026-02-07T13:13:43-06:00",
+            "lamport": 137
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "CodeSystem/$validate-code without system: different error message and severity",
@@ -888,12 +904,13 @@
             "lamport": 22
         },
         "edit_time": {
-            "timestamp": 1770489145,
-            "time": "2026-02-07T12:32:25-06:00",
-            "lamport": 92
+            "timestamp": 1770491615,
+            "time": "2026-02-07T13:13:35-06:00",
+            "lamport": 135
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
@@ -932,9 +949,9 @@
             "lamport": 23
         },
         "edit_time": {
-            "timestamp": 1770489815,
-            "time": "2026-02-07T12:43:35-06:00",
-            "lamport": 95
+            "timestamp": 1770491621,
+            "time": "2026-02-07T13:13:41-06:00",
+            "lamport": 136
         },
         "status": "open",
         "labels": [
@@ -1152,16 +1169,61 @@
             "lamport": 28
         },
         "edit_time": {
-            "timestamp": 1770491285,
-            "time": "2026-02-07T13:08:05-06:00",
-            "lamport": 110
+            "timestamp": 1770491638,
+            "time": "2026-02-07T13:13:58-06:00",
+            "lamport": 138
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
         "title": "BCP-47 case-sensitive validation: dev accepts 'en-us' (lowercase), prod correctly rejects it",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e3fb3f666a8be5d49ffd8001849ad508c5246b0c3b5b3ac97a07197067799ea6",
+        "human_id": "e3fb3f6",
+        "create_time": {
+            "timestamp": 1770491529,
+            "time": "2026-02-07T13:12:09-06:00",
+            "lamport": 29
+        },
+        "edit_time": {
+            "timestamp": 1770491534,
+            "time": "2026-02-07T13:12:14-06:00",
+            "lamport": 115
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev  succeeds (200) where prod refuses with too-costly (422) for grammar/large code systems",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

@@ -1,0 +1,29 @@
+{
+  "id": "910db7b8-1f3e-44e2-891c-0f21c756520d",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1023,
+    "hash": "d237669d23e426d6266e887d1cb9b876"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1270,
+    "hash": "af1ebec7147612a0544db2411312122e"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "display"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"394602003\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Rehabilitation specialty (qualifier value)\"},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n16 0    : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n16 0    : 0ms  : Prepare include: \\\"()\\\"\\r\\n16 0    : 0ms  : Validate \\\"[http://snomed.info/sct#394602003 (\\\"\\\")]\\\"\\r\\n16 0    : 0ms  : Check \\\"http://snomed.info/sct#394602003\\\"\\r\\n16 0    : 0ms  : Using CodeSystem \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"394602003\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20240201\"},{\"name\":\"display\",\"valueString\":\"Rehabilitation - specialty (qualifier value)\"},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20240201: Validate \\\"[undefined#394602003 (\\\"undefined\\\")]\\\"\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20240201: Check \\\"http://snomed.info/sct#394602003\\\"\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20240201: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20240201: check code in () at Coding\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20240201: Code \\\"394602003\\\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201\"}]}"
+}

@@ -473,7 +473,7 @@ const tolerances = [
 
   {
     id: 'snomed-version-skew',
-    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version parameter to prod value. Only affects the version parameter — other diffs (display, message, result) still surface. Affects ~279 validate-code records for http://snomed.info/sct.',
+    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version and display parameters to prod values. Display text changes between editions as preferred terms are updated (e.g. "Rehabilitation - specialty" → "Rehabilitation specialty"). Affects ~279 validate-code records for http://snomed.info/sct.',
     kind: 'temp-tolerance',
     bugId: 'da50d17',
     tags: ['normalize', 'version-skew', 'snomed'],
@@ -490,16 +490,50 @@ const tolerances = [
     },
     normalize({ prod, dev }) {
       const prodVersion = getParamValue(prod, 'version');
-      function setVersion(body) {
+      const prodDisplay = getParamValue(prod, 'display');
+      function setVersionAndDisplay(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'version') return { ...p, valueString: prodVersion };
+            if (p.name === 'display' && prodDisplay !== undefined) return { ...p, valueString: prodDisplay };
+            return p;
+          }),
+        };
+      }
+      return { prod: setVersionAndDisplay(prod), dev: setVersionAndDisplay(dev) };
+    },
+  },
+
+  {
+    id: 'snomed-same-version-display-differs',
+    description: 'SNOMED $validate-code: dev returns different display text (preferred term) than prod for the same SNOMED CT edition version. Examples: prod="Hearing loss" vs dev="Deafness", prod="Counselling" vs dev="Counseling (regime/therapy)". Both agree on result, system, code, and version. Normalizes display to prod value. Affects 59 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '8f739e9',
+    tags: ['normalize', 'display-text', 'snomed'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      if (prodSystem !== 'http://snomed.info/sct') return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (!prodDisplay || !devDisplay) return null;
+      if (prodDisplay === devDisplay) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodDisplay = getParamValue(prod, 'display');
+      function setDisplay(body) {
         if (!body?.parameter) return body;
         return {
           ...body,
           parameter: body.parameter.map(p =>
-            p.name === 'version' ? { ...p, valueString: prodVersion } : p
+            p.name === 'display' ? { ...p, valueString: prodDisplay } : p
           ),
         };
       }
-      return { prod: setVersion(prod), dev: setVersion(dev) };
+      return { prod: setDisplay(prod), dev: setDisplay(dev) };
     },
   },
 

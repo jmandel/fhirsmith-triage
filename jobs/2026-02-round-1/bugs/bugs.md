@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_27 bugs (25 open, 2 closed)_
+_28 bugs (25 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -308,7 +308,7 @@ Expected elimination: ~44 records.
 
 ---
 
-### [ ] `e09cff6` BCP-47 display text format: dev returns 'Region=...' instead of standard format
+### [x] `e09cff6` BCP-47 display text format: dev returns 'Region=...' instead of standard format
 
 Records-Impacted: 7
 Tolerance-ID: bcp47-display-format
@@ -349,6 +349,11 @@ Tolerance: bcp47-display-format. Matches $validate-code records where system=urn
 #####Representative record
 
 da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47
+
+
+e0019ec #1 Claude (AI Assistant) <claude@anthropic.com>
+
+Closing: no longer reproducible as of 2026-02-07. Both prod and dev now return the same 'Region=...' format for BCP-47 display text. Servers have converged.
 
 ---
 
@@ -1073,6 +1078,20 @@ Records-Impacted: 123
 Tolerance-ID: hcpcs-codesystem-availability
 Record-ID: 238a26b7-46b6-4095-a3ba-364b1973da4d
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?system=http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets&code=G0154' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?system=http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets&code=G0154' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `result: false` with `x-caused-by-unknown-system` ("A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found"). Dev returns `result: true` with `version: "2025-01"` and `display: "health or hospice setting, each 15 minutes"`.
+
 #####What differs
 
 For $validate-code requests involving system http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets, prod returns result=false with the error "A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found, so the code cannot be validated" and x-caused-by-unknown-system. Dev returns result=true with version 2025-01, display text, system, and code parameters — successfully finding and validating the codes.
@@ -1100,6 +1119,24 @@ Tolerance ID: hcpcs-codesystem-availability. Matches validate-code records where
 Records-Impacted: 1
 Tolerance-ID: cs-validate-code-no-system-error-format
 Record-ID: 9afb9fcf-df5f-4766-a56a-33379c66b90a
+
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"code":"OBG"}}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"code":"OBG"}}]}'
+```
+
+Prod returns severity=`warning` with message "Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided" and includes `details.coding` with code `invalid-data` from the `tx-issue-type` system. Dev returns severity=`error` with message "No CodeSystem specified - provide url parameter or codeSystem resource" and no `details.coding`.
 
 #####What differs
 
@@ -1136,6 +1173,24 @@ Records-Impacted: 45
 Tolerance-ID: cpt-validate-code-result-disagrees
 Record-ID: d05e7906-16ee-4915-8c8a-92137b4e62c7
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"99214"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://www.ama-assn.org/go/cpt"},{"name":"code","valueCode":"99214"}]}'
+```
+
+Prod returns `result: true` with display "Office or other outpatient visit for the evaluation and management of an established patient..." and version "2023". Dev returns `result: false` with "Unknown code '99214' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'".
+
 #####What differs
 
 Dev returns `result: false` with "Unknown code '<code>' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'" for CPT codes that prod successfully validates as `result: true`. Prod returns the code's display text and version; dev returns an error OperationOutcome with `code-invalid`.
@@ -1168,6 +1223,24 @@ Tolerance `cpt-validate-code-result-disagrees` skips all validate-code records w
 Records-Impacted: 26
 Tolerance-ID: unknown-version-valid-versions-message
 Record-ID: a3cf69a7-48f3-47b8-a29d-cd6453647621
+
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"116101001"},{"name":"version","valueString":"2017-09"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"116101001"},{"name":"version","valueString":"2017-09"}]}'
+```
+
+Prod message ends cleanly: `...http://snomed.info/xsct/900000000000207008/version/20250814`. Dev message ends with: `...http://snomed.info/xsct/900000000000207008/version/20250814 and undefined`.
 
 #####What differs
 
@@ -1365,6 +1438,24 @@ Records-Impacted: 2
 Tolerance-ID: bcp47-case-sensitive-validation
 Record-ID: ba44d44e-929e-4b34-8d18-39ead53a68b6
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-us"},{"name":"display","valueString":"English (Region=United States)"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-us"},{"name":"display","valueString":"English (Region=United States)"}]}'
+```
+
+Prod returns `result: false` with error "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47'", dev returns `result: true` with display "English (Region=United States)".
+
 #####What differs
 
 Dev returns result=true for BCP-47 code "en-us" with display "English (Region=United States)". Prod returns result=false with error "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47'" and informational issue "Unable to recognise part 2 (\"us\") as a valid language part".
@@ -1386,6 +1477,45 @@ Both records show the same root cause: dev's BCP-47 code lookup is case-insensit
 Tolerance ID: bcp47-case-sensitive-validation
 Matches: result-disagrees records where system is urn:ietf:bcp:47 and prodResult=false, devResult=true.
 Eliminates 2 records.
+
+---
+
+### [ ] `e3fb3f6` Dev  succeeds (200) where prod refuses with too-costly (422) for grammar/large code systems
+
+Records-Impacted: 12
+Tolerance-ID: expand-too-costly-succeeds
+Record-ID: 4fe6282f-ccf2-4340-9758-cbc70b7d2b79
+
+#####What differs
+
+Prod returns HTTP 422 with an OperationOutcome containing issue code `too-costly` for certain $expand requests. Dev returns HTTP 200 with a successful ValueSet expansion containing codes.
+
+Prod's error messages fall into two patterns:
+- "The code System \"X\" has a grammar, and cannot be enumerated directly" (10 records: 8 CPT, 2 BCP-13/MIME types)
+- "The value set '' expansion has too many codes to display (>10000)" (2 records: NDC)
+
+Dev expands these successfully, returning actual codes. For example, for CPT, dev returns 7 codes with full display text; for NDC, dev returns total=0 (empty expansion).
+
+#####How widespread
+
+12 records, all POST /r4/ValueSet/$expand, all with prodStatus=422 and devStatus=200.
+
+Breakdown by code system:
+- 8 records: http://www.ama-assn.org/go/cpt (CPT)
+- 2 records: urn:ietf:bcp:13 (MIME types)
+- 2 records: http://hl7.org/fhir/sid/ndc (NDC — "too many codes" variant)
+
+Search: `grep '"prodStatus":422,"devStatus":200' results/deltas/deltas.ndjson | wc -l` → 12
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-too-costly-succeeds`. Matches POST /r4/ValueSet/$expand where prod.status=422 and dev.status=200, and prod body contains issue code `too-costly`. Skips the record. Eliminates all 12 records.
+
+#####Representative record IDs
+
+- 4fe6282f-ccf2-4340-9758-cbc70b7d2b79 (CPT grammar)
+- d1360bdd-814e-4da9-af67-e4c9e145f3f1 (BCP-13 grammar)
+- 3a9f2a04-94d7-431a-95dd-af16ff2ee3f7 (NDC too many codes)
 
 ---
 
