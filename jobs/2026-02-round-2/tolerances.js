@@ -2181,6 +2181,51 @@ const tolerances = [
   },
 
   {
+    id: 'message-concat-selective-issues',
+    description: 'Dev message parameter omits some issue texts when validating CodeableConcept with multiple coding errors. Prod concatenates error+warning issue texts with "; " into the message, dev only includes a subset. The OperationOutcome issues resource is identical. Same root cause as message-concat-missing-issues but the message is not a simple join of all issue texts (e.g., informational issues are excluded). Affects 10 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '80ce6b2',
+    tags: ['normalize', 'message-format', 'validate-code'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg || prodMsg === devMsg) return null;
+      // Dev message must be a proper substring of prod message
+      if (!prodMsg.includes(devMsg) || prodMsg.length <= devMsg.length) return null;
+      // OO issues must be identical (after earlier normalizations)
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      // Compare with sorted keys to ignore JSON key ordering differences
+      const sortedStringify = obj => JSON.stringify(obj, Object.keys(obj).sort());
+      function deepSortedStringify(obj) {
+        if (obj === null || typeof obj !== 'object') return JSON.stringify(obj);
+        if (Array.isArray(obj)) return '[' + obj.map(deepSortedStringify).join(',') + ']';
+        const keys = Object.keys(obj).sort();
+        return '{' + keys.map(k => JSON.stringify(k) + ':' + deepSortedStringify(obj[k])).join(',') + '}';
+      }
+      if (deepSortedStringify(prodIssues) !== deepSortedStringify(devIssues)) return null;
+      // Prod message must contain "; " (concatenated multiple messages)
+      if (!prodMsg.includes('; ')) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodMsg = getParamValue(prod, 'message');
+      function setMessage(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        };
+      }
+      return { prod, dev: setMessage(dev) };
+    },
+  },
+
+  {
     id: 'validate-code-x-unknown-system-extra',
     description: 'Dev returns x-unknown-system parameter, extra UNKNOWN_CODESYSTEM_VERSION issue, and different message/display/version when a requested code system version is not found. Prod falls back to a known version and provides display/version details. Both agree result=false. Affects 5 validate-code content-differs records.',
     kind: 'temp-tolerance',

@@ -1,0 +1,124 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication"
+    },
+    {
+      "name": "code",
+      "valueCode": "R210"
+    },
+    {
+      "name": "version",
+      "valueString": "0.1.0"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code '1365861003' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/83821000000107/version/20230412' (UK Edition); Unknown Code 'R210' in the CodeSystem 'https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication' version '0.1.0' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication",
+            "code": "R210",
+            "display": "Inherited MMR deficiency (Lynch syndrome)"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "1365861003",
+            "display": "Lynch syndrome gene mutation detected"
+          }
+        ],
+        "text": "Inherited MMR deficiency (Lynch syndrome)"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication|0.1.0"
+            }
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODE_IN_FRAGMENT"
+              }
+            ],
+            "severity": "warning",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown Code 'R210' in the CodeSystem 'https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication' version '0.1.0' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment"
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown code '1365861003' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/83821000000107/version/20230412' (UK Edition)"
+            },
+            "location": [
+              "CodeableConcept.coding[1].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=en-GB, default-to-latest\r\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/83821000000107\r\n16 0    : 0ms  : Prepare include: \"()\"\r\n16 0    : 0ms  : Validate \"[https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication#R210 (\"Inherited MMR deficiency (Lynch syndrome)\"), http://snomed.info/sct#1365861003 (\"Lynch syndrome gene mutation detected\")]\"\r\n16 0    : 0ms  : Check \"https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication#R210\"\r\n16 0    : 0ms  : Using CodeSystem \"https://fhir.nwgenomics.nhs.uk/CodeSystem/GenomicClinicalIndication|0.1.0\" (content = fragment)\r\n16 0    : 0ms  : Check \"http://snomed.info/sct#1365861003\"\r\n16 0    : 0ms  : Using CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/83821000000107/version/20230412\" (content = complete)\r\n"
+    }
+  ]
+}
