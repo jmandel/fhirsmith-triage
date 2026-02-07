@@ -966,5 +966,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "b9e3cfd15fa5b36cea6bd090893295aa60afe3dd53c935395709ee6d26118453",
+        "human_id": "b9e3cfd",
+        "create_time": {
+            "timestamp": 1770490075,
+            "time": "2026-02-07T12:47:55-06:00",
+            "lamport": 24
+        },
+        "edit_time": {
+            "timestamp": 1770490080,
+            "time": "2026-02-07T12:48:00-06:00",
+            "lamport": 98
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Expand display text differs between prod and dev for same codes",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

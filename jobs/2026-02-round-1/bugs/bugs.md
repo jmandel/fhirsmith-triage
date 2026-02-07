@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_22 bugs (20 open, 2 closed)_
+_23 bugs (21 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1194,6 +1194,56 @@ Tolerance `unknown-version-valid-versions-message` normalizes the message and is
 #####Representative record
 
 a3cf69a7-48f3-47b8-a29d-cd6453647621 — POST /r4/CodeSystem/$validate-code for SNOMED 2017-09, both return result=false
+
+---
+
+### [ ] `b9e3cfd` Expand display text differs between prod and dev for same codes
+
+Records-Impacted: 157
+Tolerance-ID: expand-display-text-differs
+Record-ID: 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e
+
+#####What differs
+
+In $expand responses, display text for the same code differs between prod and dev in
+expansion.contains[].display. Both servers return the same codes in the same order, but
+with different human-readable display strings.
+
+Examples:
+- SNOMED 116101001: prod="Product containing gonadotropin releasing hormone receptor
+antagonist (product)", dev="Gonadotropin releasing hormone antagonist"
+- SNOMED 425901007: prod="IVF - In vitro fertilisation with intracytoplasmic sperm
+injection (ICSI)", dev="In vitro fertilization with intracytoplasmic sperm injection
+(procedure)"
+- SNOMED 60001007: prod="Not pregnant", dev="Non pregnant state"
+- ISO 3166 CUW: prod="Curagao", dev="Curaçao" (character encoding/data edition)
+- ISO 3166 ALA: prod="Eland Islands", dev="Åland Islands"
+
+#####How widespread
+
+157 expand delta records have display text diffs in expansion.contains.
+
+By code system:
+- http://snomed.info/sct: 134 records
+- urn:iso:std:iso:3166: 22 records
+- http://unitsofmeasure.org: 1 record
+
+Search: Compared expansion.contains display values between prodBody and devBody for
+all expand deltas in results/deltas/deltas.ndjson.
+
+#####What the tolerance covers
+
+Tolerance ID: expand-display-text-differs
+Matches: $expand responses (resourceType=ValueSet with expansion) where any
+contains[].display differs between prod and dev for the same code.
+Normalizes: Sets both sides' display to prod's value (canonical), preserving other
+field differences.
+
+#####Representative records
+
+- 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e (SNOMED 116101001)
+- 44f0851b-80e8-4a27-b05e-551c0522e39b (SNOMED 425901007, 161744009)
+- 2ff10aef-7210-489d-bb28-6c7739c27027 (ISO 3166 CUW, ALA, CIV)
 
 ---
 

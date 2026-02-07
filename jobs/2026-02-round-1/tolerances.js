@@ -1077,6 +1077,46 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'expand-iso3166-extra-reserved-codes',
+    description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
+    kind: 'temp-tolerance',
+    bugId: 'e5a78af',
+    tags: ['normalize', 'expand', 'iso3166', 'code-set-difference'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      // Check if this is an ISO 3166 expansion
+      const prodHasIso = prod.expansion.contains.some(c => c.system === 'urn:iso:std:iso:3166');
+      const devHasIso = dev.expansion.contains.some(c => c.system === 'urn:iso:std:iso:3166');
+      if (!prodHasIso || !devHasIso) return null;
+      // Only match when prod has more codes than dev
+      if (prod.expansion.contains.length <= dev.expansion.contains.length) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Build set of codes present in dev
+      const devCodes = new Set(
+        dev.expansion.contains.map(c => c.system + '|' + c.code)
+      );
+      // Filter prod to only codes in dev
+      const filteredContains = prod.expansion.contains.filter(c =>
+        devCodes.has(c.system + '|' + c.code)
+      );
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            total: dev.expansion.total,
+            contains: filteredContains,
+          },
+        },
+        dev,
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
