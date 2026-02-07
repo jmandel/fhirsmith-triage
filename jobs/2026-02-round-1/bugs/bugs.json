@@ -306,5 +306,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "17ad2543a787eb6f6c9b75d7b0e20a8e054d16098d224daf9a527258bdb8fb42",
+        "human_id": "17ad254",
+        "create_time": {
+            "timestamp": 1770484786,
+            "time": "2026-02-07T11:19:46-06:00",
+            "lamport": 9
+        },
+        "edit_time": {
+            "timestamp": 1770484790,
+            "time": "2026-02-07T11:19:50-06:00",
+            "lamport": 25
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "UCUM -code: dev returns human-readable display instead of code-as-display",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

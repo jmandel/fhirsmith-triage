@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_7 bugs (7 open, 0 closed)_
+_8 bugs (8 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -243,6 +243,47 @@ Search used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL whe
 - `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)
 - `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)
 - `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)
+
+---
+
+## Other
+
+### [ ] `17ad254` UCUM -code: dev returns human-readable display instead of code-as-display
+
+#####What differs
+
+For UCUM ($validate-code) operations, prod returns the UCUM code itself as the `display` parameter (e.g., `[in_i]`, `[lb_av]`, `mg`, `%`), while dev returns a human-readable name (e.g., `(inch)`, `(pound)`, `(milligram)`, `(percent)`).
+
+Per the FHIR UCUM guidance (https://terminology.hl7.org/UCUM.html): "No standardized display value is defined. The UCUM code itself is used directly as the display." Prod follows this convention; dev does not.
+
+All other parameters (result, system, code, version) agree between prod and dev. Display is the only difference.
+
+Examples:
+- code=[in_i]: prod display="[in_i]", dev display="(inch)"
+- code=[lb_av]: prod display="[lb_av]", dev display="(pound)"
+- code=[degF]: prod display="[degF]", dev display="(degree Fahrenheit)"
+- code=mg: prod display="mg", dev display="(milligram)"
+- code=%: prod display="%", dev display="(percent)"
+- code=mm[Hg]: prod display="mm[Hg]", dev display="(millimeter of mercury column)"
+- code=kg/m2: prod display="kg/m2", dev display="(kilogram) / (meter ^ 2)"
+
+#####How widespread
+
+220 records in deltas.ndjson match this pattern. All are validate-code operations on system http://unitsofmeasure.org where display is the only diff. Found with:
+
+grep '"param":"display"' deltas.ndjson | grep 'unitsofmeasure.org' | wc -l
+
+In all 220 cases, prod's display equals the UCUM code exactly.
+
+#####Tolerance
+
+Tolerance ID: ucum-display-code-as-display
+Matches: validate-code operations on http://unitsofmeasure.org where display values differ
+Normalizes both sides to prod's display value (the code itself, per FHIR convention)
+
+#####Representative record
+
+6ae99904-538b-4241-89db-b15eab6e637e (POST /r4/ValueSet/$validate-code, code=[in_i])
 
 ---
 

@@ -1,0 +1,25 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "408463005"
+    },
+    {
+      "name": "display",
+      "valueString": "Vascular surgery (qualifier value)"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20240201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

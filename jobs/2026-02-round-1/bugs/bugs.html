@@ -21,14 +21,8 @@
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
-  --pill-p0-bg: #fee2e2; --pill-p0-fg: #991b1b; --pill-p0-border: #fca5a5;
-  --pill-p1-bg: #ffedd5; --pill-p1-fg: #9a3412; --pill-p1-border: #fdba74;
-  --pill-p2-bg: #fef3c7; --pill-p2-fg: #92400e; --pill-p2-border: #fcd34d;
-  --pill-p3-bg: #dbeafe; --pill-p3-fg: #1e40af; --pill-p3-border: #93c5fd;
-  --pill-p4-bg: #f1f5f9; --pill-p4-fg: #475569; --pill-p4-border: #cbd5e1;
-  --pill-temp-bg: #f3e8ff; --pill-temp-fg: #6b21a8; --pill-temp-border: #c4b5fd;
   --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
-  --pill-other-bg: #f3f4f6; --pill-other-fg: #4b5563; --pill-other-border: #d1d5db;
+  --pill-default-bg: #f3f4f6; --pill-default-fg: #4b5563; --pill-default-border: #d1d5db;
 
   --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
   --status-closed-bg: #f3f4f6; --status-closed-fg: #6b7280; --status-closed-border: #d1d5db;
@@ -47,14 +41,8 @@
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
 
-    --pill-p0-bg: #3b1318; --pill-p0-fg: #fca5a5; --pill-p0-border: #7f1d1d;
-    --pill-p1-bg: #3b1f0b; --pill-p1-fg: #fdba74; --pill-p1-border: #7c2d12;
-    --pill-p2-bg: #3b2f0b; --pill-p2-fg: #fcd34d; --pill-p2-border: #78350f;
-    --pill-p3-bg: #172554; --pill-p3-fg: #93c5fd; --pill-p3-border: #1e3a5f;
-    --pill-p4-bg: #1e293b; --pill-p4-fg: #94a3b8; --pill-p4-border: #334155;
-    --pill-temp-bg: #2e1065; --pill-temp-fg: #c4b5fd; --pill-temp-border: #3b0764;
     --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
-    --pill-other-bg: #1f2937; --pill-other-fg: #9ca3af; --pill-other-border: #374151;
+    --pill-default-bg: #1f2937; --pill-default-fg: #9ca3af; --pill-default-border: #374151;
 
     --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
     --status-closed-bg: #1f2937; --status-closed-fg: #9ca3af; --status-closed-border: #374151;
@@ -90,7 +78,6 @@ h1 {
   margin: 0 0 24px 0;
 }
 
-/* Stats bar */
 .stats-bar {
   display: flex;
   flex-wrap: wrap;
@@ -127,7 +114,6 @@ h1 {
   margin: 0 4px;
 }
 
-/* Search and filter bar */
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
@@ -138,7 +124,7 @@ h1 {
 
 .search-box {
   flex: 1;
-  min-width: 240px;
+  min-width: 200px;
   padding: 8px 12px;
   font-size: 14px;
   font-family: var(--font);
@@ -176,7 +162,15 @@ h1 {
   cursor: pointer;
   user-select: none;
   transition: opacity 0.15s, transform 0.1s;
-  border: 1px solid;
+  border: 1px solid var(--pill-default-border);
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+}
+
+.filter-pill[data-label="tx-compare"] {
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
 }
 
 .filter-pill:hover {
@@ -192,32 +186,36 @@ h1 {
   opacity: 0.8;
 }
 
-/* Priority group headers */
-.group-header {
-  font-size: 16px;
-  font-weight: 700;
-  margin: 28px 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border-light);
+.controls {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 4px;
+  margin-left: auto;
+  flex-wrap: wrap;
 }
 
-.group-header .group-count {
+.ctrl-btn {
+  padding: 4px 10px;
   font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+}
+
+.ctrl-btn:hover {
   background: var(--bg-surface);
-  padding: 2px 8px;
-  border-radius: 999px;
 }
 
-.group-header.hidden {
-  display: none;
+.ctrl-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
 }
 
-/* Bug cards */
 .bug-card {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -306,14 +304,33 @@ h1 {
   border-color: var(--status-closed-border);
 }
 
-.pill-p0 { background: var(--pill-p0-bg); color: var(--pill-p0-fg); border-color: var(--pill-p0-border); }
-.pill-p1 { background: var(--pill-p1-bg); color: var(--pill-p1-fg); border-color: var(--pill-p1-border); }
-.pill-p2 { background: var(--pill-p2-bg); color: var(--pill-p2-fg); border-color: var(--pill-p2-border); }
-.pill-p3 { background: var(--pill-p3-bg); color: var(--pill-p3-fg); border-color: var(--pill-p3-border); }
-.pill-p4 { background: var(--pill-p4-bg); color: var(--pill-p4-fg); border-color: var(--pill-p4-border); }
-.pill-temp { background: var(--pill-temp-bg); color: var(--pill-temp-fg); border-color: var(--pill-temp-border); }
-.pill-tx-compare { background: var(--pill-tx-bg); color: var(--pill-tx-fg); border-color: var(--pill-tx-border); }
-.pill-other { background: var(--pill-other-bg); color: var(--pill-other-fg); border-color: var(--pill-other-border); }
+.pill-label {
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+  border-color: var(--pill-default-border);
+}
+
+.pill-label[data-label="tx-compare"] {
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
+}
+
+.pill-impact {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pill-impact {
+    background: #3b2f0b;
+    color: #fcd34d;
+    border-color: #78350f;
+  }
+}
 
 .bug-id {
   font-size: 11px;
@@ -336,7 +353,6 @@ h1 {
   display: block;
 }
 
-/* Markdown rendered content */
 .bug-body h1, .bug-body h2, .bug-body h3,
 .bug-body h4, .bug-body h5, .bug-body h6 {
   margin: 16px 0 8px 0;
@@ -398,22 +414,10 @@ h1 {
   margin: 16px 0;
 }
 
-.bug-body strong {
-  font-weight: 700;
-}
-
-.bug-body em {
-  font-style: italic;
-}
-
-.bug-body a {
-  color: #3b82f6;
-  text-decoration: none;
-}
-
-.bug-body a:hover {
-  text-decoration: underline;
-}
+.bug-body strong { font-weight: 700; }
+.bug-body em { font-style: italic; }
+.bug-body a { color: #3b82f6; text-decoration: none; }
+.bug-body a:hover { text-decoration: underline; }
 
 .no-results {
   text-align: center;
@@ -426,36 +430,6 @@ h1 {
   display: none;
 }
 
-/* Status filter buttons */
-.status-filters {
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-}
-
-.status-btn {
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-family: var(--font);
-  transition: background 0.15s, color 0.15s;
-}
-
-.status-btn:hover {
-  background: var(--bg-surface);
-}
-
-.status-btn.active {
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
-}
-
 @media (max-width: 640px) {
   .container { padding: 16px 12px; }
   .stats-bar { padding: 12px; gap: 6px; }
@@ -464,7 +438,7 @@ h1 {
   .search-box { min-width: 100%; }
   .bug-body { padding: 0 12px 12px 12px; }
   .bug-header { padding: 10px 12px; }
-  .status-filters { margin-left: 0; }
+  .controls { margin-left: 0; }
 }
 </style>
 </head>
@@ -477,12 +451,17 @@ h1 {
 
   <div class="filter-bar">
     <input type="text" class="search-box" id="search" placeholder="Search bugs by title or body..." autocomplete="off">
-    <div class="filter-pills" id="priority-filters"></div>
-    <div class="status-filters" id="status-filters">
-      <button class="status-btn expand-toggle" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
-      <button class="status-btn active" data-status="all">All</button>
-      <button class="status-btn" data-status="open">Open</button>
-      <button class="status-btn" data-status="closed">Closed</button>
+    <div class="filter-pills" id="label-filters"></div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn active" data-status="all">All</button>
+      <button class="ctrl-btn" data-status="open">Open</button>
+      <button class="ctrl-btn" data-status="closed">Closed</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn sort-btn active" data-sort="impact">Impact</button>
+      <button class="ctrl-btn sort-btn" data-sort="date">Date</button>
+      <button class="ctrl-btn sort-btn" data-sort="title">Title</button>
     </div>
   </div>
 
@@ -491,104 +470,84 @@ h1 {
 </div>
 
 <script>
-const BUGS = [{"id": "51f23f5", "title": "DICOM CID 29 AcquisitionModality ValueSet missing from dev", "status": "open", "labels": ["P3", "tx-compare"], "priority": "P3", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:50", "date_iso": "2026-02-07T10:50:05-06:00", "body_md": "## What differs\n\nWhen searching for the DICOM CID 29 AcquisitionModality ValueSet by URL (`/r4/ValueSet?url=http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`), prod returns a Bundle with `total: 1` containing the full ValueSet resource (id: `dicom-cid-29-AcquisitionModality`, 51 DICOM modality codes). Dev returns an empty Bundle with `total: 0`.\n\nDirect reads by ID (`/r4/ValueSet/dicom-cid-29-AcquisitionModality`) return 200 on prod with the full ValueSet, and 404 on dev with \"ValueSet/dicom-cid-29-AcquisitionModality not found\".\n\nThe ValueSet has URL `http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`, version `2025.3.20250714`, and uses system `http://dicom.nema.org/resources/ontology/DCM`.\n\n## How widespread\n\n10 records in the delta file:\n- 5x P3 (prod=200, dev=404): direct read `/r4/ValueSet/dicom-cid-29-AcquisitionModality`\n- 5x P6 (both 200, content differs): URL search returning empty Bundle vs populated Bundle\n\nSearch: `grep 'dicom-cid-29\\|sect_CID_29' deltas.ndjson` finds all 10.\n\n## Representative record IDs\n\n- `3e3359d1-7391-4620-8b72-552f197f21cf` (P6 URL search)\n- `ab5f8ed0-5149-4967-af3a-3c649cbb10c5` (P3 direct read)", "body_html": "<h2>What differs</h2>\n<p>When searching for the DICOM CID 29 AcquisitionModality ValueSet by URL (<code>/r4/ValueSet?url=http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html</code>), prod returns a Bundle with <code>total: 1</code> containing the full ValueSet resource (id: <code>dicom-cid-29-AcquisitionModality</code>, 51 DICOM modality codes). Dev returns an empty Bundle with <code>total: 0</code>.</p>\n<p>Direct reads by ID (<code>/r4/ValueSet/dicom-cid-29-AcquisitionModality</code>) return 200 on prod with the full ValueSet, and 404 on dev with &quot;ValueSet/dicom-cid-29-AcquisitionModality not found&quot;.</p>\n<p>The ValueSet has URL <code>http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html</code>, version <code>2025.3.20250714</code>, and uses system <code>http://dicom.nema.org/resources/ontology/DCM</code>.</p>\n<h2>How widespread</h2>\n<p>10 records in the delta file:</p>\n<ul><li>5x P3 (prod=200, dev=404): direct read <code>/r4/ValueSet/dicom-cid-29-AcquisitionModality</code></li><li>5x P6 (both 200, content differs): URL search returning empty Bundle vs populated Bundle</li></ul>\n<p>Search: <code>grep &#x27;dicom-cid-29\\|sect_CID_29&#x27; deltas.ndjson</code> finds all 10.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>3e3359d1-7391-4620-8b72-552f197f21cf</code> (P6 URL search)</li><li><code>ab5f8ed0-5149-4967-af3a-3c649cbb10c5</code> (P3 direct read)</li></ul>"}, {"id": "1c145d2", "title": "Dev returns 404 instead of 422 for  when referenced CodeSystem is not found", "status": "open", "labels": ["P4", "tx-compare"], "priority": "P4", "author": "Claude (AI Assistant)", "date": "2026-02-07 11:00", "date_iso": "2026-02-07T11:00:00-06:00", "body_md": "## What differs\n\nWhen a ValueSet $expand fails because a referenced CodeSystem definition cannot be found, prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 404 (Not Found). The OperationOutcome error message is identical on both sides: \"A definition for CodeSystem '...' could not be found, so the value set cannot be expanded\". The issue code is `not-found` in both cases.\n\nAdditionally, dev includes `location: [null]` and `expression: [null]` arrays in the OperationOutcome issue (prod omits these), and dev omits the `text` narrative element that prod includes. These are secondary cosmetic differences; the primary issue is the status code mismatch.\n\n## How widespread\n\n296 records in this comparison batch. All are POST /r4/ValueSet/$expand operations where the error message contains \"could not be found, so the value set cannot be expanded\".\n\nSearch: `grep '\"prodStatus\":422,\"devStatus\":404' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 296\n\nAll 296 have:\n- Operation: POST /r4/ValueSet/$expand\n- Prod status: 422\n- Dev status: 404\n- OperationOutcome issue code: not-found\n- Identical error message text\n\n## What the tolerance covers\n\nTolerance ID: `expand-422-vs-404-codesystem-not-found`\nMatches: POST /r4/ValueSet/$expand where prodStatus=422 and devStatus=404, and the OperationOutcome contains \"could not be found, so the value set cannot be expanded\".\nNormalizes: status code difference, strips null location/expression arrays from dev, strips text narrative from prod. Compares remaining OperationOutcome content.\nAffects: 296 records.\n\n## Representative record\n\nID: eee2c985-52e0-4520-b4e4-01766ede5a7d", "body_html": "<h2>What differs</h2>\n<p>When a ValueSet $expand fails because a referenced CodeSystem definition cannot be found, prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 404 (Not Found). The OperationOutcome error message is identical on both sides: &quot;A definition for CodeSystem &#x27;...&#x27; could not be found, so the value set cannot be expanded&quot;. The issue code is <code>not-found</code> in both cases.</p>\n<p>Additionally, dev includes <code>location: [null]</code> and <code>expression: [null]</code> arrays in the OperationOutcome issue (prod omits these), and dev omits the <code>text</code> narrative element that prod includes. These are secondary cosmetic differences; the primary issue is the status code mismatch.</p>\n<h2>How widespread</h2>\n<p>296 records in this comparison batch. All are POST /r4/ValueSet/$expand operations where the error message contains &quot;could not be found, so the value set cannot be expanded&quot;.</p>\n<p>Search: <code>grep &#x27;&quot;prodStatus&quot;:422,&quot;devStatus&quot;:404&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l</code> → 296</p>\n<p>All 296 have:</p>\n<ul><li>Operation: POST /r4/ValueSet/$expand</li><li>Prod status: 422</li><li>Dev status: 404</li><li>OperationOutcome issue code: not-found</li><li>Identical error message text</li></ul>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>expand-422-vs-404-codesystem-not-found</code><br>\nMatches: POST /r4/ValueSet/$expand where prodStatus=422 and devStatus=404, and the OperationOutcome contains &quot;could not be found, so the value set cannot be expanded&quot;.<br>\nNormalizes: status code difference, strips null location/expression arrays from dev, strips text narrative from prod. Compares remaining OperationOutcome content.<br>\nAffects: 296 records.</p>\n<h2>Representative record</h2>\n<p>ID: eee2c985-52e0-4520-b4e4-01766ede5a7d</p>"}, {"id": "d3b49ff", "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:13", "date_iso": "2026-02-07T10:13:12-06:00", "body_md": "## What differs\n\n$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:\n\n1. **Version**: prod returns `version: \"2.0.0\"`, dev returns `version: \"3.0.0\"`\n2. **Definition parameter**: dev returns a top-level `definition` parameter (`\"Registered Nurse\"`); prod returns the definition only as a property (code=definition)\n3. **Designation parameter**: dev returns a `designation` parameter with `preferredForLanguage` use coding; prod does not include designation\n\nThese differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.\n\n## How widespread\n\nAll 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.\n\n```\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c 'v2-0360'\n# 157\n```\n\nRequest properties that predict this difference:\n- Operation: $lookup\n- System: http://terminology.hl7.org/CodeSystem/v2-0360\n- FHIR version: /r4/\n\n## Tolerance\n\nTolerance ID: `v2-0360-lookup-version-skew`\nMatches: $lookup requests on v2-0360 system\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides\nAffects: 157 records\n\n## Representative record\n\nID: `80a780e6-8842-43a9-a260-889ce87f76ac`\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN", "body_html": "<h2>What differs</h2>\n<p>$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:</p>\n<ol><li><strong>Version</strong>: prod returns <code>version: &quot;2.0.0&quot;</code>, dev returns <code>version: &quot;3.0.0&quot;</code></li><li><strong>Definition parameter</strong>: dev returns a top-level <code>definition</code> parameter (<code>&quot;Registered Nurse&quot;</code>); prod returns the definition only as a property (code=definition)</li><li><strong>Designation parameter</strong>: dev returns a <code>designation</code> parameter with <code>preferredForLanguage</code> use coding; prod does not include designation</li></ol>\n<p>These differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.</p>\n<h2>How widespread</h2>\n<p>All 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.</p>\n<pre><code>grep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c &#x27;v2-0360&#x27;\n# 157</code></pre>\n<p>Request properties that predict this difference:</p>\n<ul><li>Operation: $lookup</li><li>System: http://terminology.hl7.org/CodeSystem/v2-0360</li><li>FHIR version: /r4/</li></ul>\n<h2>Tolerance</h2>\n<p>Tolerance ID: <code>v2-0360-lookup-version-skew</code><br>\nMatches: $lookup requests on v2-0360 system<br>\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides<br>\nAffects: 157 records</p>\n<h2>Representative record</h2>\n<p>ID: <code>80a780e6-8842-43a9-a260-889ce87f76ac</code><br>\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&amp;code=RN</p>"}, {"id": "e9c7e58", "title": "Dev returns empty-string expression/location in OperationOutcome issues", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:17", "date_iso": "2026-02-07T10:17:43-06:00", "body_md": "Dev returns `\"expression\": [\"\"]` and `\"location\": [\"\"]` on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.\n\n## What differs\n\nIn $validate-code responses (both ValueSet and CodeSystem), dev includes `\"expression\": [\"\"]` and `\"location\": [\"\"]` on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string `\"\"` is invalid FHIR.\n\nThis occurs on issues with these message IDs:\n- TX_GENERAL_CC_ERROR_MESSAGE (311 records)\n- MSG_DRAFT (4 records)\n- MSG_DEPRECATED (3 records)\n\n## How widespread\n\n318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.\n\nSearch: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.\n\n## What the tolerance covers\n\nTolerance ID: `dev-empty-string-expression-location`. Normalizes by removing `expression: [\"\"]` and `location: [\"\"]` from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.\n\n## Representative record IDs\n\n- `7de52d92-3166-495e-ac5e-af262b1019e4` (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)\n- `dcdd2b94-db9...` (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)", "body_html": "<p>Dev returns <code>&quot;expression&quot;: [&quot;&quot;]</code> and <code>&quot;location&quot;: [&quot;&quot;]</code> on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.</p>\n<h2>What differs</h2>\n<p>In $validate-code responses (both ValueSet and CodeSystem), dev includes <code>&quot;expression&quot;: [&quot;&quot;]</code> and <code>&quot;location&quot;: [&quot;&quot;]</code> on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string <code>&quot;&quot;</code> is invalid FHIR.</p>\n<p>This occurs on issues with these message IDs:</p>\n<ul><li>TX_GENERAL_CC_ERROR_MESSAGE (311 records)</li><li>MSG_DRAFT (4 records)</li><li>MSG_DEPRECATED (3 records)</li></ul>\n<h2>How widespread</h2>\n<p>318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.</p>\n<p>Search: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>dev-empty-string-expression-location</code>. Normalizes by removing <code>expression: [&quot;&quot;]</code> and <code>location: [&quot;&quot;]</code> from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>7de52d92-3166-495e-ac5e-af262b1019e4</code> (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li><li><code>dcdd2b94-db9...</code> (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li></ul>"}, {"id": "cf90495", "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:22", "date_iso": "2026-02-07T10:22:21-06:00", "body_md": "## What differs\n\nWhen $validate-code detects a wrong display name, prod and dev return different error message text in both the `message` parameter and `issues` OperationOutcome `details.text`.\n\nSpecific differences:\n- **Display option count**: Prod may list duplicate display options (e.g., \"6 choices\" with repeats), while dev de-duplicates (e.g., \"3 choices\" with unique entries)\n- **Language tags**: Dev appends language tags like `(en)` after each display option; prod does not\n- **Example**: For `urn:ietf:bcp:47#en-US`:\n  - Prod: \"Valid display is one of 6 choices: 'English (Region=United States)', 'English (United States)', 'English (Region=United States)', ...\"\n  - Dev: \"Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) ...\"\n\nThe core validation result (`result: false`) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.\n\n## How widespread\n\n44 delta records have `invalid-display` issue type with only `message` and `issues` diffs. 41 records contain \"Wrong Display Name\" in the delta text.\n\nSearch: `grep -c 'Wrong Display Name' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 41\nSearch: `grep -c 'invalid-display' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 53 (44 with only message/issues diffs)\n\nAffected operations: $validate-code on both CodeSystem and ValueSet\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others\n\n## What the tolerance covers\n\nTolerance ID: `invalid-display-message-format`\nMatches: validate-code records where both prod and dev have `invalid-display` issue type and only the message/issues text differs. Normalizes the message and issues text to prod's version.\nExpected elimination: ~44 records.\n\n## Representative record ID\n\n`beb4276b-f937-46c3-81ab-7f63cb7798b7` — grep -n 'beb4276b-f937-46c3-81ab-7f63cb7798b7' jobs/2026-02-round-1/comparison.ndjson", "body_html": "<h2>What differs</h2>\n<p>When $validate-code detects a wrong display name, prod and dev return different error message text in both the <code>message</code> parameter and <code>issues</code> OperationOutcome <code>details.text</code>.</p>\n<p>Specific differences:</p>\n<ul><li><strong>Display option count</strong>: Prod may list duplicate display options (e.g., &quot;6 choices&quot; with repeats), while dev de-duplicates (e.g., &quot;3 choices&quot; with unique entries)</li><li><strong>Language tags</strong>: Dev appends language tags like <code>(en)</code> after each display option; prod does not</li><li><strong>Example</strong>: For <code>urn:ietf:bcp:47#en-US</code>:</li><li>Prod: &quot;Valid display is one of 6 choices: &#x27;English (Region=United States)&#x27;, &#x27;English (United States)&#x27;, &#x27;English (Region=United States)&#x27;, ...&quot;</li><li>Dev: &quot;Valid display is one of 3 choices: &#x27;English (Region=United States)&#x27; (en), &#x27;English (United States)&#x27; (en) or &#x27;English (Region=United States)&#x27; (en) ...&quot;</li></ul>\n<p>The core validation result (<code>result: false</code>) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.</p>\n<h2>How widespread</h2>\n<p>44 delta records have <code>invalid-display</code> issue type with only <code>message</code> and <code>issues</code> diffs. 41 records contain &quot;Wrong Display Name&quot; in the delta text.</p>\n<p>Search: <code>grep -c &#x27;Wrong Display Name&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 41<br>\nSearch: <code>grep -c &#x27;invalid-display&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 53 (44 with only message/issues diffs)</p>\n<p>Affected operations: $validate-code on both CodeSystem and ValueSet<br>\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>invalid-display-message-format</code><br>\nMatches: validate-code records where both prod and dev have <code>invalid-display</code> issue type and only the message/issues text differs. Normalizes the message and issues text to prod&#x27;s version.<br>\nExpected elimination: ~44 records.</p>\n<h2>Representative record ID</h2>\n<p><code>beb4276b-f937-46c3-81ab-7f63cb7798b7</code> — grep -n &#x27;beb4276b-f937-46c3-81ab-7f63cb7798b7&#x27; jobs/2026-02-round-1/comparison.ndjson</p>"}, {"id": "e09cff6", "title": "BCP-47 display text format: dev returns 'Region=...' instead of standard format", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:45", "date_iso": "2026-02-07T10:45:20-06:00", "body_md": "## What differs\n\nFor BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like \"English (Region=United States)\" while prod returns the standard format \"English (United States)\".\n\nSpecific example for code en-US:\n- prod: \"English (United States)\"\n- dev: \"English (Region=United States)\"\n\nThe \"Region=\" prefix in dev's display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.\n\n## How widespread\n\n7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.\n\nSearch: grep -c 'Region=' deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where \"Region=\" appears only in diagnostics).\n\n## What the tolerance covers\n\nTolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.\n\n## Representative record\n\nda702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47", "body_html": "<h2>What differs</h2>\n<p>For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like &quot;English (Region=United States)&quot; while prod returns the standard format &quot;English (United States)&quot;.</p>\n<p>Specific example for code en-US:</p>\n<ul><li>prod: &quot;English (United States)&quot;</li><li>dev: &quot;English (Region=United States)&quot;</li></ul>\n<p>The &quot;Region=&quot; prefix in dev&#x27;s display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.</p>\n<h2>How widespread</h2>\n<p>7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.</p>\n<p>Search: grep -c &#x27;Region=&#x27; deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where &quot;Region=&quot; appears only in diagnostics).</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.</p>\n<h2>Representative record</h2>\n<p>da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47</p>"}, {"id": "4233647", "title": "Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Other", "author": "Claude (AI Assistant)", "date": "2026-02-07 10:54", "date_iso": "2026-02-07T10:54:51-06:00", "body_md": "## What differs\n\nDev's searchset Bundle responses differ from prod in several ways:\n\n1. **`entry: []` on empty results**: When a search returns no results (total: 0), dev includes `entry: []` (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR's general rule that arrays, if present, must be non-empty.\n\n2. **Extra pagination link relations**: Dev returns `self`, `first`, and `last` link relations. Prod returns only `self`. This applies to both empty and non-empty search results.\n\n3. **Absolute vs relative link URLs**: Dev uses absolute URLs with full host prefix (e.g., `http://tx.fhir.org/r4/ValueSet?...&_offset=0`). Prod uses relative URLs (e.g., `ValueSet?&url=...`). Dev also appends `_offset=0` to search links.\n\n4. **Server-generated metadata**: Prod includes `id` and `meta.lastUpdated` on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)\n\n## How widespread\n\nAffects all searchset Bundle responses for ValueSet and CodeSystem searches:\n- 337 empty ValueSet search Bundles\n- 154 empty CodeSystem search Bundles  \n- 7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)\n\nTotal: **498 records** in the deltas file.\n\nSearch used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL where prodBody contains a Bundle with type \"searchset\".\n\n## Representative record IDs\n\n- `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)\n- `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)\n- `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)", "body_html": "<h2>What differs</h2>\n<p>Dev&#x27;s searchset Bundle responses differ from prod in several ways:</p>\n<ol><li>**<code>entry: []</code> on empty results**: When a search returns no results (total: 0), dev includes <code>entry: []</code> (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR&#x27;s general rule that arrays, if present, must be non-empty.</li></ol>\n<ol><li><strong>Extra pagination link relations</strong>: Dev returns <code>self</code>, <code>first</code>, and <code>last</code> link relations. Prod returns only <code>self</code>. This applies to both empty and non-empty search results.</li></ol>\n<ol><li><strong>Absolute vs relative link URLs</strong>: Dev uses absolute URLs with full host prefix (e.g., <code>http://tx.fhir.org/r4/ValueSet?...&amp;_offset=0</code>). Prod uses relative URLs (e.g., <code>ValueSet?&amp;url=...</code>). Dev also appends <code>_offset=0</code> to search links.</li></ol>\n<ol><li><strong>Server-generated metadata</strong>: Prod includes <code>id</code> and <code>meta.lastUpdated</code> on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)</li></ol>\n<h2>How widespread</h2>\n<p>Affects all searchset Bundle responses for ValueSet and CodeSystem searches:</p>\n<ul><li>337 empty ValueSet search Bundles</li><li>154 empty CodeSystem search Bundles</li><li>7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)</li></ul>\n<p>Total: <strong>498 records</strong> in the deltas file.</p>\n<p>Search used: Parsed all records with <code>ValueSet?</code> or <code>CodeSystem?</code> in the URL where prodBody contains a Bundle with type &quot;searchset&quot;.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>c97f36a4-973b-42c5-8b6d-58464195cfd5</code> (empty ValueSet search, RadLex Playbook)</li><li><code>4ab7655f-015d-4f44-b184-5ba0fd256926</code> (empty ValueSet search, DICOM)</li><li><code>640875e4-3839-40d1-aaa1-0bf79bef77f2</code> (non-empty CodeSystem search, USPS)</li></ul>"}];
-const STATS = {"total": 7, "open": 7, "closed": 0, "priorities": {"P0": 0, "P1": 0, "P2": 0, "P3": 1, "P4": 1, "Temp Tolerances": 4, "Other": 1}};
-const PRIORITY_ORDER = ["P0", "P1", "P2", "P3", "P4", "Temp Tolerances", "Other"];
+const BUGS = [{"id": "17ad254", "title": "UCUM -code: dev returns human-readable display instead of code-as-display", "status": "open", "labels": ["content-differs", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 11:19", "date_iso": "2026-02-07T11:19:46-06:00", "body_md": "## What differs\n\nFor UCUM ($validate-code) operations, prod returns the UCUM code itself as the `display` parameter (e.g., `[in_i]`, `[lb_av]`, `mg`, `%`), while dev returns a human-readable name (e.g., `(inch)`, `(pound)`, `(milligram)`, `(percent)`).\n\nPer the FHIR UCUM guidance (https://terminology.hl7.org/UCUM.html): \"No standardized display value is defined. The UCUM code itself is used directly as the display.\" Prod follows this convention; dev does not.\n\nAll other parameters (result, system, code, version) agree between prod and dev. Display is the only difference.\n\nExamples:\n- code=[in_i]: prod display=\"[in_i]\", dev display=\"(inch)\"\n- code=[lb_av]: prod display=\"[lb_av]\", dev display=\"(pound)\"\n- code=[degF]: prod display=\"[degF]\", dev display=\"(degree Fahrenheit)\"\n- code=mg: prod display=\"mg\", dev display=\"(milligram)\"\n- code=%: prod display=\"%\", dev display=\"(percent)\"\n- code=mm[Hg]: prod display=\"mm[Hg]\", dev display=\"(millimeter of mercury column)\"\n- code=kg/m2: prod display=\"kg/m2\", dev display=\"(kilogram) / (meter ^ 2)\"\n\n## How widespread\n\n220 records in deltas.ndjson match this pattern. All are validate-code operations on system http://unitsofmeasure.org where display is the only diff. Found with:\n\n  grep '\"param\":\"display\"' deltas.ndjson | grep 'unitsofmeasure.org' | wc -l\n\nIn all 220 cases, prod's display equals the UCUM code exactly.\n\n## Tolerance\n\nTolerance ID: ucum-display-code-as-display\nMatches: validate-code operations on http://unitsofmeasure.org where display values differ\nNormalizes both sides to prod's display value (the code itself, per FHIR convention)\n\n## Representative record\n\n6ae99904-538b-4241-89db-b15eab6e637e (POST /r4/ValueSet/$validate-code, code=[in_i])", "body_html": "<h2>What differs</h2>\n<p>For UCUM ($validate-code) operations, prod returns the UCUM code itself as the <code>display</code> parameter (e.g., <code>[in_i]</code>, <code>[lb_av]</code>, <code>mg</code>, <code>%</code>), while dev returns a human-readable name (e.g., <code>(inch)</code>, <code>(pound)</code>, <code>(milligram)</code>, <code>(percent)</code>).</p>\n<p>Per the FHIR UCUM guidance (https://terminology.hl7.org/UCUM.html): &quot;No standardized display value is defined. The UCUM code itself is used directly as the display.&quot; Prod follows this convention; dev does not.</p>\n<p>All other parameters (result, system, code, version) agree between prod and dev. Display is the only difference.</p>\n<p>Examples:</p>\n<ul><li>code=[in_i]: prod display=&quot;[in_i]&quot;, dev display=&quot;(inch)&quot;</li><li>code=[lb_av]: prod display=&quot;[lb_av]&quot;, dev display=&quot;(pound)&quot;</li><li>code=[degF]: prod display=&quot;[degF]&quot;, dev display=&quot;(degree Fahrenheit)&quot;</li><li>code=mg: prod display=&quot;mg&quot;, dev display=&quot;(milligram)&quot;</li><li>code=%: prod display=&quot;%&quot;, dev display=&quot;(percent)&quot;</li><li>code=mm[Hg]: prod display=&quot;mm[Hg]&quot;, dev display=&quot;(millimeter of mercury column)&quot;</li><li>code=kg/m2: prod display=&quot;kg/m2&quot;, dev display=&quot;(kilogram) / (meter ^ 2)&quot;</li></ul>\n<h2>How widespread</h2>\n<p>220 records in deltas.ndjson match this pattern. All are validate-code operations on system http://unitsofmeasure.org where display is the only diff. Found with:</p>\n<p>grep &#x27;&quot;param&quot;:&quot;display&quot;&#x27; deltas.ndjson | grep &#x27;unitsofmeasure.org&#x27; | wc -l</p>\n<p>In all 220 cases, prod&#x27;s display equals the UCUM code exactly.</p>\n<h2>Tolerance</h2>\n<p>Tolerance ID: ucum-display-code-as-display<br>\nMatches: validate-code operations on http://unitsofmeasure.org where display values differ<br>\nNormalizes both sides to prod&#x27;s display value (the code itself, per FHIR convention)</p>\n<h2>Representative record</h2>\n<p>6ae99904-538b-4241-89db-b15eab6e637e (POST /r4/ValueSet/$validate-code, code=[in_i])</p>", "impact": 220}, {"id": "d3b49ff", "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation", "status": "open", "labels": ["P6", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:13", "date_iso": "2026-02-07T10:13:12-06:00", "body_md": "## What differs\n\n$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:\n\n1. **Version**: prod returns `version: \"2.0.0\"`, dev returns `version: \"3.0.0\"`\n2. **Definition parameter**: dev returns a top-level `definition` parameter (`\"Registered Nurse\"`); prod returns the definition only as a property (code=definition)\n3. **Designation parameter**: dev returns a `designation` parameter with `preferredForLanguage` use coding; prod does not include designation\n\nThese differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.\n\n## How widespread\n\nAll 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.\n\n```\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep '\"op\":\"lookup\"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c 'v2-0360'\n# 157\n```\n\nRequest properties that predict this difference:\n- Operation: $lookup\n- System: http://terminology.hl7.org/CodeSystem/v2-0360\n- FHIR version: /r4/\n\n## Tolerance\n\nTolerance ID: `v2-0360-lookup-version-skew`\nMatches: $lookup requests on v2-0360 system\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides\nAffects: 157 records\n\n## Representative record\n\nID: `80a780e6-8842-43a9-a260-889ce87f76ac`\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN", "body_html": "<h2>What differs</h2>\n<p>$lookup on CodeSystem v2-0360 (DegreeLicenseCertificate) returns different version and content between prod and dev:</p>\n<ol><li><strong>Version</strong>: prod returns <code>version: &quot;2.0.0&quot;</code>, dev returns <code>version: &quot;3.0.0&quot;</code></li><li><strong>Definition parameter</strong>: dev returns a top-level <code>definition</code> parameter (<code>&quot;Registered Nurse&quot;</code>); prod returns the definition only as a property (code=definition)</li><li><strong>Designation parameter</strong>: dev returns a <code>designation</code> parameter with <code>preferredForLanguage</code> use coding; prod does not include designation</li></ol>\n<p>These differences reflect that dev has loaded a newer edition (3.0.0) of the v2-0360 CodeSystem than prod (2.0.0). The structural differences (definition as top-level param, extra designation) are consistent with the newer version having richer content.</p>\n<h2>How widespread</h2>\n<p>All 157 $lookup deltas are for this same system and show the identical pattern. All use code=RN.</p>\n<pre><code>grep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l\n# 157\n\ngrep &#x27;&quot;op&quot;:&quot;lookup&quot;&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | grep -c &#x27;v2-0360&#x27;\n# 157</code></pre>\n<p>Request properties that predict this difference:</p>\n<ul><li>Operation: $lookup</li><li>System: http://terminology.hl7.org/CodeSystem/v2-0360</li><li>FHIR version: /r4/</li></ul>\n<h2>Tolerance</h2>\n<p>Tolerance ID: <code>v2-0360-lookup-version-skew</code><br>\nMatches: $lookup requests on v2-0360 system<br>\nNormalizes: strips version, definition, and designation parameters from both sides; removes property with code=definition from both sides<br>\nAffects: 157 records</p>\n<h2>Representative record</h2>\n<p>ID: <code>80a780e6-8842-43a9-a260-889ce87f76ac</code><br>\nURL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&amp;code=RN</p>", "impact": null}, {"id": "e9c7e58", "title": "Dev returns empty-string expression/location in OperationOutcome issues", "status": "open", "labels": ["P6", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:17", "date_iso": "2026-02-07T10:17:43-06:00", "body_md": "Dev returns `\"expression\": [\"\"]` and `\"location\": [\"\"]` on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.\n\n## What differs\n\nIn $validate-code responses (both ValueSet and CodeSystem), dev includes `\"expression\": [\"\"]` and `\"location\": [\"\"]` on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string `\"\"` is invalid FHIR.\n\nThis occurs on issues with these message IDs:\n- TX_GENERAL_CC_ERROR_MESSAGE (311 records)\n- MSG_DRAFT (4 records)\n- MSG_DEPRECATED (3 records)\n\n## How widespread\n\n318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.\n\nSearch: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.\n\n## What the tolerance covers\n\nTolerance ID: `dev-empty-string-expression-location`. Normalizes by removing `expression: [\"\"]` and `location: [\"\"]` from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.\n\n## Representative record IDs\n\n- `7de52d92-3166-495e-ac5e-af262b1019e4` (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)\n- `dcdd2b94-db9...` (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)", "body_html": "<p>Dev returns <code>&quot;expression&quot;: [&quot;&quot;]</code> and <code>&quot;location&quot;: [&quot;&quot;]</code> on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.</p>\n<h2>What differs</h2>\n<p>In $validate-code responses (both ValueSet and CodeSystem), dev includes <code>&quot;expression&quot;: [&quot;&quot;]</code> and <code>&quot;location&quot;: [&quot;&quot;]</code> on OperationOutcome issue entries that have no specific FHIRPath location. Prod omits these fields entirely, which is correct — FHIR requires strings to be non-empty if present. The empty string <code>&quot;&quot;</code> is invalid FHIR.</p>\n<p>This occurs on issues with these message IDs:</p>\n<ul><li>TX_GENERAL_CC_ERROR_MESSAGE (311 records)</li><li>MSG_DRAFT (4 records)</li><li>MSG_DEPRECATED (3 records)</li></ul>\n<h2>How widespread</h2>\n<p>318 delta records show this pattern. All are $validate-code operations (both ValueSet/$validate-code and CodeSystem/$validate-code), all P6 priority.</p>\n<p>Search: examined all records in deltas.ndjson where dev OperationOutcome issues contain empty-string expression or location arrays.</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>dev-empty-string-expression-location</code>. Normalizes by removing <code>expression: [&quot;&quot;]</code> and <code>location: [&quot;&quot;]</code> from OperationOutcome issues in dev responses, matching what prod does (omit the fields). This is a normalize tolerance (not skip) so other differences in these records still surface.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>7de52d92-3166-495e-ac5e-af262b1019e4</code> (ValueSet/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li><li><code>dcdd2b94-db9...</code> (CodeSystem/$validate-code, TX_GENERAL_CC_ERROR_MESSAGE)</li></ul>", "impact": null}, {"id": "cf90495", "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags", "status": "open", "labels": ["P6", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:22", "date_iso": "2026-02-07T10:22:21-06:00", "body_md": "## What differs\n\nWhen $validate-code detects a wrong display name, prod and dev return different error message text in both the `message` parameter and `issues` OperationOutcome `details.text`.\n\nSpecific differences:\n- **Display option count**: Prod may list duplicate display options (e.g., \"6 choices\" with repeats), while dev de-duplicates (e.g., \"3 choices\" with unique entries)\n- **Language tags**: Dev appends language tags like `(en)` after each display option; prod does not\n- **Example**: For `urn:ietf:bcp:47#en-US`:\n  - Prod: \"Valid display is one of 6 choices: 'English (Region=United States)', 'English (United States)', 'English (Region=United States)', ...\"\n  - Dev: \"Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) ...\"\n\nThe core validation result (`result: false`) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.\n\n## How widespread\n\n44 delta records have `invalid-display` issue type with only `message` and `issues` diffs. 41 records contain \"Wrong Display Name\" in the delta text.\n\nSearch: `grep -c 'Wrong Display Name' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 41\nSearch: `grep -c 'invalid-display' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 53 (44 with only message/issues diffs)\n\nAffected operations: $validate-code on both CodeSystem and ValueSet\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others\n\n## What the tolerance covers\n\nTolerance ID: `invalid-display-message-format`\nMatches: validate-code records where both prod and dev have `invalid-display` issue type and only the message/issues text differs. Normalizes the message and issues text to prod's version.\nExpected elimination: ~44 records.\n\n## Representative record ID\n\n`beb4276b-f937-46c3-81ab-7f63cb7798b7` — grep -n 'beb4276b-f937-46c3-81ab-7f63cb7798b7' jobs/2026-02-round-1/comparison.ndjson", "body_html": "<h2>What differs</h2>\n<p>When $validate-code detects a wrong display name, prod and dev return different error message text in both the <code>message</code> parameter and <code>issues</code> OperationOutcome <code>details.text</code>.</p>\n<p>Specific differences:</p>\n<ul><li><strong>Display option count</strong>: Prod may list duplicate display options (e.g., &quot;6 choices&quot; with repeats), while dev de-duplicates (e.g., &quot;3 choices&quot; with unique entries)</li><li><strong>Language tags</strong>: Dev appends language tags like <code>(en)</code> after each display option; prod does not</li><li><strong>Example</strong>: For <code>urn:ietf:bcp:47#en-US</code>:</li><li>Prod: &quot;Valid display is one of 6 choices: &#x27;English (Region=United States)&#x27;, &#x27;English (United States)&#x27;, &#x27;English (Region=United States)&#x27;, ...&quot;</li><li>Dev: &quot;Valid display is one of 3 choices: &#x27;English (Region=United States)&#x27; (en), &#x27;English (United States)&#x27; (en) or &#x27;English (Region=United States)&#x27; (en) ...&quot;</li></ul>\n<p>The core validation result (<code>result: false</code>) agrees in all but 1 of 41 records. The difference is confined to the human-readable error message text.</p>\n<h2>How widespread</h2>\n<p>44 delta records have <code>invalid-display</code> issue type with only <code>message</code> and <code>issues</code> diffs. 41 records contain &quot;Wrong Display Name&quot; in the delta text.</p>\n<p>Search: <code>grep -c &#x27;Wrong Display Name&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 41<br>\nSearch: <code>grep -c &#x27;invalid-display&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson</code> → 53 (44 with only message/issues diffs)</p>\n<p>Affected operations: $validate-code on both CodeSystem and ValueSet<br>\nAffected systems: urn:ietf:bcp:47, http://snomed.info/sct, and others</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>invalid-display-message-format</code><br>\nMatches: validate-code records where both prod and dev have <code>invalid-display</code> issue type and only the message/issues text differs. Normalizes the message and issues text to prod&#x27;s version.<br>\nExpected elimination: ~44 records.</p>\n<h2>Representative record ID</h2>\n<p><code>beb4276b-f937-46c3-81ab-7f63cb7798b7</code> — grep -n &#x27;beb4276b-f937-46c3-81ab-7f63cb7798b7&#x27; jobs/2026-02-round-1/comparison.ndjson</p>", "impact": null}, {"id": "e09cff6", "title": "BCP-47 display text format: dev returns 'Region=...' instead of standard format", "status": "open", "labels": ["P6", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:45", "date_iso": "2026-02-07T10:45:20-06:00", "body_md": "## What differs\n\nFor BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like \"English (Region=United States)\" while prod returns the standard format \"English (United States)\".\n\nSpecific example for code en-US:\n- prod: \"English (United States)\"\n- dev: \"English (Region=United States)\"\n\nThe \"Region=\" prefix in dev's display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.\n\n## How widespread\n\n7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.\n\nSearch: grep -c 'Region=' deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where \"Region=\" appears only in diagnostics).\n\n## What the tolerance covers\n\nTolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.\n\n## Representative record\n\nda702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47", "body_html": "<h2>What differs</h2>\n<p>For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like &quot;English (Region=United States)&quot; while prod returns the standard format &quot;English (United States)&quot;.</p>\n<p>Specific example for code en-US:</p>\n<ul><li>prod: &quot;English (United States)&quot;</li><li>dev: &quot;English (Region=United States)&quot;</li></ul>\n<p>The &quot;Region=&quot; prefix in dev&#x27;s display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.</p>\n<h2>How widespread</h2>\n<p>7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.</p>\n<p>Search: grep -c &#x27;Region=&#x27; deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where &quot;Region=&quot; appears only in diagnostics).</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.</p>\n<h2>Representative record</h2>\n<p>da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47</p>", "impact": null}, {"id": "51f23f5", "title": "DICOM CID 29 AcquisitionModality ValueSet missing from dev", "status": "open", "labels": ["P3", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:50", "date_iso": "2026-02-07T10:50:05-06:00", "body_md": "## What differs\n\nWhen searching for the DICOM CID 29 AcquisitionModality ValueSet by URL (`/r4/ValueSet?url=http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`), prod returns a Bundle with `total: 1` containing the full ValueSet resource (id: `dicom-cid-29-AcquisitionModality`, 51 DICOM modality codes). Dev returns an empty Bundle with `total: 0`.\n\nDirect reads by ID (`/r4/ValueSet/dicom-cid-29-AcquisitionModality`) return 200 on prod with the full ValueSet, and 404 on dev with \"ValueSet/dicom-cid-29-AcquisitionModality not found\".\n\nThe ValueSet has URL `http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`, version `2025.3.20250714`, and uses system `http://dicom.nema.org/resources/ontology/DCM`.\n\n## How widespread\n\n10 records in the delta file:\n- 5x P3 (prod=200, dev=404): direct read `/r4/ValueSet/dicom-cid-29-AcquisitionModality`\n- 5x P6 (both 200, content differs): URL search returning empty Bundle vs populated Bundle\n\nSearch: `grep 'dicom-cid-29\\|sect_CID_29' deltas.ndjson` finds all 10.\n\n## Representative record IDs\n\n- `3e3359d1-7391-4620-8b72-552f197f21cf` (P6 URL search)\n- `ab5f8ed0-5149-4967-af3a-3c649cbb10c5` (P3 direct read)", "body_html": "<h2>What differs</h2>\n<p>When searching for the DICOM CID 29 AcquisitionModality ValueSet by URL (<code>/r4/ValueSet?url=http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html</code>), prod returns a Bundle with <code>total: 1</code> containing the full ValueSet resource (id: <code>dicom-cid-29-AcquisitionModality</code>, 51 DICOM modality codes). Dev returns an empty Bundle with <code>total: 0</code>.</p>\n<p>Direct reads by ID (<code>/r4/ValueSet/dicom-cid-29-AcquisitionModality</code>) return 200 on prod with the full ValueSet, and 404 on dev with &quot;ValueSet/dicom-cid-29-AcquisitionModality not found&quot;.</p>\n<p>The ValueSet has URL <code>http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html</code>, version <code>2025.3.20250714</code>, and uses system <code>http://dicom.nema.org/resources/ontology/DCM</code>.</p>\n<h2>How widespread</h2>\n<p>10 records in the delta file:</p>\n<ul><li>5x P3 (prod=200, dev=404): direct read <code>/r4/ValueSet/dicom-cid-29-AcquisitionModality</code></li><li>5x P6 (both 200, content differs): URL search returning empty Bundle vs populated Bundle</li></ul>\n<p>Search: <code>grep &#x27;dicom-cid-29\\|sect_CID_29&#x27; deltas.ndjson</code> finds all 10.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>3e3359d1-7391-4620-8b72-552f197f21cf</code> (P6 URL search)</li><li><code>ab5f8ed0-5149-4967-af3a-3c649cbb10c5</code> (P3 direct read)</li></ul>", "impact": null}, {"id": "4233647", "title": "Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs", "status": "open", "labels": ["P6", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 10:54", "date_iso": "2026-02-07T10:54:51-06:00", "body_md": "## What differs\n\nDev's searchset Bundle responses differ from prod in several ways:\n\n1. **`entry: []` on empty results**: When a search returns no results (total: 0), dev includes `entry: []` (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR's general rule that arrays, if present, must be non-empty.\n\n2. **Extra pagination link relations**: Dev returns `self`, `first`, and `last` link relations. Prod returns only `self`. This applies to both empty and non-empty search results.\n\n3. **Absolute vs relative link URLs**: Dev uses absolute URLs with full host prefix (e.g., `http://tx.fhir.org/r4/ValueSet?...&_offset=0`). Prod uses relative URLs (e.g., `ValueSet?&url=...`). Dev also appends `_offset=0` to search links.\n\n4. **Server-generated metadata**: Prod includes `id` and `meta.lastUpdated` on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)\n\n## How widespread\n\nAffects all searchset Bundle responses for ValueSet and CodeSystem searches:\n- 337 empty ValueSet search Bundles\n- 154 empty CodeSystem search Bundles  \n- 7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)\n\nTotal: **498 records** in the deltas file.\n\nSearch used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL where prodBody contains a Bundle with type \"searchset\".\n\n## Representative record IDs\n\n- `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)\n- `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)\n- `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)", "body_html": "<h2>What differs</h2>\n<p>Dev&#x27;s searchset Bundle responses differ from prod in several ways:</p>\n<ol><li>**<code>entry: []</code> on empty results**: When a search returns no results (total: 0), dev includes <code>entry: []</code> (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR&#x27;s general rule that arrays, if present, must be non-empty.</li></ol>\n<ol><li><strong>Extra pagination link relations</strong>: Dev returns <code>self</code>, <code>first</code>, and <code>last</code> link relations. Prod returns only <code>self</code>. This applies to both empty and non-empty search results.</li></ol>\n<ol><li><strong>Absolute vs relative link URLs</strong>: Dev uses absolute URLs with full host prefix (e.g., <code>http://tx.fhir.org/r4/ValueSet?...&amp;_offset=0</code>). Prod uses relative URLs (e.g., <code>ValueSet?&amp;url=...</code>). Dev also appends <code>_offset=0</code> to search links.</li></ol>\n<ol><li><strong>Server-generated metadata</strong>: Prod includes <code>id</code> and <code>meta.lastUpdated</code> on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)</li></ol>\n<h2>How widespread</h2>\n<p>Affects all searchset Bundle responses for ValueSet and CodeSystem searches:</p>\n<ul><li>337 empty ValueSet search Bundles</li><li>154 empty CodeSystem search Bundles</li><li>7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)</li></ul>\n<p>Total: <strong>498 records</strong> in the deltas file.</p>\n<p>Search used: Parsed all records with <code>ValueSet?</code> or <code>CodeSystem?</code> in the URL where prodBody contains a Bundle with type &quot;searchset&quot;.</p>\n<h2>Representative record IDs</h2>\n<ul><li><code>c97f36a4-973b-42c5-8b6d-58464195cfd5</code> (empty ValueSet search, RadLex Playbook)</li><li><code>4ab7655f-015d-4f44-b184-5ba0fd256926</code> (empty ValueSet search, DICOM)</li><li><code>640875e4-3839-40d1-aaa1-0bf79bef77f2</code> (non-empty CodeSystem search, USPS)</li></ul>", "impact": null}, {"id": "1c145d2", "title": "Dev returns 404 instead of 422 for  when referenced CodeSystem is not found", "status": "open", "labels": ["P4", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 11:00", "date_iso": "2026-02-07T11:00:00-06:00", "body_md": "## What differs\n\nWhen a ValueSet $expand fails because a referenced CodeSystem definition cannot be found, prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 404 (Not Found). The OperationOutcome error message is identical on both sides: \"A definition for CodeSystem '...' could not be found, so the value set cannot be expanded\". The issue code is `not-found` in both cases.\n\nAdditionally, dev includes `location: [null]` and `expression: [null]` arrays in the OperationOutcome issue (prod omits these), and dev omits the `text` narrative element that prod includes. These are secondary cosmetic differences; the primary issue is the status code mismatch.\n\n## How widespread\n\n296 records in this comparison batch. All are POST /r4/ValueSet/$expand operations where the error message contains \"could not be found, so the value set cannot be expanded\".\n\nSearch: `grep '\"prodStatus\":422,\"devStatus\":404' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 296\n\nAll 296 have:\n- Operation: POST /r4/ValueSet/$expand\n- Prod status: 422\n- Dev status: 404\n- OperationOutcome issue code: not-found\n- Identical error message text\n\n## What the tolerance covers\n\nTolerance ID: `expand-422-vs-404-codesystem-not-found`\nMatches: POST /r4/ValueSet/$expand where prodStatus=422 and devStatus=404, and the OperationOutcome contains \"could not be found, so the value set cannot be expanded\".\nNormalizes: status code difference, strips null location/expression arrays from dev, strips text narrative from prod. Compares remaining OperationOutcome content.\nAffects: 296 records.\n\n## Representative record\n\nID: eee2c985-52e0-4520-b4e4-01766ede5a7d", "body_html": "<h2>What differs</h2>\n<p>When a ValueSet $expand fails because a referenced CodeSystem definition cannot be found, prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 404 (Not Found). The OperationOutcome error message is identical on both sides: &quot;A definition for CodeSystem &#x27;...&#x27; could not be found, so the value set cannot be expanded&quot;. The issue code is <code>not-found</code> in both cases.</p>\n<p>Additionally, dev includes <code>location: [null]</code> and <code>expression: [null]</code> arrays in the OperationOutcome issue (prod omits these), and dev omits the <code>text</code> narrative element that prod includes. These are secondary cosmetic differences; the primary issue is the status code mismatch.</p>\n<h2>How widespread</h2>\n<p>296 records in this comparison batch. All are POST /r4/ValueSet/$expand operations where the error message contains &quot;could not be found, so the value set cannot be expanded&quot;.</p>\n<p>Search: <code>grep &#x27;&quot;prodStatus&quot;:422,&quot;devStatus&quot;:404&#x27; jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l</code> → 296</p>\n<p>All 296 have:</p>\n<ul><li>Operation: POST /r4/ValueSet/$expand</li><li>Prod status: 422</li><li>Dev status: 404</li><li>OperationOutcome issue code: not-found</li><li>Identical error message text</li></ul>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>expand-422-vs-404-codesystem-not-found</code><br>\nMatches: POST /r4/ValueSet/$expand where prodStatus=422 and devStatus=404, and the OperationOutcome contains &quot;could not be found, so the value set cannot be expanded&quot;.<br>\nNormalizes: status code difference, strips null location/expression arrays from dev, strips text narrative from prod. Compares remaining OperationOutcome content.<br>\nAffects: 296 records.</p>\n<h2>Representative record</h2>\n<p>ID: eee2c985-52e0-4520-b4e4-01766ede5a7d</p>", "impact": null}, {"id": "da50d17", "title": "SNOMED CT edition version skew: dev loads older editions than prod", "status": "open", "labels": ["content-differs", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 11:23", "date_iso": "2026-02-07T11:23:49-06:00", "body_md": "Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.\n\n## What differs\n\nThe `version` parameter in $validate-code responses contains different SNOMED CT edition URIs:\n\n- International edition (900000000000207008): prod=20250201, dev=20240201 (256 records)\n- US edition (731000124108): prod=20250901, dev=20230301 (46 records, some with reversed newer dev versions)\n- Swedish edition (45991000052106): prod=20220531, dev=20231130 (13 records)\n- Plus other national editions with smaller counts\n\n## How widespread\n\n279 total records in the current comparison dataset show SNOMED version parameter differences:\n- 265 categorized as content-differs (version string is the only or primary diff)\n- 14 categorized as result-disagrees (validation result boolean differs — codes valid in one edition but not the other)\n\nAll are $validate-code operations. The version difference also correlates with display text differences in ~80 records (display names changed between editions).\n\nMatched by: system=http://snomed.info/sct AND version parameter contains snomed.info/sct AND prod version != dev version.\n\n## What the tolerance covers\n\nTolerance ID: snomed-version-skew\nNormalizes the `version` parameter to prod's value on both sides when both contain snomed.info/sct URIs with different version dates. This eliminates records where version is the only diff (~190 records). Records with additional diffs (display, message, result) still surface for separate triage.\n\n## Representative record IDs\n\n- e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)\n- e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)", "body_html": "<p>Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.</p>\n<h2>What differs</h2>\n<p>The <code>version</code> parameter in $validate-code responses contains different SNOMED CT edition URIs:</p>\n<ul><li>International edition (900000000000207008): prod=20250201, dev=20240201 (256 records)</li><li>US edition (731000124108): prod=20250901, dev=20230301 (46 records, some with reversed newer dev versions)</li><li>Swedish edition (45991000052106): prod=20220531, dev=20231130 (13 records)</li><li>Plus other national editions with smaller counts</li></ul>\n<h2>How widespread</h2>\n<p>279 total records in the current comparison dataset show SNOMED version parameter differences:</p>\n<ul><li>265 categorized as content-differs (version string is the only or primary diff)</li><li>14 categorized as result-disagrees (validation result boolean differs — codes valid in one edition but not the other)</li></ul>\n<p>All are $validate-code operations. The version difference also correlates with display text differences in ~80 records (display names changed between editions).</p>\n<p>Matched by: system=http://snomed.info/sct AND version parameter contains snomed.info/sct AND prod version != dev version.</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: snomed-version-skew<br>\nNormalizes the <code>version</code> parameter to prod&#x27;s value on both sides when both contain snomed.info/sct URIs with different version dates. This eliminates records where version is the only diff (~190 records). Records with additional diffs (display, message, result) still surface for separate triage.</p>\n<h2>Representative record IDs</h2>\n<ul><li>e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)</li><li>e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)</li></ul>", "impact": null}];
+const STATS = {"total": 9, "open": 9, "closed": 0, "labels": {"content-differs": 2, "tx-compare": 9, "P6": 5, "P3": 1, "P4": 1}, "sortedLabels": ["tx-compare", "P6", "content-differs", "P3", "P4"]};
 
-const PILL_CLASS_MAP = {
-  "P0": "pill-p0", "P1": "pill-p1", "P2": "pill-p2",
-  "P3": "pill-p3", "P4": "pill-p4",
-  "Temp Tolerances": "pill-temp",
-  "tx-compare": "pill-tx-compare"
-};
-
-function pillClass(label) {
-  return PILL_CLASS_MAP[label] || "pill-other";
-}
-
-function labelToPillClass(label) {
-  const upper = label.toUpperCase();
-  if (PILL_CLASS_MAP[upper]) return PILL_CLASS_MAP[upper];
-  if (PILL_CLASS_MAP[label]) return PILL_CLASS_MAP[label];
-  if (label === "tx-compare") return "pill-tx-compare";
-  return "pill-other";
-}
-
-// Render generation time
 document.getElementById("gen-time").textContent = new Date().toLocaleString();
 
-// Render stats bar
+// Stats bar
 (function() {
   const bar = document.getElementById("stats-bar");
   let html = `<div class="stat"><span class="stat-value">${STATS.total}</span> total</div>`;
   html += `<div class="stat-divider"></div>`;
   html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${STATS.open}</span> open</div>`;
   html += `<div class="stat"><span class="stat-value">${STATS.closed}</span> closed</div>`;
-  html += `<div class="stat-divider"></div>`;
-  for (const p of PRIORITY_ORDER) {
-    const c = STATS.priorities[p] || 0;
-    if (c > 0) {
-      html += `<div class="stat"><span class="stat-value">${c}</span> ${p}</div>`;
-    }
+  const totalImpact = BUGS.reduce((s, b) => s + (b.impact || 0), 0);
+  if (totalImpact > 0) {
+    html += `<div class="stat-divider"></div>`;
+    html += `<div class="stat"><span class="stat-value">${totalImpact.toLocaleString()}</span> records impacted</div>`;
   }
   bar.innerHTML = html;
 })();
 
-// Build priority filter pills
+// Label filter pills
 (function() {
-  const container = document.getElementById("priority-filters");
+  const container = document.getElementById("label-filters");
   let html = "";
-  for (const p of PRIORITY_ORDER) {
-    const c = STATS.priorities[p] || 0;
-    if (c > 0) {
-      html += `<span class="filter-pill ${pillClass(p)}" data-priority="${p}">${p} <span class="count">${c}</span></span>`;
-    }
+  for (const label of STATS.sortedLabels) {
+    const c = STATS.labels[label] || 0;
+    html += `<span class="filter-pill" data-label="${label}">${label} <span class="count">${c}</span></span>`;
   }
   container.innerHTML = html;
 })();
 
 // State
-let activePriorities = new Set();
+let activeLabels = new Set();
 let activeStatus = "all";
 let searchQuery = "";
+let currentSort = "impact";
 
-// Build bug cards grouped by priority
-(function() {
+function renderBugList() {
   const list = document.getElementById("bug-list");
+  // Sort bugs
+  const sorted = [...BUGS];
+  if (currentSort === "impact") {
+    sorted.sort((a, b) => (b.impact || 0) - (a.impact || 0) || a.title.localeCompare(b.title));
+  } else if (currentSort === "date") {
+    sorted.sort((a, b) => (b.date_iso || "").localeCompare(a.date_iso || ""));
+  } else if (currentSort === "title") {
+    sorted.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
   let html = "";
+  for (const bug of sorted) {
+    const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
+    const labels = bug.labels.map(l => `<span class="pill pill-label" data-label="${l}">${l}</span>`).join("");
+    const impactPill = bug.impact ? `<span class="pill pill-impact">${bug.impact.toLocaleString()} records</span>` : "";
 
-  for (const p of PRIORITY_ORDER) {
-    const groupBugs = BUGS.filter(b => b.priority === p);
-    if (groupBugs.length === 0) continue;
-
-    html += `<div class="group-header" data-group="${p}">${p} <span class="group-count">${groupBugs.length}</span></div>`;
-
-    for (const bug of groupBugs) {
-      const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
-      const labels = bug.labels.map(l => `<span class="pill ${labelToPillClass(l)}">${l}</span>`).join("");
-
-      html += `<div class="bug-card" data-priority="${bug.priority}" data-status="${bug.status}" data-id="${bug.id}">
-        <div class="bug-header" onclick="toggleBug(this)">
-          <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
-          </svg>
-          <div class="bug-info">
-            <div class="bug-title">${bug.title}</div>
-            <div class="bug-meta">
-              <span class="pill ${statusClass}">${bug.status}</span>
-              ${labels}
-              <span class="bug-id">${bug.id}</span>
-              <span class="bug-date">${bug.date}</span>
-            </div>
+    html += `<div class="bug-card" data-status="${bug.status}" data-id="${bug.id}" data-labels="${bug.labels.join(",")}" data-impact="${bug.impact || 0}">
+      <div class="bug-header" onclick="toggleBug(this)">
+        <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
+        </svg>
+        <div class="bug-info">
+          <div class="bug-title">${bug.title}</div>
+          <div class="bug-meta">
+            <span class="pill ${statusClass}">${bug.status}</span>
+            ${labels}
+            ${impactPill}
+            <span class="bug-id">${bug.id}</span>
+            <span class="bug-date">${bug.date}</span>
           </div>
         </div>
-        <div class="bug-body">${bug.body_html}</div>
-      </div>`;
-    }
+      </div>
+      <div class="bug-body">${bug.body_html}</div>
+    </div>`;
   }
 
   list.innerHTML = html;
-})();
+  applyFilters();
+}
 
 function toggleBug(header) {
   header.parentElement.classList.toggle("expanded");
@@ -602,50 +561,39 @@ function toggleExpandAll() {
   document.getElementById("expand-all-btn").textContent = allExpanded ? "Collapse all" : "Expand all";
 }
 
-// Filtering logic
 function applyFilters() {
   const cards = document.querySelectorAll(".bug-card");
-  const groups = document.querySelectorAll(".group-header");
   const query = searchQuery.toLowerCase();
   let visibleCount = 0;
-  const visibleGroups = new Set();
 
   cards.forEach(card => {
-    const priority = card.dataset.priority;
     const status = card.dataset.status;
+    const cardLabels = card.dataset.labels ? card.dataset.labels.split(",") : [];
     const bugId = card.dataset.id;
     const bug = BUGS.find(b => b.id === bugId);
 
     let show = true;
 
-    // Priority filter
-    if (activePriorities.size > 0 && !activePriorities.has(priority)) {
-      show = false;
+    // Label filter: card must have at least one of the active labels
+    if (activeLabels.size > 0) {
+      if (!cardLabels.some(l => activeLabels.has(l))) {
+        show = false;
+      }
     }
 
-    // Status filter
     if (activeStatus !== "all" && status !== activeStatus) {
       show = false;
     }
 
-    // Search filter
     if (query && show && bug) {
-      const searchable = (bug.title + " " + bug.body_md).toLowerCase();
+      const searchable = (bug.title + " " + bug.body_md + " " + bug.labels.join(" ")).toLowerCase();
       if (!searchable.includes(query)) {
         show = false;
       }
     }
 
     card.classList.toggle("hidden", !show);
-    if (show) {
-      visibleCount++;
-      visibleGroups.add(priority);
-    }
-  });
-
-  // Show/hide group headers
-  groups.forEach(g => {
-    g.classList.toggle("hidden", !visibleGroups.has(g.dataset.group));
+    if (show) visibleCount++;
   });
 
   document.getElementById("no-results").classList.toggle("hidden", visibleCount > 0);
@@ -657,31 +605,27 @@ document.getElementById("search").addEventListener("input", function() {
   applyFilters();
 });
 
-// Priority filter pills
-document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {
+// Label filter pills
+document.querySelectorAll(".filter-pill[data-label]").forEach(pill => {
   pill.addEventListener("click", function() {
-    const p = this.dataset.priority;
-    if (activePriorities.has(p)) {
-      activePriorities.delete(p);
+    const label = this.dataset.label;
+    if (activeLabels.has(label)) {
+      activeLabels.delete(label);
       this.classList.remove("dimmed");
     } else {
-      // If clicking to add filter: dim all others, activate this one
-      if (activePriorities.size === 0) {
-        // First click: activate only this one, dim the rest
-        document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
-          if (pp.dataset.priority !== p) pp.classList.add("dimmed");
+      if (activeLabels.size === 0) {
+        document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {
+          if (pp.dataset.label !== label) pp.classList.add("dimmed");
         });
-        activePriorities.add(p);
+        activeLabels.add(label);
       } else {
-        // Subsequent click: toggle this one
-        activePriorities.add(p);
+        activeLabels.add(label);
         this.classList.remove("dimmed");
       }
     }
 
-    // If nothing is active, un-dim everything
-    if (activePriorities.size === 0) {
-      document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
+    if (activeLabels.size === 0) {
+      document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {
         pp.classList.remove("dimmed");
       });
     }
@@ -691,14 +635,27 @@ document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {
 });
 
 // Status filter buttons
-document.querySelectorAll(".status-btn[data-status]").forEach(btn => {
+document.querySelectorAll(".ctrl-btn[data-status]").forEach(btn => {
   btn.addEventListener("click", function() {
-    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".ctrl-btn[data-status]").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     activeStatus = this.dataset.status;
     applyFilters();
   });
 });
+
+// Sort buttons
+document.querySelectorAll(".sort-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    currentSort = this.dataset.sort;
+    renderBugList();
+  });
+});
+
+// Initial render
+renderBugList();
 </script>
 </body>
 </html>

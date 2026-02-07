@@ -363,6 +363,38 @@ const tolerances = [
   },
 
   {
+    id: 'snomed-version-skew',
+    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version parameter to prod value. Only affects the version parameter — other diffs (display, message, result) still surface. Affects ~279 validate-code records for http://snomed.info/sct.',
+    kind: 'temp-tolerance',
+    bugId: 'da50d17',
+    tags: ['normalize', 'version-skew', 'snomed'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      if (prodSystem !== 'http://snomed.info/sct') return null;
+      const prodVersion = getParamValue(prod, 'version');
+      const devVersion = getParamValue(dev, 'version');
+      if (!prodVersion || !devVersion) return null;
+      if (!prodVersion.includes('snomed.info/sct') || !devVersion.includes('snomed.info/sct')) return null;
+      if (prodVersion === devVersion) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodVersion = getParamValue(prod, 'version');
+      function setVersion(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'version' ? { ...p, valueString: prodVersion } : p
+          ),
+        };
+      }
+      return { prod: setVersion(prod), dev: setVersion(dev) };
+    },
+  },
+
+  {
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',

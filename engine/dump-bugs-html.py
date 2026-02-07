@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Generate a single-file HTML bug report from git-bug tx-compare issues."""
+"""Generate a single-file HTML bug report from git-bug tx-compare issues.
+
+Optionally correlates with a job directory to compute records-impacted counts
+by reading progress.ndjson and analysis.md files.
+
+Usage:
+  python3 engine/dump-bugs-html.py <output-path> [--job <job-dir>]
+"""
 
 import json
 import os
@@ -12,7 +19,6 @@ from datetime import datetime
 
 def run_git_bug():
     """Fetch all tx-compare bugs from git-bug, including full comment bodies."""
-    # Get bug list
     result = subprocess.run(
         ["git-bug", "bug", "-l", "tx-compare", "-f", "json"],
         capture_output=True, text=True
@@ -23,7 +29,6 @@ def run_git_bug():
 
     bug_list = json.loads(result.stdout)
 
-    # List JSON has comments as a count, not bodies — need show per bug
     bugs = []
     for bug_summary in bug_list:
         hid = bug_summary["human_id"]
@@ -39,25 +44,53 @@ def run_git_bug():
     return bugs
 
 
-def classify_group(bug):
-    """Determine the display group for a bug based on its labels."""
-    labels = [l.lower() for l in bug.get("labels", [])]
+def compute_impact_counts(job_dir):
+    """Compute records-impacted per bugId by correlating progress.ndjson with analysis.md.
 
-    # Descriptive category labels (current scheme)
-    category_labels = [
-        "dev-crash-on-valid", "dev-crash-on-error", "result-disagrees",
-        "missing-resource", "status-mismatch", "parse-error", "content-differs",
-    ]
-    for cat in category_labels:
-        if cat in labels:
-            return cat
+    Returns dict of bugId -> eliminated count.
+    """
+    progress_path = os.path.join(job_dir, "progress.ndjson")
+    issues_dir = os.path.join(job_dir, "issues")
 
-    # Legacy P-labels (from before the category refactor)
-    for p in ["p0", "p1", "p2", "p3", "p4", "p6"]:
-        if p in labels:
-            return p.upper()
+    if not os.path.exists(progress_path):
+        return {}
 
-    return "Other"
+    # Read progress entries
+    entries = []
+    with open(progress_path) as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                entries.append(json.loads(line))
+
+    if len(entries) < 2:
+        return {}
+
+    # For each consecutive pair, compute eliminated = entries[i].total - entries[i+1].total
+    # and attribute to the recordId of entries[i]
+    record_eliminated = {}
+    for i in range(len(entries) - 1):
+        record_id = entries[i].get("recordId")
+        eliminated = entries[i].get("total", 0) - entries[i + 1].get("total", 0)
+        if record_id and eliminated > 0:
+            record_eliminated[record_id] = eliminated
+
+    # Map recordId -> bugId by reading analysis.md files
+    bug_impact = {}
+    for record_id, eliminated in record_eliminated.items():
+        analysis_path = os.path.join(issues_dir, record_id, "analysis.md")
+        if not os.path.exists(analysis_path):
+            continue
+        with open(analysis_path) as f:
+            content = f.read()
+        # Parse **Bug**: <bugId> line
+        m = re.search(r'\*\*Bug\*\*:\s*(\S+)', content)
+        if m:
+            bug_id = m.group(1)
+            if bug_id != "none":
+                bug_impact[bug_id] = bug_impact.get(bug_id, 0) + eliminated
+
+    return bug_impact
 
 
 def markdown_to_html(text):
@@ -86,7 +119,6 @@ def markdown_to_html(text):
     def inline_format(s):
         """Handle inline markdown: bold, inline code, links.
         Expects RAW text (not pre-escaped). Escapes internally."""
-        # Inline code (must come first to protect content inside backticks)
         parts = []
         segments = s.split("`")
         for i, seg in enumerate(segments):
@@ -98,13 +130,10 @@ def markdown_to_html(text):
 
     def format_non_code(s):
         """Format bold, italic, links in non-code text."""
-        # Bold: **text** or __text__
         s = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', s)
         s = re.sub(r'__(.+?)__', r'<strong>\1</strong>', s)
-        # Italic: *text* or _text_ (but not inside words for _)
         s = re.sub(r'(?<!\w)\*(.+?)\*(?!\w)', r'<em>\1</em>', s)
         s = re.sub(r'(?<!\w)_(.+?)_(?!\w)', r'<em>\1</em>', s)
-        # Links: [text](url)
         s = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2" target="_blank">\1</a>', s)
         return s
 
@@ -112,7 +141,6 @@ def markdown_to_html(text):
     while i < len(lines):
         line = lines[i]
 
-        # Code block toggle
         if line.strip().startswith("```"):
             if in_code_block:
                 code_content = escape("\n".join(code_block_lines))
@@ -135,13 +163,11 @@ def markdown_to_html(text):
 
         stripped = line.strip()
 
-        # Blank line
         if not stripped:
             flush_list()
             i += 1
             continue
 
-        # Headers
         header_match = re.match(r'^(#{1,6})\s+(.+)$', stripped)
         if header_match:
             flush_list()
@@ -151,7 +177,6 @@ def markdown_to_html(text):
             i += 1
             continue
 
-        # Unordered list
         ul_match = re.match(r'^[-*+]\s+(.+)$', stripped)
         if ul_match:
             if in_list == "ol":
@@ -161,7 +186,6 @@ def markdown_to_html(text):
             i += 1
             continue
 
-        # Ordered list
         ol_match = re.match(r'^\d+[.)]\s+(.+)$', stripped)
         if ol_match:
             if in_list == "ul":
@@ -171,14 +195,12 @@ def markdown_to_html(text):
             i += 1
             continue
 
-        # Horizontal rule
         if re.match(r'^[-*_]{3,}\s*$', stripped):
             flush_list()
             html_parts.append("<hr>")
             i += 1
             continue
 
-        # Paragraph: collect consecutive non-blank, non-special lines
         flush_list()
         para_lines = [stripped]
         i += 1
@@ -193,7 +215,6 @@ def markdown_to_html(text):
         para_html = "<br>\n".join(inline_format(l) for l in para_lines)
         html_parts.append(f"<p>{para_html}</p>")
 
-    # Flush remaining state
     flush_list()
     if in_code_block:
         code_content = escape("\n".join(code_block_lines))
@@ -202,13 +223,11 @@ def markdown_to_html(text):
     return "\n".join(html_parts)
 
 
-def build_bug_data(bugs):
+def build_bug_data(bugs, impact_counts):
     """Build the data structure for the HTML page."""
-    priority_order = ["P0", "P1", "P2", "P3", "P4", "Temp Tolerances", "Other"]
-    grouped = {p: [] for p in priority_order}
+    bug_data = []
 
     for bug in bugs:
-        priority = classify_priority(bug)
         comments = bug.get("comments", [])
         body_md = ""
         if isinstance(comments, list) and len(comments) > 0:
@@ -217,7 +236,6 @@ def build_bug_data(bugs):
         body_html = markdown_to_html(body_md)
 
         create_time = bug.get("create_time", {}).get("time", "")
-        # Parse to a friendlier display
         date_display = create_time
         try:
             dt = datetime.fromisoformat(create_time)
@@ -225,52 +243,63 @@ def build_bug_data(bugs):
         except (ValueError, TypeError):
             pass
 
+        hid = bug.get("human_id", "")
+        labels = bug.get("labels", [])
+
+        # Look up impact count — try full human_id first, then prefix match
+        impact = impact_counts.get(hid, None)
+        if impact is None:
+            for key, val in impact_counts.items():
+                if hid.startswith(key) or key.startswith(hid):
+                    impact = val
+                    break
+
         entry = {
-            "id": bug.get("human_id", ""),
+            "id": hid,
             "title": bug.get("title", ""),
             "status": bug.get("status", "open"),
-            "labels": bug.get("labels", []),
-            "priority": priority,
+            "labels": labels,
             "author": bug.get("author", {}).get("name", "Unknown"),
             "date": date_display,
             "date_iso": create_time,
             "body_md": body_md,
             "body_html": body_html,
+            "impact": impact,  # null if unknown
         }
-        grouped[priority].append(entry)
+        bug_data.append(entry)
 
-    # Sort each group: open first, then by date descending
-    for p in priority_order:
-        grouped[p].sort(key=lambda b: (0 if b["status"] == "open" else 1, b.get("date_iso", "")), reverse=False)
-        # Actually: open first (0 < 1), then by date descending within status
-        grouped[p].sort(key=lambda b: (0 if b["status"] == "open" else 1, ""), reverse=False)
+    # Default sort: open first, then by impact (highest first), then by date
+    bug_data.sort(key=lambda b: (
+        0 if b["status"] == "open" else 1,
+        -(b["impact"] or 0),
+        b.get("date_iso", ""),
+    ))
 
-    all_bugs = []
-    for p in priority_order:
-        all_bugs.extend(grouped[p])
-
-    return all_bugs, priority_order
+    return bug_data
 
 
-def generate_html(bugs, priority_order):
+def generate_html(bugs):
     """Generate the full HTML page."""
     total = len(bugs)
     open_count = sum(1 for b in bugs if b["status"] == "open")
     closed_count = total - open_count
 
-    priority_counts = {}
-    for p in priority_order:
-        priority_counts[p] = sum(1 for b in bugs if b["priority"] == p)
+    # Collect all unique labels and their counts
+    label_counts = {}
+    for b in bugs:
+        for l in b["labels"]:
+            label_counts[l] = label_counts.get(l, 0) + 1
+    # Sort labels: most common first
+    sorted_labels = sorted(label_counts.keys(), key=lambda l: -label_counts[l])
 
-    # Prepare bug data for embedding as JSON (without body_html rendered server-side,
-    # we still embed it so JS can use it)
     bugs_json = json.dumps(bugs, ensure_ascii=False)
 
     stats = json.dumps({
         "total": total,
         "open": open_count,
         "closed": closed_count,
-        "priorities": priority_counts,
+        "labels": label_counts,
+        "sortedLabels": sorted_labels,
     }, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
@@ -296,14 +325,8 @@ def generate_html(bugs, priority_order):
   --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
-  --pill-p0-bg: #fee2e2; --pill-p0-fg: #991b1b; --pill-p0-border: #fca5a5;
-  --pill-p1-bg: #ffedd5; --pill-p1-fg: #9a3412; --pill-p1-border: #fdba74;
-  --pill-p2-bg: #fef3c7; --pill-p2-fg: #92400e; --pill-p2-border: #fcd34d;
-  --pill-p3-bg: #dbeafe; --pill-p3-fg: #1e40af; --pill-p3-border: #93c5fd;
-  --pill-p4-bg: #f1f5f9; --pill-p4-fg: #475569; --pill-p4-border: #cbd5e1;
-  --pill-temp-bg: #f3e8ff; --pill-temp-fg: #6b21a8; --pill-temp-border: #c4b5fd;
   --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
-  --pill-other-bg: #f3f4f6; --pill-other-fg: #4b5563; --pill-other-border: #d1d5db;
+  --pill-default-bg: #f3f4f6; --pill-default-fg: #4b5563; --pill-default-border: #d1d5db;
 
   --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
   --status-closed-bg: #f3f4f6; --status-closed-fg: #6b7280; --status-closed-border: #d1d5db;
@@ -322,14 +345,8 @@ def generate_html(bugs, priority_order):
     --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
 
-    --pill-p0-bg: #3b1318; --pill-p0-fg: #fca5a5; --pill-p0-border: #7f1d1d;
-    --pill-p1-bg: #3b1f0b; --pill-p1-fg: #fdba74; --pill-p1-border: #7c2d12;
-    --pill-p2-bg: #3b2f0b; --pill-p2-fg: #fcd34d; --pill-p2-border: #78350f;
-    --pill-p3-bg: #172554; --pill-p3-fg: #93c5fd; --pill-p3-border: #1e3a5f;
-    --pill-p4-bg: #1e293b; --pill-p4-fg: #94a3b8; --pill-p4-border: #334155;
-    --pill-temp-bg: #2e1065; --pill-temp-fg: #c4b5fd; --pill-temp-border: #3b0764;
     --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
-    --pill-other-bg: #1f2937; --pill-other-fg: #9ca3af; --pill-other-border: #374151;
+    --pill-default-bg: #1f2937; --pill-default-fg: #9ca3af; --pill-default-border: #374151;
 
     --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
     --status-closed-bg: #1f2937; --status-closed-fg: #9ca3af; --status-closed-border: #374151;
@@ -365,7 +382,6 @@ h1 {{
   margin: 0 0 24px 0;
 }}
 
-/* Stats bar */
 .stats-bar {{
   display: flex;
   flex-wrap: wrap;
@@ -402,7 +418,6 @@ h1 {{
   margin: 0 4px;
 }}
 
-/* Search and filter bar */
 .filter-bar {{
   display: flex;
   flex-wrap: wrap;
@@ -413,7 +428,7 @@ h1 {{
 
 .search-box {{
   flex: 1;
-  min-width: 240px;
+  min-width: 200px;
   padding: 8px 12px;
   font-size: 14px;
   font-family: var(--font);
@@ -451,7 +466,15 @@ h1 {{
   cursor: pointer;
   user-select: none;
   transition: opacity 0.15s, transform 0.1s;
-  border: 1px solid;
+  border: 1px solid var(--pill-default-border);
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+}}
+
+.filter-pill[data-label="tx-compare"] {{
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
 }}
 
 .filter-pill:hover {{
@@ -467,32 +490,36 @@ h1 {{
   opacity: 0.8;
 }}
 
-/* Priority group headers */
-.group-header {{
-  font-size: 16px;
-  font-weight: 700;
-  margin: 28px 0 12px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid var(--border-light);
+.controls {{
   display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 4px;
+  margin-left: auto;
+  flex-wrap: wrap;
 }}
 
-.group-header .group-count {{
+.ctrl-btn {{
+  padding: 4px 10px;
   font-size: 12px;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+}}
+
+.ctrl-btn:hover {{
   background: var(--bg-surface);
-  padding: 2px 8px;
-  border-radius: 999px;
 }}
 
-.group-header.hidden {{
-  display: none;
+.ctrl-btn.active {{
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
 }}
 
-/* Bug cards */
 .bug-card {{
   background: var(--bg-card);
   border: 1px solid var(--border-light);
@@ -581,14 +608,33 @@ h1 {{
   border-color: var(--status-closed-border);
 }}
 
-.pill-p0 {{ background: var(--pill-p0-bg); color: var(--pill-p0-fg); border-color: var(--pill-p0-border); }}
-.pill-p1 {{ background: var(--pill-p1-bg); color: var(--pill-p1-fg); border-color: var(--pill-p1-border); }}
-.pill-p2 {{ background: var(--pill-p2-bg); color: var(--pill-p2-fg); border-color: var(--pill-p2-border); }}
-.pill-p3 {{ background: var(--pill-p3-bg); color: var(--pill-p3-fg); border-color: var(--pill-p3-border); }}
-.pill-p4 {{ background: var(--pill-p4-bg); color: var(--pill-p4-fg); border-color: var(--pill-p4-border); }}
-.pill-temp {{ background: var(--pill-temp-bg); color: var(--pill-temp-fg); border-color: var(--pill-temp-border); }}
-.pill-tx-compare {{ background: var(--pill-tx-bg); color: var(--pill-tx-fg); border-color: var(--pill-tx-border); }}
-.pill-other {{ background: var(--pill-other-bg); color: var(--pill-other-fg); border-color: var(--pill-other-border); }}
+.pill-label {{
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+  border-color: var(--pill-default-border);
+}}
+
+.pill-label[data-label="tx-compare"] {{
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
+}}
+
+.pill-impact {{
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}}
+
+@media (prefers-color-scheme: dark) {{
+  .pill-impact {{
+    background: #3b2f0b;
+    color: #fcd34d;
+    border-color: #78350f;
+  }}
+}}
 
 .bug-id {{
   font-size: 11px;
@@ -611,7 +657,6 @@ h1 {{
   display: block;
 }}
 
-/* Markdown rendered content */
 .bug-body h1, .bug-body h2, .bug-body h3,
 .bug-body h4, .bug-body h5, .bug-body h6 {{
   margin: 16px 0 8px 0;
@@ -673,22 +718,10 @@ h1 {{
   margin: 16px 0;
 }}
 
-.bug-body strong {{
-  font-weight: 700;
-}}
-
-.bug-body em {{
-  font-style: italic;
-}}
-
-.bug-body a {{
-  color: #3b82f6;
-  text-decoration: none;
-}}
-
-.bug-body a:hover {{
-  text-decoration: underline;
-}}
+.bug-body strong {{ font-weight: 700; }}
+.bug-body em {{ font-style: italic; }}
+.bug-body a {{ color: #3b82f6; text-decoration: none; }}
+.bug-body a:hover {{ text-decoration: underline; }}
 
 .no-results {{
   text-align: center;
@@ -701,36 +734,6 @@ h1 {{
   display: none;
 }}
 
-/* Status filter buttons */
-.status-filters {{
-  display: flex;
-  gap: 4px;
-  margin-left: auto;
-}}
-
-.status-btn {{
-  padding: 4px 10px;
-  font-size: 12px;
-  font-weight: 600;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  font-family: var(--font);
-  transition: background 0.15s, color 0.15s;
-}}
-
-.status-btn:hover {{
-  background: var(--bg-surface);
-}}
-
-.status-btn.active {{
-  background: var(--text);
-  color: var(--bg);
-  border-color: var(--text);
-}}
-
 @media (max-width: 640px) {{
   .container {{ padding: 16px 12px; }}
   .stats-bar {{ padding: 12px; gap: 6px; }}
@@ -739,7 +742,7 @@ h1 {{
   .search-box {{ min-width: 100%; }}
   .bug-body {{ padding: 0 12px 12px 12px; }}
   .bug-header {{ padding: 10px 12px; }}
-  .status-filters {{ margin-left: 0; }}
+  .controls {{ margin-left: 0; }}
 }}
 </style>
 </head>
@@ -752,12 +755,17 @@ h1 {{
 
   <div class="filter-bar">
     <input type="text" class="search-box" id="search" placeholder="Search bugs by title or body..." autocomplete="off">
-    <div class="filter-pills" id="priority-filters"></div>
-    <div class="status-filters" id="status-filters">
-      <button class="status-btn expand-toggle" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
-      <button class="status-btn active" data-status="all">All</button>
-      <button class="status-btn" data-status="open">Open</button>
-      <button class="status-btn" data-status="closed">Closed</button>
+    <div class="filter-pills" id="label-filters"></div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn active" data-status="all">All</button>
+      <button class="ctrl-btn" data-status="open">Open</button>
+      <button class="ctrl-btn" data-status="closed">Closed</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn sort-btn active" data-sort="impact">Impact</button>
+      <button class="ctrl-btn sort-btn" data-sort="date">Date</button>
+      <button class="ctrl-btn sort-btn" data-sort="title">Title</button>
     </div>
   </div>
 
@@ -768,102 +776,82 @@ h1 {{
 <script>
 const BUGS = {bugs_json};
 const STATS = {stats};
-const PRIORITY_ORDER = {json.dumps(priority_order)};
 
-const PILL_CLASS_MAP = {{
-  "P0": "pill-p0", "P1": "pill-p1", "P2": "pill-p2",
-  "P3": "pill-p3", "P4": "pill-p4",
-  "Temp Tolerances": "pill-temp",
-  "tx-compare": "pill-tx-compare"
-}};
-
-function pillClass(label) {{
-  return PILL_CLASS_MAP[label] || "pill-other";
-}}
-
-function labelToPillClass(label) {{
-  const upper = label.toUpperCase();
-  if (PILL_CLASS_MAP[upper]) return PILL_CLASS_MAP[upper];
-  if (PILL_CLASS_MAP[label]) return PILL_CLASS_MAP[label];
-  if (label === "tx-compare") return "pill-tx-compare";
-  return "pill-other";
-}}
-
-// Render generation time
 document.getElementById("gen-time").textContent = new Date().toLocaleString();
 
-// Render stats bar
+// Stats bar
 (function() {{
   const bar = document.getElementById("stats-bar");
   let html = `<div class="stat"><span class="stat-value">${{STATS.total}}</span> total</div>`;
   html += `<div class="stat-divider"></div>`;
   html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${{STATS.open}}</span> open</div>`;
   html += `<div class="stat"><span class="stat-value">${{STATS.closed}}</span> closed</div>`;
-  html += `<div class="stat-divider"></div>`;
-  for (const p of PRIORITY_ORDER) {{
-    const c = STATS.priorities[p] || 0;
-    if (c > 0) {{
-      html += `<div class="stat"><span class="stat-value">${{c}}</span> ${{p}}</div>`;
-    }}
+  const totalImpact = BUGS.reduce((s, b) => s + (b.impact || 0), 0);
+  if (totalImpact > 0) {{
+    html += `<div class="stat-divider"></div>`;
+    html += `<div class="stat"><span class="stat-value">${{totalImpact.toLocaleString()}}</span> records impacted</div>`;
   }}
   bar.innerHTML = html;
 }})();
 
-// Build priority filter pills
+// Label filter pills
 (function() {{
-  const container = document.getElementById("priority-filters");
+  const container = document.getElementById("label-filters");
   let html = "";
-  for (const p of PRIORITY_ORDER) {{
-    const c = STATS.priorities[p] || 0;
-    if (c > 0) {{
-      html += `<span class="filter-pill ${{pillClass(p)}}" data-priority="${{p}}">${{p}} <span class="count">${{c}}</span></span>`;
-    }}
+  for (const label of STATS.sortedLabels) {{
+    const c = STATS.labels[label] || 0;
+    html += `<span class="filter-pill" data-label="${{label}}">${{label}} <span class="count">${{c}}</span></span>`;
   }}
   container.innerHTML = html;
 }})();
 
 // State
-let activePriorities = new Set();
+let activeLabels = new Set();
 let activeStatus = "all";
 let searchQuery = "";
+let currentSort = "impact";
 
-// Build bug cards grouped by priority
-(function() {{
+function renderBugList() {{
   const list = document.getElementById("bug-list");
+  // Sort bugs
+  const sorted = [...BUGS];
+  if (currentSort === "impact") {{
+    sorted.sort((a, b) => (b.impact || 0) - (a.impact || 0) || a.title.localeCompare(b.title));
+  }} else if (currentSort === "date") {{
+    sorted.sort((a, b) => (b.date_iso || "").localeCompare(a.date_iso || ""));
+  }} else if (currentSort === "title") {{
+    sorted.sort((a, b) => a.title.localeCompare(b.title));
+  }}
+
   let html = "";
+  for (const bug of sorted) {{
+    const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
+    const labels = bug.labels.map(l => `<span class="pill pill-label" data-label="${{l}}">${{l}}</span>`).join("");
+    const impactPill = bug.impact ? `<span class="pill pill-impact">${{bug.impact.toLocaleString()}} records</span>` : "";
 
-  for (const p of PRIORITY_ORDER) {{
-    const groupBugs = BUGS.filter(b => b.priority === p);
-    if (groupBugs.length === 0) continue;
-
-    html += `<div class="group-header" data-group="${{p}}">${{p}} <span class="group-count">${{groupBugs.length}}</span></div>`;
-
-    for (const bug of groupBugs) {{
-      const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
-      const labels = bug.labels.map(l => `<span class="pill ${{labelToPillClass(l)}}">${{l}}</span>`).join("");
-
-      html += `<div class="bug-card" data-priority="${{bug.priority}}" data-status="${{bug.status}}" data-id="${{bug.id}}">
-        <div class="bug-header" onclick="toggleBug(this)">
-          <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
-          </svg>
-          <div class="bug-info">
-            <div class="bug-title">${{bug.title}}</div>
-            <div class="bug-meta">
-              <span class="pill ${{statusClass}}">${{bug.status}}</span>
-              ${{labels}}
-              <span class="bug-id">${{bug.id}}</span>
-              <span class="bug-date">${{bug.date}}</span>
-            </div>
+    html += `<div class="bug-card" data-status="${{bug.status}}" data-id="${{bug.id}}" data-labels="${{bug.labels.join(",")}}" data-impact="${{bug.impact || 0}}">
+      <div class="bug-header" onclick="toggleBug(this)">
+        <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
+        </svg>
+        <div class="bug-info">
+          <div class="bug-title">${{bug.title}}</div>
+          <div class="bug-meta">
+            <span class="pill ${{statusClass}}">${{bug.status}}</span>
+            ${{labels}}
+            ${{impactPill}}
+            <span class="bug-id">${{bug.id}}</span>
+            <span class="bug-date">${{bug.date}}</span>
           </div>
         </div>
-        <div class="bug-body">${{bug.body_html}}</div>
-      </div>`;
-    }}
+      </div>
+      <div class="bug-body">${{bug.body_html}}</div>
+    </div>`;
   }}
 
   list.innerHTML = html;
-}})();
+  applyFilters();
+}}
 
 function toggleBug(header) {{
   header.parentElement.classList.toggle("expanded");
@@ -877,50 +865,39 @@ function toggleExpandAll() {{
   document.getElementById("expand-all-btn").textContent = allExpanded ? "Collapse all" : "Expand all";
 }}
 
-// Filtering logic
 function applyFilters() {{
   const cards = document.querySelectorAll(".bug-card");
-  const groups = document.querySelectorAll(".group-header");
   const query = searchQuery.toLowerCase();
   let visibleCount = 0;
-  const visibleGroups = new Set();
 
   cards.forEach(card => {{
-    const priority = card.dataset.priority;
     const status = card.dataset.status;
+    const cardLabels = card.dataset.labels ? card.dataset.labels.split(",") : [];
     const bugId = card.dataset.id;
     const bug = BUGS.find(b => b.id === bugId);
 
     let show = true;
 
-    // Priority filter
-    if (activePriorities.size > 0 && !activePriorities.has(priority)) {{
-      show = false;
+    // Label filter: card must have at least one of the active labels
+    if (activeLabels.size > 0) {{
+      if (!cardLabels.some(l => activeLabels.has(l))) {{
+        show = false;
+      }}
     }}
 
-    // Status filter
     if (activeStatus !== "all" && status !== activeStatus) {{
       show = false;
     }}
 
-    // Search filter
     if (query && show && bug) {{
-      const searchable = (bug.title + " " + bug.body_md).toLowerCase();
+      const searchable = (bug.title + " " + bug.body_md + " " + bug.labels.join(" ")).toLowerCase();
       if (!searchable.includes(query)) {{
         show = false;
       }}
     }}
 
     card.classList.toggle("hidden", !show);
-    if (show) {{
-      visibleCount++;
-      visibleGroups.add(priority);
-    }}
-  }});
-
-  // Show/hide group headers
-  groups.forEach(g => {{
-    g.classList.toggle("hidden", !visibleGroups.has(g.dataset.group));
+    if (show) visibleCount++;
   }});
 
   document.getElementById("no-results").classList.toggle("hidden", visibleCount > 0);
@@ -932,31 +909,27 @@ document.getElementById("search").addEventListener("input", function() {{
   applyFilters();
 }});
 
-// Priority filter pills
-document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {{
+// Label filter pills
+document.querySelectorAll(".filter-pill[data-label]").forEach(pill => {{
   pill.addEventListener("click", function() {{
-    const p = this.dataset.priority;
-    if (activePriorities.has(p)) {{
-      activePriorities.delete(p);
+    const label = this.dataset.label;
+    if (activeLabels.has(label)) {{
+      activeLabels.delete(label);
       this.classList.remove("dimmed");
     }} else {{
-      // If clicking to add filter: dim all others, activate this one
-      if (activePriorities.size === 0) {{
-        // First click: activate only this one, dim the rest
-        document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {{
-          if (pp.dataset.priority !== p) pp.classList.add("dimmed");
+      if (activeLabels.size === 0) {{
+        document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {{
+          if (pp.dataset.label !== label) pp.classList.add("dimmed");
         }});
-        activePriorities.add(p);
+        activeLabels.add(label);
       }} else {{
-        // Subsequent click: toggle this one
-        activePriorities.add(p);
+        activeLabels.add(label);
         this.classList.remove("dimmed");
       }}
     }}
 
-    // If nothing is active, un-dim everything
-    if (activePriorities.size === 0) {{
-      document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {{
+    if (activeLabels.size === 0) {{
+      document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {{
         pp.classList.remove("dimmed");
       }});
     }}
@@ -966,14 +939,27 @@ document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {{
 }});
 
 // Status filter buttons
-document.querySelectorAll(".status-btn[data-status]").forEach(btn => {{
+document.querySelectorAll(".ctrl-btn[data-status]").forEach(btn => {{
   btn.addEventListener("click", function() {{
-    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".ctrl-btn[data-status]").forEach(b => b.classList.remove("active"));
     this.classList.add("active");
     activeStatus = this.dataset.status;
     applyFilters();
   }});
 }});
+
+// Sort buttons
+document.querySelectorAll(".sort-btn").forEach(btn => {{
+  btn.addEventListener("click", function() {{
+    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    currentSort = this.dataset.sort;
+    renderBugList();
+  }});
+}});
+
+// Initial render
+renderBugList();
 </script>
 </body>
 </html>"""
@@ -982,33 +968,51 @@ document.querySelectorAll(".status-btn[data-status]").forEach(btn => {{
 
 
 def main():
-    # Determine repo root so script works from anywhere
     repo_root = subprocess.run(
         ["git", "rev-parse", "--show-toplevel"],
         capture_output=True, text=True
     ).stdout.strip()
 
     if not repo_root:
-        # Fallback
         repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
     os.chdir(repo_root)
+
+    # Parse args
+    out_path = None
+    job_dir = None
+    args = sys.argv[1:]
+    i = 0
+    while i < len(args):
+        if args[i] == "--job" and i + 1 < len(args):
+            job_dir = args[i + 1]
+            i += 2
+        elif not args[i].startswith("-"):
+            out_path = args[i]
+            i += 1
+        else:
+            i += 1
+
+    if not out_path:
+        out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, "bugs.html")
+    else:
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
     print("Fetching bugs from git-bug...", file=sys.stderr)
     bugs = run_git_bug()
     print(f"Found {len(bugs)} bugs", file=sys.stderr)
 
-    bug_data, priority_order = build_bug_data(bugs)
-    html = generate_html(bug_data, priority_order)
+    # Compute impact counts if job dir provided
+    impact_counts = {}
+    if job_dir:
+        print(f"Computing impact counts from {job_dir}...", file=sys.stderr)
+        impact_counts = compute_impact_counts(job_dir)
+        print(f"Found impact data for {len(impact_counts)} bugs", file=sys.stderr)
 
-    # Accept optional output path as CLI argument
-    if len(sys.argv) > 1:
-        out_path = sys.argv[1]
-        os.makedirs(os.path.dirname(out_path), exist_ok=True)
-    else:
-        out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
-        os.makedirs(out_dir, exist_ok=True)
-        out_path = os.path.join(out_dir, "bugs.html")
+    bug_data = build_bug_data(bugs, impact_counts)
+    html = generate_html(bug_data)
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
