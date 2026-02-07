@@ -1,0 +1,25 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "INFA"
+    },
+    {
+      "name": "display",
+      "valueString": "information access"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/v3-ActCode"
+    },
+    {
+      "name": "version",
+      "valueString": "9.0.0"
+    }
+  ],
+  "resourceType": "Parameters"
+}

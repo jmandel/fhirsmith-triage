@@ -1,0 +1,27 @@
+{
+  "id": "92d4fd1a-70fc-4497-adb5-309a3f564716",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=INFA&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 315,
+    "hash": "c5b0b97e3eadbcfa7bbf75bab497e11d"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1060,
+    "hash": "c0f16b04159362ef1db7cdb3e706e3b9"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": true,
+    "devResult": false,
+    "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+    "code": "INFA"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/v3-ActCode\"},{\"name\" : \"code\",\"valueCode\" : \"INFA\"},{\"name\" : \"version\",\"valueString\" : \"9.0.0\"},{\"name\" : \"display\",\"valueString\" : \"information access\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"version\",\"valueString\":\"9.0.0\"},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/v3-ActCode\"},{\"name\":\"code\",\"valueCode\":\"INFA\"},{\"name\":\"display\",\"valueString\":\"information access\"},{\"name\":\"message\",\"valueString\":\"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#INFA' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#INFA' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}}]}"
+}

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_3 bugs (3 open, 0 closed)_
+_4 bugs (3 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -9,36 +9,48 @@ _3 bugs (3 open, 0 closed)_
 
 ## Other
 
-### [ ] `e18fdef` Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)
+### [x] `e18fdef` Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)
 
 Records-Impacted: 2
 Tolerance-ID: loinc-answer-list-expand-404
 Record-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0
 
-#####What differs
 
-When expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev returns 404 with:
+```bash
+curl -s https://tx.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+```
+
+**Result:** Both servers now return 200 with identical ValueSet expansions containing 7 codes. The bug is no longer reproduced - the dev server previously returned 404 with "ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1" but now correctly expands the LOINC answer list.
+
+
+When expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev **previously** returned 404 with:
 
   ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1
 
-Dev appears to be appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.
+Dev was appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.
 
-#####How widespread
 
-2 records in the comparison dataset show this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.
+2 records in the comparison dataset showed this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.
 
 Search:
 - `grep 'LL379-9' deltas.ndjson` → 2 records
 - `grep 'missing-resource' deltas.ndjson` → 3 total (1 is a separate CodeSystem/SOP issue)
-- All 2 matching records have identical error diagnostic
+- All 2 matching records had identical error diagnostic
 
-The full comparison.ndjson has 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeed on both servers.
+The full comparison.ndjson had 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeeded on both servers.
 
-#####What the tolerance covers
 
 Tolerance ID: `loinc-answer-list-expand-404`
-Matches: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`
-Eliminates: 2 records
+Matched: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`
+Eliminated: 2 records
 
 ---
 
@@ -151,6 +163,43 @@ Search used: `grep -c '"prodStatus":422,"devStatus":404' results/deltas/deltas.n
 Tolerance ID: `expand-valueset-not-found-status-mismatch`
 Matches: $expand operations where prod=422 and dev=404, and both responses are OperationOutcomes indicating a ValueSet was not found.
 Records eliminated: 756
+
+---
+
+### [ ] `cd4b7d1` Dev returns 400 instead of 422 for error responses across validate-code and expand operations
+
+Records-Impacted: 1897
+Tolerance-ID: error-status-422-vs-400
+Record-ID: e5639442-a91b-4de0-b1d9-9b901023b6c1
+
+#####What differs
+
+Prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 400 (Bad Request) for error responses. Both servers return OperationOutcome resources with error-level issues and agree on the error semantics (same error codes, same error messages). The only difference is the HTTP status code.
+
+Example: a $validate-code request for a ValueSet that doesn't exist. Both return OperationOutcome with issue code "not-found" and text "A definition for the value Set '...' could not be found", but prod uses 422 and dev uses 400.
+
+#####How widespread
+
+1897 records in the comparison dataset show this pattern (prod=422, dev=400). All 1897 have OperationOutcome on both sides.
+
+Breakdown by operation type:
+- validate-code: 1331 records
+- expand: 566 records
+
+Both GET and POST requests are affected. The pattern spans all FHIR versions (/r4/, etc.) and all code systems/ValueSets.
+
+Found via: grep -c '"prodStatus":422,"devStatus":400' results/deltas/deltas.ndjson
+
+#####What the tolerance covers
+
+Tolerance ID: error-status-422-vs-400
+Matches: any record where prod.status=422, dev.status=400, and both response bodies are OperationOutcome resources (resourceType check).
+Action: skip (since the status code difference IS the categorization trigger — normalizing bodies doesn't change the status-mismatch category).
+Eliminates: 1897 records.
+
+#####Representative record
+
+e5639442-a91b-4de0-b1d9-9b901023b6c1 — GET /r4/ValueSet/$validate-code for PractitionerRoleVS (davinci-pdex-plan-net). Prod=422, dev=400, both return "not-found" OperationOutcome.
 
 ---
 

@@ -2262,6 +2262,24 @@ const tolerances = [
   },
 
   {
+    id: 'v3-valueset-validate-code-result-disagrees',
+    description: 'Dev returns result=false for valid HL7 v3 terminology codes in ValueSet $validate-code. Prod correctly returns result=true. Both agree on CodeSystem version, code, and display. Dev fails to resolve ValueSet membership for codes from terminology.hl7.org/CodeSystem/v3-* systems. Affects 187 records across 5 ValueSets (v3-ActEncounterCode, encounter-participant-type, consent-category, v3-ServiceDeliveryLocationRoleType, v3-PurposeOfUse).',
+    kind: 'temp-tolerance',
+    bugId: '167be81',
+    tags: ['skip', 'result-disagrees', 'v3-terminology', 'validate-code'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$validate-code/.test(record.url)) return null;
+      if (!prod || !dev) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== false) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system') || '';
+      if (!/^http:\/\/terminology\.hl7\.org\/CodeSystem\/v3-/.test(system)) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',
