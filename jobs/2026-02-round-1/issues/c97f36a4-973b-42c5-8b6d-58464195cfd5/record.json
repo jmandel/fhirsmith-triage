@@ -1,0 +1,15 @@
+{
+  "id": "c97f36a4-973b-42c5-8b6d-58464195cfd5",
+  "url": "/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx",
+  "method": "GET",
+  "prodStatus": 200,
+  "devStatus": 200,
+  "comparison": {
+    "priority": "P6",
+    "reason": "content-differs",
+    "op": "read",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"Bundle\",\"id\" : \"b7084949-790b-4c1e-81af-9382f1a2e7\",\"meta\" : {\"lastUpdated\" : \"2026-02-06T22:15:52.192Z\"},\"type\" : \"searchset\",\"total\" : 0,\"link\" : [{\"relation\" : \"self\",\"url\" : \"ValueSet?&url=http://www.rsna.org/RadLex_Playbook.aspx\"}]}",
+  "devBody": "{\"resourceType\":\"Bundle\",\"type\":\"searchset\",\"total\":0,\"link\":[{\"relation\":\"self\",\"url\":\"http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0\"},{\"relation\":\"first\",\"url\":\"http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0\"},{\"relation\":\"last\",\"url\":\"http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0\"}],\"entry\":[]}"
+}

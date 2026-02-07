@@ -271,6 +271,38 @@ const tolerances = [
   },
 
   {
+    id: 'searchset-bundle-wrapper',
+    description: 'Searchset Bundle wrapper differences: dev includes empty entry:[] arrays (invalid FHIR), extra first/last pagination links, absolute URLs with _offset param. Prod includes server-generated id/meta. Normalizes both sides by stripping id, meta, removing empty entry arrays, and keeping only self link relation with normalized URL. Affects ~498 records (ValueSet and CodeSystem searches). Does NOT hide entry content differences for non-empty results.',
+    kind: 'temp-tolerance',
+    bugId: '4233647',
+    tags: ['normalize', 'searchset', 'bundle-wrapper'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'Bundle' || prod?.type !== 'searchset') return null;
+      if (dev?.resourceType !== 'Bundle' || dev?.type !== 'searchset') return null;
+      return 'normalize';
+    },
+    normalize(ctx) {
+      function cleanBundle(body) {
+        if (!body || body.resourceType !== 'Bundle') return body;
+        const result = { ...body };
+        // Strip server-generated transient metadata
+        delete result.id;
+        delete result.meta;
+        // Remove empty entry arrays (invalid FHIR)
+        if (Array.isArray(result.entry) && result.entry.length === 0) {
+          delete result.entry;
+        }
+        // Strip all links — self/first/last links echo back the search URL
+        // in different formats (relative vs absolute, encoded vs decoded,
+        // with/without _offset/_format params). No semantic content.
+        delete result.link;
+        return result;
+      }
+      return both(ctx, cleanBundle);
+    },
+  },
+
+  {
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',

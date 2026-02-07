@@ -174,5 +174,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "51f23f5adc788ee296fcc67d843f470518d6e4430797e2b5c8c1cfd926c82768",
+        "human_id": "51f23f5",
+        "create_time": {
+            "timestamp": 1770483005,
+            "time": "2026-02-07T10:50:05-06:00",
+            "lamport": 6
+        },
+        "edit_time": {
+            "timestamp": 1770483011,
+            "time": "2026-02-07T10:50:11-06:00",
+            "lamport": 16
+        },
+        "status": "open",
+        "labels": [
+            "P3",
+            "tx-compare"
+        ],
+        "title": "DICOM CID 29 AcquisitionModality ValueSet missing from dev",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

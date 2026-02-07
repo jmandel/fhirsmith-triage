@@ -84,7 +84,8 @@ def markdown_to_html(text):
         in_list = None
 
     def inline_format(s):
-        """Handle inline markdown: bold, inline code, links."""
+        """Handle inline markdown: bold, inline code, links.
+        Expects RAW text (not pre-escaped). Escapes internally."""
         # Inline code (must come first to protect content inside backticks)
         parts = []
         segments = s.split("`")
@@ -92,7 +93,7 @@ def markdown_to_html(text):
             if i % 2 == 1:
                 parts.append(f"<code>{escape(seg)}</code>")
             else:
-                parts.append(format_non_code(seg))
+                parts.append(format_non_code(escape(seg)))
         return "".join(parts)
 
     def format_non_code(s):
@@ -145,7 +146,7 @@ def markdown_to_html(text):
         if header_match:
             flush_list()
             level = len(header_match.group(1))
-            content = inline_format(escape(header_match.group(2)))
+            content = inline_format(header_match.group(2))
             html_parts.append(f"<h{level}>{content}</h{level}>")
             i += 1
             continue
@@ -156,7 +157,7 @@ def markdown_to_html(text):
             if in_list == "ol":
                 flush_list()
             in_list = "ul"
-            list_lines.append(escape(ul_match.group(1)))
+            list_lines.append(ul_match.group(1))
             i += 1
             continue
 
@@ -166,7 +167,7 @@ def markdown_to_html(text):
             if in_list == "ul":
                 flush_list()
             in_list = "ol"
-            list_lines.append(escape(ol_match.group(1)))
+            list_lines.append(ol_match.group(1))
             i += 1
             continue
 
@@ -189,7 +190,7 @@ def markdown_to_html(text):
                 break
             para_lines.append(nxt)
             i += 1
-        para_html = "<br>\n".join(inline_format(escape(l)) for l in para_lines)
+        para_html = "<br>\n".join(inline_format(l) for l in para_lines)
         html_parts.append(f"<p>{para_html}</p>")
 
     # Flush remaining state

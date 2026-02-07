@@ -1,6 +1,6 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T16:50:40.865Z",
+  "timestamp": "2026-02-07T16:56:17.450Z",
   "totalRecords": 7245,
   "skipped": 1327,
   "skippedReasons": {
@@ -11,9 +11,9 @@
     "skip-root-page": 359
   },
   "priorities": {
-    "OK": 2860,
-    "P6": 2258,
+    "OK": 3351,
     "P4": 346,
+    "P6": 1767,
     "P2": 186,
     "P1": 246,
     "P0": 17,
@@ -30,8 +30,8 @@
       "OK": 157
     },
     "read": {
-      "P6": 701,
-      "OK": 4,
+      "OK": 495,
+      "P6": 210,
       "P3": 3
     },
     "expand": {

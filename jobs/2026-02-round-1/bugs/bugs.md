@@ -1,10 +1,38 @@
 # tx-compare Bug Report
 
-_4 bugs (4 open, 0 closed)_
+_5 bugs (5 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
+| P3 | 1 | Missing resources |
 | P6 | 4 | Content differences |
+
+---
+
+## P3 -- Missing resources
+
+### [ ] `51f23f5` DICOM CID 29 AcquisitionModality ValueSet missing from dev
+
+#####What differs
+
+When searching for the DICOM CID 29 AcquisitionModality ValueSet by URL (`/r4/ValueSet?url=http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`), prod returns a Bundle with `total: 1` containing the full ValueSet resource (id: `dicom-cid-29-AcquisitionModality`, 51 DICOM modality codes). Dev returns an empty Bundle with `total: 0`.
+
+Direct reads by ID (`/r4/ValueSet/dicom-cid-29-AcquisitionModality`) return 200 on prod with the full ValueSet, and 404 on dev with "ValueSet/dicom-cid-29-AcquisitionModality not found".
+
+The ValueSet has URL `http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html`, version `2025.3.20250714`, and uses system `http://dicom.nema.org/resources/ontology/DCM`.
+
+#####How widespread
+
+10 records in the delta file:
+- 5x P3 (prod=200, dev=404): direct read `/r4/ValueSet/dicom-cid-29-AcquisitionModality`
+- 5x P6 (both 200, content differs): URL search returning empty Bundle vs populated Bundle
+
+Search: `grep 'dicom-cid-29\|sect_CID_29' deltas.ndjson` finds all 10.
+
+#####Representative record IDs
+
+- `3e3359d1-7391-4620-8b72-552f197f21cf` (P6 URL search)
+- `ab5f8ed0-5149-4967-af3a-3c649cbb10c5` (P3 direct read)
 
 ---
 

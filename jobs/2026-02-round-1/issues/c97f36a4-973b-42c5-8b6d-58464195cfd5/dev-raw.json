@@ -1,0 +1,20 @@
+{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "total": 0,
+  "link": [
+    {
+      "relation": "self",
+      "url": "http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0"
+    },
+    {
+      "relation": "first",
+      "url": "http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0"
+    },
+    {
+      "relation": "last",
+      "url": "http://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx&_offset=0"
+    }
+  ],
+  "entry": []
+}

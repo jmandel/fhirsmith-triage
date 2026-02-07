@@ -1,0 +1,15 @@
+{
+  "resourceType": "Bundle",
+  "id": "b7084949-790b-4c1e-81af-9382f1a2e7",
+  "meta": {
+    "lastUpdated": "2026-02-06T22:15:52.192Z"
+  },
+  "type": "searchset",
+  "total": 0,
+  "link": [
+    {
+      "relation": "self",
+      "url": "ValueSet?&url=http://www.rsna.org/RadLex_Playbook.aspx"
+    }
+  ]
+}
