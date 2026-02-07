@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FHIRsmith tx-compare Bug Report</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-surface: #f6f8fa;
+  --bg-card: #ffffff;
+  --border: #d1d9e0;
+  --border-light: #e8ecf0;
+  --text: #1f2328;
+  --text-secondary: #59636e;
+  --text-muted: #818b98;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
+  --pill-default-bg: #f3f4f6; --pill-default-fg: #4b5563; --pill-default-border: #d1d5db;
+
+  --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
+  --status-closed-bg: #f3f4f6; --status-closed-fg: #6b7280; --status-closed-border: #d1d5db;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --bg-surface: #161b22;
+    --bg-card: #1c2128;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+
+    --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
+    --pill-default-bg: #1f2937; --pill-default-fg: #9ca3af; --pill-default-border: #374151;
+
+    --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
+    --status-closed-bg: #1f2937; --status-closed-fg: #9ca3af; --status-closed-border: #374151;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-box:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.search-box::placeholder {
+  color: var(--text-muted);
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s, transform 0.1s;
+  border: 1px solid var(--pill-default-border);
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+}
+
+.filter-pill[data-label="tx-compare"] {
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
+}
+
+.filter-pill:hover {
+  transform: translateY(-1px);
+}
+
+.filter-pill.dimmed {
+  opacity: 0.35;
+}
+
+.filter-pill .count {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.controls {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.ctrl-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+}
+
+.ctrl-btn:hover {
+  background: var(--bg-surface);
+}
+
+.ctrl-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+.bug-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  overflow: hidden;
+}
+
+.bug-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border);
+}
+
+.bug-card.hidden {
+  display: none;
+}
+
+.bug-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bug-header:hover {
+  background: var(--bg-surface);
+}
+
+.bug-expand-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.bug-card.expanded .bug-expand-icon {
+  transform: rotate(90deg);
+}
+
+.bug-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bug-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.bug-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.pill-status-open {
+  background: var(--status-open-bg);
+  color: var(--status-open-fg);
+  border-color: var(--status-open-border);
+}
+
+.pill-status-closed {
+  background: var(--status-closed-bg);
+  color: var(--status-closed-fg);
+  border-color: var(--status-closed-border);
+}
+
+.pill-label {
+  background: var(--pill-default-bg);
+  color: var(--pill-default-fg);
+  border-color: var(--pill-default-border);
+}
+
+.pill-label[data-label="tx-compare"] {
+  background: var(--pill-tx-bg);
+  color: var(--pill-tx-fg);
+  border-color: var(--pill-tx-border);
+}
+
+.pill-impact {
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fcd34d;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pill-impact {
+    background: #3b2f0b;
+    color: #fcd34d;
+    border-color: #78350f;
+  }
+}
+
+.bug-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.bug-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bug-body {
+  display: none;
+  padding: 0 16px 16px 44px;
+  border-top: 1px solid var(--border-light);
+}
+
+.bug-card.expanded .bug-body {
+  display: block;
+}
+
+.bug-body h1, .bug-body h2, .bug-body h3,
+.bug-body h4, .bug-body h5, .bug-body h6 {
+  margin: 16px 0 8px 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.bug-body h1 { font-size: 18px; }
+.bug-body h2 { font-size: 16px; }
+.bug-body h3 { font-size: 14px; }
+.bug-body h4, .bug-body h5, .bug-body h6 { font-size: 13px; }
+
+.bug-body p {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.bug-body ul, .bug-body ol {
+  margin: 8px 0;
+  padding-left: 24px;
+  font-size: 13px;
+}
+
+.bug-body li {
+  margin: 4px 0;
+  line-height: 1.55;
+}
+
+.bug-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+.bug-body pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.bug-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bug-body hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 16px 0;
+}
+
+.bug-body strong { font-weight: 700; }
+.bug-body em { font-style: italic; }
+.bug-body a { color: #3b82f6; text-decoration: none; }
+.bug-body a:hover { text-decoration: underline; }
+
+.no-results {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.no-results.hidden {
+  display: none;
+}
+
+.pipeline-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.pipeline-bar:empty {
+  display: none;
+}
+
+.pipeline-seg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  min-width: 0;
+  text-align: center;
+}
+
+.pipeline-seg .seg-value {
+  font-weight: 700;
+  font-size: 16px;
+  font-family: var(--font-mono);
+}
+
+.pipeline-seg .seg-label {
+  font-size: 10px;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+
+.seg-perfect { background: #dcfce7; color: #166534; }
+.seg-equiv { background: #dbeafe; color: #1e40af; }
+.seg-known { background: #fef3c7; color: #92400e; }
+.seg-untriaged { background: #fee2e2; color: #991b1b; }
+
+@media (prefers-color-scheme: dark) {
+  .seg-perfect { background: #052e16; color: #86efac; }
+  .seg-equiv { background: #172554; color: #93c5fd; }
+  .seg-known { background: #3b2f0b; color: #fcd34d; }
+  .seg-untriaged { background: #450a0a; color: #fca5a5; }
+}
+
+@media (max-width: 640px) {
+  .container { padding: 16px 12px; }
+  .stats-bar { padding: 12px; gap: 6px; }
+  .stat-divider { display: none; }
+  .filter-bar { flex-direction: column; }
+  .search-box { min-width: 100%; }
+  .bug-body { padding: 0 12px 12px 12px; }
+  .bug-header { padding: 10px 12px; }
+  .controls { margin-left: 0; }
+  .pipeline-bar { font-size: 10px; }
+  .pipeline-seg .seg-value { font-size: 13px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FHIRsmith tx-compare Bugs</h1>
+  <p class="subtitle">Generated from git-bug &middot; <span id="gen-time"></span></p>
+
+  <div class="pipeline-bar" id="pipeline-bar"></div>
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="filter-bar">
+    <input type="text" class="search-box" id="search" placeholder="Search bugs by title or body..." autocomplete="off">
+    <div class="filter-pills" id="label-filters"></div>
+    <div class="controls">
+      <button class="ctrl-btn" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn active" data-status="all">All</button>
+      <button class="ctrl-btn" data-status="open">Open</button>
+      <button class="ctrl-btn" data-status="closed">Closed</button>
+      <span class="stat-divider"></span>
+      <button class="ctrl-btn sort-btn active" data-sort="impact">Impact</button>
+      <button class="ctrl-btn sort-btn" data-sort="date">Date</button>
+      <button class="ctrl-btn sort-btn" data-sort="title">Title</button>
+    </div>
+  </div>
+
+  <div id="bug-list"></div>
+  <div class="no-results hidden" id="no-results">No bugs match your filters.</div>
+</div>
+
+<script>
+const BUGS = [{"id": "a9cf20c", "title": "Dev omits deprecated location field on OperationOutcome issues", "status": "open", "labels": ["content-differs", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 15:13", "date_iso": "2026-02-07T15:13:01-06:00", "body_md": "Records-Impacted: 3019\nTolerance-ID: oo-missing-location-field\nRecord-ID: 59eff7c6-9fd2-45b2-8f27-c790368bcc54\n\n## What differs\n\nProd includes both `location` and `expression` arrays on OperationOutcome issues. Dev includes only `expression`, omitting `location` entirely.\n\nIn FHIR R4, `location` (0..*) is deprecated in favor of `expression`, but it is still a defined field. Prod populates both; dev omits `location`.\n\nIn every observed case, `location` and `expression` have identical values (e.g., both `[\"system\"]` or both `[\"code\"]`).\n\nExample from prod:\n```json\n{\n  \"severity\": \"error\",\n  \"code\": \"not-found\",\n  \"details\": { ... },\n  \"location\": [\"system\"],\n  \"expression\": [\"system\"]\n}\n```\n\nDev returns the same issue without `location`:\n```json\n{\n  \"severity\": \"error\",\n  \"code\": \"not-found\",\n  \"details\": { ... },\n  \"expression\": [\"system\"]\n}\n```\n\n## How widespread\n\n3019 out of 9838 delta records exhibit this pattern (31% of all deltas). All are `validate-code` operations (3018 `content-differs`, 1 `status-mismatch`).\n\nSearch: compared parsed prod and dev bodies for all deltas, checking for OperationOutcome issues where prod has `location` and dev does not. In all 3628 individual OO issues across these 3019 records, `location` exactly equals `expression`.\n\nMost common location values:\n- `[\"code\"]`: 1073\n- `[\"Coding.system\"]`: 802\n- `[\"Coding.code\"]`: 622\n- `[\"system\"]`: 463\n- `[\"CodeableConcept.coding[0].code\"]`: 283\n\n## What the tolerance covers\n\nTolerance `oo-missing-location-field` normalizes by stripping `location` from prod's OO issues when dev lacks it and `location` equals `expression`. This eliminates 3019 records from the deltas (where this is the only remaining difference after other tolerances).\n\n## Representative record\n\n`grep -n '59eff7c6-9fd2-45b2-8f27-c790368bcc54' jobs/2026-02-round-2/comparison.ndjson`", "body_html": "<p>Records-Impacted: 3019<br>\nTolerance-ID: oo-missing-location-field<br>\nRecord-ID: 59eff7c6-9fd2-45b2-8f27-c790368bcc54</p>\n<h2>What differs</h2>\n<p>Prod includes both <code>location</code> and <code>expression</code> arrays on OperationOutcome issues. Dev includes only <code>expression</code>, omitting <code>location</code> entirely.</p>\n<p>In FHIR R4, <code>location</code> (0..*) is deprecated in favor of <code>expression</code>, but it is still a defined field. Prod populates both; dev omits <code>location</code>.</p>\n<p>In every observed case, <code>location</code> and <code>expression</code> have identical values (e.g., both <code>[&quot;system&quot;]</code> or both <code>[&quot;code&quot;]</code>).</p>\n<p>Example from prod:</p>\n<pre><code class=\"lang-json\">{\n  &quot;severity&quot;: &quot;error&quot;,\n  &quot;code&quot;: &quot;not-found&quot;,\n  &quot;details&quot;: { ... },\n  &quot;location&quot;: [&quot;system&quot;],\n  &quot;expression&quot;: [&quot;system&quot;]\n}</code></pre>\n<p>Dev returns the same issue without <code>location</code>:</p>\n<pre><code class=\"lang-json\">{\n  &quot;severity&quot;: &quot;error&quot;,\n  &quot;code&quot;: &quot;not-found&quot;,\n  &quot;details&quot;: { ... },\n  &quot;expression&quot;: [&quot;system&quot;]\n}</code></pre>\n<h2>How widespread</h2>\n<p>3019 out of 9838 delta records exhibit this pattern (31% of all deltas). All are <code>validate-code</code> operations (3018 <code>content-differs</code>, 1 <code>status-mismatch</code>).</p>\n<p>Search: compared parsed prod and dev bodies for all deltas, checking for OperationOutcome issues where prod has <code>location</code> and dev does not. In all 3628 individual OO issues across these 3019 records, <code>location</code> exactly equals <code>expression</code>.</p>\n<p>Most common location values:</p>\n<ul><li><code>[&quot;code&quot;]</code>: 1073</li><li><code>[&quot;Coding.system&quot;]</code>: 802</li><li><code>[&quot;Coding.code&quot;]</code>: 622</li><li><code>[&quot;system&quot;]</code>: 463</li><li><code>[&quot;CodeableConcept.coding[0].code&quot;]</code>: 283</li></ul>\n<h2>What the tolerance covers</h2>\n<p>Tolerance <code>oo-missing-location-field</code> normalizes by stripping <code>location</code> from prod&#x27;s OO issues when dev lacks it and <code>location</code> equals <code>expression</code>. This eliminates 3019 records from the deltas (where this is the only remaining difference after other tolerances).</p>\n<h2>Representative record</h2>\n<p><code>grep -n &#x27;59eff7c6-9fd2-45b2-8f27-c790368bcc54&#x27; jobs/2026-02-round-2/comparison.ndjson</code></p>", "impact": 3019}, {"id": "e18fdef", "title": "Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)", "status": "open", "labels": ["missing-resource", "tx-compare"], "author": "Claude (AI Assistant)", "date": "2026-02-07 15:10", "date_iso": "2026-02-07T15:10:47-06:00", "body_md": "Records-Impacted: 2\nTolerance-ID: loinc-answer-list-expand-404\nRecord-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0\n\n## What differs\n\nWhen expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev returns 404 with:\n\n    ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1\n\nDev appears to be appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.\n\n## How widespread\n\n2 records in the comparison dataset show this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.\n\nSearch:\n- `grep 'LL379-9' deltas.ndjson` → 2 records\n- `grep 'missing-resource' deltas.ndjson` → 3 total (1 is a separate CodeSystem/SOP issue)\n- All 2 matching records have identical error diagnostic\n\nThe full comparison.ndjson has 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeed on both servers.\n\n## What the tolerance covers\n\nTolerance ID: `loinc-answer-list-expand-404`\nMatches: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`\nEliminates: 2 records", "body_html": "<p>Records-Impacted: 2<br>\nTolerance-ID: loinc-answer-list-expand-404<br>\nRecord-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0</p>\n<h2>What differs</h2>\n<p>When expanding the LOINC answer list ValueSet <code>http://loinc.org/vs/LL379-9</code> via <code>POST /r4/ValueSet/$expand</code>, prod returns 200 with a successful expansion (7 codes), while dev returns 404 with:</p>\n<p>ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1</p>\n<p>Dev appears to be appending <code>|4.0.1</code> (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.</p>\n<h2>How widespread</h2>\n<p>2 records in the comparison dataset show this exact pattern — both are <code>POST /r4/ValueSet/$expand</code> for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same <code>|4.0.1</code> suffix in the dev error message.</p>\n<p>Search:</p>\n<ul><li><code>grep &#x27;LL379-9&#x27; deltas.ndjson</code> → 2 records</li><li><code>grep &#x27;missing-resource&#x27; deltas.ndjson</code> → 3 total (1 is a separate CodeSystem/SOP issue)</li><li>All 2 matching records have identical error diagnostic</li></ul>\n<p>The full comparison.ndjson has 64 records referencing LL379-9, but the other 62 are <code>GET /r4/ValueSet?_elements=url,version</code> (search/list operations, not expand) and succeed on both servers.</p>\n<h2>What the tolerance covers</h2>\n<p>Tolerance ID: <code>loinc-answer-list-expand-404</code><br>\nMatches: <code>missing-resource</code> category, <code>POST /r4/ValueSet/$expand</code>, dev 404 with diagnostics containing <code>|4.0.1</code><br>\nEliminates: 2 records</p>", "impact": 2}];
+const STATS = {"total": 2, "open": 2, "closed": 0, "labels": {"content-differs": 1, "tx-compare": 2, "missing-resource": 1}, "sortedLabels": ["tx-compare", "content-differs", "missing-resource"], "job": {"total": 32233, "matchedPerfectly": 0, "matchedEquiv": 10231, "knownIssues": 14719, "untriaged": 7283}};
+
+document.getElementById("gen-time").textContent = new Date().toLocaleString();
+
+// Pipeline overview bar
+(function() {
+  const job = STATS.job;
+  if (!job) return;
+  const bar = document.getElementById("pipeline-bar");
+  const segs = [
+    { value: job.matchedPerfectly, label: "matched perfectly", cls: "seg-perfect" },
+    { value: job.matchedEquiv, label: "considered equivalent by Claude", cls: "seg-equiv" },
+    { value: job.knownIssues, label: "considered mismatches by Claude; bugs listed below", cls: "seg-known" },
+    { value: job.untriaged, label: "untriaged", cls: "seg-untriaged" },
+  ];
+  const total = job.total;
+  let html = "";
+  for (const s of segs) {
+    if (s.value === 0) continue;
+    const pct = (s.value / total * 100);
+    html += `<div class="pipeline-seg ${s.cls}" style="flex:${s.value}">
+      <span class="seg-value">${s.value.toLocaleString()}</span>
+      <span class="seg-label">${s.label}</span>
+    </div>`;
+  }
+  bar.innerHTML = html;
+})();
+
+// Stats bar
+(function() {
+  const bar = document.getElementById("stats-bar");
+  let html = `<div class="stat"><span class="stat-value">${STATS.total}</span> bugs total</div>`;
+  html += `<div class="stat-divider"></div>`;
+  html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${STATS.open}</span> open</div>`;
+  html += `<div class="stat"><span class="stat-value">${STATS.closed}</span> closed</div>`;
+  bar.innerHTML = html;
+})();
+
+// Label filter pills
+(function() {
+  const container = document.getElementById("label-filters");
+  let html = "";
+  for (const label of STATS.sortedLabels) {
+    const c = STATS.labels[label] || 0;
+    html += `<span class="filter-pill" data-label="${label}">${label} <span class="count">${c}</span></span>`;
+  }
+  container.innerHTML = html;
+})();
+
+// State
+let activeLabels = new Set();
+let activeStatus = "all";
+let searchQuery = "";
+let currentSort = "impact";
+
+function renderBugList() {
+  const list = document.getElementById("bug-list");
+  // Sort bugs
+  const sorted = [...BUGS];
+  if (currentSort === "impact") {
+    sorted.sort((a, b) => (b.impact || 0) - (a.impact || 0) || a.title.localeCompare(b.title));
+  } else if (currentSort === "date") {
+    sorted.sort((a, b) => (b.date_iso || "").localeCompare(a.date_iso || ""));
+  } else if (currentSort === "title") {
+    sorted.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
+  let html = "";
+  for (const bug of sorted) {
+    const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
+    const labels = bug.labels.map(l => `<span class="pill pill-label" data-label="${l}">${l}</span>`).join("");
+    const impactPill = bug.impact ? `<span class="pill pill-impact">${bug.impact.toLocaleString()} records</span>` : "";
+
+    html += `<div class="bug-card" data-status="${bug.status}" data-id="${bug.id}" data-labels="${bug.labels.join(",")}" data-impact="${bug.impact || 0}">
+      <div class="bug-header" onclick="toggleBug(this)">
+        <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
+        </svg>
+        <div class="bug-info">
+          <div class="bug-title">${bug.title}</div>
+          <div class="bug-meta">
+            <span class="pill ${statusClass}">${bug.status}</span>
+            ${labels}
+            ${impactPill}
+            <span class="bug-id">${bug.id}</span>
+            <span class="bug-date">${bug.date}</span>
+          </div>
+        </div>
+      </div>
+      <div class="bug-body">${bug.body_html}</div>
+    </div>`;
+  }
+
+  list.innerHTML = html;
+  applyFilters();
+}
+
+function toggleBug(header) {
+  header.parentElement.classList.toggle("expanded");
+}
+
+let allExpanded = false;
+function toggleExpandAll() {
+  allExpanded = !allExpanded;
+  const cards = document.querySelectorAll(".bug-card:not(.hidden)");
+  cards.forEach(c => c.classList.toggle("expanded", allExpanded));
+  document.getElementById("expand-all-btn").textContent = allExpanded ? "Collapse all" : "Expand all";
+}
+
+function applyFilters() {
+  const cards = document.querySelectorAll(".bug-card");
+  const query = searchQuery.toLowerCase();
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    const status = card.dataset.status;
+    const cardLabels = card.dataset.labels ? card.dataset.labels.split(",") : [];
+    const bugId = card.dataset.id;
+    const bug = BUGS.find(b => b.id === bugId);
+
+    let show = true;
+
+    // Label filter: card must have at least one of the active labels
+    if (activeLabels.size > 0) {
+      if (!cardLabels.some(l => activeLabels.has(l))) {
+        show = false;
+      }
+    }
+
+    if (activeStatus !== "all" && status !== activeStatus) {
+      show = false;
+    }
+
+    if (query && show && bug) {
+      const searchable = (bug.title + " " + bug.body_md + " " + bug.labels.join(" ")).toLowerCase();
+      if (!searchable.includes(query)) {
+        show = false;
+      }
+    }
+
+    card.classList.toggle("hidden", !show);
+    if (show) visibleCount++;
+  });
+
+  document.getElementById("no-results").classList.toggle("hidden", visibleCount > 0);
+}
+
+// Search
+document.getElementById("search").addEventListener("input", function() {
+  searchQuery = this.value;
+  applyFilters();
+});
+
+// Label filter pills
+document.querySelectorAll(".filter-pill[data-label]").forEach(pill => {
+  pill.addEventListener("click", function() {
+    const label = this.dataset.label;
+    if (activeLabels.has(label)) {
+      activeLabels.delete(label);
+      this.classList.remove("dimmed");
+    } else {
+      if (activeLabels.size === 0) {
+        document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {
+          if (pp.dataset.label !== label) pp.classList.add("dimmed");
+        });
+        activeLabels.add(label);
+      } else {
+        activeLabels.add(label);
+        this.classList.remove("dimmed");
+      }
+    }
+
+    if (activeLabels.size === 0) {
+      document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {
+        pp.classList.remove("dimmed");
+      });
+    }
+
+    applyFilters();
+  });
+});
+
+// Status filter buttons
+document.querySelectorAll(".ctrl-btn[data-status]").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".ctrl-btn[data-status]").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    activeStatus = this.dataset.status;
+    applyFilters();
+  });
+});
+
+// Sort buttons
+document.querySelectorAll(".sort-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    currentSort = this.dataset.sort;
+    renderBugList();
+  });
+});
+
+// Initial render
+renderBugList();
+</script>
+</body>
+</html>

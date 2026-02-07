@@ -2246,6 +2246,27 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'expand-valueset-not-found-status-mismatch',
+    description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
+    kind: 'temp-tolerance',
+    bugId: '2337986',
+    tags: ['skip', 'status-mismatch', 'expand'],
+    match({ record, prod, dev }) {
+      if (record.prod.status !== 422 || record.dev.status !== 404) return null;
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      // Verify both sides report ValueSet not found
+      const prodNotFound = prod?.issue?.some(i =>
+        i.code === 'unknown' && /unable to find value set/i.test(i.details?.text || '')
+      );
+      const devNotFound = dev?.issue?.some(i =>
+        i.code === 'not-found' && /valueset not found/i.test(i.diagnostics || '')
+      );
+      if (prodNotFound && devNotFound) return 'skip';
+      return null;
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

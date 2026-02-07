@@ -1,0 +1,25 @@
+{
+  "id": "8b7a9262-90d3-4753-a197-9a631ffdcf2f",
+  "url": "/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json",
+  "method": "GET",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 437,
+    "hash": "6d48759b244fe90d77867cd945a75edc"
+  },
+  "dev": {
+    "status": 404,
+    "contentType": "application/json; charset=utf-8",
+    "size": 194,
+    "hash": "3e3ed5b84de9ecc9d22eb35c9bef2f07"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "expand",
+    "prodStatus": 422,
+    "devStatus": 404
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>Unable to find value set for URL \\\"http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\\\"</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"unknown\",\"details\" : {\"text\" : \"Unable to find value set for URL \\\"http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\\\"\"}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"diagnostics\":\"ValueSet not found: http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\"}]}"
+}

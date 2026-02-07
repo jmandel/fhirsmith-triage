@@ -1,0 +1,10 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "diagnostics": "ValueSet not found: http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

@@ -1,0 +1,15 @@
+{
+  "issue": [
+    {
+      "code": "unknown",
+      "details": {
+        "text": "Unable to find value set for URL \"http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\""
+      },
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Unable to find value set for URL \"http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\"</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "unknown",
+      "details": {
+        "text": "Unable to find value set for URL \"http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS\""
+      }
+    }
+  ]
+}
