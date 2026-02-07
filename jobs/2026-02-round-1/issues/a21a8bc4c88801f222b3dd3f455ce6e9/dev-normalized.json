@@ -1,0 +1,58 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "en-US"
+    },
+    {
+      "name": "display",
+      "valueString": "English (Region=United States)"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'English' for urn:ietf:bcp:47#en-US. Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) (for the language(s) 'en-US')"
+            },
+            "expression": [
+              "Coding.display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "location": [
+              "Coding.display"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'English' for urn:ietf:bcp:47#en-US. Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

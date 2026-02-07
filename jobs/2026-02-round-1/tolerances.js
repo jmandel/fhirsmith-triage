@@ -165,6 +165,68 @@ const tolerances = [
 
   // Phase C: Content — temp-tolerances for known bugs
   {
+    id: 'invalid-display-message-format',
+    description: 'Wrong Display Name error messages differ in format: prod may list duplicate display options (e.g. "6 choices"), dev de-duplicates and appends language tags like "(en)". Core validation result agrees. Affects ~44 validate-code records with invalid-display issues.',
+    kind: 'temp-tolerance',
+    bugId: 'cf90495',
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      const prodHas = prodIssues.issue.some(i =>
+        i.details?.coding?.some(c => c.code === 'invalid-display'));
+      const devHas = devIssues.issue.some(i =>
+        i.details?.coding?.some(c => c.code === 'invalid-display'));
+      if (!prodHas || !devHas) return null;
+      // Only normalize if messages actually differ
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (prodMsg === devMsg) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev, record }) {
+      // Canonicalize message and issues text to prod's versions
+      const prodMsg = getParamValue(prod, 'message');
+      const prodIssues = getParamValue(prod, 'issues');
+
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && prodMsg !== undefined) {
+              return { ...p, valueString: prodMsg };
+            }
+            if (p.name === 'issues' && prodIssues?.issue && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map((iss, idx) => {
+                    const prodIss = prodIssues.issue[idx];
+                    if (!prodIss) return iss;
+                    const hasCoding = iss.details?.coding?.some(c => c.code === 'invalid-display');
+                    const prodHasCoding = prodIss.details?.coding?.some(c => c.code === 'invalid-display');
+                    if (!hasCoding || !prodHasCoding) return iss;
+                    return {
+                      ...iss,
+                      details: { ...iss.details, text: prodIss.details?.text },
+                    };
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+
+      return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',

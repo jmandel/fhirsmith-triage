@@ -1,0 +1,62 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    },
+    {
+      "name": "code",
+      "valueCode": "en-US"
+    },
+    {
+      "name": "display",
+      "valueString": "English (Region=United States)"
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'English' for urn:ietf:bcp:47#en-US. Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "text": "Wrong Display Name 'English' for urn:ietf:bcp:47#en-US. Valid display is one of 3 choices: 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en) (for the language(s) 'en-US')",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ]
+            },
+            "location": [
+              "Coding.display"
+            ],
+            "expression": [
+              "Coding.display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms urn:ietf:bcp:47/vs: Validate \"[undefined#en-US (\"English\")]\"\n1ms urn:ietf:bcp:47/vs: Check \"urn:ietf:bcp:47#en-US\"\n1ms urn:ietf:bcp:47/vs: CodeSystem found: urn:ietf:bcp:47|null for urn:ietf:bcp:47\n1ms urn:ietf:bcp:47/vs: check code in () at Coding\n1ms urn:ietf:bcp:47/vs: Code \"en-US\" found in urn:ietf:bcp:47|null"
+    }
+  ]
+}
