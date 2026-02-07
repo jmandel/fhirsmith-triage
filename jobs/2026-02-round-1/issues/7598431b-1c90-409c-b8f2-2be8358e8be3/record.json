@@ -1,0 +1,23 @@
+{
+  "id": "7598431b-1c90-409c-b8f2-2be8358e8be3",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1678,
+    "hash": "e39667e1e7d1ba3422cca01109d08aea"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 200,
+    "hash": "f52340779fd35779a14169cbf2b2797b"
+  },
+  "comparison": {
+    "category": "dev-crash-on-valid",
+    "op": "expand"
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"url\" : \"http://hl7.org/fhir/us/core/ValueSet/us-core-pregnancy-status\",\"identifier\" : [{\"system\" : \"urn:ietf:rfc:3986\",\"value\" : \"urn:oid:2.16.840.1.113883.4.642.40.2.48.15\"}],\"version\" : \"7.0.0\",\"name\" : \"USCorePregnancyStatusCodes\",\"title\" : \"US Core Pregnancy Status Codes\",\"status\" : \"active\",\"experimental\" : false,\"date\" : \"2022-09-29\",\"jurisdiction\" : [{\"coding\" : [{\"system\" : \"urn:iso:std:iso:3166\",\"code\" : \"US\"}]}],\"expansion\" : {\"identifier\" : \"urn:uuid:76197b73-71cb-42f6-a09f-b81f0638bd80\",\"timestamp\" : \"2026-02-06T22:27:42.830Z\",\"total\" : 1,\"offset\" : 0,\"parameter\" : [{\"name\" : \"limitedExpansion\",\"valueBoolean\" : true},{\"name\" : \"displayLanguage\",\"valueCode\" : \"en\"},{\"name\" : \"excludeNested\",\"valueBoolean\" : false},{\"name\" : \"offset\",\"valueInteger\" : 0},{\"name\" : \"count\",\"valueInteger\" : 1000},{\"name\" : \"used-valueset\",\"valueUri\" : \"http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1099.24|20230715\"},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/v3-NullFlavor|3.0.0\"}],\"contains\" : [{\"system\" : \"http://snomed.info/sct\",\"version\" : \"http://snomed.info/sct/731000124108/version/20250301\",\"code\" : \"146799005\",\"display\" : \"Possible pregnancy (situation)\"},{\"system\" : \"http://snomed.info/sct\",\"version\" : \"http://snomed.info/sct/731000124108/version/20250301\",\"code\" : \"60001007\",\"display\" : \"Not pregnant (finding)\"},{\"system\" : \"http://snomed.info/sct\",\"version\" : \"http://snomed.info/sct/731000124108/version/20250301\",\"code\" : \"77386006\",\"display\" : \"Pregnancy (finding)\"},{\"system\" : \"http://terminology.hl7.org/CodeSystem/v3-NullFlavor\",\"code\" : \"UNK\",\"display\" : \"unknown\"}]}}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"exception\",\"details\":{\"text\":\"vs.expansion.parameter is not iterable\"},\"diagnostics\":\"vs.expansion.parameter is not iterable\"}]}"
+}

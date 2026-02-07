@@ -681,6 +681,19 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-crash-on-valid',
+    description: 'Dev crashes (500) on valid $expand requests that prod handles successfully (200). Dev returns JavaScript TypeErrors: "vs.expansion.parameter is not iterable" (1 record, us-core-pregnancy-status) and "exp.addParamUri is not a function" (14 records, Verily phenotype ValueSets). Affects 15 POST /r4/ValueSet/$expand records.',
+    kind: 'temp-tolerance',
+    bugId: '2ae971e',
+    tags: ['skip', 'dev-crash-on-valid', 'expand'],
+    match({ record }) {
+      if (record.url !== '/r4/ValueSet/$expand') return null;
+      if (record.prod?.status !== 200 || record.dev?.status !== 500) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'draft-codesystem-message-provenance-suffix',
     description: 'Dev omits " from <package>#<version>" provenance suffix in OperationOutcome issue text for draft CodeSystem warnings (MSG_DRAFT). Prod includes it, e.g. "Reference to draft CodeSystem ...event-status|4.0.1 from hl7.fhir.r4.core#4.0.1". Normalizes both sides to prod text. Affects 4 validate-code records.',
     kind: 'temp-tolerance',

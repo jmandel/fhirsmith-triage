@@ -20,3 +20,4 @@
 {"pickedAt":"2026-02-07T18:45:32.642Z","recordId":"6d25c912-25f4-45cf-8dea-3dd07d9d7e1e","total":610,"analyzed":0,"remaining":610,"category":"content-differs"}
 {"pickedAt":"2026-02-07T18:49:38.200Z","recordId":"70faaf64-3ca5-4ee1-94f1-7f89ad1cf7ed","total":461,"analyzed":0,"remaining":461,"category":"content-differs"}
 {"pickedAt":"2026-02-07T18:54:19.840Z","recordId":"47192b88-140f-44da-8242-a777f564acac","total":454,"analyzed":0,"remaining":454,"category":"content-differs"}
+{"pickedAt":"2026-02-07T18:57:47.308Z","recordId":"7598431b-1c90-409c-b8f2-2be8358e8be3","total":452,"analyzed":0,"remaining":452,"category":"dev-crash-on-valid"}

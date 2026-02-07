@@ -1,0 +1,13 @@
+{
+  "issue": [
+    {
+      "code": "exception",
+      "details": {
+        "text": "vs.expansion.parameter is not iterable"
+      },
+      "diagnostics": "vs.expansion.parameter is not iterable",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}
