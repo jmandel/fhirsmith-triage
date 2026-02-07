@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_4 bugs (3 open, 1 closed)_
+_5 bugs (4 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -172,6 +172,22 @@ Records-Impacted: 1897
 Tolerance-ID: error-status-422-vs-400
 Record-ID: e5639442-a91b-4de0-b1d9-9b901023b6c1
 
+#####Repro
+
+```bash
+####Prod
+curl -s -w "\nHTTP Status: %{http_code}\n" \
+'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS&code=ho&_format=json&system=http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s -w "\nHTTP Status: %{http_code}\n" \
+'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS&code=ho&_format=json&system=http://hl7.org/fhir/us/davinci-pdex-plan-net/CodeSystem/ProviderRoleCS' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 422 with OperationOutcome (issue code "not-found"). Dev returns HTTP 400 with the same OperationOutcome content. Both agree on the error semantics (same error code, same error message), differing only in HTTP status.
+
 #####What differs
 
 Prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 400 (Bad Request) for error responses. Both servers return OperationOutcome resources with error-level issues and agree on the error semantics (same error codes, same error messages). The only difference is the HTTP status code.
@@ -200,6 +216,46 @@ Eliminates: 1897 records.
 #####Representative record
 
 e5639442-a91b-4de0-b1d9-9b901023b6c1 — GET /r4/ValueSet/$validate-code for PractitionerRoleVS (davinci-pdex-plan-net). Prod=422, dev=400, both return "not-found" OperationOutcome.
+
+---
+
+### [ ] `167be81` Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code
+
+Records-Impacted: 187
+Tolerance-ID: v3-valueset-validate-code-result-disagrees
+Record-ID: 92d4fd1a-70fc-4497-adb5-309a3f564716
+
+#####What differs
+
+Prod returns `result: true` for $validate-code of HL7 v3 terminology codes against their corresponding ValueSets. Dev returns `result: false` with message "The provided code was not found in the value set."
+
+Both servers agree on the CodeSystem version, code, and display text — dev can look up the code successfully in the CodeSystem. But dev fails to determine that the code is a member of the ValueSet.
+
+Example (this record): GET /r4/ValueSet/$validate-code with system=v3-ActCode, code=INFA, url=consent-category.
+- Prod: result=true, version=9.0.0, display="information access"
+- Dev: result=false, version=9.0.0, display="information access", message="code not found in value set consent-category|4.0.1"
+
+#####How widespread
+
+187 records across 5 ValueSets, all GET requests, all r4, all using terminology.hl7.org/CodeSystem/v3-* systems:
+
+- 103 records: v3-ActEncounterCode ValueSet (codes AMB, IMP, HH, EMER from v3-ActCode)
+- 69 records: encounter-participant-type ValueSet (codes CON, ADM, ATND from v3-ParticipationType)
+- 9 records: consent-category ValueSet (code INFA from v3-ActCode)
+- 4 records: v3-ServiceDeliveryLocationRoleType ValueSet (codes ER, CARD, SLEEP from v3-RoleCode)
+- 2 records: v3-PurposeOfUse ValueSet (code HMARKT from v3-ActReason)
+
+Search used: grep 'result-disagrees' deltas.ndjson, filtered to terminology.hl7.org/CodeSystem/v3-* systems.
+
+#####What the tolerance covers
+
+Tolerance `v3-valueset-validate-code-result-disagrees` skips records where:
+- Operation is ValueSet/$validate-code
+- System is terminology.hl7.org/CodeSystem/v3-*
+- prodResult=true, devResult=false
+- Both sides report the same CodeSystem version
+
+Eliminates 187 records.
 
 ---
 

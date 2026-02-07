@@ -2,3 +2,4 @@
 {"pickedAt":"2026-02-07T21:15:33.146Z","recordId":"8b7a9262-90d3-4753-a197-9a631ffdcf2f","total":7283,"analyzed":0,"remaining":7283,"category":"status-mismatch"}
 {"pickedAt":"2026-02-07T21:20:07.200Z","recordId":"e5639442-a91b-4de0-b1d9-9b901023b6c1","total":6569,"analyzed":0,"remaining":6569,"category":"status-mismatch"}
 {"pickedAt":"2026-02-07T21:24:40.897Z","recordId":"92d4fd1a-70fc-4497-adb5-309a3f564716","total":4672,"analyzed":0,"remaining":4672,"category":"result-disagrees"}
+{"pickedAt":"2026-02-07T21:30:33.552Z","recordId":"04364a8a-acce-491a-8018-9ac010d47d21","total":4485,"analyzed":0,"remaining":4485,"category":"content-differs"}

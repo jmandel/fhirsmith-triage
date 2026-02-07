@@ -1,0 +1,33 @@
+{
+  "id": "04364a8a-acce-491a-8018-9ac010d47d21",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=idscl&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fconsentcategorycodes",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1662,
+    "hash": "58f57eeb915d382d3bdef8a05eb6c17e"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1546,
+    "hash": "7656904b9ed52ba16eb0b19965d6f7f8"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/consentcategorycodes\"},{\"name\" : \"code\",\"valueCode\" : \"idscl\"},{\"name\" : \"message\",\"valueString\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'; Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '4.0.1'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '4.0.1'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]},{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"None_of_the_provided_codes_are_in_the_value_set_one\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-in-vs\"}],\"text\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/consentcategorycodes\"},{\"name\":\"code\",\"valueCode\":\"idscl\"},{\"name\":\"message\",\"valueString\":\"The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'; Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '1.0.1'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '1.0.1'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}}]}"
+}

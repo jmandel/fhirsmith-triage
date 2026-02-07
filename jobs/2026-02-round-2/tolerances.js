@@ -2280,6 +2280,80 @@ const tolerances = [
   },
 
   {
+    id: 'hl7-terminology-cs-version-skew',
+    description: 'HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) are loaded with different versions in prod vs dev. Prod uses version 4.0.1 for consentcategorycodes/goal-achievement (dev=1.0.1), 4.0.1 for consentpolicycodes (dev=3.0.1), and 2.9 for v2-0116 (dev=3.0.0). Both agree on validation result. Version strings differ only in message and issues text. Normalizes version strings in message and OperationOutcome issue details.text from dev to prod values. Affects 32 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'validate-code', 'version-skew', 'hl7-terminology'],
+    match({ record, prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      if (prodMsg === devMsg) return null;
+      // Check system is a terminology.hl7.org CodeSystem
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system') || '';
+      if (!system.startsWith('http://terminology.hl7.org/CodeSystem/')) return null;
+      // Check that messages differ only in version string
+      const versionPattern = /version '[^']*'/g;
+      const prodNorm = prodMsg.replace(versionPattern, "version 'X'");
+      const devNorm = devMsg.replace(versionPattern, "version 'X'");
+      if (prodNorm !== devNorm) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Extract prod's version strings from message
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const versionPattern = /version '([^']*)'/g;
+      const prodVersions = [];
+      let m;
+      while ((m = versionPattern.exec(prodMsg)) !== null) {
+        prodVersions.push(m[1]);
+      }
+      if (prodVersions.length === 0) return { prod, dev };
+      // Build a replacement: replace dev's version strings with prod's (positionally)
+      function replaceVersions(text) {
+        let idx = 0;
+        return text.replace(/version '[^']*'/g, (match) => {
+          if (idx < prodVersions.length) {
+            return "version '" + prodVersions[idx++] + "'";
+          }
+          return match;
+        });
+      }
+      function fixBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: replaceVersions(p.valueString) };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => {
+                    if (iss.details?.text) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: replaceVersions(iss.details.text) },
+                      };
+                    }
+                    return iss;
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod, dev: fixBody(dev) };
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

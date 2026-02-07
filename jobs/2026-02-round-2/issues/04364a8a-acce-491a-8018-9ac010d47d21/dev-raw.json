@@ -1,0 +1,73 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/consentcategorycodes"
+    },
+    {
+      "name": "code",
+      "valueCode": "idscl"
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'; Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '1.0.1'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code 'idscl' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/consentcategorycodes' version '1.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://terminology.hl7.org/CodeSystem/consentcategorycodes#idscl' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

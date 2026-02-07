@@ -143,16 +143,61 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770499383,
-            "time": "2026-02-07T15:23:03-06:00",
-            "lamport": 22
+            "timestamp": 1770499565,
+            "time": "2026-02-07T15:26:05-06:00",
+            "lamport": 24
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
         "title": "Dev returns 400 instead of 422 for error responses across validate-code and expand operations",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "167be81b77f8ea7cb431bb2f61742331f7e0926f9c07bee82a46f28d2e5af083",
+        "human_id": "167be81",
+        "create_time": {
+            "timestamp": 1770499680,
+            "time": "2026-02-07T15:28:00-06:00",
+            "lamport": 6
+        },
+        "edit_time": {
+            "timestamp": 1770499685,
+            "time": "2026-02-07T15:28:05-06:00",
+            "lamport": 27
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
