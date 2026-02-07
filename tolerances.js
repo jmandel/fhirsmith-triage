@@ -345,22 +345,51 @@ const tolerances = [
 
   {
     id: 'temp-snomed-version-mismatch',
-    description: 'SNOMED CT version mismatch: dev loads older editions than prod. International: 20250201 vs 20240201 (239 records), US: 20250901 vs 20230301 (39 records). Affects 281 validate-code records.',
+    description: 'SNOMED CT version mismatch: dev loads older editions than prod. International: 20250201 vs 20240201, US: 20250901 vs 20230301. Affects validate-code (281 records) and expand (4 records) where used-codesystem version differs.',
     kind: 'temp-tolerance',
     bugId: '4abd03a',
     match({ record, prod, dev }) {
-      if (!/\$validate-code/.test(record.url)) return null;
-      if (!isParameters(prod) || !isParameters(dev)) return null;
-      const prodVersion = getParamValue(prod, 'version');
-      const devVersion = getParamValue(dev, 'version');
-      if (!prodVersion || !devVersion || prodVersion === devVersion) return null;
-      // Match SNOMED version URIs: http://snomed.info/sct/<module>/version/<date>
       const snomedVersionRe = /^http:\/\/snomed\.info\/sct\/\d+\/version\/\d+$/;
-      if (snomedVersionRe.test(prodVersion) && snomedVersionRe.test(devVersion)) return 'normalize';
+      // $validate-code: version parameter on Parameters
+      if (/\$validate-code/.test(record.url)) {
+        if (!isParameters(prod) || !isParameters(dev)) return null;
+        const prodVersion = getParamValue(prod, 'version');
+        const devVersion = getParamValue(dev, 'version');
+        if (!prodVersion || !devVersion || prodVersion === devVersion) return null;
+        if (snomedVersionRe.test(prodVersion) && snomedVersionRe.test(devVersion)) return 'normalize';
+      }
+      // $expand: used-codesystem parameter in expansion.parameter
+      if (/\$expand/.test(record.url)) {
+        const prodParams = prod?.expansion?.parameter;
+        const devParams = dev?.expansion?.parameter;
+        if (!prodParams || !devParams) return null;
+        const prodUsed = prodParams.find(p => p.name === 'used-codesystem')?.valueUri;
+        const devUsed = devParams.find(p => p.name === 'used-codesystem')?.valueUri;
+        if (!prodUsed || !devUsed || prodUsed === devUsed) return null;
+        const prodVer = prodUsed.match(/snomed\.info\/sct\/\d+\/version\/\d+/);
+        const devVer = devUsed.match(/snomed\.info\/sct\/\d+\/version\/\d+/);
+        if (prodVer && devVer) return 'normalize';
+      }
       return null;
     },
     normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'version'));
+      // $validate-code: strip version parameter from Parameters
+      if (/\$validate-code/.test(ctx.record.url)) {
+        return both(ctx, body => stripParams(body, 'version'));
+      }
+      // $expand: strip used-codesystem from expansion parameters
+      return both(ctx, body => {
+        return transformExpansions(body, vs => {
+          if (!vs.expansion?.parameter) return vs;
+          return {
+            ...vs,
+            expansion: {
+              ...vs.expansion,
+              parameter: vs.expansion.parameter.filter(p => p.name !== 'used-codesystem'),
+            },
+          };
+        });
+      });
     },
   },
 
