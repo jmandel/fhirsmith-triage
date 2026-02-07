@@ -1,0 +1,13 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "too-costly",
+      "details": {
+        "text": "The code System \"urn:ietf:bcp:47\" has a grammar, and cannot be enumerated directly"
+      },
+      "diagnostics": "0ms tx-op\n0ms start working\n0ms compose #1"
+    }
+  ]
+}

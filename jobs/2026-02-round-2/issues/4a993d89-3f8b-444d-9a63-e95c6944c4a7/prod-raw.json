@@ -1,0 +1,56 @@
+{
+  "resourceType": "ValueSet",
+  "meta": {
+    "lastUpdated": "2019-11-01T09:29:23.356+11:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "url": "http://hl7.org/fhir/ValueSet/all-languages",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.3.21"
+    }
+  ],
+  "version": "4.0.1",
+  "name": "AllLanguages",
+  "title": "All Languages",
+  "status": "active",
+  "experimental": false,
+  "date": "2019-11-01T09:29:23+11:00",
+  "expansion": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/valueset-toocostly",
+        "valueBoolean": true
+      }
+    ],
+    "identifier": "urn:uuid:e4f47559-f6ee-4260-a72c-e3e5a3d9ce02",
+    "timestamp": "2026-02-07T09:24:36.830Z",
+    "total": 0,
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "limitedExpansion",
+        "valueBoolean": true
+      },
+      {
+        "name": "displayLanguage",
+        "valueCode": "en"
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      }
+    ]
+  }
+}

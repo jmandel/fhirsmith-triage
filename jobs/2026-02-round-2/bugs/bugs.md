@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_18 bugs (17 open, 1 closed)_
+_19 bugs (18 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -967,6 +967,37 @@ The pattern may apply more broadly to any CodeSystem where a nonexistent version
 #####What the tolerance covers
 
 Tolerance `unknown-version-no-versions-known` normalizes the message text, OperationOutcome details, x-caused-by-unknown-system, and message-id for records matching this pattern: both result=false, prod message contains "Valid versions:", dev message contains "No versions of this code system are known". Eliminates 50 records.
+
+---
+
+### [ ] `9fd2328` Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets
+
+Records-Impacted: 40
+Tolerance-ID: expand-snomed-version-skew-content
+Record-ID: 2c7143df-3316-422a-b284-237f16fbcd6e
+
+#####What differs
+
+Prod $expand uses SNOMED CT International edition version 20250201 while dev uses version 20240201. This causes expansion results to contain different sets of codes — prod includes codes added in the 2025 edition that dev does not have, and some codes present in both editions have different display text reflecting updates between versions.
+
+For example, in the representative record (expanding descendants of 365636006 "Finding of blood group"), prod returns 208 codes while dev returns 207. Code 1351894008 "Mixed field RhD (finding)" is present in prod but absent from dev, consistent with it being added in the 2025 edition.
+
+The used-codesystem parameter confirms the version difference:
+- Prod: `http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201`
+- Dev: `http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201`
+
+#####How widespread
+
+40 expand content-differs records in the current comparison have SNOMED version skew with code membership differences. Identified via:
+```
+grep expand+content-differs in deltas.ndjson, then check for SNOMED used-codesystem version mismatch + different code sets
+```
+
+All 40 records are POST /r4/ValueSet/$expand requests using SNOMED CT.
+
+#####What the tolerance covers
+
+Tolerance `expand-snomed-version-skew-content` matches expand records where both sides return 200, SNOMED used-codesystem versions differ, and the expansion contains arrays have different code membership. It normalizes both sides to the intersection of codes and adjusts the total count. This is the same approach used by `expand-hl7-terminology-version-skew-content` (bug 6edc96c).
 
 ---
 

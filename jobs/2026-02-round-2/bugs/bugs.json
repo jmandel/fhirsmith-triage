@@ -806,5 +806,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "9fd23281c28c7533e883346a38f84ad749941064681170be85f24771ac4e40e3",
+        "human_id": "9fd2328",
+        "create_time": {
+            "timestamp": 1770506555,
+            "time": "2026-02-07T17:22:35-06:00",
+            "lamport": 20
+        },
+        "edit_time": {
+            "timestamp": 1770506560,
+            "time": "2026-02-07T17:22:40-06:00",
+            "lamport": 99
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

@@ -1,0 +1,26 @@
+{
+  "id": "4a993d89-3f8b-444d-9a63-e95c6944c4a7",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 964,
+    "hash": "e2d11259d9c304c71d508782e048a2dc"
+  },
+  "dev": {
+    "status": 400,
+    "contentType": "application/json; charset=utf-8",
+    "size": 253,
+    "hash": "bfaa07ca8f8cb6e2e670e4e1b58294c2"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "expand",
+    "prodStatus": 200,
+    "devStatus": 400
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"meta\" : {\"lastUpdated\" : \"2019-11-01T09:29:23.356+11:00\",\"profile\" : [\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"url\" : \"http://hl7.org/fhir/ValueSet/all-languages\",\"identifier\" : [{\"system\" : \"urn:ietf:rfc:3986\",\"value\" : \"urn:oid:2.16.840.1.113883.4.642.3.21\"}],\"version\" : \"4.0.1\",\"name\" : \"AllLanguages\",\"title\" : \"All Languages\",\"status\" : \"active\",\"experimental\" : false,\"date\" : \"2019-11-01T09:29:23+11:00\",\"expansion\" : {\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/valueset-toocostly\",\"valueBoolean\" : true}],\"identifier\" : \"urn:uuid:e4f47559-f6ee-4260-a72c-e3e5a3d9ce02\",\"timestamp\" : \"2026-02-07T09:24:36.830Z\",\"total\" : 0,\"offset\" : 0,\"parameter\" : [{\"name\" : \"limitedExpansion\",\"valueBoolean\" : true},{\"name\" : \"displayLanguage\",\"valueCode\" : \"en\"},{\"name\" : \"excludeNested\",\"valueBoolean\" : false},{\"name\" : \"offset\",\"valueInteger\" : 0},{\"name\" : \"count\",\"valueInteger\" : 1000}]}}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"too-costly\",\"details\":{\"text\":\"The code System \\\"urn:ietf:bcp:47\\\" has a grammar, and cannot be enumerated directly\"},\"diagnostics\":\"0ms tx-op\\n0ms start working\\n0ms compose #1\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"defaultDisplayLanguage\",\"valueCode\":\"en-US\"},{\"name\":\"_limit\",\"valueInteger\":10000},{\"name\":\"_incomplete\",\"valueBoolean\":true},{\"name\":\"displayLanguage\",\"valueCode\":\"en\"},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"excludeNested\",\"valueBoolean\":false},{\"name\":\"cache-id\",\"valueId\":\"26888bd4-58f1-4cae-b379-f6f52937a918\"},{\"name\":\"valueSet\",\"resource\":{\"resourceType\":\"ValueSet\",\"id\":\"all-languages\",\"meta\":{\"lastUpdated\":\"2019-11-01T09:29:23.356+11:00\",\"profile\":[\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg\",\"valueCode\":\"fhir\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status\",\"valueCode\":\"normative\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version\",\"valueCode\":\"4.0.0\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm\",\"valueInteger\":5}],\"url\":\"http://hl7.org/fhir/ValueSet/all-languages\",\"identifier\":[{\"system\":\"urn:ietf:rfc:3986\",\"value\":\"urn:oid:2.16.840.1.113883.4.642.3.21\"}],\"version\":\"4.0.1\",\"name\":\"AllLanguages\",\"title\":\"All Languages\",\"status\":\"active\",\"experimental\":false,\"date\":\"2019-11-01T09:29:23+11:00\",\"publisher\":\"HL7 International - FHIR-Infrastructure\",\"contact\":[{\"telecom\":[{\"system\":\"url\",\"value\":\"http://hl7.org/fhir\"}]}],\"description\":\"This value set includes all possible codes from BCP-47 (http://tools.ietf.org/html/bcp47)\",\"compose\":{\"include\":[{\"system\":\"urn:ietf:bcp:47\"}]}}}]}"
+}

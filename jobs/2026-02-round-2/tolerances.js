@@ -3086,6 +3086,24 @@ const tolerances = [
   },
 
   {
+    id: 'expand-toocostly-grammar-400',
+    description: 'Dev returns 400 OperationOutcome with too-costly error for grammar-based code systems (BCP-47, SNOMED), while prod returns 200 with a ValueSet containing the valueset-toocostly extension. Prod behavior is correct per FHIR spec.',
+    kind: 'temp-tolerance',
+    bugId: 'f33161f',
+    tags: ['skip', 'status-mismatch', 'expand', 'toocostly'],
+    match({ record, prod, dev }) {
+      if (record.prod.status !== 200 || record.dev.status !== 400) return null;
+      if (!/\$expand/.test(record.url)) return null;
+      // Prod must have the valueset-toocostly extension
+      if (!prod?.expansion?.extension?.some(e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly')) return null;
+      // Dev must be an OperationOutcome with too-costly issue code
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      if (!dev?.issue?.some(i => i.code === 'too-costly')) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'snomed-implicit-valueset-expand-404',
     description: 'Dev returns 404 for SNOMED CT implicit ValueSet URLs (fhir_vs pattern). These are FHIR-standard implicit ValueSet URLs that prod handles correctly but dev does not recognize.',
     kind: 'temp-tolerance',
