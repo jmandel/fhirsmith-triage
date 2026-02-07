@@ -2807,6 +2807,19 @@ const tolerances = [
   },
 
   {
+    id: 'skip-prod-hgvs-timeout',
+    description: 'Prod returned 500 due to transient timeout calling external HGVS validation service ("Error parsing HGVS response: Read timed out"). Dev returned 200 with a valid terminology response. Comparison data is unreliable for these records. Affects 62 records, all POST /r4/CodeSystem/$validate-code with system http://varnomen.hgvs.org.',
+    kind: 'temp-tolerance',
+    bugId: 'e02b03e',
+    tags: ['skip', 'data-collection-artifact', 'hgvs', 'timeout'],
+    match({ record }) {
+      if (record.prod.status !== 500) return null;
+      if (!record.prodBody || !record.prodBody.includes('Read timed out')) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'snomed-implicit-valueset-expand-404',
     description: 'Dev returns 404 for SNOMED CT implicit ValueSet URLs (fhir_vs pattern). These are FHIR-standard implicit ValueSet URLs that prod handles correctly but dev does not recognize.',
     kind: 'temp-tolerance',

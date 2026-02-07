@@ -1,0 +1,26 @@
+{
+  "id": "286d30a9-e2b8-4967-8c56-265b3f6160a6",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 500,
+    "contentType": "application/fhir+json",
+    "size": 288,
+    "hash": "5a32e8dfd731d8ba73a77fe59f7fcb3e"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1913,
+    "hash": "97a19a685a2d2a3547d43d9d14f658b6"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "validate-code",
+    "prodStatus": 500,
+    "devStatus": 200
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>Error parsing HGVS response: Read timed out.</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"details\" : {\"text\" : \"Error parsing HGVS response: Read timed out.\"}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://varnomen.hgvs.org\"},{\"name\":\"code\",\"valueCode\":\"BRCA1:c.3143delG p.(Gly1048ValfsTer14)\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"information\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Error while processing 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)': HGVS expressions with gene symbols and multiple descriptions of a variant, such as both c. and p., are not valid. Please see https://varnomen.hgvs.org/ for guidance on HGVS standards.\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms http://varnomen.hgvs.org/vs|2.0: Validate \\\"[undefined#BRCA1:c.3143delG p.(Gly1048ValfsTer14) (\\\"undefined\\\")]\\\"\\n0ms http://varnomen.hgvs.org/vs|2.0: Check \\\"http://varnomen.hgvs.org#BRCA1:c.3143delG p.(Gly1048ValfsTer14)\\\"\\n0ms http://varnomen.hgvs.org/vs|2.0: CodeSystem found: http://varnomen.hgvs.org|2.0 for http://varnomen.hgvs.org|2.0\\n0ms http://varnomen.hgvs.org/vs|2.0: check code in () at Coding\\n745ms http://varnomen.hgvs.org/vs|2.0: Code \\\"BRCA1:c.3143delG p.(Gly1048ValfsTer14)\\\" not found in http://varnomen.hgvs.org|2.0: undefined\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://varnomen.hgvs.org\",\"code\":\"BRCA1:c.3143delG p.(Gly1048ValfsTer14)\"}},{\"name\":\"displayLanguage\",\"valueString\":\"en-GB\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"7743c2e6-5b90-4b62-bcd2-6695b993e76b\"},{\"name\":\"system-version\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/83821000000107\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

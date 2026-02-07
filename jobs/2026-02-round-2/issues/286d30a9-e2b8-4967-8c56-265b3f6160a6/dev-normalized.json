@@ -1,0 +1,61 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "BRCA1:c.3143delG p.(Gly1048ValfsTer14)"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Error while processing 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)': HGVS expressions with gene symbols and multiple descriptions of a variant, such as both c. and p., are not valid. Please see https://varnomen.hgvs.org/ for guidance on HGVS standards."
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'BRCA1:c.3143delG p.(Gly1048ValfsTer14)' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://varnomen.hgvs.org"
+    }
+  ],
+  "resourceType": "Parameters"
+}

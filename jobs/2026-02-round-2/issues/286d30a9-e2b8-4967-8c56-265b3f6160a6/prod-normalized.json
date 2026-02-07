@@ -1,0 +1,14 @@
+{
+  "issue": [
+    {
+      "details": {
+        "text": "Error parsing HGVS response: Read timed out."
+      },
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated"
+  }
+}
