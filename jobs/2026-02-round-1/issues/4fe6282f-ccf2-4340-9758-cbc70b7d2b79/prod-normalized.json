@@ -1,0 +1,17 @@
+{
+  "issue": [
+    {
+      "code": "too-costly",
+      "details": {
+        "text": "The code System \"http://www.ama-assn.org/go/cpt\" has a grammar, and cannot be enumerated directly"
+      },
+      "diagnostics": "0 0 : start\r\n0 0     : not in cache\r\n0 0     : 0ms start working\r\n0 0     : 0ms compose #1\r\n",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome",
+  "text": {
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>The code System \"http://www.ama-assn.org/go/cpt\" has a grammar, and cannot be enumerated directly</p></div>",
+    "status": "generated"
+  }
+}

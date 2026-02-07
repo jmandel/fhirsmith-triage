@@ -1147,6 +1147,22 @@ const tolerances = [
   },
 
   {
+    id: 'expand-too-costly-succeeds',
+    description: 'Prod returns 422 with too-costly issue code for $expand on grammar-based or very large code systems (CPT, BCP-13 MIME types, NDC). Dev returns 200 with a successful expansion. Dev does not enforce the expansion guard that prod has. Affects 12 records (8 CPT, 2 BCP-13, 2 NDC).',
+    kind: 'temp-tolerance',
+    bugId: 'e3fb3f6',
+    tags: ['skip', 'status-mismatch', 'expand', 'too-costly'],
+    match({ record, prod }) {
+      if (record.url !== '/r4/ValueSet/$expand') return null;
+      if (record.prod?.status !== 422 || record.dev?.status !== 200) return null;
+      // Check prod is OperationOutcome with too-costly issue
+      if (prod?.resourceType !== 'OperationOutcome') return null;
+      if (!prod?.issue?.some(i => i.code === 'too-costly')) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',

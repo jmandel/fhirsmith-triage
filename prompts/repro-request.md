@@ -76,3 +76,23 @@ git-bug bug comment edit <COMMENT_ID> -m "<new full body>" --non-interactive
 ```
 
 **Important**: The `-m` value must be the COMPLETE new body (the edit replaces the entire comment). Preserve all existing content — just insert the `## Repro` section after the header.
+
+## Step 5: Label the outcome
+
+After editing the bug, add a label reflecting the repro result:
+
+**Reproduced** — the live servers show the difference described in the bug:
+```bash
+git-bug bug label new <BUG_ID> "reproduced"
+```
+
+**Not reproduced** — the servers have converged and the bug is clearly no longer present. Close it:
+```bash
+git-bug bug label new <BUG_ID> "not-reproduced"
+git-bug bug status close <BUG_ID>
+```
+
+**Repro inconclusive** — you tried but couldn't set up the right conditions (e.g., request body wasn't stored, server data has changed, complex preconditions). The bug may still be real — you just can't confirm it live. Do NOT close the bug:
+```bash
+git-bug bug label new <BUG_ID> "repro-inconclusive"
+```

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_26 bugs (24 open, 2 closed)_
+_27 bugs (25 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1356,6 +1356,36 @@ Tolerance `validate-code-crash-undefined-system-code` matches POST /r4/ValueSet/
 #####Representative record
 
 6b937ddc-13c0-49e1-bd96-24ef10f06543
+
+---
+
+### [ ] `85d0977` BCP-47 case-sensitive validation: dev accepts 'en-us' (lowercase), prod correctly rejects it
+
+Records-Impacted: 2
+Tolerance-ID: bcp47-case-sensitive-validation
+Record-ID: ba44d44e-929e-4b34-8d18-39ead53a68b6
+
+#####What differs
+
+Dev returns result=true for BCP-47 code "en-us" with display "English (Region=United States)". Prod returns result=false with error "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47'" and informational issue "Unable to recognise part 2 (\"us\") as a valid language part".
+
+The correct BCP-47 regional variant format is "en-US" (uppercase region code). BCP-47 is case-sensitive in FHIR (the code system has caseSensitive=true by default per the 2022 FHIR update). Prod correctly rejects the lowercase variant; dev incorrectly accepts it.
+
+#####How widespread
+
+2 records in deltas, both for code "en-us" in system urn:ietf:bcp:47:
+- ba44d44e-929e-4b34-8d18-39ead53a68b6: POST /r4/CodeSystem/$validate-code
+- 175c5449-c70c-4c69-9e2e-4f728d035c1f: POST /r4/ValueSet/$validate-code
+
+Search: grep 'en-us' jobs/2026-02-round-1/results/deltas/deltas.ndjson (2 matches, both result-disagrees with prodResult=false, devResult=true)
+
+Both records show the same root cause: dev's BCP-47 code lookup is case-insensitive when it should be case-sensitive.
+
+#####What the tolerance covers
+
+Tolerance ID: bcp47-case-sensitive-validation
+Matches: result-disagrees records where system is urn:ietf:bcp:47 and prodResult=false, devResult=true.
+Eliminates 2 records.
 
 ---
 

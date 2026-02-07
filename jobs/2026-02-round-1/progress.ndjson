@@ -23,3 +23,4 @@
 {"pickedAt":"2026-02-07T18:57:47.308Z","recordId":"7598431b-1c90-409c-b8f2-2be8358e8be3","total":452,"analyzed":0,"remaining":452,"category":"dev-crash-on-valid"}
 {"pickedAt":"2026-02-07T19:01:38.575Z","recordId":"6b937ddc-13c0-49e1-bd96-24ef10f06543","total":437,"analyzed":0,"remaining":437,"category":"dev-crash-on-valid"}
 {"pickedAt":"2026-02-07T19:05:30.267Z","recordId":"ba44d44e-929e-4b34-8d18-39ead53a68b6","total":436,"analyzed":0,"remaining":436,"category":"result-disagrees"}
+{"pickedAt":"2026-02-07T19:09:26.621Z","recordId":"4fe6282f-ccf2-4340-9758-cbc70b7d2b79","total":434,"analyzed":0,"remaining":434,"category":"status-mismatch"}

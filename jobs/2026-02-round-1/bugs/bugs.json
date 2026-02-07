@@ -1142,5 +1142,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "85d09778c785b5246be065ab0e65dcc4ec3176301c8a2d8d1d275e71804ec167",
+        "human_id": "85d0977",
+        "create_time": {
+            "timestamp": 1770491280,
+            "time": "2026-02-07T13:08:00-06:00",
+            "lamport": 28
+        },
+        "edit_time": {
+            "timestamp": 1770491285,
+            "time": "2026-02-07T13:08:05-06:00",
+            "lamport": 110
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "BCP-47 case-sensitive validation: dev accepts 'en-us' (lowercase), prod correctly rejects it",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

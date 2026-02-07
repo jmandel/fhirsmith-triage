@@ -1,0 +1,25 @@
+{
+  "id": "4fe6282f-ccf2-4340-9758-cbc70b7d2b79",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 539,
+    "hash": "067a0f31289a25df7e3a9818d6492148"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 3433,
+    "hash": "55c82d644619921d9c5e65589211f1db"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "expand",
+    "prodStatus": 422,
+    "devStatus": 200
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>The code System \\\"http://www.ama-assn.org/go/cpt\\\" has a grammar, and cannot be enumerated directly</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"too-costly\",\"details\" : {\"text\" : \"The code System \\\"http://www.ama-assn.org/go/cpt\\\" has a grammar, and cannot be enumerated directly\"},\"diagnostics\" : \"0 0 : start\\r\\n0 0     : not in cache\\r\\n0 0     : 0ms start working\\r\\n0 0     : 0ms compose #1\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"ValueSet\",\"status\":\"active\",\"id\":\"\",\"expansion\":{\"timestamp\":\"2026-02-06T22:27:59.951Z\",\"identifier\":\"urn:uuid:614fe91d-a587-4be4-b766-cd28c65989ff\",\"parameter\":[{\"name\":\"excludeNested\",\"valueBoolean\":false},{\"name\":\"includeDefinition\",\"valueBoolean\":false},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"used-codesystem\",\"valueUri\":\"http://www.ama-assn.org/go/cpt|2023\"}],\"offset\":0,\"total\":7,\"contains\":[{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"99202\",\"display\":\"Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and straightforward medical decision making. When using time for code selection, 15-29 minutes of total time is spent on the date of the encounter.\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"99203\",\"display\":\"Office or other outpatient visit for the evaluation and management of a new patient, which requires a medically appropriate history and/or examination and low level of medical decision making. When using time for code selection, 30-44 minutes of total time is spent on the date of the encounter.\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"0001A\",\"display\":\"Immunization administration by intramuscular injection of severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2) (coronavirus disease [COVID-19]) vaccine, mRNA-LNP, spike protein, preservative free, 30 mcg/0.3 mL dosage, diluent reconstituted; first dose\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"25\",\"display\":\"Significant, Separately Identifiable Evaluation and Management Service by the Same Physician or Other Qualified Health Care Professional on the Same Day of the Procedure or Other Service: It may be necessary to indicate that on the day a procedure or service identified by a CPT code was performed, the patient's condition required a significant, separately identifiable E/M service above and beyond the other service provided or beyond the usual preoperative and postoperative care associated with the procedure that was performed. A significant, separately identifiable E/M service is defined or substantiated by documentation that satisfies the relevant criteria for the respective E/M service to be reported (see Evaluation and Management Services Guidelines for instructions on determining level of E/M service). The E/M service may be prompted by the symptom or condition for which the procedure and/or service was provided. As such, different diagnoses are not required for reporting of the E/M services on the same date. This circumstance may be reported by adding modifier 25 to the appropriate level of E/M service. Note: This modifier is not used to report an E/M service that resulted in a decision to perform surgery. See modifier 57 For significant, separately identifiable non-E/M services, see modifier 59.\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"P1\",\"display\":\"A normal healthy patient\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"1P\",\"display\":\"Performance Measure Exclusion Modifier due to Medical Reasons Reasons include: Not indicated (absence of organ/limb, already received/ performed, other) Contraindicated (patient allergic history, potential adverse drug interaction, other) Other medical reasons\"},{\"system\":\"http://www.ama-assn.org/go/cpt\",\"code\":\"F1\",\"display\":\"Left hand, second digit\"}]}}"
+}
