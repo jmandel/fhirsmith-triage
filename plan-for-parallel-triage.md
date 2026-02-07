@@ -75,14 +75,14 @@ Agents edit `tolerances.js` directly, exactly as they do today. No structural ch
 
 The agent handles conflicts, not the orchestrator. Before the orchestrator merges, it tells the agent to rebase onto current main. The agent (Claude) resolves any conflicts in tolerances.js — it has full context about what it added and can do this intelligently. After rebase, the merge into main is a clean fast-forward.
 
-Agent commit flow:
-1. Agent finishes analysis, edits tolerances.js, commits to its branch
-2. Orchestrator signals "rebase onto main"
-3. Agent runs `git rebase main` — resolves any conflicts (it knows what it wrote)
-4. Agent's branch is now ahead of main with no conflicts
-5. Orchestrator does `git merge agent-N` — fast-forward, guaranteed clean
+Agent commit flow (all done by the Opus agent as part of its triage workflow):
+1. Agent finishes analysis, edits tolerances.js, validates, files bugs
+2. Agent commits to its branch
+3. Agent rebases onto main, resolves any conflicts in tolerances.js
+4. Agent updates main: `git push . HEAD:main` (with `receive.denyCurrentBranch=updateInstead`)
+5. If the update fails (main moved because another agent landed first), agent rebases again and retries
 
-This keeps conflict resolution close to the code author (the agent) rather than in a shell script that lacks context.
+The agent owns the entire rebase-resolve-update loop. The orchestrator never deals with conflicts or merging — it just waits for agents to finish and dispatches new records.
 
 **No changes needed to**: tolerances.js structure, triage prompt, compare.js.
 
@@ -121,8 +121,8 @@ For each agent, one cycle looks like:
 4. Comparison.ndjson symlink ensured
 5. Claude runs in the agent's worktree with the triage prompt
 6. Claude does full analysis: reads files, searches patterns, writes tolerance to `tolerances.js`, runs compare.js, validates, files git-bug, writes analysis.md
-7. Claude commits to the agent's branch
-8. Orchestrator merges agent branch into main, reruns compare.js, commits
+7. Claude commits to its branch, rebases onto main, resolves any conflicts, updates main ref
+8. Orchestrator detects main moved forward, reruns compare.js to validate combined tolerances
 9. Agent is available for next record
 
 ## Scripts
@@ -156,6 +156,9 @@ for i in $(seq 1 "$NUM_AGENTS"); do
 
   echo "Created worktree: $WORKTREE (branch: $BRANCH)"
 done
+
+# Allow agents to update main from their worktrees
+git config receive.denyCurrentBranch updateInstead
 
 echo "Setup complete. $NUM_AGENTS agent worktrees ready."
 ```
@@ -219,28 +222,14 @@ Job directory: $JOB_REL. Issue directory: $issue_dir" \
   echo $!  # return PID
 }
 
-merge_agent() {
+on_agent_done() {
   local agent_num=$1
   local branch="agent-$agent_num"
 
   cd "$TRIAGE_DIR"
 
-  # Have the agent rebase onto main (agent resolves any conflicts)
-  # This is done by a short Claude invocation in the agent's worktree
-  local worktree="$TRIAGE_DIR/../triage-agent-$agent_num"
-  git -C "$worktree" rebase main || {
-    # If rebase fails, launch Claude to resolve
-    ( cd "$worktree" && claude -p --dangerously-skip-permissions --model haiku \
-        "Resolve the git rebase conflict. You added a new tolerance to tolerances.js.
-Keep both your addition and whatever was added on main. Then git add and git rebase --continue." \
-        2>/dev/null )
-  }
-
-  # Now merge is a clean fast-forward
-  git merge "$branch" --ff-only --quiet || {
-    echo "$(date -Is) FAILED to ff-merge agent-$agent_num" | tee -a "$ERROR_LOG"
-    return 1
-  }
+  # Agent already rebased and updated main. Just reset our working tree.
+  git reset --hard main
 
   # Rerun compare.js on main with combined tolerances
   node engine/compare.js --job "$JOB_REL" 2>&1 | tail -5
@@ -249,7 +238,7 @@ Keep both your addition and whatever was added on main. Then git add and git reb
   git add -A
   git commit -m "Triage: validate combined tolerances after agent-$agent_num" --quiet 2>/dev/null || true
 
-  echo "$(date -Is) agent-$agent_num merged, deltas: $(wc -l < "$JOB_DIR/results/deltas/deltas.ndjson")" \
+  echo "$(date -Is) agent-$agent_num landed, deltas: $(wc -l < "$JOB_DIR/results/deltas/deltas.ndjson")" \
     | tee -a "$ERROR_LOG"
 }
 
@@ -271,7 +260,7 @@ for i in $(seq 1 "$NUM_AGENTS"); do
   RECORDS[$i]=$record_id
 done
 
-# Wait for agents, merge, redispatch
+# Wait for agents to land on main, then redispatch
 while [ ${#PIDS[@]} -gt 0 ]; do
   # Wait for any child to finish
   wait -n ${PIDS[@]} 2>/dev/null || true
@@ -282,8 +271,8 @@ while [ ${#PIDS[@]} -gt 0 ]; do
     [ -z "$pid" ] && continue
     kill -0 "$pid" 2>/dev/null && continue
 
-    # Agent finished — merge its work
-    merge_agent "$i"
+    # Agent finished — sync orchestrator and validate
+    on_agent_done "$i"
     unset PIDS[$i]
 
     # Dispatch next record to this agent
@@ -304,7 +293,7 @@ echo "=== Parallel triage complete ==="
 
 - **Agent timeout**: Wrapped in `timeout 1200`. If it times out, the agent's branch may have partial work. The orchestrator skips the merge and moves on. The record stays claimed but unanalyzed.
 - **Agent crash**: Same as timeout — no analysis.md written, record stays claimed. A cleanup pass could detect claimed-but-unanalyzed records and re-queue them.
-- **Merge conflict**: The agent rebases onto main before merge. If tolerances.js conflicts, a lightweight Claude (haiku) resolves it — it just needs to keep both additions. Non-tolerance conflicts are rare (agents write to separate issue dirs).
+- **Merge conflict**: The agent (Opus) rebases onto main, resolves conflicts, and updates main itself. It has full context about what it added. If the main update fails (race), it rebases again. Non-tolerance conflicts are rare (agents write to separate issue dirs).
 
 ## What doesn't change
 
@@ -317,12 +306,12 @@ echo "=== Parallel triage complete ==="
 ## Expected throughput
 
 - Current: ~5 min/round sequential = ~12 records/hour
-- With 3 agents: ~5 min analysis parallelized + ~30s serialized merge = ~36 records/hour (3x)
-- The serialized merge is fast enough that it's not a bottleneck unless agents finish simultaneously
+- With 3 agents: ~5 min analysis parallelized, agents land on main independently = ~36 records/hour (3x)
+- The rebase-push is fast (~seconds). Races are resolved by the agent retrying, not the orchestrator
 
 ## Known rough edges
 
-- The `git branch -f` / `reset --hard` dance for resetting agent branches needs testing
+- The `receive.denyCurrentBranch=updateInstead` setting and `git push . HEAD:main` from worktrees needs testing
 - If an agent fails mid-analysis, its claimed record has no analysis.md — needs a cleanup/retry mechanism
 - The merge-time compare.js validation could be smarter about detecting interaction effects
-- The rebase conflict resolution via Claude haiku should be tested — it's a simple task (keep both tolerance additions) but needs to handle edge cases gracefully
+- The triage prompt needs a new final step: "rebase onto main and resolve any conflicts before finishing"

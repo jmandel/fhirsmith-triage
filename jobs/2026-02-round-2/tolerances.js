@@ -2572,6 +2572,27 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'dev-extra-display-lang-not-found-message',
+    description: 'Dev $validate-code returns extra message and issues parameters with "no valid display names found" informational feedback when displayLanguage is specified and the code system lacks a display in that language. Prod omits these entirely. Both agree result=true. Affects 19 validate-code records (mostly urn:iso:std:iso:3166 with displayLanguage=fr/fr-FR).',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'extra-message'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      if (prodResult !== true) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      if (prodMsg !== undefined) return null;
+      const devMsg = getParamValue(dev, 'message');
+      if (!devMsg || !devMsg.includes('There are no valid display names found')) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      return { prod, dev: stripParams(dev, 'message', 'issues') };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

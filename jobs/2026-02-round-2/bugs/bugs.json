@@ -323,16 +323,61 @@
             "lamport": 9
         },
         "edit_time": {
-            "timestamp": 1770501156,
-            "time": "2026-02-07T15:52:36-06:00",
-            "lamport": 43
+            "timestamp": 1770501390,
+            "time": "2026-02-07T15:56:30-06:00",
+            "lamport": 45
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "801aef1abd21202dc7ae1377598b69f8d68fca952e3bb18d381197d98dca965e",
+        "human_id": "801aef1",
+        "create_time": {
+            "timestamp": 1770501556,
+            "time": "2026-02-07T15:59:16-06:00",
+            "lamport": 10
+        },
+        "edit_time": {
+            "timestamp": 1770501561,
+            "time": "2026-02-07T15:59:21-06:00",
+            "lamport": 48
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions",
+        "title": "Dev adds expression field on informational OperationOutcome issues where prod omits it",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

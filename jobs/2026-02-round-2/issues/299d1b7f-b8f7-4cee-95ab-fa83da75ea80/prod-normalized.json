@@ -1,0 +1,37 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "FR"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "FR",
+            "display": "France",
+            "system": "urn:iso:std:iso:3166"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "France"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:3166"
+    },
+    {
+      "name": "version",
+      "valueString": "2018"
+    }
+  ],
+  "resourceType": "Parameters"
+}

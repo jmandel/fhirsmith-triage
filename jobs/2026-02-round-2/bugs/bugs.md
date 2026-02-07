@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_8 bugs (7 open, 1 closed)_
+_9 bugs (8 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -392,7 +392,93 @@ Records-Impacted: 292
 Tolerance-ID: expand-unclosed-extension-and-total
 Record-ID: b6156665-797d-4483-971c-62c00a0816b8
 
-#####What differs
+
+```bash
+curl -s https://tx.fhir.org/r4/ValueSet/\$expand \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+--data-binary @- << 'REQUEST'
+{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "count",
+    "valueInteger": 1000
+  },
+  {
+    "name": "offset",
+    "valueInteger": 0
+  },
+  {
+    "name": "valueSet",
+    "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "inactive": true,
+        "include": [
+          {
+            "system": "http://snomed.info/sct",
+            "filter": [
+              {
+                "property": "concept",
+                "op": "is-a",
+                "value": "404684003"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]
+}
+REQUEST
+
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$expand \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+--data-binary @- << 'REQUEST'
+{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "count",
+    "valueInteger": 1000
+  },
+  {
+    "name": "offset",
+    "valueInteger": 0
+  },
+  {
+    "name": "valueSet",
+    "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "inactive": true,
+        "include": [
+          {
+            "system": "http://snomed.info/sct",
+            "filter": [
+              {
+                "property": "concept",
+                "op": "is-a",
+                "value": "404684003"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+]
+}
+REQUEST
+```
+
+Prod returns `expansion.extension` with `valueset-unclosed: true` and no `expansion.total`. Dev returns `expansion.total: 124412` with no unclosed extension.
+
 
 For $expand operations that return incomplete/truncated expansions (e.g., SNOMED CT is-a queries requesting count=1000 from a set with 124,412 total codes):
 
@@ -402,13 +488,11 @@ For $expand operations that return incomplete/truncated expansions (e.g., SNOMED
 
 These two differences always co-occur in the same records — every record where prod has `valueset-unclosed` but dev doesn't also has dev providing `total` while prod doesn't.
 
-#####How widespread
 
 292 records in the comparison dataset show both patterns simultaneously. All are successful (200/200) $expand operations. The pattern is predicted by: prod expansion has `valueset-unclosed` extension present AND dev expansion has `total` present but prod expansion does not.
 
 Search: analyzed all 810 successful expand deltas; 292 match the combined pattern `unclosed=prod-only AND total=dev-only`. No records show unclosed prod-only without total dev-only or vice versa.
 
-#####What the tolerance covers
 
 Tolerance `expand-unclosed-extension-and-total` matches $expand records where:
 - Both return 200 with expansion data
@@ -417,9 +501,41 @@ Tolerance `expand-unclosed-extension-and-total` matches $expand records where:
 
 It normalizes by removing the `valueset-unclosed` extension from prod's expansion.extension array and removing `total` from dev's expansion object.
 
-#####Representative record
 
 b6156665-797d-4483-971c-62c00a0816b8: POST /r4/ValueSet/$expand — SNOMED CT is-a 404684003 (Clinical finding), count=1000. Prod returns 1000 codes with `valueset-unclosed: true` and no total. Dev returns 1000 codes with `total: 124412` and no unclosed extension.
+
+---
+
+### [ ] `801aef1` Dev adds expression field on informational OperationOutcome issues where prod omits it
+
+Records-Impacted: 6
+Tolerance-ID: oo-extra-expression-on-info-issues
+Record-ID: 9160e659-1af6-4bc6-9c89-e0a8b4df55cf
+
+#####What differs
+
+In $validate-code responses, both prod and dev return OperationOutcome issues. On error-severity issues, both include `expression: ["code"]`. On information-severity issues, prod omits the `expression` field entirely while dev includes `expression: ["code"]`.
+
+For example, on `GET /r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST`:
+- Prod: informational issue has no `expression` field
+- Dev: informational issue has `"expression": ["code"]`
+
+The `expression` value is semantically correct (the issue relates to the `code` parameter), so dev is providing more complete information, but the difference in field presence is a real behavioral divergence.
+
+#####How widespread
+
+6 records across the dataset exhibit this pattern:
+- 4 SNOMED CT records (all `code=K29` variants on different FHIR version paths)
+- 1 UCUM record (`code=TEST`)
+- 1 SNOMED CT POST record (`code=freetext`)
+
+All are `$validate-code` or `$batch-validate-code` operations where the code is invalid and the informational issue provides supplementary error context (e.g., UCUM parse error, SNOMED expression parse error).
+
+Search: node script checking all 3948 delta records for issues where dev has `expression` and prod lacks it on the same positional issue.
+
+#####What the tolerance covers
+
+Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters responses where any OperationOutcome information-severity issue in dev has `expression` that prod lacks. Normalizes by removing the extra `expression` from dev to match prod. Eliminates 6 records.
 
 ---
 
