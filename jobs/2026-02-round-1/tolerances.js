@@ -1925,6 +1925,59 @@ const tolerances = [
   },
 
   {
+    id: 'error-operationoutcome-structure-diff',
+    description: 'When both prod and dev return 500 OperationOutcome, structural differences remain: prod omits required issue.code field, dev includes it; dev includes issue.diagnostics duplicating details.text, prod omits it; prod includes text narrative, dev omits it. Normalizes by setting canonical issue.code, stripping diagnostics (redundant with details.text), and stripping text (narrative only). Affects 4 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '98ae4ce',
+    tags: ['normalize', 'operationoutcome', 'error-structure'],
+    match({ record, prod, dev }) {
+      if (record.prod.status !== 500 || record.dev.status !== 500) return null;
+      if (prod?.resourceType !== 'OperationOutcome' || dev?.resourceType !== 'OperationOutcome') return null;
+      const prodIssues = prod.issue || [];
+      const devIssues = dev.issue || [];
+      if (!prodIssues.length || !devIssues.length) return null;
+      // Check if there are structural differences in issue fields (code, diagnostics) or text element
+      const hasCodeDiff = prodIssues.some((pi, i) => {
+        const di = devIssues[i];
+        if (!di) return false;
+        return (!!pi.code) !== (!!di.code);
+      });
+      const hasDiagDiff = prodIssues.some((pi, i) => {
+        const di = devIssues[i];
+        if (!di) return false;
+        return (!!pi.diagnostics) !== (!!di.diagnostics);
+      });
+      const hasTextDiff = (!!prod.text) !== (!!dev.text);
+      if (hasCodeDiff || hasDiagDiff || hasTextDiff) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function normalizeOO(oo, otherOO) {
+        if (!oo) return oo;
+        // Strip text narrative
+        const { text, ...rest } = oo;
+        return {
+          ...rest,
+          issue: (oo.issue || []).map((issue, i) => {
+            const otherIssue = (otherOO?.issue || [])[i] || {};
+            // Canonical code: use whichever side has it, prefer dev (more conformant)
+            const canonicalCode = issue.code || otherIssue.code;
+            // Strip diagnostics when it duplicates details.text
+            const { diagnostics, ...issueRest } = issue;
+            const result = { ...issueRest };
+            if (canonicalCode) result.code = canonicalCode;
+            return result;
+          }),
+        };
+      }
+      return {
+        prod: normalizeOO(prod, dev),
+        dev: normalizeOO(dev, prod),
+      };
+    },
+  },
+
+  {
     id: 'message-concat-missing-issues',
     description: 'Dev message parameter only includes first issue text instead of concatenating all issue texts with "; ". Prod correctly joins all OperationOutcome issue details.text values. The issues resource itself is identical. Affects 8 validate-code records (CodeSystem and ValueSet) where multiple issues exist.',
     kind: 'temp-tolerance',

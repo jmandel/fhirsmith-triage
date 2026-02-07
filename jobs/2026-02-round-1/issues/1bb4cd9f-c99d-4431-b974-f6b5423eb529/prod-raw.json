@@ -1,0 +1,15 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "details": {
+        "text": "Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded"
+      }
+    }
+  ]
+}

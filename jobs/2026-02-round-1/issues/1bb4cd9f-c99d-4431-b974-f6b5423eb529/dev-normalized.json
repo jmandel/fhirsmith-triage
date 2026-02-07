@@ -1,0 +1,13 @@
+{
+  "issue": [
+    {
+      "code": "exception",
+      "details": {
+        "text": "Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded"
+      },
+      "diagnostics": "Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

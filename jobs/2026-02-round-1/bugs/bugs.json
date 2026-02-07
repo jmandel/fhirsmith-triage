@@ -2014,5 +2014,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "91e49e8a4e0ae62ddc73a89d84910a9e8e13dfd58f7f86352a074e8d2ccf7833",
+        "human_id": "91e49e8",
+        "create_time": {
+            "timestamp": 1770497002,
+            "time": "2026-02-07T14:43:22-06:00",
+            "lamport": 47
+        },
+        "edit_time": {
+            "timestamp": 1770497007,
+            "time": "2026-02-07T14:43:27-06:00",
+            "lamport": 226
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Prod returns duplicate entries in searchset Bundle for same resource URL",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

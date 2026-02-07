@@ -1,0 +1,24 @@
+{
+  "id": "1bb4cd9f-c99d-4431-b974-f6b5423eb529",
+  "url": "/r4/ValueSet/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 500,
+    "contentType": "application/fhir+json",
+    "size": 570,
+    "hash": "c535860b0f96ccad0d39f582b9042dde"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 494,
+    "hash": "3b932430cca7275570b6fb31e3f99576"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"details\" : {\"text\" : \"Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded\"}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"exception\",\"details\":{\"text\":\"Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded\"},\"diagnostics\":\"Exception expanding value set in order to infer system: A definition for CodeSystem 'http://hl7.org/fhir/v3/AdministrativeGender' could not be found, so the value set cannot be expanded\"}]}"
+}
