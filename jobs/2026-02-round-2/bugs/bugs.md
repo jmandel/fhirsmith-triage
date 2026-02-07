@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_2 bugs (2 open, 0 closed)_
+_3 bugs (3 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -47,6 +47,20 @@ Eliminates: 2 records
 Records-Impacted: 3019
 Tolerance-ID: oo-missing-location-field
 Record-ID: 59eff7c6-9fd2-45b2-8f27-c790368bcc54
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.114222.4.11.1066&code=1223P0106X&_format=json&system=http:%2F%2Fnucc.org%2Fprovider-taxonomy' \
+-H 'Accept: application/fhir+json' | jq '.parameter[] | select(.name == "issues") | .resource.issue[0] | {severity, code, location, expression}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.114222.4.11.1066&code=1223P0106X&_format=json&system=http:%2F%2Fnucc.org%2Fprovider-taxonomy' \
+-H 'Accept: application/fhir+json' | jq '.parameter[] | select(.name == "issues") | .resource.issue[0] | {severity, code, location, expression}'
+```
+
+Prod returns `"location": ["system"]`, dev returns `"location": null` (field is omitted).
 
 #####What differs
 
@@ -97,6 +111,46 @@ Tolerance `oo-missing-location-field` normalizes by stripping `location` from pr
 #####Representative record
 
 `grep -n '59eff7c6-9fd2-45b2-8f27-c790368bcc54' jobs/2026-02-round-2/comparison.ndjson`
+
+---
+
+### [ ] `2337986` Dev returns 404 instead of 422 when ValueSet not found for $expand
+
+Records-Impacted: 756
+Tolerance-ID: expand-valueset-not-found-status-mismatch
+Record-ID: 8b7a9262-90d3-4753-a197-9a631ffdcf2f
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 422 with `issue.code: "unknown"` and `issue.details.text`, dev returns HTTP 404 with `issue.code: "not-found"` and `issue.diagnostics`.
+
+
+When a ValueSet cannot be found for a $expand operation, prod returns HTTP 422 (Unprocessable Entity) with an OperationOutcome using issue code `unknown` and `details.text`, while dev returns HTTP 404 (Not Found) with issue code `not-found` and `diagnostics`. Both communicate the same semantic meaning ("this ValueSet doesn't exist"), but the HTTP status code and OperationOutcome structure differ.
+
+Prod response (status 422):
+- issue.code: "unknown"
+- issue.details.text: "Unable to find value set for URL \"...\""
+
+Dev response (status 404):
+- issue.code: "not-found"
+- issue.diagnostics: "ValueSet not found: ..."
+
+
+756 records in the comparison dataset show this exact pattern (prod=422, dev=404). All are $expand operations (722 GET, 34 POST) across many different ValueSet URLs. The pattern is universal — every prod=422/dev=404 status mismatch is an $expand of an unknown ValueSet.
+
+Search used: `grep -c '"prodStatus":422,"devStatus":404' results/deltas/deltas.ndjson`
+
+
+Tolerance ID: `expand-valueset-not-found-status-mismatch`
+Matches: $expand operations where prod=422 and dev=404, and both responses are OperationOutcomes indicating a ValueSet was not found.
+Records eliminated: 756
 
 ---
 

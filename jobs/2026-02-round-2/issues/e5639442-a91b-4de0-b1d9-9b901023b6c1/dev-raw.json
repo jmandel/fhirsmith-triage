@@ -1,0 +1,24 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "not-found",
+      "details": {
+        "text": "A definition for the value Set 'http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS' could not be found",
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+            "code": "not-found"
+          }
+        ]
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueString": "Unable_to_resolve_value_Set_"
+        }
+      ]
+    }
+  ]
+}

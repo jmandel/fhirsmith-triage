@@ -2247,6 +2247,21 @@ const tolerances = [
   },
 
   {
+    id: 'error-status-422-vs-400',
+    description: 'Dev returns HTTP 400 instead of 422 for error responses across validate-code and expand operations. Both sides return OperationOutcome with the same error semantics. 1897 records (1331 validate-code, 566 expand).',
+    kind: 'temp-tolerance',
+    bugId: 'cd4b7d1',
+    tags: ['skip', 'status-mismatch'],
+    match({ record, prod, dev }) {
+      if (record.prod?.status !== 422 || record.dev?.status !== 400) return null;
+      // Both must be OperationOutcome error responses
+      if (prod?.resourceType !== 'OperationOutcome') return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

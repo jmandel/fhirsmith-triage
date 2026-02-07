@@ -1,0 +1,25 @@
+{
+  "id": "e5639442-a91b-4de0-b1d9-9b901023b6c1",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&code=ho&_format=json&system=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FCodeSystem%2FProviderRoleCS",
+  "method": "GET",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 573,
+    "hash": "cd317633c1194763e93bd7e46e2a4c04"
+  },
+  "dev": {
+    "status": 400,
+    "contentType": "application/json; charset=utf-8",
+    "size": 462,
+    "hash": "f509a921d623ff7d06514d82705a65a9"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "validate-code",
+    "prodStatus": 422,
+    "devStatus": 400
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unable_to_resolve_value_Set_\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for the value Set 'http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS' could not be found\"}},{\"severity\" : \"information\",\"code\" : \"informational\",\"diagnostics\" : \"X-Request-Id: \"}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for the value Set 'http://hl7.org/fhir/us/davinci-pdex-plan-net/ValueSet/PractitionerRoleVS' could not be found\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unable_to_resolve_value_Set_\"}]}]}"
+}

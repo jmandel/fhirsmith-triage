@@ -35,6 +35,37 @@ Monitor progress via:
 
 ## Step 2: Monitor and launch repro agents
 
+### Option A: Round-commit watcher (recommended for coordinating sessions)
+
+Set up a background watcher that blocks until the next triage round commits, then reports any bugs needing repro:
+
+```bash
+LOG=jobs/<job-name>/triage-errors.log
+SEEN=$(grep -c "committed" "$LOG" 2>/dev/null || echo 0)
+while true; do
+  sleep 5
+  COUNT=$(grep -c "committed" "$LOG" 2>/dev/null || echo 0)
+  if [ "$COUNT" -gt "$SEEN" ]; then
+    echo "=== Round committed (#$COUNT) ==="
+    tail -3 "$LOG"
+    echo ""
+    echo "=== Bugs needing repro ==="
+    for bug_id in $(git-bug bug 2>/dev/null | grep "open" | awk '{print $1}'); do
+      has_label=$(git-bug bug show "$bug_id" | grep -c "reproduced\|repro-inconclusive\|not-reproduced" || true)
+      if [ "$has_label" -eq 0 ]; then
+        echo "NEEDS REPRO: $bug_id  $(git-bug bug 2>/dev/null | grep $bug_id)"
+      fi
+    done
+    echo "=== Done ==="
+    break
+  fi
+done
+```
+
+Run this as a background Bash task. When a round commits, the task completes and notifies you. Launch repro agents for any listed bugs, then set up a new watcher (updating `SEEN` to the current commit count). This avoids manual polling.
+
+### Option B: Manual polling
+
 Periodically check for open bugs that lack a repro label:
 
 ```bash
@@ -45,6 +76,8 @@ for bug_id in $(git-bug bug | grep "open" | awk '{print $1}'); do
   fi
 done
 ```
+
+### Launching repro agents
 
 For each bug needing repro, launch a Claude Code agent (these can run in parallel):
 
