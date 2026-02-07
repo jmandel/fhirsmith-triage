@@ -418,6 +418,91 @@ const tolerances = [
   },
 
   {
+    id: 'batch-invalid-display-message-format',
+    description: 'Same as invalid-display-message-format but for $batch-validate-code responses, where each validation is a nested Parameters resource. Dev appends language tags like "(en)" to invalid-display messages inside each validation. Affects 12 batch-validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'cf90495',
+    tags: ['normalize', 'message-format', 'batch-validate-code', 'invalid-display'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('batch-validate-code')) return null;
+      if (!prod?.parameter || !dev?.parameter) return null;
+      // Check if any nested validation has invalid-display message diffs
+      for (let i = 0; i < prod.parameter.length; i++) {
+        const pv = prod.parameter[i];
+        const dv = dev.parameter[i];
+        if (pv?.name !== 'validation' || dv?.name !== 'validation') continue;
+        const pres = pv.resource;
+        const dres = dv.resource;
+        if (!pres?.parameter || !dres?.parameter) continue;
+        const prodIssues = getParamValue(pres, 'issues');
+        const devIssues = getParamValue(dres, 'issues');
+        if (!prodIssues?.issue || !devIssues?.issue) continue;
+        const prodHas = prodIssues.issue.some(iss =>
+          iss.details?.coding?.some(c => c.code === 'invalid-display'));
+        const devHas = devIssues.issue.some(iss =>
+          iss.details?.coding?.some(c => c.code === 'invalid-display'));
+        if (!prodHas || !devHas) continue;
+        const prodMsg = getParamValue(pres, 'message');
+        const devMsg = getParamValue(dres, 'message');
+        if (prodMsg !== devMsg) return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev, record }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      const newDevParams = dev.parameter.map((dv, i) => {
+        const pv = prod.parameter[i];
+        if (!pv || pv.name !== 'validation' || dv.name !== 'validation') return dv;
+        const pres = pv.resource;
+        const dres = dv.resource;
+        if (!pres?.parameter || !dres?.parameter) return dv;
+        const prodIssues = getParamValue(pres, 'issues');
+        const devIssues = getParamValue(dres, 'issues');
+        if (!prodIssues?.issue || !devIssues?.issue) return dv;
+        const prodHas = prodIssues.issue.some(iss =>
+          iss.details?.coding?.some(c => c.code === 'invalid-display'));
+        const devHas = devIssues.issue.some(iss =>
+          iss.details?.coding?.some(c => c.code === 'invalid-display'));
+        if (!prodHas || !devHas) return dv;
+        const prodMsg = getParamValue(pres, 'message');
+        const devMsg = getParamValue(dres, 'message');
+        if (prodMsg === devMsg) return dv;
+        // Canonicalize message and issues text to prod's versions
+        const newDresParams = dres.parameter.map(dp => {
+          if (dp.name === 'message' && prodMsg !== undefined) {
+            return { ...dp, valueString: prodMsg };
+          }
+          if (dp.name === 'issues' && prodIssues?.issue && dp.resource?.issue) {
+            return {
+              ...dp,
+              resource: {
+                ...dp.resource,
+                issue: dp.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  const hasCoding = iss.details?.coding?.some(c => c.code === 'invalid-display');
+                  const prodHasCoding = prodIss.details?.coding?.some(c => c.code === 'invalid-display');
+                  if (!hasCoding || !prodHasCoding) return iss;
+                  return {
+                    ...iss,
+                    details: { ...iss.details, text: prodIss.details?.text },
+                  };
+                }),
+              },
+            };
+          }
+          return dp;
+        });
+        return {
+          ...dv,
+          resource: { ...dres, parameter: newDresParams },
+        };
+      });
+      return { prod, dev: { ...dev, parameter: newDevParams } };
+    },
+  },
+
+  {
     id: 'bcp47-display-format',
     description: 'BCP-47 display text format differs: prod returns "English (United States)", dev returns "English (Region=United States)". Dev uses explicit subtag labels ("Region=") which is non-standard. Affects 7 validate-code records for urn:ietf:bcp:47.',
     kind: 'temp-tolerance',
