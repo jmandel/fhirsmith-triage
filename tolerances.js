@@ -412,6 +412,27 @@ const tolerances = [
   },
 
   {
+    id: 'temp-ndc-validate-code-inactive',
+    description: 'Dev returns extra inactive, version, message, and issues parameters for NDC validate-code that prod omits. Dev flags NDC concepts as inactive (status null) with version 2021-11-01 while prod returns none of these. Affects 16 P6 records.',
+    kind: 'temp-tolerance',
+    bugId: '8ca2509',
+    match({ record, prod, dev }) {
+      if (!/\$validate-code/.test(record.url)) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      if (prodSystem !== 'http://hl7.org/fhir/sid/ndc') return null;
+      // Only match when dev has inactive param that prod lacks
+      const prodInactive = getParamValue(prod, 'inactive');
+      const devInactive = getParamValue(dev, 'inactive');
+      if (prodInactive !== undefined || devInactive === undefined) return null;
+      return 'normalize';
+    },
+    normalize(ctx) {
+      return both(ctx, body => stripParams(body, 'inactive', 'version', 'message', 'issues'));
+    },
+  },
+
+  {
     id: 'temp-issue-text-package-provenance',
     description: 'Dev omits package provenance suffix (e.g. "from hl7.fhir.r4.core#4.0.1") in OperationOutcome issue details.text for draft CodeSystem status-check messages. Affects 4 P6 validate-code records.',
     kind: 'temp-tolerance',
