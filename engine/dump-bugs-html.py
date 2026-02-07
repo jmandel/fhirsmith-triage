@@ -1000,9 +1000,14 @@ def main():
     bug_data, priority_order = build_bug_data(bugs)
     html = generate_html(bug_data, priority_order)
 
-    out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
-    os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, "bugs.html")
+    # Accept optional output path as CLI argument
+    if len(sys.argv) > 1:
+        out_path = sys.argv[1]
+        os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    else:
+        out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
+        os.makedirs(out_dir, exist_ok=True)
+        out_path = os.path.join(out_dir, "bugs.html")
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)

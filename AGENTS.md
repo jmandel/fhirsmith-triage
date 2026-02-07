@@ -26,7 +26,7 @@ We compare responses from **prod** (tx.fhir.org Java) vs **dev** (FHIRsmith Node
 POST requests have `url` with trailing `?` (no query params).
 GET requests (like $lookup) have params in the URL.
 
-The comparison engine writes categorized delta files to `results/deltas/`. Each delta line includes the original record fields plus a `comparison` object with priority, reason, and operation. See `results/deltas/*.ndjson`.
+The comparison engine writes all non-OK/non-SKIP records to a single `results/deltas/deltas.ndjson` file. Each delta line includes the original record fields plus a `comparison` object with priority, reason, and operation. The priority is metadata embedded in each record — filtering by priority is done at read time, not write time.
 
 ## FHIR Terminology Operations
 
@@ -127,14 +127,14 @@ git-bug bug show <BUG_ID>
 
 Always add the `tx-compare` label. Use priority labels like `P0`, `P1`, etc.
 Include in the bug description:
-- The comparison record ID (from comparison.ndjson) so a reader can `grep -n '<ID>' comparison.ndjson`
+- The comparison record ID so a reader can `grep -n '<ID>' <job-dir>/comparison.ndjson`
 - The operation and URL
 - What prod returned vs what dev returned
 - Why this is a real bug (not cosmetic)
 
 ## Tolerance Pipeline
 
-All comparison logic — skipping irrelevant records, normalizing cosmetic differences, suppressing known bugs — is expressed as an ordered list of **tolerance objects** in `tolerances.js`. The comparison engine (`compare.js`) iterates this list for each record.
+All comparison logic — skipping irrelevant records, normalizing cosmetic differences, suppressing known bugs — is expressed as an ordered list of **tolerance objects** in the job's `tolerances.js`. The comparison engine (`engine/compare.js`) iterates this list for each record.
 
 ### Tolerance kinds
 
@@ -197,9 +197,9 @@ Scope tolerances as narrowly as possible — match only the request/response pat
 
 When developing a new tolerance (whether `equiv-autofix` or `temp-tolerance`):
 
-1. Add the tolerance object to `tolerances.js`
-2. Archive the current delta file: `cp results/deltas/<p>.ndjson results/deltas/<p>.<timestamp>.ndjson`
-3. Rerun comparison: `node compare.js --input comparison.ndjson --out results`
+1. Add the tolerance object to the job's `tolerances.js`
+2. Archive the current delta file: `cp <job-dir>/results/deltas/deltas.ndjson <job-dir>/results/deltas/deltas.$(date +%Y%m%d-%H%M%S).ndjson`
+3. Rerun comparison: `node engine/compare.js --job <job-dir>`
 4. Compare old and new delta file line counts
 5. **Validate**: randomly sample at least 10 eliminated records and verify each is legitimate — the differences match the pattern you're targeting and nothing else is being hidden
 6. If any sampled elimination is inappropriate, restore the archive, revert, rework, and repeat
@@ -208,20 +208,57 @@ For `temp-tolerance`: file a `git-bug` first, then be extra judicious in validat
 
 ## MD5 Hashing for Record Identity
 
-Since comparison reruns regenerate delta files (records get new positions), we use the MD5 hash of the raw NDJSON line as a stable identifier. This hash survives reruns as long as the underlying record hasn't changed, and is used to track which records have been analyzed.
+Since comparison reruns regenerate delta files (records get new positions), we use the MD5 hash of the raw NDJSON line as a stable identifier. This hash maps to an issue directory (`issues/<md5>/`) containing the record's analysis workspace. The hash survives reruns as long as the underlying record hasn't changed.
 
 ## File Locations
 
-- `comparison.ndjson` - Raw paired responses
-- `compare.js` - Comparison engine (pipeline + priority assignment)
-- `tolerances.js` - Tolerance definitions (skip, normalize, metadata)
-- `tolerances-v1/` - Archived full tolerance set from batch 1
-- `results/summary.json` - Latest comparison stats
-- `results/deltas/*.ndjson` - Categorized differences by priority
-- `results/<priority>-analyzed.txt` - One-line triage ledger per analyzed record
-- `results/<priority>-detailed-reports.md` - Full analysis reports per record
-- `next-record.py` - Sequential record sampler for triage
-- `triage-loop.sh` - Automated triage control loop
-- `triage-prompt.md` - Triage agent prompt
-- `stream-filter.py` - Claude stream-json output filter
-- `dump-bugs.sh`, `dump-bugs-html.py` - Bug report generators
+### Stable tools (`engine/`)
+- `engine/compare.js` - Comparison engine (pipeline + priority assignment)
+- `engine/next-record.js` - Sequential record picker, creates issue directories
+- `engine/stream-filter.py` - Claude stream-json output filter
+- `engine/dump-bugs.sh`, `engine/dump-bugs-html.py` - Bug report generators
+
+### Prompts and orchestration (`prompts/`)
+- `prompts/triage-prompt.md` - Triage agent prompt
+- `prompts/triage-loop.sh` - Automated triage control loop
+- `prompts/start-triage.sh` - Initialize a new triage round (reset to baseline)
+
+### Reset checkpoint (`baseline/`)
+- `baseline/tolerances.js` - Minimal starter tolerances (skips + diagnostics only). Use `start-triage.sh` to create a new job from this baseline.
+
+### Reference materials (`reference/`)
+- `reference/INDEX.md` - Directory of all reference files
+- `reference/operations/` - FHIR operation specs and OperationDefinition JSON
+- `reference/resources/` - FHIR resource definitions
+- `reference/terminology-guidance/` - Code system usage guides (SNOMED, LOINC, etc.)
+
+### Historical (`archive/`)
+- `archive/tolerances-v1/` - Archived tolerance set from batch 1
+- `archive/TRIAGE-METHODS.md` - Methodology writeup
+
+### Per-job mutable state (`jobs/<job-name>/`)
+Each triage round lives in its own job directory, created by `prompts/start-triage.sh`:
+- `comparison.ndjson` - Raw paired responses (input data for this job)
+- `tolerances.js` - Working tolerances (copied from baseline, built up during triage)
+- `results/summary.json` - Comparison stats
+- `results/deltas/deltas.ndjson` - All non-OK/non-SKIP records with priority in comparison metadata
+- `issues/<md5>/` - Per-record triage workspace:
+  - `record.json` - Full delta record (pretty-printed)
+  - `prod-raw.json` / `dev-raw.json` - Parsed response bodies
+  - `prod-normalized.json` / `dev-normalized.json` - After tolerance pipeline
+  - `applied-tolerances.txt` - Which tolerances were applied
+  - `analysis.md` - Agent's analysis (existence = "analyzed")
+- `triage-logs/` - Per-round log files from the triage loop
+- `triage-errors.log` - Error/status log
+
+## Every Record Gets a Tolerance
+
+A tolerance is a record of judgment: "I looked at this and decided X." Every triaged record must result in a tolerance entry in `tolerances.js`, regardless of category. Without a tolerance, the record will surface again in the next triage pass.
+
+- **equiv-autofix**: Normalize tolerance that canonicalizes the difference away
+- **temp-tolerance**: Real difference linked to a git-bug, suppressed until the bug is fixed
+- **real-diff / equiv-manual / ambiguous**: Write a temp-tolerance scoped to the specific record or pattern to prevent re-triaging
+
+## Canonical Normalization
+
+Prefer canonical normalization over stripping. When two values differ, normalize both sides to a canonical value (e.g., the longer display string, or prod's value) rather than removing the field entirely. This preserves the field for comparison of other dimensions. Only strip when both values are irrelevant (like diagnostics trace).

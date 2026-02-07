@@ -1,0 +1,48 @@
+{
+  "jobDir": "jobs/2026-02-round-1",
+  "timestamp": "2026-02-07T16:06:46.834Z",
+  "totalRecords": 7245,
+  "skipped": 1317,
+  "skippedReasons": {
+    "skip-metadata-ops": 780,
+    "skip-prod-xml": 174,
+    "skip-static-assets": 4,
+    "skip-root-page": 359
+  },
+  "priorities": {
+    "P6": 3280,
+    "OK": 1843,
+    "P3": 10,
+    "P4": 346,
+    "P2": 186,
+    "P1": 246,
+    "P0": 17
+  },
+  "operationBreakdown": {
+    "validate-code": {
+      "P6": 1666,
+      "OK": 1834,
+      "P1": 246,
+      "P0": 1
+    },
+    "lookup": {
+      "P6": 157
+    },
+    "read": {
+      "P6": 706,
+      "P3": 8,
+      "OK": 4
+    },
+    "expand": {
+      "P4": 346,
+      "P6": 742,
+      "P2": 186,
+      "P0": 16,
+      "P3": 2
+    },
+    "batch-validate-code": {
+      "OK": 5,
+      "P6": 9
+    }
+  }
+}

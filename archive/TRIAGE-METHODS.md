@@ -26,16 +26,20 @@ We have paired HTTP request/response records comparing a production FHIR termino
 
 We use an agent-driven triage process:
 
-1. **Run comparison**: `node compare.js --input comparison.ndjson --out results` categorizes records by priority
-2. **Iterative triage**: For each priority, process records sequentially — analyze, categorize, develop tolerances, file bugs
+1. **Start a job**: `./prompts/start-triage.sh <job-name> [comparison.ndjson]` creates a job directory with baseline tolerances and runs the initial comparison
+2. **Iterative triage**: Process records sequentially — analyze, categorize, develop tolerances, file bugs
 3. **Tolerance development**: When a recognizable pattern is found, write a tolerance to clear it from future triage
 
 ### Key Design Decisions
 
-- **Sequential processing**: Records are processed in order from each delta file, not randomly sampled
-- **Generalized loop**: A single `triage-loop.sh` handles all priority levels, not just P6
-- **MD5 hashing for stable record identity**: Since comparison reruns change record IDs, we hash the raw NDJSON line to create a stable identifier that survives reruns
+- **Job-directory isolation**: Each triage round lives in `jobs/<job-name>/` with its own comparison data, tolerances, results, and issue workspaces
+- **Sequential processing**: Records are processed in order from the delta file, not randomly sampled
+- **Single unified delta file**: All non-OK/non-SKIP records go to one `deltas.ndjson` with priority embedded in each record's comparison metadata
+- **Issue directories**: Each record gets a workspace at `issues/<md5>/` with pre-prepared files (raw, normalized, applied tolerances)
+- **MD5 hashing for stable record identity**: Since comparison reruns change record positions, we hash the raw NDJSON line to create a stable identifier that survives reruns
 - **Iterative tolerance development with validation**: New heuristics are validated by sampling eliminated records to catch false positives
+- **Minimal baseline**: New jobs start from `baseline/tolerances.js` (only inarguably correct tolerances), not from the previous round's accumulated set
+- **Bug archival**: When starting a new job, existing git-bugs are dumped (JSON + MD + HTML) to the previous job's `bugs/` dir before wiping
 - **Separate triage repo**: The triage toolkit lives in its own git repo, independent of the FHIRsmith source
 
 ---
@@ -67,12 +71,12 @@ Each line in the file is a JSON object:
 }
 ```
 
-### Comparison Engine (compare.js)
+### Comparison Engine (engine/compare.js)
 
-The comparison engine reads `comparison.ndjson`, applies the tolerance pipeline, categorizes each record by priority, and writes results to delta files.
+The comparison engine reads the job's `comparison.ndjson`, applies the tolerance pipeline, categorizes each record by priority, and writes all non-OK/non-SKIP records to a single delta file.
 
 ```
-comparison.ndjson
+jobs/<job-name>/comparison.ndjson
          │
          ▼
 ┌─────────────────────┐
@@ -91,18 +95,18 @@ comparison.ndjson
 └─────────────────────┘
          │
          ▼
-┌─────────────────────┐
-│  Output writers     │
-│  results/           │
-│    summary.json     │
-│    deltas/          │
-│      p0..p6.ndjson  │
-└─────────────────────┘
+┌─────────────────────────────────┐
+│  Output                         │
+│  jobs/<job-name>/results/       │
+│    summary.json                 │
+│    deltas/deltas.ndjson         │
+│    (all priorities in one file) │
+└─────────────────────────────────┘
 ```
 
 #### Tolerance Pipeline (tolerances.js)
 
-All comparison logic — skipping irrelevant records, normalizing cosmetic differences, suppressing known bugs — is expressed as an ordered list of tolerance objects in `tolerances.js`.
+All comparison logic — skipping irrelevant records, normalizing cosmetic differences, suppressing known bugs — is expressed as an ordered list of tolerance objects in the job's `tolerances.js`.
 
 Each tolerance is a self-contained object:
 
@@ -139,34 +143,45 @@ Each tolerance is a self-contained object:
 #### Running the Comparison
 
 ```bash
-node compare.js --input comparison.ndjson --out results
+node engine/compare.js --job jobs/<job-name>
 ```
 
 ---
 
 ## Triage Process
 
+### Starting a New Job
+
+```bash
+# Start a new triage job (dumps bugs from previous job, wipes git-bug, resets tolerances)
+./prompts/start-triage.sh 2026-02-round-1 /path/to/comparison.ndjson
+```
+
+This creates `jobs/2026-02-round-1/` with baseline tolerances, copies the comparison data, and runs the initial comparison.
+
 ### Running the Triage Loop
 
 ```bash
-# Triage a single priority
-./triage-loop.sh P6
-
-# Triage all priorities sequentially
-./triage-loop.sh
+./prompts/triage-loop.sh jobs/2026-02-round-1
 ```
 
 The loop:
-- Calls `next-record.py --priority <P>` to get the next un-analyzed record
-- Invokes `claude -p --dangerously-skip-permissions --model opus` with `triage-prompt.md`
-- Logs each round to `results/triage-logs/<priority>-round-NNNN.log`
+- Calls `engine/next-record.js --job <job-dir>` to get the next un-analyzed record and prepare its issue directory
+- Invokes `claude -p --dangerously-skip-permissions --model opus` with the triage prompt
+- Logs each round to `<job-dir>/triage-logs/round-NNNN.log`
 - Commits changes after each round
-- Stops when all records for a priority are analyzed, then moves to the next
+- Stops when all records are analyzed
 - Uses a lock file to prevent concurrent instances
 
 ### Record Selection
 
-`next-record.py` reads the delta file sequentially (top to bottom) and returns the first record whose MD5 hash is not in the analyzed file. No randomization — deterministic ordering for reproducibility.
+`engine/next-record.js` reads the delta file sequentially (top to bottom) and returns the first record whose MD5 hash doesn't have an `analysis.md` in its issue directory. No randomization — deterministic ordering for reproducibility.
+
+For each selected record, it creates a prepared issue directory at `<job-dir>/issues/<md5>/` containing:
+- `record.json` — Full delta record (pretty-printed)
+- `prod-raw.json` / `dev-raw.json` — Parsed response bodies
+- `prod-normalized.json` / `dev-normalized.json` — After tolerance pipeline
+- `applied-tolerances.txt` — Which tolerances were applied
 
 ### Category Labels
 
@@ -176,19 +191,21 @@ Each analyzed record is assigned one of five categories:
 |-------|---------|--------|
 | `equiv-autofix` | Equivalent, automatable | Add tolerance with `kind: 'equiv-autofix'` |
 | `temp-tolerance` | Real difference, common pattern | File git-bug, add tolerance with `kind: 'temp-tolerance'` + `bugId` |
-| `equiv-manual` | Equivalent, not automatable | Note and move on |
-| `ambiguous` | Unclear | Flag for human review |
-| `real-diff` | Meaningfully different | File git-bug |
+| `equiv-manual` | Equivalent, not automatable | Write a narrowly-scoped tolerance |
+| `ambiguous` | Unclear | Write a temp-tolerance, flag for human review |
+| `real-diff` | Meaningfully different | File git-bug, write a temp-tolerance to prevent re-triaging |
+
+**Every record gets a tolerance.** A tolerance is a record of judgment — without one, the record surfaces again in the next triage pass.
 
 ### The Tolerance Development Loop
 
 When a record is categorized as `equiv-autofix` or `temp-tolerance`, the agent enters an iterative development loop:
 
 ```
-1. Read tolerances.js
+1. Read the job's tolerances.js
 2. Add new tolerance object
 3. Archive current delta file
-4. Rerun comparison
+4. Rerun comparison (node engine/compare.js --job <job-dir>)
 5. Count eliminated records
 6. Sample ≥10 eliminated records
 7. Validate each is legitimate
@@ -198,17 +215,37 @@ When a record is categorized as `equiv-autofix` or `temp-tolerance`, the agent e
 
 ### Analysis Files
 
-- **`results/<priority>-analyzed.txt`**: One-line triage ledger per analyzed record
+Each record's analysis lives in its issue directory (`<job-dir>/issues/<md5>/`):
+
+- **`analysis.md`** — The agent's analysis. Its existence signals "analyzed" to the record picker.
+
+  Format:
+  ```markdown
+  # Analysis: <category-label>
+
+  **MD5**: `<md5hash>`
+  **Operation**: `<METHOD> <URL>`
+  **Priority**: <priority>
+  **Bug**: <bug ID or "none">
+  **Tolerance**: <tolerance ID>
+
+  ## What differs
+  ...
+
+  ## Category: `<category-label>`
+  ...
+
+  ## Tolerance
+  ...
   ```
-  a1b2c3d4e5f6: equiv-autofix null vs absent extension array
-  f7e8d9c0b1a2: real-diff (bug:abc1234) dev missing concepts
-  ```
 
-- **`results/<priority>-detailed-reports.md`**: Full analysis reports with reasoning
+- Arbitrary scratch files (`notes.txt`, `pattern-search.md`, etc.) for working notes
 
-### Archived Tolerances
+### Archived Tolerances and Bug Reports
 
-`tolerances-v1/` contains the full tolerance set from batch 1 (both equiv-autofix and temp-tolerance entries). The active `tolerances.js` starts each batch with only the permanent equiv-autofix tolerances.
+`archive/tolerances-v1/` contains the full tolerance set from batch 1 (both equiv-autofix and temp-tolerance entries). When starting a new job, `baseline/tolerances.js` provides only the minimal inarguably-correct tolerances.
+
+Bug reports are archived to `<job-dir>/bugs/` (as JSON, Markdown, and HTML) when starting a new job.
 
 ---
 
@@ -231,7 +268,7 @@ Batch 1 processed 7,245 records from tx.fhir.org comparison testing. Results:
 
 ### Tolerances Developed
 
-12 permanent equiv-autofix tolerances survived into the base set. 12 temp-tolerances were developed for batch-1-specific bug patterns (archived in `tolerances-v1/`).
+12 permanent equiv-autofix tolerances survived into the base set. 12 temp-tolerances were developed for batch-1-specific bug patterns (archived in `archive/tolerances-v1/`).
 
 ### Bug Tracking
 

@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FHIRsmith tx-compare Bug Report</title>
+<style>
+:root {
+  --bg: #ffffff;
+  --bg-surface: #f6f8fa;
+  --bg-card: #ffffff;
+  --border: #d1d9e0;
+  --border-light: #e8ecf0;
+  --text: #1f2328;
+  --text-secondary: #59636e;
+  --text-muted: #818b98;
+  --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+  --radius: 8px;
+  --radius-sm: 6px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --pill-p0-bg: #fee2e2; --pill-p0-fg: #991b1b; --pill-p0-border: #fca5a5;
+  --pill-p1-bg: #ffedd5; --pill-p1-fg: #9a3412; --pill-p1-border: #fdba74;
+  --pill-p2-bg: #fef3c7; --pill-p2-fg: #92400e; --pill-p2-border: #fcd34d;
+  --pill-p3-bg: #dbeafe; --pill-p3-fg: #1e40af; --pill-p3-border: #93c5fd;
+  --pill-p4-bg: #f1f5f9; --pill-p4-fg: #475569; --pill-p4-border: #cbd5e1;
+  --pill-temp-bg: #f3e8ff; --pill-temp-fg: #6b21a8; --pill-temp-border: #c4b5fd;
+  --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
+  --pill-other-bg: #f3f4f6; --pill-other-fg: #4b5563; --pill-other-border: #d1d5db;
+
+  --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
+  --status-closed-bg: #f3f4f6; --status-closed-fg: #6b7280; --status-closed-border: #d1d5db;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1117;
+    --bg-surface: #161b22;
+    --bg-card: #1c2128;
+    --border: #30363d;
+    --border-light: #21262d;
+    --text: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+
+    --pill-p0-bg: #3b1318; --pill-p0-fg: #fca5a5; --pill-p0-border: #7f1d1d;
+    --pill-p1-bg: #3b1f0b; --pill-p1-fg: #fdba74; --pill-p1-border: #7c2d12;
+    --pill-p2-bg: #3b2f0b; --pill-p2-fg: #fcd34d; --pill-p2-border: #78350f;
+    --pill-p3-bg: #172554; --pill-p3-fg: #93c5fd; --pill-p3-border: #1e3a5f;
+    --pill-p4-bg: #1e293b; --pill-p4-fg: #94a3b8; --pill-p4-border: #334155;
+    --pill-temp-bg: #2e1065; --pill-temp-fg: #c4b5fd; --pill-temp-border: #3b0764;
+    --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
+    --pill-other-bg: #1f2937; --pill-other-fg: #9ca3af; --pill-other-border: #374151;
+
+    --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
+    --status-closed-bg: #1f2937; --status-closed-fg: #9ca3af; --status-closed-border: #374151;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0 0 24px 0;
+}
+
+/* Stats bar */
+.stats-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--text);
+  font-size: 15px;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  margin: 0 4px;
+}
+
+/* Search and filter bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 240px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: var(--font);
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-box:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.search-box::placeholder {
+  color: var(--text-muted);
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 999px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.15s, transform 0.1s;
+  border: 1px solid;
+}
+
+.filter-pill:hover {
+  transform: translateY(-1px);
+}
+
+.filter-pill.dimmed {
+  opacity: 0.35;
+}
+
+.filter-pill .count {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+/* Priority group headers */
+.group-header {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 28px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.group-header .group-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-surface);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.group-header.hidden {
+  display: none;
+}
+
+/* Bug cards */
+.bug-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  overflow: hidden;
+}
+
+.bug-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--border);
+}
+
+.bug-card.hidden {
+  display: none;
+}
+
+.bug-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bug-header:hover {
+  background: var(--bg-surface);
+}
+
+.bug-expand-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.bug-card.expanded .bug-expand-icon {
+  transform: rotate(90deg);
+}
+
+.bug-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bug-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.bug-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 999px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.pill-status-open {
+  background: var(--status-open-bg);
+  color: var(--status-open-fg);
+  border-color: var(--status-open-border);
+}
+
+.pill-status-closed {
+  background: var(--status-closed-bg);
+  color: var(--status-closed-fg);
+  border-color: var(--status-closed-border);
+}
+
+.pill-p0 { background: var(--pill-p0-bg); color: var(--pill-p0-fg); border-color: var(--pill-p0-border); }
+.pill-p1 { background: var(--pill-p1-bg); color: var(--pill-p1-fg); border-color: var(--pill-p1-border); }
+.pill-p2 { background: var(--pill-p2-bg); color: var(--pill-p2-fg); border-color: var(--pill-p2-border); }
+.pill-p3 { background: var(--pill-p3-bg); color: var(--pill-p3-fg); border-color: var(--pill-p3-border); }
+.pill-p4 { background: var(--pill-p4-bg); color: var(--pill-p4-fg); border-color: var(--pill-p4-border); }
+.pill-temp { background: var(--pill-temp-bg); color: var(--pill-temp-fg); border-color: var(--pill-temp-border); }
+.pill-tx-compare { background: var(--pill-tx-bg); color: var(--pill-tx-fg); border-color: var(--pill-tx-border); }
+.pill-other { background: var(--pill-other-bg); color: var(--pill-other-fg); border-color: var(--pill-other-border); }
+
+.bug-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.bug-date {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.bug-body {
+  display: none;
+  padding: 0 16px 16px 44px;
+  border-top: 1px solid var(--border-light);
+}
+
+.bug-card.expanded .bug-body {
+  display: block;
+}
+
+/* Markdown rendered content */
+.bug-body h1, .bug-body h2, .bug-body h3,
+.bug-body h4, .bug-body h5, .bug-body h6 {
+  margin: 16px 0 8px 0;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.bug-body h1 { font-size: 18px; }
+.bug-body h2 { font-size: 16px; }
+.bug-body h3 { font-size: 14px; }
+.bug-body h4, .bug-body h5, .bug-body h6 { font-size: 13px; }
+
+.bug-body p {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.bug-body ul, .bug-body ol {
+  margin: 8px 0;
+  padding-left: 24px;
+  font-size: 13px;
+}
+
+.bug-body li {
+  margin: 4px 0;
+  line-height: 1.55;
+}
+
+.bug-body code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-surface);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--border-light);
+}
+
+.bug-body pre {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.bug-body pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.bug-body hr {
+  border: none;
+  border-top: 1px solid var(--border-light);
+  margin: 16px 0;
+}
+
+.bug-body strong {
+  font-weight: 700;
+}
+
+.bug-body em {
+  font-style: italic;
+}
+
+.bug-body a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.bug-body a:hover {
+  text-decoration: underline;
+}
+
+.no-results {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.no-results.hidden {
+  display: none;
+}
+
+/* Status filter buttons */
+.status-filters {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.status-btn {
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: var(--font);
+  transition: background 0.15s, color 0.15s;
+}
+
+.status-btn:hover {
+  background: var(--bg-surface);
+}
+
+.status-btn.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+@media (max-width: 640px) {
+  .container { padding: 16px 12px; }
+  .stats-bar { padding: 12px; gap: 6px; }
+  .stat-divider { display: none; }
+  .filter-bar { flex-direction: column; }
+  .search-box { min-width: 100%; }
+  .bug-body { padding: 0 12px 12px 12px; }
+  .bug-header { padding: 10px 12px; }
+  .status-filters { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>FHIRsmith tx-compare Bugs</h1>
+  <p class="subtitle">Generated from git-bug &middot; <span id="gen-time"></span></p>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="filter-bar">
+    <input type="text" class="search-box" id="search" placeholder="Search bugs by title or body..." autocomplete="off">
+    <div class="filter-pills" id="priority-filters"></div>
+    <div class="status-filters" id="status-filters">
+      <button class="status-btn expand-toggle" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
+      <button class="status-btn active" data-status="all">All</button>
+      <button class="status-btn" data-status="open">Open</button>
+      <button class="status-btn" data-status="closed">Closed</button>
+    </div>
+  </div>
+
+  <div id="bug-list"></div>
+  <div class="no-results hidden" id="no-results">No bugs match your filters.</div>
+</div>
+
+<script>
+const BUGS = [{"id": "52e1690", "title": "v2-0360 CodeSystem version mismatch: prod 2.0.0 vs dev 3.0.0 in $lookup", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:08", "date_iso": "2026-02-07T08:08:20-06:00", "body_md": "Dev loads v2-0360 CodeSystem version 3.0.0 while prod loads version 2.0.0.\n\nThis causes 157 P6 lookup records to differ:\n1. version parameter: \"2.0.0\" (prod) vs \"3.0.0\" (dev)\n2. definition parameter: absent in prod, present in dev\n3. designation parameter: absent in prod, present in dev\n\nThe extra definition and designation parameters in dev are likely due to richer content in the 3.0.0 edition.\n\nAll 157 affected records are $lookup operations on system=http://terminology.hl7.org/CodeSystem/v2-0360.\n\nRecord ID: 80a780e6-8842-43a9-a260-889ce87f76ac\nLookup: grep -n '80a780e6-8842-43a9-a260-889ce87f76ac' comparison.ndjson\n\nTolerance ID: temp-v2-0360-version-mismatch", "body_html": "<p>Dev loads v2-0360 CodeSystem version 3.0.0 while prod loads version 2.0.0.</p>\n<p>This causes 157 P6 lookup records to differ:</p>\n<ol><li>version parameter: &quot;2.0.0&quot; (prod) vs &quot;3.0.0&quot; (dev)</li><li>definition parameter: absent in prod, present in dev</li><li>designation parameter: absent in prod, present in dev</li></ol>\n<p>The extra definition and designation parameters in dev are likely due to richer content in the 3.0.0 edition.</p>\n<p>All 157 affected records are $lookup operations on system=http://terminology.hl7.org/CodeSystem/v2-0360.</p>\n<p>Record ID: 80a780e6-8842-43a9-a260-889ce87f76ac<br>\nLookup: grep -n &#x27;80a780e6-8842-43a9-a260-889ce87f76ac&#x27; comparison.ndjson</p>\n<p>Tolerance ID: temp-v2-0360-version-mismatch</p>"}, {"id": "92514c0", "title": "Dev emits empty-string location/expression on OperationOutcome issues", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:15", "date_iso": "2026-02-07T08:15:21-06:00", "body_md": "Dev (FHIRsmith) adds location: [\"\"] and expression: [\"\"] to OperationOutcome issues where prod (tx.fhir.org) has these fields absent. Empty strings are invalid FHIR (strings must be non-empty if present), making this a conformance bug.\n\nAffects 260 P6 records (214 of which have this as the only remaining difference after tolerances).\n\nOperations: $validate-code (both ValueSet and CodeSystem)\n\nExample Record ID: 7de52d92-3166-495e-ac5e-af262b1019e4\n  grep -n '7de52d92-3166-495e-ac5e-af262b1019e4' comparison.ndjson\n\nProd issue (error-level, TX_GENERAL_CC_ERROR_MESSAGE):\n  No location or expression fields\n\nDev issue (same):\n  location: [\"\"]\n  expression: [\"\"]\n\nThis is a bug in issue construction: when no specific location applies, the fields should be omitted rather than populated with empty strings.", "body_html": "<p>Dev (FHIRsmith) adds location: [&quot;&quot;] and expression: [&quot;&quot;] to OperationOutcome issues where prod (tx.fhir.org) has these fields absent. Empty strings are invalid FHIR (strings must be non-empty if present), making this a conformance bug.</p>\n<p>Affects 260 P6 records (214 of which have this as the only remaining difference after tolerances).</p>\n<p>Operations: $validate-code (both ValueSet and CodeSystem)</p>\n<p>Example Record ID: 7de52d92-3166-495e-ac5e-af262b1019e4<br>\ngrep -n &#x27;7de52d92-3166-495e-ac5e-af262b1019e4&#x27; comparison.ndjson</p>\n<p>Prod issue (error-level, TX_GENERAL_CC_ERROR_MESSAGE):<br>\nNo location or expression fields</p>\n<p>Dev issue (same):<br>\nlocation: [&quot;&quot;]<br>\nexpression: [&quot;&quot;]</p>\n<p>This is a bug in issue construction: when no specific location applies, the fields should be omitted rather than populated with empty strings.</p>"}, {"id": "dc6c82a", "title": "Response body truncation at 50k chars makes 277 P6 records uncomparable", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:28", "date_iso": "2026-02-07T08:28:01-06:00", "body_md": "The response recording system truncates response bodies at exactly 50,000 characters, producing invalid JSON that cannot be parsed or compared. This affects 739 records total (277 in P6 as parse-errors, others across other priority buckets).\n\nAffected operations: ValueSet search (67), ValueSet $expand (64), ValueSet search /r3 and /r5 (118), individual ValueSet reads (8), $validate-code (6), $batch-validate-code (6), CodeSystem search (3).\n\nRecord ID: cdeaf9dc-7d27-46ab-a3f0-8351334cd17b\nTolerance ID: skip-truncated-body\n\nThese records should be excluded from comparison since the data capture is incomplete.", "body_html": "<p>The response recording system truncates response bodies at exactly 50,000 characters, producing invalid JSON that cannot be parsed or compared. This affects 739 records total (277 in P6 as parse-errors, others across other priority buckets).</p>\n<p>Affected operations: ValueSet search (67), ValueSet $expand (64), ValueSet search /r3 and /r5 (118), individual ValueSet reads (8), $validate-code (6), $batch-validate-code (6), CodeSystem search (3).</p>\n<p>Record ID: cdeaf9dc-7d27-46ab-a3f0-8351334cd17b<br>\nTolerance ID: skip-truncated-body</p>\n<p>These records should be excluded from comparison since the data capture is incomplete.</p>"}, {"id": "5c34436", "title": "validate-code display parameter differs between prod and dev", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:31", "date_iso": "2026-02-07T08:31:29-06:00", "body_md": "In $validate-code responses, the display parameter value differs between prod and dev for multiple code systems.\n\n**UCUM (220 records)**: Prod echoes the code as display (e.g., display='[in_i]') while dev returns the human-readable name (e.g., display='(inch)'). Affected codes include %, mm[Hg], mm, cm, kg, Cel, /min, kg/m2, [lb_av], mg/dL, [in_i], mL, d, mg, {count}, [degF], /d, s, mo, mmol/L, dB, {Snellen}.\n\n**SNOMED (59 records)**: Both return display text but different preferred terms/synonyms. E.g., code=60001007: prod='Not pregnant' vs dev='Non pregnant state'; code=370221004: prod='Severe asthma' vs dev='Severe asthma (finding)'.\n\n**BCP47 (7 records)**: Format differs. E.g., code=en-US: prod='English (United States)' vs dev='English (Region=United States)'.\n\nTotal affected: 286 display-only P6 records.\n\nRecord ID: 6ae99904-538b-4241-89db-b15eab6e637e\nTolerance ID: temp-validate-code-display-differs", "body_html": "<p>In $validate-code responses, the display parameter value differs between prod and dev for multiple code systems.</p>\n<p><strong>UCUM (220 records)</strong>: Prod echoes the code as display (e.g., display=&#x27;[in_i]&#x27;) while dev returns the human-readable name (e.g., display=&#x27;(inch)&#x27;). Affected codes include %, mm[Hg], mm, cm, kg, Cel, /min, kg/m2, [lb_av], mg/dL, [in_i], mL, d, mg, {count}, [degF], /d, s, mo, mmol/L, dB, {Snellen}.</p>\n<p><strong>SNOMED (59 records)</strong>: Both return display text but different preferred terms/synonyms. E.g., code=60001007: prod=&#x27;Not pregnant&#x27; vs dev=&#x27;Non pregnant state&#x27;; code=370221004: prod=&#x27;Severe asthma&#x27; vs dev=&#x27;Severe asthma (finding)&#x27;.</p>\n<p><strong>BCP47 (7 records)</strong>: Format differs. E.g., code=en-US: prod=&#x27;English (United States)&#x27; vs dev=&#x27;English (Region=United States)&#x27;.</p>\n<p>Total affected: 286 display-only P6 records.</p>\n<p>Record ID: 6ae99904-538b-4241-89db-b15eab6e637e<br>\nTolerance ID: temp-validate-code-display-differs</p>"}, {"id": "4abd03a", "title": "SNOMED CT version mismatch: dev loads older editions than prod", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:35", "date_iso": "2026-02-07T08:35:15-06:00", "body_md": "Dev is loading older SNOMED CT editions than prod across multiple edition modules:\n\n- International (900000000000207008): prod has 20250201, dev has 20240201 (239 records)\n- US edition (731000124108): prod has 20250901, dev has 20230301 (39 records)\n\nThis affects 281 validate-code P6 records where the version parameter differs. In 260 of these, the version is the only meaningful difference (after existing tolerances strip diagnostics and display). In 21 records, there are additional differences.\n\nRecord ID: e5716810-0ced-4937-85a5-5651fb884719\n\nThe version parameter returns which SNOMED edition was used for validation. This is a data/configuration issue — dev needs to load the same SNOMED editions as prod.\n\nTolerance ID: temp-snomed-version-mismatch", "body_html": "<p>Dev is loading older SNOMED CT editions than prod across multiple edition modules:</p>\n<ul><li>International (900000000000207008): prod has 20250201, dev has 20240201 (239 records)</li><li>US edition (731000124108): prod has 20250901, dev has 20230301 (39 records)</li></ul>\n<p>This affects 281 validate-code P6 records where the version parameter differs. In 260 of these, the version is the only meaningful difference (after existing tolerances strip diagnostics and display). In 21 records, there are additional differences.</p>\n<p>Record ID: e5716810-0ced-4937-85a5-5651fb884719</p>\n<p>The version parameter returns which SNOMED edition was used for validation. This is a data/configuration issue — dev needs to load the same SNOMED editions as prod.</p>\n<p>Tolerance ID: temp-snomed-version-mismatch</p>"}, {"id": "bb9bee9", "title": "Dev fails on ValueSets with vsacOpModifier extension", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:40", "date_iso": "2026-02-07T08:40:17-06:00", "body_md": "Dev cannot process ValueSets that contain VSAC modifier extensions (vsacOpModifier) in exclude[0].filter. Instead of properly validating the code against the ValueSet, dev returns a business-rule error: \"Cannot process resource at exclude[0].filter due to the presence of the modifier extension vsacOpModifier\".\n\nProd successfully processes these ValueSets and returns detailed validation results (unknown CodeSystem version, code not in VS, etc).\n\nBoth return result=false, but for completely different reasons — dev never attempts actual code validation.\n\nAffects 3 P6 records:\n- 64ff24e8-e8ff-456c-a0ed-0f222b9454fb\n- 9350ad8a-c2bb-4b2d-bcd0-faacfb33353f\n- 648b49a6-c9ab-4534-812f-c3fbd352426d\n\nAll are POST /r4/ValueSet/$validate-code against ValueSet http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.4.642.40.2.48.1\n\nTolerance ID: temp-vsac-op-modifier", "body_html": "<p>Dev cannot process ValueSets that contain VSAC modifier extensions (vsacOpModifier) in exclude[0].filter. Instead of properly validating the code against the ValueSet, dev returns a business-rule error: &quot;Cannot process resource at exclude[0].filter due to the presence of the modifier extension vsacOpModifier&quot;.</p>\n<p>Prod successfully processes these ValueSets and returns detailed validation results (unknown CodeSystem version, code not in VS, etc).</p>\n<p>Both return result=false, but for completely different reasons — dev never attempts actual code validation.</p>\n<p>Affects 3 P6 records:</p>\n<ul><li>64ff24e8-e8ff-456c-a0ed-0f222b9454fb</li><li>9350ad8a-c2bb-4b2d-bcd0-faacfb33353f</li><li>648b49a6-c9ab-4534-812f-c3fbd352426d</li></ul>\n<p>All are POST /r4/ValueSet/$validate-code against ValueSet http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.4.642.40.2.48.1</p>\n<p>Tolerance ID: temp-vsac-op-modifier</p>"}, {"id": "8ca2509", "title": "NDC validate-code: dev returns extra inactive/version/message/issues parameters", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Temp Tolerances", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:51", "date_iso": "2026-02-07T08:51:30-06:00", "body_md": "Dev returns extra parameters (version, inactive, message, issues) for NDC CodeSystem validate-code that prod does not return.\n\nPattern: For all NDC validate-code requests, dev returns:\n- version: \"2021-11-01\" (NDC edition version)\n- inactive: true (concept has null status)\n- message: \"The concept '<code>' has a status of null and its use should be reviewed\"\n- issues: OperationOutcome with INACTIVE_CONCEPT_FOUND warning\n\nProd returns none of these extra parameters. The core result (true), system, code, and display all match.\n\nThis suggests dev is loading NDC data with concept status metadata that triggers inactive-concept handling, while prod either lacks this metadata or doesn't report it.\n\nAffected: 16 P6 validate-code records, all for http://hl7.org/fhir/sid/ndc.\n\nRecord IDs (sample): ac23726f-6ff2-4b72-b2c8-584922d04c92, 8877db64-c49f-4ea0-a78f-d83190b345ea, c2a82ab9-de4f-45f9-9f27-5de9ac11e809\n\nTolerance ID: temp-ndc-validate-code-inactive", "body_html": "<p>Dev returns extra parameters (version, inactive, message, issues) for NDC CodeSystem validate-code that prod does not return.</p>\n<p>Pattern: For all NDC validate-code requests, dev returns:</p>\n<ul><li>version: &quot;2021-11-01&quot; (NDC edition version)</li><li>inactive: true (concept has null status)</li><li>message: &quot;The concept &#x27;&lt;code&gt;&#x27; has a status of null and its use should be reviewed&quot;</li><li>issues: OperationOutcome with INACTIVE_CONCEPT_FOUND warning</li></ul>\n<p>Prod returns none of these extra parameters. The core result (true), system, code, and display all match.</p>\n<p>This suggests dev is loading NDC data with concept status metadata that triggers inactive-concept handling, while prod either lacks this metadata or doesn&#x27;t report it.</p>\n<p>Affected: 16 P6 validate-code records, all for http://hl7.org/fhir/sid/ndc.</p>\n<p>Record IDs (sample): ac23726f-6ff2-4b72-b2c8-584922d04c92, 8877db64-c49f-4ea0-a78f-d83190b345ea, c2a82ab9-de4f-45f9-9f27-5de9ac11e809</p>\n<p>Tolerance ID: temp-ndc-validate-code-inactive</p>"}, {"id": "e0f466b", "title": "BCP-47 validate-code: display choices differ (6 vs 3) with different formatting", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Other", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:19", "date_iso": "2026-02-07T08:19:40-06:00", "body_md": "When validating display names for BCP-47 language codes (e.g., en-US), prod and dev report different numbers of valid display choices and use different formatting.\n\n**Prod**: Lists 6 choices (with duplicates): 'English (Region=United States)', 'English (United States)', 'English (Region=United States)', 'English (Region=United States)', 'English (United States)' or 'English (Region=United States)'\n\n**Dev**: Lists 3 choices (deduplicated, with language tags): 'English (Region=United States)' (en), 'English (United States)' (en) or 'English (Region=United States)' (en)\n\nThe unique display values are the same in both, but:\n1. Prod includes duplicate designations (6 items, only 2 unique)\n2. Dev deduplicates somewhat (3 items, 2 unique)\n3. Dev adds language qualifier '(en)' after each display option\n\nThe validation result (false) and correct display are identical. This affects ~10 P6 records.\n\nRecord ID: beb4276b-f937-46c3-81ab-7f63cb7798b7\nOperation: POST /r4/CodeSystem/$validate-code?\ngrep -n 'beb4276b-f937-46c3-81ab-7f63cb7798b7' comparison.ndjson", "body_html": "<p>When validating display names for BCP-47 language codes (e.g., en-US), prod and dev report different numbers of valid display choices and use different formatting.</p>\n<p><strong>Prod</strong>: Lists 6 choices (with duplicates): &#x27;English (Region=United States)&#x27;, &#x27;English (United States)&#x27;, &#x27;English (Region=United States)&#x27;, &#x27;English (Region=United States)&#x27;, &#x27;English (United States)&#x27; or &#x27;English (Region=United States)&#x27;</p>\n<p><strong>Dev</strong>: Lists 3 choices (deduplicated, with language tags): &#x27;English (Region=United States)&#x27; (en), &#x27;English (United States)&#x27; (en) or &#x27;English (Region=United States)&#x27; (en)</p>\n<p>The unique display values are the same in both, but:</p>\n<ol><li>Prod includes duplicate designations (6 items, only 2 unique)</li><li>Dev deduplicates somewhat (3 items, 2 unique)</li><li>Dev adds language qualifier &#x27;(en)&#x27; after each display option</li></ol>\n<p>The validation result (false) and correct display are identical. This affects ~10 P6 records.</p>\n<p>Record ID: beb4276b-f937-46c3-81ab-7f63cb7798b7<br>\nOperation: POST /r4/CodeSystem/$validate-code?<br>\ngrep -n &#x27;beb4276b-f937-46c3-81ab-7f63cb7798b7&#x27; comparison.ndjson</p>"}, {"id": "3c10c6e", "title": "BCP-47 display text includes 'Region=' prefix in dev", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Other", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:22", "date_iso": "2026-02-07T08:22:06-06:00", "body_md": "Dev returns 'English (Region=United States)' for BCP-47 code en-US, while prod returns 'English (United States)'. The dev format incorrectly includes the subtag type prefix 'Region=' in the display text.\n\nAffects 7 records, all for code en-US.\n\nRecord IDs:\n- da702ab4-7ced-4b69-945c-0b5bbbc088c0\n- 74979a19-f57b-4872-80c3-e741c1b54204\n- 4a8b13c7-17b6-4cad-be74-dff1ec76bbf6\n- 9020d19f-293d-4849-9c06-d952e2395245\n- 4a04821e-654f-47de-94d1-5ac63935f4f8\n- 4768974a-32eb-41ca-a8fe-29d989047863\n- 385e424e-de83-4be4-bd8d-7f26d63002f8\n\nOperation: POST /r4/ValueSet/$validate-code\nSystem: urn:ietf:bcp:47\n\nExample:\n  prod display: \"English (United States)\"\n  dev display:  \"English (Region=United States)\"\n\nThis is a real bug in the BCP-47 display text generation logic.", "body_html": "<p>Dev returns &#x27;English (Region=United States)&#x27; for BCP-47 code en-US, while prod returns &#x27;English (United States)&#x27;. The dev format incorrectly includes the subtag type prefix &#x27;Region=&#x27; in the display text.</p>\n<p>Affects 7 records, all for code en-US.</p>\n<p>Record IDs:</p>\n<ul><li>da702ab4-7ced-4b69-945c-0b5bbbc088c0</li><li>74979a19-f57b-4872-80c3-e741c1b54204</li><li>4a8b13c7-17b6-4cad-be74-dff1ec76bbf6</li><li>9020d19f-293d-4849-9c06-d952e2395245</li><li>4a04821e-654f-47de-94d1-5ac63935f4f8</li><li>4768974a-32eb-41ca-a8fe-29d989047863</li><li>385e424e-de83-4be4-bd8d-7f26d63002f8</li></ul>\n<p>Operation: POST /r4/ValueSet/$validate-code<br>\nSystem: urn:ietf:bcp:47</p>\n<p>Example:<br>\nprod display: &quot;English (United States)&quot;<br>\ndev display:  &quot;English (Region=United States)&quot;</p>\n<p>This is a real bug in the BCP-47 display text generation logic.</p>"}, {"id": "f4145f1", "title": "Dev missing DICOM CID 29 AcquisitionModality ValueSet", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Other", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:24", "date_iso": "2026-02-07T08:24:29-06:00", "body_md": "## Summary\n\nSearching for ValueSet with URL `http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html` returns total=0 in dev but total=1 in prod. The DICOM CID 29 AcquisitionModality ValueSet is loaded in prod but completely missing from dev.\n\n## Details\n\n- **Operation**: GET /r4/ValueSet?url=http%3A%2F%2Fdicom.nema.org%2Fmedical%2Fdicom%2Fcurrent%2Foutput%2Fchtml%2Fpart16%2Fsect_CID_29.html\n- **Prod**: Returns Bundle with total=1 containing the AcquisitionModality ValueSet (id: dicom-cid-29-AcquisitionModality, version 2025.3.20250714, 51 concepts)\n- **Dev**: Returns Bundle with total=0 and empty entry array\n- **Affected records**: 5 records, all same ValueSet URL\n- **Record ID**: 3e3359d1-7391-4620-8b72-552f197f21cf (grep -n '3e3359d1-7391-4620-8b72-552f197f21cf' comparison.ndjson)\n\n## Why this is a real bug\n\nThe dev server is missing a terminology resource that exists in prod. This is a data/configuration gap — the DICOM ValueSets need to be loaded into the dev server.\n\nAdditionally, the dev response includes `\"entry\":[]` which is invalid FHIR (empty arrays must be omitted).", "body_html": "<h2>Summary</h2>\n<p>Searching for ValueSet with URL <code>http://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_29.html</code> returns total=0 in dev but total=1 in prod. The DICOM CID 29 AcquisitionModality ValueSet is loaded in prod but completely missing from dev.</p>\n<h2>Details</h2>\n<ul><li><strong>Operation</strong>: GET /r4/ValueSet?url=http%3A%2F%2Fdicom.nema.org%2Fmedical%2Fdicom%2Fcurrent%2Foutput%2Fchtml%2Fpart16%2Fsect_CID_29.html</li><li><strong>Prod</strong>: Returns Bundle with total=1 containing the AcquisitionModality ValueSet (id: dicom-cid-29-AcquisitionModality, version 2025.3.20250714, 51 concepts)</li><li><strong>Dev</strong>: Returns Bundle with total=0 and empty entry array</li><li><strong>Affected records</strong>: 5 records, all same ValueSet URL</li><li><strong>Record ID</strong>: 3e3359d1-7391-4620-8b72-552f197f21cf (grep -n &#x27;3e3359d1-7391-4620-8b72-552f197f21cf&#x27; comparison.ndjson)</li></ul>\n<h2>Why this is a real bug</h2>\n<p>The dev server is missing a terminology resource that exists in prod. This is a data/configuration gap — the DICOM ValueSets need to be loaded into the dev server.</p>\n<p>Additionally, the dev response includes <code>&amp;quot;entry&amp;quot;:[]</code> which is invalid FHIR (empty arrays must be omitted).</p>"}, {"id": "1e3f335", "title": "Dev omits package provenance in OperationOutcome issue text", "status": "open", "labels": ["P6", "tx-compare"], "priority": "Other", "author": "Claude (AI Assistant)", "date": "2026-02-07 08:48", "date_iso": "2026-02-07T08:48:19-06:00", "body_md": "In $validate-code responses for draft CodeSystems, prod includes package provenance (e.g. 'from hl7.fhir.r4.core#4.0.1') in the informational message text while dev omits it.\n\nProd: \"Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1 from hl7.fhir.r4.core#4.0.1\"\nDev:  \"Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1\"\n\nThis affects informational messages (severity=information, code=business-rule) with coding status-check. The provenance suffix follows the pattern ' from <package>#<version>'.\n\nAffected records (4 total):\n- dcdd2b94-db92-4e95-973c-5ced19783bef\n- 43fffcb3-2e22-4f94-a84c-dd9515864a0b\n- 2d19785a-6906-4615-9572-62cdb76d5694\n- 955ee0d7-5ec0-4016-b807-c7767a0b7552\n\nAll are /r4/CodeSystem/$validate-code POST requests. grep -n 'dcdd2b94-db92-4e95-973c-5ced19783bef' comparison.ndjson", "body_html": "<p>In $validate-code responses for draft CodeSystems, prod includes package provenance (e.g. &#x27;from hl7.fhir.r4.core#4.0.1&#x27;) in the informational message text while dev omits it.</p>\n<p>Prod: &quot;Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1 from hl7.fhir.r4.core#4.0.1&quot;<br>\nDev:  &quot;Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1&quot;</p>\n<p>This affects informational messages (severity=information, code=business-rule) with coding status-check. The provenance suffix follows the pattern &#x27; from &lt;package&gt;#&lt;version&gt;&#x27;.</p>\n<p>Affected records (4 total):</p>\n<ul><li>dcdd2b94-db92-4e95-973c-5ced19783bef</li><li>43fffcb3-2e22-4f94-a84c-dd9515864a0b</li><li>2d19785a-6906-4615-9572-62cdb76d5694</li><li>955ee0d7-5ec0-4016-b807-c7767a0b7552</li></ul>\n<p>All are /r4/CodeSystem/$validate-code POST requests. grep -n &#x27;dcdd2b94-db92-4e95-973c-5ced19783bef&#x27; comparison.ndjson</p>"}];
+const STATS = {"total": 11, "open": 11, "closed": 0, "priorities": {"P0": 0, "P1": 0, "P2": 0, "P3": 0, "P4": 0, "Temp Tolerances": 7, "Other": 4}};
+const PRIORITY_ORDER = ["P0", "P1", "P2", "P3", "P4", "Temp Tolerances", "Other"];
+
+const PILL_CLASS_MAP = {
+  "P0": "pill-p0", "P1": "pill-p1", "P2": "pill-p2",
+  "P3": "pill-p3", "P4": "pill-p4",
+  "Temp Tolerances": "pill-temp",
+  "tx-compare": "pill-tx-compare"
+};
+
+function pillClass(label) {
+  return PILL_CLASS_MAP[label] || "pill-other";
+}
+
+function labelToPillClass(label) {
+  const upper = label.toUpperCase();
+  if (PILL_CLASS_MAP[upper]) return PILL_CLASS_MAP[upper];
+  if (PILL_CLASS_MAP[label]) return PILL_CLASS_MAP[label];
+  if (label === "tx-compare") return "pill-tx-compare";
+  return "pill-other";
+}
+
+// Render generation time
+document.getElementById("gen-time").textContent = new Date().toLocaleString();
+
+// Render stats bar
+(function() {
+  const bar = document.getElementById("stats-bar");
+  let html = `<div class="stat"><span class="stat-value">${STATS.total}</span> total</div>`;
+  html += `<div class="stat-divider"></div>`;
+  html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${STATS.open}</span> open</div>`;
+  html += `<div class="stat"><span class="stat-value">${STATS.closed}</span> closed</div>`;
+  html += `<div class="stat-divider"></div>`;
+  for (const p of PRIORITY_ORDER) {
+    const c = STATS.priorities[p] || 0;
+    if (c > 0) {
+      html += `<div class="stat"><span class="stat-value">${c}</span> ${p}</div>`;
+    }
+  }
+  bar.innerHTML = html;
+})();
+
+// Build priority filter pills
+(function() {
+  const container = document.getElementById("priority-filters");
+  let html = "";
+  for (const p of PRIORITY_ORDER) {
+    const c = STATS.priorities[p] || 0;
+    if (c > 0) {
+      html += `<span class="filter-pill ${pillClass(p)}" data-priority="${p}">${p} <span class="count">${c}</span></span>`;
+    }
+  }
+  container.innerHTML = html;
+})();
+
+// State
+let activePriorities = new Set();
+let activeStatus = "all";
+let searchQuery = "";
+
+// Build bug cards grouped by priority
+(function() {
+  const list = document.getElementById("bug-list");
+  let html = "";
+
+  for (const p of PRIORITY_ORDER) {
+    const groupBugs = BUGS.filter(b => b.priority === p);
+    if (groupBugs.length === 0) continue;
+
+    html += `<div class="group-header" data-group="${p}">${p} <span class="group-count">${groupBugs.length}</span></div>`;
+
+    for (const bug of groupBugs) {
+      const statusClass = bug.status === "open" ? "pill-status-open" : "pill-status-closed";
+      const labels = bug.labels.map(l => `<span class="pill ${labelToPillClass(l)}">${l}</span>`).join("");
+
+      html += `<div class="bug-card" data-priority="${bug.priority}" data-status="${bug.status}" data-id="${bug.id}">
+        <div class="bug-header" onclick="toggleBug(this)">
+          <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
+            <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
+          </svg>
+          <div class="bug-info">
+            <div class="bug-title">${bug.title}</div>
+            <div class="bug-meta">
+              <span class="pill ${statusClass}">${bug.status}</span>
+              ${labels}
+              <span class="bug-id">${bug.id}</span>
+              <span class="bug-date">${bug.date}</span>
+            </div>
+          </div>
+        </div>
+        <div class="bug-body">${bug.body_html}</div>
+      </div>`;
+    }
+  }
+
+  list.innerHTML = html;
+})();
+
+function toggleBug(header) {
+  header.parentElement.classList.toggle("expanded");
+}
+
+let allExpanded = false;
+function toggleExpandAll() {
+  allExpanded = !allExpanded;
+  const cards = document.querySelectorAll(".bug-card:not(.hidden)");
+  cards.forEach(c => c.classList.toggle("expanded", allExpanded));
+  document.getElementById("expand-all-btn").textContent = allExpanded ? "Collapse all" : "Expand all";
+}
+
+// Filtering logic
+function applyFilters() {
+  const cards = document.querySelectorAll(".bug-card");
+  const groups = document.querySelectorAll(".group-header");
+  const query = searchQuery.toLowerCase();
+  let visibleCount = 0;
+  const visibleGroups = new Set();
+
+  cards.forEach(card => {
+    const priority = card.dataset.priority;
+    const status = card.dataset.status;
+    const bugId = card.dataset.id;
+    const bug = BUGS.find(b => b.id === bugId);
+
+    let show = true;
+
+    // Priority filter
+    if (activePriorities.size > 0 && !activePriorities.has(priority)) {
+      show = false;
+    }
+
+    // Status filter
+    if (activeStatus !== "all" && status !== activeStatus) {
+      show = false;
+    }
+
+    // Search filter
+    if (query && show && bug) {
+      const searchable = (bug.title + " " + bug.body_md).toLowerCase();
+      if (!searchable.includes(query)) {
+        show = false;
+      }
+    }
+
+    card.classList.toggle("hidden", !show);
+    if (show) {
+      visibleCount++;
+      visibleGroups.add(priority);
+    }
+  });
+
+  // Show/hide group headers
+  groups.forEach(g => {
+    g.classList.toggle("hidden", !visibleGroups.has(g.dataset.group));
+  });
+
+  document.getElementById("no-results").classList.toggle("hidden", visibleCount > 0);
+}
+
+// Search
+document.getElementById("search").addEventListener("input", function() {
+  searchQuery = this.value;
+  applyFilters();
+});
+
+// Priority filter pills
+document.querySelectorAll(".filter-pill[data-priority]").forEach(pill => {
+  pill.addEventListener("click", function() {
+    const p = this.dataset.priority;
+    if (activePriorities.has(p)) {
+      activePriorities.delete(p);
+      this.classList.remove("dimmed");
+    } else {
+      // If clicking to add filter: dim all others, activate this one
+      if (activePriorities.size === 0) {
+        // First click: activate only this one, dim the rest
+        document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
+          if (pp.dataset.priority !== p) pp.classList.add("dimmed");
+        });
+        activePriorities.add(p);
+      } else {
+        // Subsequent click: toggle this one
+        activePriorities.add(p);
+        this.classList.remove("dimmed");
+      }
+    }
+
+    // If nothing is active, un-dim everything
+    if (activePriorities.size === 0) {
+      document.querySelectorAll(".filter-pill[data-priority]").forEach(pp => {
+        pp.classList.remove("dimmed");
+      });
+    }
+
+    applyFilters();
+  });
+});
+
+// Status filter buttons
+document.querySelectorAll(".status-btn[data-status]").forEach(btn => {
+  btn.addEventListener("click", function() {
+    document.querySelectorAll(".status-btn").forEach(b => b.classList.remove("active"));
+    this.classList.add("active");
+    activeStatus = this.dataset.status;
+    applyFilters();
+  });
+});
+</script>
+</body>
+</html>

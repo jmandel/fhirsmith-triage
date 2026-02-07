@@ -1,8 +1,13 @@
-# Archived delta snapshots (timestamped backups, large)
-results/deltas/*.2*.ndjson
-# Triage round logs (stream-json output, verbose)
-results/triage-logs/
-# Error log
-results/triage-errors.log
+# Per-job large/transient files
+jobs/*/comparison.ndjson
+jobs/*/results/deltas/*.2*.ndjson
+jobs/*/triage-logs/
+jobs/*/triage-errors.log
+
 # Lock file
 .triage.lock
+
+# Legacy root-level paths (pre-job-dir)
+results/deltas/*.2*.ndjson
+results/triage-logs/
+results/triage-errors.log

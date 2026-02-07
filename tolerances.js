@@ -327,6 +327,34 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'sort-expansion-extensions',
+    description: 'Sort extension arrays by URL within ValueSet expansion and expansion.contains entries. Extension ordering is not semantically meaningful in FHIR.',
+    kind: 'equiv-autofix',
+    match({ prod, dev }) {
+      const hasExpansion = (body) => body?.resourceType === 'ValueSet' && body?.expansion;
+      return (hasExpansion(prod) || hasExpansion(dev)) ? 'normalize' : null;
+    },
+    normalize(ctx) {
+      function sortExtensions(obj) {
+        if (obj === null || obj === undefined || typeof obj !== 'object') return obj;
+        if (Array.isArray(obj)) return obj.map(sortExtensions);
+        const result = {};
+        for (const [key, val] of Object.entries(obj)) {
+          if (key === 'extension' && Array.isArray(val)) {
+            result[key] = [...val]
+              .sort((a, b) => (a.url || '').localeCompare(b.url || ''))
+              .map(sortExtensions);
+          } else {
+            result[key] = sortExtensions(val);
+          }
+        }
+        return result;
+      }
+      return both(ctx, body => transformExpansions(body, sortExtensions));
+    },
+  },
+
   // ============================================================
   // Phase C: Content-specific normalizations
   // ============================================================

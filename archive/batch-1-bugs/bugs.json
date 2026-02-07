@@ -1,0 +1,486 @@
+[
+    {
+        "id": "52e169085371ffe2ed205e3e9c802a60c05c1a222a758cb182f1b38655465ae5",
+        "human_id": "52e1690",
+        "create_time": {
+            "timestamp": 1770473300,
+            "time": "2026-02-07T08:08:20-06:00",
+            "lamport": 2
+        },
+        "edit_time": {
+            "timestamp": 1770473304,
+            "time": "2026-02-07T08:08:24-06:00",
+            "lamport": 4
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "v2-0360 CodeSystem version mismatch: prod 2.0.0 vs dev 3.0.0 in $lookup",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "92514c0218ac0e3c50410df8351a837ec87acc0aa0d2f8e4fd6d69202bbacb58",
+        "human_id": "92514c0",
+        "create_time": {
+            "timestamp": 1770473721,
+            "time": "2026-02-07T08:15:21-06:00",
+            "lamport": 3
+        },
+        "edit_time": {
+            "timestamp": 1770473726,
+            "time": "2026-02-07T08:15:26-06:00",
+            "lamport": 6
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Dev emits empty-string location/expression on OperationOutcome issues",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e0f466b0858621d0ff561dbc79f1bbc379036612670a44270c46683f82be0be5",
+        "human_id": "e0f466b",
+        "create_time": {
+            "timestamp": 1770473980,
+            "time": "2026-02-07T08:19:40-06:00",
+            "lamport": 4
+        },
+        "edit_time": {
+            "timestamp": 1770473985,
+            "time": "2026-02-07T08:19:45-06:00",
+            "lamport": 8
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "BCP-47 validate-code: display choices differ (6 vs 3) with different formatting",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3c10c6ef8a04476417d01dcbfaa97c2fbabb76e84e3cbbf7c83a8b8e199e57f6",
+        "human_id": "3c10c6e",
+        "create_time": {
+            "timestamp": 1770474126,
+            "time": "2026-02-07T08:22:06-06:00",
+            "lamport": 5
+        },
+        "edit_time": {
+            "timestamp": 1770474130,
+            "time": "2026-02-07T08:22:10-06:00",
+            "lamport": 10
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "BCP-47 display text includes 'Region=' prefix in dev",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f4145f1acdb068da53e349b863d81d1f36decd809222ee285539e8ec4a6f1da7",
+        "human_id": "f4145f1",
+        "create_time": {
+            "timestamp": 1770474269,
+            "time": "2026-02-07T08:24:29-06:00",
+            "lamport": 6
+        },
+        "edit_time": {
+            "timestamp": 1770474275,
+            "time": "2026-02-07T08:24:35-06:00",
+            "lamport": 13
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Dev missing DICOM CID 29 AcquisitionModality ValueSet",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "dc6c82a7b3edcb94dea672a25b48faab6ddca64dcc4410275b633d2c6f6f2c2f",
+        "human_id": "dc6c82a",
+        "create_time": {
+            "timestamp": 1770474481,
+            "time": "2026-02-07T08:28:01-06:00",
+            "lamport": 7
+        },
+        "edit_time": {
+            "timestamp": 1770474485,
+            "time": "2026-02-07T08:28:05-06:00",
+            "lamport": 16
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Response body truncation at 50k chars makes 277 P6 records uncomparable",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "5c344363f9fe1084db79d255b1ede3250fb9cd6965f5fb7f00778b43da5e3deb",
+        "human_id": "5c34436",
+        "create_time": {
+            "timestamp": 1770474689,
+            "time": "2026-02-07T08:31:29-06:00",
+            "lamport": 8
+        },
+        "edit_time": {
+            "timestamp": 1770474694,
+            "time": "2026-02-07T08:31:34-06:00",
+            "lamport": 19
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "validate-code display parameter differs between prod and dev",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4abd03a5eb53cd8116ef51ee8970fb2873f4284cf494837610f9c09897518c50",
+        "human_id": "4abd03a",
+        "create_time": {
+            "timestamp": 1770474915,
+            "time": "2026-02-07T08:35:15-06:00",
+            "lamport": 9
+        },
+        "edit_time": {
+            "timestamp": 1770475544,
+            "time": "2026-02-07T08:45:44-06:00",
+            "lamport": 26
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "SNOMED CT version mismatch: dev loads older editions than prod",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "bb9bee9b69c5d7e434a82819d46fad8bde796d62c43905bc47e8592e150b1fd5",
+        "human_id": "bb9bee9",
+        "create_time": {
+            "timestamp": 1770475217,
+            "time": "2026-02-07T08:40:17-06:00",
+            "lamport": 10
+        },
+        "edit_time": {
+            "timestamp": 1770475222,
+            "time": "2026-02-07T08:40:22-06:00",
+            "lamport": 25
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Dev fails on ValueSets with vsacOpModifier extension",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1e3f335dfe873862189b2d4382e331feb9bb522987cdda9331449ff053b86918",
+        "human_id": "1e3f335",
+        "create_time": {
+            "timestamp": 1770475699,
+            "time": "2026-02-07T08:48:19-06:00",
+            "lamport": 11
+        },
+        "edit_time": {
+            "timestamp": 1770475705,
+            "time": "2026-02-07T08:48:25-06:00",
+            "lamport": 29
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Dev omits package provenance in OperationOutcome issue text",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "8ca25098224fdc1e7eeb915418f613400173b75e2c1eaccd2659933bdbb9a2cb",
+        "human_id": "8ca2509",
+        "create_time": {
+            "timestamp": 1770475890,
+            "time": "2026-02-07T08:51:30-06:00",
+            "lamport": 12
+        },
+        "edit_time": {
+            "timestamp": 1770475895,
+            "time": "2026-02-07T08:51:35-06:00",
+            "lamport": 32
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "NDC validate-code: dev returns extra inactive/version/message/issues parameters",
+        "actors": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+                "human_id": "5f57260",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "5f572600505e9815348f2bb83e1cb64fbf079bb4992aa5c87f1c7c221a8f6b0a",
+            "human_id": "5f57260",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    }
+]

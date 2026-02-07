@@ -5,31 +5,37 @@
  * Comparison engine: reads comparison.ndjson, applies the unified tolerance
  * pipeline, categorizes deltas by priority, writes results.
  *
- * Tolerances are defined in tolerances.js. Each tolerance has a match()
- * function that returns 'skip', 'normalize', or null, and a normalize()
- * function that transforms parsed response bodies. See tolerances.js for
- * the full tolerance model documentation.
+ * Tolerances are loaded from <job>/tolerances.js.
  *
  * Usage:
- *   node scripts/tx-compare/compare.js [--input FILE] [--out DIR]
+ *   node engine/compare.js --job jobs/<round-name>
  *
- * Defaults:
- *   --input comparison.ndjson
- *   --out scripts/tx-compare/results
+ * The job directory must contain:
+ *   - comparison.ndjson (input data)
+ *   - tolerances.js (tolerance definitions)
+ *
+ * Output is written to <job>/results/
  */
 
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const { tolerances, getParamValue } = require('./tolerances');
-
-const INPUT = getArg('--input', 'comparison.ndjson');
-const OUT_DIR = getArg('--out', 'scripts/tx-compare/results');
 
 function getArg(flag, def) {
   const i = process.argv.indexOf(flag);
   return i >= 0 && i + 1 < process.argv.length ? process.argv[i + 1] : def;
 }
+
+const JOB_DIR = getArg('--job', null);
+if (!JOB_DIR) {
+  console.error('Usage: node engine/compare.js --job <job-directory>');
+  process.exit(1);
+}
+
+const jobDir = path.resolve(JOB_DIR);
+const { tolerances, getParamValue } = require(path.join(jobDir, 'tolerances'));
+const inputPath = path.join(jobDir, 'comparison.ndjson');
+const outDir = path.join(jobDir, 'results');
 
 // ---- Comparison ----
 
@@ -159,22 +165,19 @@ function findParameterDiffs(prod, dev) {
 
 // ---- Output writers ----
 
-class OutputWriters {
+class OutputWriter {
   constructor(outDir) {
     this.outDir = outDir;
     this.deltasDir = path.join(outDir, 'deltas');
     fs.mkdirSync(this.deltasDir, { recursive: true });
-    this.streams = {};
+    const filePath = path.join(this.deltasDir, 'deltas.ndjson');
+    this.stream = fs.createWriteStream(filePath);
     this.counts = {};
   }
 
   write(priority, record, comparison) {
-    if (!this.streams[priority]) {
-      const filePath = path.join(this.deltasDir, `${priority.toLowerCase()}.ndjson`);
-      this.streams[priority] = fs.createWriteStream(filePath);
-      this.counts[priority] = 0;
-    }
-    this.streams[priority].write(JSON.stringify({
+    this.counts[priority] = (this.counts[priority] || 0) + 1;
+    this.stream.write(JSON.stringify({
       id: record.id,
       url: record.url,
       method: record.method,
@@ -183,29 +186,26 @@ class OutputWriters {
       comparison,
       prodBody: record.prodBody,
       devBody: record.devBody,
+      ...(record.requestBody ? { requestBody: record.requestBody } : {}),
     }) + '\n');
-    this.counts[priority]++;
   }
 
   close() {
-    return Promise.all(
-      Object.values(this.streams).map(s => new Promise(r => s.end(r)))
-    );
+    return new Promise(r => this.stream.end(r));
   }
 }
 
 // ---- Main ----
 
 async function main() {
+  console.log(`Job directory: ${jobDir}`);
   console.log(`Loaded ${tolerances.length} tolerances`);
 
-  const inputPath = path.resolve(INPUT);
-  const outDir = path.resolve(OUT_DIR);
   fs.mkdirSync(outDir, { recursive: true });
 
-  const writers = new OutputWriters(outDir);
+  const writers = new OutputWriter(outDir);
   const summary = {
-    inputFile: INPUT,
+    jobDir: JOB_DIR,
     timestamp: new Date().toISOString(),
     totalRecords: 0,
     skipped: 0,
