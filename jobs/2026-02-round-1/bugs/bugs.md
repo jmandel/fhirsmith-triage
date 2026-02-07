@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_18 bugs (16 open, 2 closed)_
+_19 bugs (17 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -500,6 +500,57 @@ Normalizes both sides to prod's display value (the code itself, per FHIR convent
 Records-Impacted: 181
 Tolerance-ID: snomed-version-skew
 Record-ID: e5716810-0ced-4937-85a5-5651fb884719
+
+#####Repro
+
+The version skew is visible in both the metadata endpoint and $validate-code responses.
+The International edition has been partially fixed (both servers now resolve to 20250201),
+but the US edition (731000124108) still shows the bug: dev defaults to 20230301 instead
+of 20250901. Both servers have the 20250901 edition loaded, but dev picks the wrong default.
+
+######1. Metadata: compare loaded SNOMED US editions
+
+```bash
+####PROD - lists US edition 20250901 only
+curl -s "https://tx.fhir.org/r4/metadata?mode=terminology" \
+-H "Accept: application/fhir+json" | \
+jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
+
+####DEV - lists BOTH 20250901 AND 20230301 (extra stale edition)
+curl -s "https://tx-dev.fhir.org/r4/metadata?mode=terminology" \
+-H "Accept: application/fhir+json" | \
+jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
+```
+
+Expected: both list only `http://snomed.info/sct/731000124108/version/20250901`
+Actual: dev also has `http://snomed.info/sct/731000124108/version/20230301`
+
+######2. $validate-code: US edition resolves to wrong default version
+
+```bash
+####PROD - returns version 20250901
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+--data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
+
+####DEV - returns version 20230301 (should be 20250901)
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+--data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
+```
+
+Expected: both return `"version": "http://snomed.info/sct/731000124108/version/20250901"`
+Actual: dev returns `"version": "http://snomed.info/sct/731000124108/version/20230301"`
+
+######Additional affected records
+
+- 36822cee-7132-4003-bf9e-a5602f839466 (US edition, code 243796009)
+- 1796976f-3807-40ec-aa48-f8758b0fee62 (US edition, code 272379006)
+- 03fec18b-e871-4041-b9b8-5c770b2b17c7 (International edition, code 106292003)
+
+Tested: 2026-02-07
 
 Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.
 
@@ -1013,6 +1064,34 @@ Eliminates: 74 records (73 with only the display diff, 1 with additional message
 #####Representative record
 
 d9457f4d-39c0-445a-96d4-0721961e169d — POST /r4/CodeSystem/$validate-code, code U in system https://codesystem.x12.org/005010/1338
+
+---
+
+### [ ] `ac95424` HCPCS CodeSystem loaded in dev but unknown in prod — 110 result-disagrees
+
+Records-Impacted: 123
+Tolerance-ID: hcpcs-codesystem-availability
+Record-ID: 238a26b7-46b6-4095-a3ba-364b1973da4d
+
+#####What differs
+
+For $validate-code requests involving system http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets, prod returns result=false with the error "A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found, so the code cannot be validated" and x-caused-by-unknown-system. Dev returns result=true with version 2025-01, display text, system, and code parameters — successfully finding and validating the codes.
+
+The diagnostics confirm: prod says "CodeSystem not found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets" while dev says "CodeSystem found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets|2025-01".
+
+#####How widespread
+
+123 delta records mention HCPCS (all validate-code operations):
+- 110 result-disagrees: prod=false dev=true (prod doesn't have HCPCS, dev does)
+- 4 result-disagrees: prod=true dev=false (code 33206, likely a different sub-issue)
+- 9 content-differs: same result but differences in surrounding content
+
+Searched with: grep -c 'HCPCSReleaseCodeSets' jobs/2026-02-round-1/results/deltas/deltas.ndjson
+All 110 prod=false/dev=true records have x-caused-by-unknown-system pointing to HCPCSReleaseCodeSets.
+
+#####What the tolerance covers
+
+Tolerance ID: hcpcs-codesystem-availability. Matches validate-code records where prod has x-caused-by-unknown-system for HCPCSReleaseCodeSets and dev returns result=true. Skips these records since the root cause is code system availability, not a logic bug.
 
 ---
 

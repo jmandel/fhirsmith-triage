@@ -1,0 +1,33 @@
+{
+  "id": "9afb9fcf-df5f-4766-a56a-33379c66b90a",
+  "url": "/r4/CodeSystem/$validate-code",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 822,
+    "hash": "ae607d52af3a9b3fbf8b2648ad2dc2e9"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 507,
+    "hash": "624c3fe5c24adaa1b07828b1755ab91f"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"code\",\"valueCode\" : \"OBG\"},{\"name\" : \"message\",\"valueString\" : \"Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Coding_has_no_system__cannot_validate\"}],\"severity\" : \"warning\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-data\"}],\"text\" : \"Coding has no system. A code with no system has no defined meaning, and it cannot be validated. A system should be provided\"}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"invalid\",\"details\":{\"text\":\"No CodeSystem specified - provide url parameter or codeSystem resource\"},\"location\":[null],\"expression\":[null]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"No CodeSystem specified - provide url parameter or codeSystem resource\"},{\"name\":\"code\",\"valueCode\":\"OBG\"},{\"name\":\"display\",\"valueString\":\"OB/GYN\"}]}"
+}

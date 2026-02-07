@@ -360,9 +360,9 @@
             "lamport": 10
         },
         "edit_time": {
-            "timestamp": 1770485570,
-            "time": "2026-02-07T11:32:50-06:00",
-            "lamport": 49
+            "timestamp": 1770488607,
+            "time": "2026-02-07T12:23:27-06:00",
+            "lamport": 83
         },
         "status": "open",
         "labels": [
@@ -766,6 +766,50 @@
             "tx-compare"
         ],
         "title": "Dev echoes display param on failed validate-code when CodeSystem unknown",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "ac95424e904fc560bca2f18ed8703832b02a209fdcfb9fb001072545fad0c810",
+        "human_id": "ac95424",
+        "create_time": {
+            "timestamp": 1770488615,
+            "time": "2026-02-07T12:23:35-06:00",
+            "lamport": 20
+        },
+        "edit_time": {
+            "timestamp": 1770488619,
+            "time": "2026-02-07T12:23:39-06:00",
+            "lamport": 86
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "HCPCS CodeSystem loaded in dev but unknown in prod — 110 result-disagrees",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

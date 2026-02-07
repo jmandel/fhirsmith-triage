@@ -1,0 +1,42 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "text": "No CodeSystem specified - provide url parameter or codeSystem resource"
+            },
+            "location": [
+              null
+            ],
+            "expression": [
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "No CodeSystem specified - provide url parameter or codeSystem resource"
+    },
+    {
+      "name": "code",
+      "valueCode": "OBG"
+    },
+    {
+      "name": "display",
+      "valueString": "OB/GYN"
+    }
+  ]
+}

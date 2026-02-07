@@ -828,6 +828,46 @@ const tolerances = [
   },
 
   {
+    id: 'cs-validate-code-no-system-error-format',
+    description: 'CodeSystem/$validate-code with no system: prod returns warning with "Coding has no system" message and tx-issue-type coding, dev returns error with "No CodeSystem specified" message and no coding. Both agree result=false. Severity, message text, and issue detail structure all differ. Affects 1 record (POST /r4/CodeSystem/$validate-code without system).',
+    kind: 'temp-tolerance',
+    bugId: '52ecb75',
+    tags: ['normalize', 'validate-code', 'error-format'],
+    match({ record, dev }) {
+      if (!isParameters(dev)) return null;
+      if (record.url !== '/r4/CodeSystem/$validate-code') return null;
+      const devMsg = getParamValue(dev, 'message');
+      if (devMsg && devMsg.includes('No CodeSystem specified')) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Canonicalize dev's message and issues to match prod's
+      const prodMsg = getParamValue(prod, 'message');
+      const prodIssues = getParamValue(prod, 'issues');
+      if (!prodMsg || !prodIssues) return { prod, dev };
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message') {
+              return { ...p, valueString: prodMsg };
+            }
+            if (p.name === 'issues' && prodIssues) {
+              return {
+                ...p,
+                resource: prodIssues,
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

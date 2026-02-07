@@ -1,0 +1,32 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "OBG"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "text": "No CodeSystem specified - provide url parameter or codeSystem resource"
+            },
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "No CodeSystem specified - provide url parameter or codeSystem resource"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    }
+  ],
+  "resourceType": "Parameters"
+}
