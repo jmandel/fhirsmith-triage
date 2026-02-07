@@ -1,12 +1,13 @@
 # tx-compare Bug Report
 
-_9 bugs (9 open, 0 closed)_
+_10 bugs (10 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
 | P3 | 1 | Missing resources |
 | P4 | 1 | Status code mismatch |
 | P6 | 5 | Content differences |
+| TEMP | 1 | Temporary tolerances (real bugs, suppressed for triage) |
 
 ---
 
@@ -243,6 +244,24 @@ Search used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL whe
 - `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)
 - `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)
 - `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)
+
+---
+
+## Temporary tolerances (real bugs, suppressed for triage)
+
+### [ ] `933fdcc` Dev fails to process VSAC ValueSets with vsacOpModifier extension
+
+Dev returns a generic error "Cannot process resource at \"exclude[0].filter\" due to the presence of the modifier extension vsacOpModifier" instead of processing VSAC ValueSets that use the vsacOpModifier extension in their exclude filters.
+
+**What differs**: When validating codes against VSAC ValueSets that use vsacOpModifier, prod processes the ValueSet and returns proper validation results (e.g., unknown codesystem version, not-in-valueset issues), while dev bails out at ValueSet processing with a business-rule error about the modifier extension. Both return result=false, but for completely different reasons — prod gives specific, correct error details while dev gives a generic "cannot process" error.
+
+**How widespread**: 3 records in the delta file, all POST /r4/ValueSet/$validate-code, all involving the same VSAC ValueSet (http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.4.642.40.2.48.1|20250419) with system urn:oid:2.16.840.1.113883.6.238.
+
+Search: grep -c 'vsacOpModifier' results/deltas/deltas.ndjson → 3
+
+**Tolerance**: `vsac-modifier-extension-error` (temp-tolerance) matches validate-code records where dev's message contains "vsacOpModifier". Eliminates 3 records.
+
+**Representative record**: 64ff24e8-e8ff-456c-a0ed-0f222b9454fb
 
 ---
 

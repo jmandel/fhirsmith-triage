@@ -394,5 +394,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "933fdcc1a6494638a1e4169082256bb554145276c892a840260030bdeb55cd68",
+        "human_id": "933fdcc",
+        "create_time": {
+            "timestamp": 1770485278,
+            "time": "2026-02-07T11:27:58-06:00",
+            "lamport": 11
+        },
+        "edit_time": {
+            "timestamp": 1770485283,
+            "time": "2026-02-07T11:28:03-06:00",
+            "lamport": 31
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev fails to process VSAC ValueSets with vsacOpModifier extension",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

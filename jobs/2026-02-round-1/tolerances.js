@@ -433,6 +433,115 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'expand-metadata-identifier-timestamp',
+    description: 'Expansion identifier (server-generated UUID) and timestamp differ between implementations. These are transient metadata with no terminology significance. Affects all $expand responses.',
+    kind: 'equiv-autofix',
+    tags: ['normalize', 'expand', 'transient-metadata'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      if (prod.expansion.identifier !== dev.expansion.identifier ||
+          prod.expansion.timestamp !== dev.expansion.timestamp) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      return {
+        prod: {
+          ...prod,
+          expansion: { ...prod.expansion, identifier: undefined, timestamp: undefined },
+        },
+        dev: {
+          ...dev,
+          expansion: { ...dev.expansion, identifier: undefined, timestamp: undefined },
+        },
+      };
+    },
+  },
+
+  {
+    id: 'expand-dev-empty-id',
+    description: 'Dev $expand returns "id":"" (empty string) on ValueSet responses. Prod omits id. Empty string is invalid FHIR. Affects 690 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '2abe02d',
+    tags: ['normalize', 'expand', 'invalid-fhir'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!dev?.expansion) return null;
+      if (dev.id === '') return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (dev.id === '') {
+        const { id, ...devRest } = dev;
+        return { prod, dev: devRest };
+      }
+      return { prod, dev };
+    },
+  },
+
+  {
+    id: 'expand-dev-includeDefinition-param',
+    description: 'Dev $expand echoes includeDefinition=false in expansion.parameter. Prod omits it. Affects 677 expand records.',
+    kind: 'temp-tolerance',
+    bugId: 'd1b7d3b',
+    tags: ['normalize', 'expand', 'extra-param'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!dev?.expansion?.parameter) return null;
+      const hasIncDef = dev.expansion.parameter.some(p => p.name === 'includeDefinition');
+      const prodHas = prod?.expansion?.parameter?.some(p => p.name === 'includeDefinition');
+      if (hasIncDef && !prodHas) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      return {
+        prod,
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: dev.expansion.parameter.filter(p => p.name !== 'includeDefinition'),
+          },
+        },
+      };
+    },
+  },
+
+  {
+    id: 'expand-used-codesystem-version-skew',
+    description: 'Dev $expand reports different used-codesystem versions than prod, reflecting different loaded code system editions. Normalizes used-codesystem to prod value. Affects 37 expand records across SNOMED, ICD-9-CM, LOINC, and others.',
+    kind: 'temp-tolerance',
+    bugId: '515117b',
+    tags: ['normalize', 'expand', 'version-skew'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.parameter || !dev?.expansion?.parameter) return null;
+      const prodUcs = prod.expansion.parameter.find(p => p.name === 'used-codesystem');
+      const devUcs = dev.expansion.parameter.find(p => p.name === 'used-codesystem');
+      if (!prodUcs || !devUcs) return null;
+      if (prodUcs.valueUri !== devUcs.valueUri) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodUcs = prod.expansion.parameter.find(p => p.name === 'used-codesystem');
+      return {
+        prod,
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: dev.expansion.parameter.map(p =>
+              p.name === 'used-codesystem' ? { ...p, valueUri: prodUcs.valueUri } : p
+            ),
+          },
+        },
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

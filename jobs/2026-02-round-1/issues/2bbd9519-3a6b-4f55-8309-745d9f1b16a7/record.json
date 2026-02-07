@@ -1,0 +1,24 @@
+{
+  "id": "2bbd9519-3a6b-4f55-8309-745d9f1b16a7",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 683,
+    "hash": "3226662b74b9a48e2a71722b777dd1c7"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 697,
+    "hash": "5a2c322fe3e9a43ec63ea7d0c642192a"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "expand",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"status\" : \"active\",\"expansion\" : {\"identifier\" : \"urn:uuid:097d90d9-7ddb-48da-9cb7-54818dd82f67\",\"timestamp\" : \"2026-02-06T22:18:31.614Z\",\"total\" : 1,\"offset\" : 0,\"parameter\" : [{\"name\" : \"excludeNested\",\"valueBoolean\" : true},{\"name\" : \"offset\",\"valueInteger\" : 0},{\"name\" : \"count\",\"valueInteger\" : 1000},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://snomed.info/sct|http://snomed.info/sct/731000124108/version/20250901\"},{\"name\" : \"system-version\",\"valueUri\" : \"http://snomed.info/sct|http://snomed.info/sct/731000124108\"}],\"contains\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"160245001\",\"display\" : \"No current problems or disability\"}]}}",
+  "devBody": "{\"resourceType\":\"ValueSet\",\"status\":\"active\",\"id\":\"\",\"expansion\":{\"timestamp\":\"2026-02-06T22:18:31.673Z\",\"identifier\":\"urn:uuid:2a546f19-d223-4e09-ae93-d883308cde08\",\"parameter\":[{\"name\":\"excludeNested\",\"valueBoolean\":true},{\"name\":\"includeDefinition\",\"valueBoolean\":false},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"used-codesystem\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/731000124108/version/20230301\"},{\"name\":\"system-version\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/731000124108\"}],\"offset\":0,\"total\":1,\"contains\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"160245001\",\"display\":\"No current problems or disability\"}]}}"
+}

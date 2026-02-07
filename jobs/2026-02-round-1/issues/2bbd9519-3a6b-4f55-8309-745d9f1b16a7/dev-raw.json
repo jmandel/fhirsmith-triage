@@ -1,0 +1,44 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "id": "",
+  "expansion": {
+    "timestamp": "2026-02-06T22:18:31.673Z",
+    "identifier": "urn:uuid:2a546f19-d223-4e09-ae93-d883308cde08",
+    "parameter": [
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "includeDefinition",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/731000124108/version/20230301"
+      },
+      {
+        "name": "system-version",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/731000124108"
+      }
+    ],
+    "offset": 0,
+    "total": 1,
+    "contains": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "160245001",
+        "display": "No current problems or disability"
+      }
+    ]
+  }
+}
