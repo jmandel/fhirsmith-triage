@@ -946,6 +946,63 @@ const tolerances = [
   },
 
   {
+    id: 'unknown-version-valid-versions-message',
+    description: 'UNKNOWN_CODESYSTEM_VERSION error messages list available versions, which differ between prod and dev because they load different editions. Dev also appends "and undefined" to some version lists (bug de8b2f7) and uses ", " vs "," separators. Both sides agree result=false and the same error type. Normalizes by truncating the "Valid versions:" portion from message and issues text. Affects 13 validate-code records where both sides report UNKNOWN_CODESYSTEM_VERSION for SNOMED 2017-09.',
+    kind: 'temp-tolerance',
+    bugId: 'de8b2f7',
+    tags: ['normalize', 'validate-code', 'version-list', 'unknown-version'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      // Both sides must have "Valid versions:" in their message
+      if (!prodMsg.includes('Valid versions:') || !devMsg.includes('Valid versions:')) return null;
+      // Prefix before "Valid versions:" must match (same error, just different version lists)
+      const prodPrefix = prodMsg.split('Valid versions:')[0];
+      const devPrefix = devMsg.split('Valid versions:')[0];
+      if (prodPrefix !== devPrefix) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      function truncateVersionList(text) {
+        const idx = text.indexOf('Valid versions:');
+        if (idx === -1) return text;
+        return text.substring(0, idx).trimEnd();
+      }
+      function normalizeBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: truncateVersionList(p.valueString) };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => {
+                    if (iss.details?.text?.includes('Valid versions:')) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: truncateVersionList(iss.details.text) },
+                      };
+                    }
+                    return iss;
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return both({ prod, dev }, normalizeBody);
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

@@ -1,0 +1,33 @@
+{
+  "id": "a3cf69a7-48f3-47b8-a29d-cd6453647621",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 3251,
+    "hash": "ce6418c86305e11a60bc190b6de1fbb3"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 2531,
+    "hash": "27144e328999f05d5107ec8b71a53ce2"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"http://snomed.info/sct|2017-09\"},{\"name\" : \"code\",\"valueCode\" : \"116101001\"},{\"name\" : \"version\",\"valueString\" : \"2017-09\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'http://snomed.info/sct' version '2017-09' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM_VERSION\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'http://snomed.info/sct' version '2017-09' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://snomed.info/sct|2017-09#116101001 (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://snomed.info/sct|2017-09#116101001\\\"\\r\\n0 0     : 0ms  : Didn't find CodeSystem \\\"http://snomed.info/sct|2017-09\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://snomed.info/sct' version '2017-09' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930, http://snomed.info/sct/11000172109/version/20231115, http://snomed.info/sct/2011000195101/version/20230607, http://snomed.info/sct/32506021000036107/version/20230731, http://snomed.info/sct/45991000052106/version/20231130, http://snomed.info/sct/554471000005108/version/20250930, http://snomed.info/sct/731000124108/version/20230301, http://snomed.info/sct/731000124108/version/20250901, http://snomed.info/sct/827022005/version/20241216, http://snomed.info/sct/83821000000107/version/20230412, http://snomed.info/sct/900000000000207008/version/20240201, http://snomed.info/sct/900000000000207008/version/20250201, http://snomed.info/xsct/900000000000207008/version/20250814 and undefined\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"location\":[\"Coding.system\"],\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'http://snomed.info/sct' version '2017-09' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930, http://snomed.info/sct/11000172109/version/20231115, http://snomed.info/sct/2011000195101/version/20230607, http://snomed.info/sct/32506021000036107/version/20230731, http://snomed.info/sct/45991000052106/version/20231130, http://snomed.info/sct/554471000005108/version/20250930, http://snomed.info/sct/731000124108/version/20230301, http://snomed.info/sct/731000124108/version/20250901, http://snomed.info/sct/827022005/version/20241216, http://snomed.info/sct/83821000000107/version/20230412, http://snomed.info/sct/900000000000207008/version/20240201, http://snomed.info/sct/900000000000207008/version/20250201, http://snomed.info/xsct/900000000000207008/version/20250814 and undefined\"},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"version\",\"valueString\":\"2017-09\"},{\"name\":\"code\",\"valueCode\":\"116101001\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"http://snomed.info/sct|2017-09\"}]}"
+}
