@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_19 bugs (18 open, 1 closed)_
+_20 bugs (19 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -998,6 +998,40 @@ All 40 records are POST /r4/ValueSet/$expand requests using SNOMED CT.
 #####What the tolerance covers
 
 Tolerance `expand-snomed-version-skew-content` matches expand records where both sides return 200, SNOMED used-codesystem versions differ, and the expansion contains arrays have different code membership. It normalizes both sides to the intersection of codes and adjusts the total count. This is the same approach used by `expand-hl7-terminology-version-skew-content` (bug 6edc96c).
+
+---
+
+### [ ] `f33161f` Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems
+
+Records-Impacted: 12
+Tolerance-ID: expand-toocostly-grammar-400
+Record-ID: 4a993d89-3f8b-444d-9a63-e95c6944c4a7
+
+#####What differs
+
+When expanding a ValueSet that includes a grammar-based code system (BCP-47 `urn:ietf:bcp:47` or SNOMED CT `http://snomed.info/sct`) without any filter constraints, prod returns HTTP 200 with a ValueSet containing the `valueset-toocostly` extension and `limitedExpansion` parameter (indicating the expansion is too large to enumerate). Dev instead returns HTTP 400 with an OperationOutcome error (`code: "too-costly"`, message: "The code System ... has a grammar, and cannot be enumerated directly").
+
+Prod's approach (returning a ValueSet with the toocostly extension) is the expected FHIR behavior for expansions that are too costly to compute — it signals the condition without failing the request.
+
+#####How widespread
+
+12 records in the comparison dataset show this pattern:
+- 8 records involve BCP-47 (`urn:ietf:bcp:47`), including the `all-languages` ValueSet
+- 4 records involve SNOMED CT (`http://snomed.info/sct`)
+- Affects both /r4/ and /r5/ endpoints
+- All are POST /r{4,5}/ValueSet/$expand requests
+
+Search: `grep 'has a grammar' deltas.ndjson` finds 223 matches across all records (most already handled by existing tolerances), but filtering to status-mismatch expand records with prod=200/dev=400 and dev issue code "too-costly" yields exactly 12.
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-toocostly-grammar-400`. Matches $expand requests where prod returns 200 with the `valueset-toocostly` extension and dev returns 400 with an OperationOutcome containing issue code "too-costly". Skips these records entirely since the status codes and response formats are incomparable.
+
+#####Representative records
+
+- `4a993d89-3f8b-444d-9a63-e95c6944c4a7` (BCP-47, /r4/)
+- `b96706f9-c555-40e7-bdd2-f682fe2d5d88` (SNOMED, /r4/)
+- `d61127b2-3ed1-4deb-b11b-b8ccc77185ed` (BCP-47, /r5/)
 
 ---
 

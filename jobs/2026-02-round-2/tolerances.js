@@ -1532,12 +1532,12 @@ const tolerances = [
 
   {
     id: 'expand-too-costly-succeeds',
-    description: 'Prod returns 422 with too-costly issue code for $expand on grammar-based or very large code systems (CPT, BCP-13 MIME types, NDC). Dev returns 200 with a successful expansion. Dev does not enforce the expansion guard that prod has. Affects 12 records (8 CPT, 2 BCP-13, 2 NDC).',
+    description: 'Prod returns 422 with too-costly issue code for $expand on very large code systems (LOINC, MIME types, CPT, BCP-13, NDC). Dev returns 200 with a successful expansion. Dev does not enforce the expansion guard that prod has. Affects /r4/ and /r5/ $expand requests, both GET (with query params) and POST.',
     kind: 'temp-tolerance',
-    bugId: 'e3fb3f6',
+    bugId: '44d1916',
     tags: ['skip', 'status-mismatch', 'expand', 'too-costly'],
     match({ record, prod }) {
-      if (record.url !== '/r4/ValueSet/$expand') return null;
+      if (!record.url.includes('ValueSet/$expand')) return null;
       if (record.prod?.status !== 422 || record.dev?.status !== 200) return null;
       // Check prod is OperationOutcome with too-costly issue
       if (prod?.resourceType !== 'OperationOutcome') return null;

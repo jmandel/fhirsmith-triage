@@ -850,5 +850,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "f33161f36f5897a327a6a6bcf7700b38ecc80cac50e504a4e2a23a12c8362cbb",
+        "human_id": "f33161f",
+        "create_time": {
+            "timestamp": 1770506926,
+            "time": "2026-02-07T17:28:46-06:00",
+            "lamport": 21
+        },
+        "edit_time": {
+            "timestamp": 1770506932,
+            "time": "2026-02-07T17:28:52-06:00",
+            "lamport": 102
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
