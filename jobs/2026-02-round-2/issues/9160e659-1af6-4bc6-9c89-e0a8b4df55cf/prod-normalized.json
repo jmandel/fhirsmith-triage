@@ -1,0 +1,58 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "TEST"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'"
+            },
+            "expression": [
+              "code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Error processing Unit: 'TEST': The unit \"TEST\" is unknown at character 1"
+            },
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://unitsofmeasure.org"
+    }
+  ],
+  "resourceType": "Parameters"
+}

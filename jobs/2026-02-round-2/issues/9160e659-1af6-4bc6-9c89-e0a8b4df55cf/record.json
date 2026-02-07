@@ -1,0 +1,29 @@
+{
+  "id": "9160e659-1af6-4bc6-9c89-e0a8b4df55cf",
+  "url": "/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1087,
+    "hash": "f144dd7d8bb9812a91bf4777b51ab6d0"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1020,
+    "hash": "1e11800b0b86aa0a108b0eb69110ceb8"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://unitsofmeasure.org\"},{\"name\" : \"code\",\"valueCode\" : \"TEST\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]},{\"severity\" : \"information\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Error processing Unit: 'TEST': The unit \\\"TEST\\\" is unknown at character 1\"}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://unitsofmeasure.org\"},{\"name\":\"code\",\"valueCode\":\"TEST\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"information\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Error processing unit 'TEST': The unit 'TEST' is unknown at character 1\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"code\"]}]}}]}"
+}

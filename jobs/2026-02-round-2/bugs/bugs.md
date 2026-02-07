@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_7 bugs (6 open, 1 closed)_
+_8 bugs (7 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -344,7 +344,17 @@ Records-Impacted: 246
 Tolerance-ID: expand-v3-hierarchical-incomplete
 Record-ID: 18d8209b-15f4-486d-8009-25ed8cb2cbcb
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http://terminology.hl7.org/ValueSet/v3-PurposeOfUse&_format=json' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http://terminology.hl7.org/ValueSet/v3-PurposeOfUse&_format=json' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `expansion.total=63` with 63 codes (PurposeOfUse root + 62 child codes like HMARKT, HOPERAT, TREAT, etc.). Dev returns `expansion.total=1` with only the root abstract concept `PurposeOfUse`.
+
 
 When expanding v3 ValueSets that include hierarchical concepts from `terminology.hl7.org/CodeSystem/v3-ActReason`, dev returns only the root abstract concept while prod returns the full hierarchy of child codes.
 
@@ -360,7 +370,6 @@ The same pattern affects 4 distinct v3 ValueSets:
 
 In all cases, dev returns only the root concept and completely omits the descendant codes that should be included in the expansion.
 
-#####How widespread
 
 246 records across the 4 ValueSets listed above. Found via:
 ```bash
@@ -369,13 +378,48 @@ grep '"op":"expand"' jobs/2026-02-round-2/results/deltas/deltas.ndjson | python3
 
 All are GET requests to `/r4/ValueSet/$expand` with `url=http://terminology.hl7.org/ValueSet/v3-*`.
 
-#####What the tolerance covers
 
 Tolerance ID: `expand-v3-hierarchical-incomplete`. Matches expand operations where both prod and dev return 200, the ValueSet URL matches `terminology.hl7.org/ValueSet/v3-`, and dev expansion total is 1 while prod expansion total is greater than 1. Skips these records. Eliminates 246 records.
 
-#####Note
 
 Bug 6edc96c mentions these 246 records in a comment as potentially a separate root cause from the version skew issue. This bug tracks the specific failure to expand hierarchical v3 ValueSets.
+
+---
+
+### [ ] `f2b2cef` Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions
+
+Records-Impacted: 292
+Tolerance-ID: expand-unclosed-extension-and-total
+Record-ID: b6156665-797d-4483-971c-62c00a0816b8
+
+#####What differs
+
+For $expand operations that return incomplete/truncated expansions (e.g., SNOMED CT is-a queries requesting count=1000 from a set with 124,412 total codes):
+
+1. **Prod includes `expansion.extension` with `valueset-unclosed: true`; dev omits it.** Per the FHIR R4 spec, this extension signals that an expansion is incomplete due to inclusion of post-coordinated or unbounded value sets. Prod correctly marks these expansions as unclosed; dev does not.
+
+2. **Dev includes `expansion.total` (e.g., 124412); prod omits it.** The `total` field is optional (0..1) per spec. Prod omits it on these incomplete expansions; dev includes it. Since these expansions are truncated to the `count` parameter (e.g., 1000 codes returned), the behavioral difference is: dev tells the client the full count but doesn't signal incompleteness, while prod signals incompleteness but doesn't provide the full count.
+
+These two differences always co-occur in the same records — every record where prod has `valueset-unclosed` but dev doesn't also has dev providing `total` while prod doesn't.
+
+#####How widespread
+
+292 records in the comparison dataset show both patterns simultaneously. All are successful (200/200) $expand operations. The pattern is predicted by: prod expansion has `valueset-unclosed` extension present AND dev expansion has `total` present but prod expansion does not.
+
+Search: analyzed all 810 successful expand deltas; 292 match the combined pattern `unclosed=prod-only AND total=dev-only`. No records show unclosed prod-only without total dev-only or vice versa.
+
+#####What the tolerance covers
+
+Tolerance `expand-unclosed-extension-and-total` matches $expand records where:
+- Both return 200 with expansion data
+- Prod has the `valueset-unclosed` extension but dev doesn't
+- Dev has `expansion.total` but prod doesn't
+
+It normalizes by removing the `valueset-unclosed` extension from prod's expansion.extension array and removing `total` from dev's expansion object.
+
+#####Representative record
+
+b6156665-797d-4483-971c-62c00a0816b8: POST /r4/ValueSet/$expand — SNOMED CT is-a 404684003 (Clinical finding), count=1000. Prod returns 1000 codes with `valueset-unclosed: true` and no total. Dev returns 1000 codes with `total: 124412` and no unclosed extension.
 
 ---
 

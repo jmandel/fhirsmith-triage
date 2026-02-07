@@ -278,16 +278,61 @@
             "lamport": 8
         },
         "edit_time": {
-            "timestamp": 1770500745,
-            "time": "2026-02-07T15:45:45-06:00",
-            "lamport": 38
+            "timestamp": 1770501026,
+            "time": "2026-02-07T15:50:26-06:00",
+            "lamport": 40
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev  returns only root concept for v3 hierarchical ValueSets (missing child codes)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f2b2ceff471c67940514fe998c387df816ff13927a6965d52cf947e4b8d05994",
+        "human_id": "f2b2cef",
+        "create_time": {
+            "timestamp": 1770501152,
+            "time": "2026-02-07T15:52:32-06:00",
+            "lamport": 9
+        },
+        "edit_time": {
+            "timestamp": 1770501156,
+            "time": "2026-02-07T15:52:36-06:00",
+            "lamport": 43
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev  returns only root concept for v3 hierarchical ValueSets (missing child codes)",
+        "title": "Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

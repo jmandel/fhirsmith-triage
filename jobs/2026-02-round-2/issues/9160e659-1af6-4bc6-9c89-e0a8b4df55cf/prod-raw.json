@@ -1,0 +1,67 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://unitsofmeasure.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "TEST"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown code 'TEST' in the CodeSystem 'http://unitsofmeasure.org' version '2.2'"
+            },
+            "location": [
+              "code"
+            ],
+            "expression": [
+              "code"
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Error processing Unit: 'TEST': The unit \"TEST\" is unknown at character 1"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

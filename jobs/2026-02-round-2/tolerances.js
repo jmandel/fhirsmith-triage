@@ -2501,6 +2501,57 @@ const tolerances = [
   },
 
   {
+    id: 'oo-extra-expression-on-info-issues',
+    description: 'Dev adds expression: ["code"] on information-severity OperationOutcome issues where prod omits the expression field. Both error-severity issues have expression in both sides. Affects 6 validate-code records (SNOMED and UCUM invalid codes).',
+    kind: 'temp-tolerance',
+    bugId: '801aef1',
+    tags: ['normalize', 'operationoutcome', 'expression-field'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      if (prodIssues.issue.length !== devIssues.issue.length) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const pi = prodIssues.issue[i];
+        const di = devIssues.issue[i];
+        if (!pi.expression && di?.expression && di.severity === 'information') {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function stripExtraExpression(devBody, prodBody) {
+        if (!devBody?.parameter || !prodBody?.parameter) return devBody;
+        return {
+          ...devBody,
+          parameter: devBody.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const prodParam = prodBody.parameter.find(pp => pp.name === 'issues');
+            if (!prodParam?.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodParam.resource.issue[idx];
+                  if (iss.severity === 'information' && iss.expression && !prodIss?.expression) {
+                    const { expression, ...rest } = iss;
+                    return rest;
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: stripExtraExpression(dev, prod) };
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

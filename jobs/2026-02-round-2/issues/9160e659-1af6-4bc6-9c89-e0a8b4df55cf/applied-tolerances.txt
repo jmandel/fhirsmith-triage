@@ -1,0 +1,5 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+strip-oo-message-id-extension: normalize
+oo-missing-location-field: normalize
+ucum-error-message-format: normalize
