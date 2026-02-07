@@ -246,13 +246,20 @@ def build_bug_data(bugs, impact_counts):
         hid = bug.get("human_id", "")
         labels = bug.get("labels", [])
 
-        # Look up impact count — try full human_id first, then prefix match
-        impact = impact_counts.get(hid, None)
+        # Extract impact from bug body header (Records-Impacted: N)
+        impact = None
+        impact_match = re.search(r'^Records-Impacted:\s*(\d+)', body_md, re.MULTILINE)
+        if impact_match:
+            impact = int(impact_match.group(1))
+
+        # Fall back to progress.ndjson correlation
         if impact is None:
-            for key, val in impact_counts.items():
-                if hid.startswith(key) or key.startswith(hid):
-                    impact = val
-                    break
+            impact = impact_counts.get(hid, None)
+            if impact is None:
+                for key, val in impact_counts.items():
+                    if hid.startswith(key) or key.startswith(hid):
+                        impact = val
+                        break
 
         entry = {
             "id": hid,

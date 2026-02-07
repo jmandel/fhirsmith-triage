@@ -350,5 +350,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "da50d174b9c0779c94a0383dc9f19828748b88b4847f8f106318fde1f594f933",
+        "human_id": "da50d17",
+        "create_time": {
+            "timestamp": 1770485029,
+            "time": "2026-02-07T11:23:49-06:00",
+            "lamport": 10
+        },
+        "edit_time": {
+            "timestamp": 1770485033,
+            "time": "2026-02-07T11:23:53-06:00",
+            "lamport": 28
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "SNOMED CT edition version skew: dev loads older editions than prod",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

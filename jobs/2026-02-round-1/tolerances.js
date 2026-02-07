@@ -395,6 +395,20 @@ const tolerances = [
   },
 
   {
+    id: 'vsac-modifier-extension-error',
+    description: 'Dev fails to process VSAC ValueSets with vsacOpModifier extension in exclude filters. Returns generic "Cannot process resource" business-rule error instead of proper validation. Both servers return result=false but for different reasons. Affects 3 POST /r4/ValueSet/$validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '933fdcc',
+    tags: ['skip', 'vsac', 'modifier-extension'],
+    match({ record, dev }) {
+      if (!isParameters(dev)) return null;
+      const devMsg = getParamValue(dev, 'message');
+      if (devMsg && devMsg.includes('vsacOpModifier')) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',

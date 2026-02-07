@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_8 bugs (8 open, 0 closed)_
+_9 bugs (9 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -284,6 +284,41 @@ Normalizes both sides to prod's display value (the code itself, per FHIR convent
 #####Representative record
 
 6ae99904-538b-4241-89db-b15eab6e637e (POST /r4/ValueSet/$validate-code, code=[in_i])
+
+---
+
+### [ ] `da50d17` SNOMED CT edition version skew: dev loads older editions than prod
+
+Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.
+
+#####What differs
+
+The `version` parameter in $validate-code responses contains different SNOMED CT edition URIs:
+
+- International edition (900000000000207008): prod=20250201, dev=20240201 (256 records)
+- US edition (731000124108): prod=20250901, dev=20230301 (46 records, some with reversed newer dev versions)
+- Swedish edition (45991000052106): prod=20220531, dev=20231130 (13 records)
+- Plus other national editions with smaller counts
+
+#####How widespread
+
+279 total records in the current comparison dataset show SNOMED version parameter differences:
+- 265 categorized as content-differs (version string is the only or primary diff)
+- 14 categorized as result-disagrees (validation result boolean differs — codes valid in one edition but not the other)
+
+All are $validate-code operations. The version difference also correlates with display text differences in ~80 records (display names changed between editions).
+
+Matched by: system=http://snomed.info/sct AND version parameter contains snomed.info/sct AND prod version != dev version.
+
+#####What the tolerance covers
+
+Tolerance ID: snomed-version-skew
+Normalizes the `version` parameter to prod's value on both sides when both contain snomed.info/sct URIs with different version dates. This eliminates records where version is the only diff (~190 records). Records with additional diffs (display, message, result) still surface for separate triage.
+
+#####Representative record IDs
+
+- e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)
+- e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)
 
 ---
 

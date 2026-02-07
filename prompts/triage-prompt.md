@@ -60,19 +60,26 @@ Use these exact category labels:
 
 ### Filing bug reports
 
-When filing a `git-bug`, describe what you **observed**, not what you think the code is doing. You haven't read the codebase — don't speculate on root causes.
+When filing a `git-bug`, describe what you **observed**, not what you think the code is doing. You haven't read the codebase — don't speculate on root causes or suggest fixes.
 
-A good bug report includes:
+The bug body starts with a metadata header (machine-parseable), then free-form narrative:
 
-1. **What differs**: The factual difference between prod and dev responses. Be specific — "dev returns `inactive: true` with `version: 2021-11-01`, prod omits both parameters" not "dev has extra parameters."
-2. **How widespread**: How many records show this pattern, and what request properties predict it (system URI, operation type, FHIR version, etc.). Include the grep/search you used to find this.
-3. **What the tolerance covers**: The tolerance ID, what it matches, and how many records it eliminates. This tells the person fixing the bug how to validate their fix.
-4. **A representative record ID**: At least one, so a reader can `grep -n '<ID>' comparison.ndjson` to reproduce.
+```
+Records-Impacted: <N>
+Tolerance-ID: <tolerance-id>
+Record-ID: <representative-uuid>
 
-Do **not** include:
-- Speculation about what code path causes the difference
-- Guesses about which module or function is responsible
-- Suggested fixes
+<Free-form narrative — use markdown freely. Describe what differs between
+prod and dev, how widespread the pattern is, what request properties predict
+it, and any other context that helps a reader understand the issue. Include
+specific examples with prod vs dev values, grep commands you used, etc.
+No required sections — tell the story of the difference.>
+```
+
+The three header lines are required:
+- `Records-Impacted`: how many comparison records this tolerance eliminates
+- `Tolerance-ID`: the tolerance ID in tolerances.js (for cross-referencing)
+- `Record-ID`: a representative record UUID (for `grep -n '<ID>' comparison.ndjson`)
 
 Always add the `tx-compare` label. Also add the record's comparison category as a label (e.g., `content-differs`, `status-mismatch`).
 

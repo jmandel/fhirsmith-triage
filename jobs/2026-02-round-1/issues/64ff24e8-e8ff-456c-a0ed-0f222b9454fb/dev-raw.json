@@ -1,0 +1,46 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "business-rule",
+            "details": {
+              "text": "Cannot process resource at \"exclude[0].filter\" due to the presence of the modifier extension vsacOpModifier"
+            },
+            "location": [
+              null
+            ],
+            "expression": [
+              null
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "Cannot process resource at \"exclude[0].filter\" due to the presence of the modifier extension vsacOpModifier"
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:oid:2.16.840.1.113883.6.238"
+    },
+    {
+      "name": "code",
+      "valueCode": "2184-0"
+    },
+    {
+      "name": "display",
+      "valueString": "Dominican"
+    }
+  ]
+}
