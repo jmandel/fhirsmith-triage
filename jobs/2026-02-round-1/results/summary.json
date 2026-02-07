@@ -1,9 +1,10 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T16:45:48.067Z",
+  "timestamp": "2026-02-07T16:50:40.865Z",
   "totalRecords": 7245,
-  "skipped": 1317,
+  "skipped": 1327,
   "skippedReasons": {
+    "missing-dicom-cid29-valueset": 10,
     "skip-metadata-ops": 780,
     "skip-prod-xml": 174,
     "skip-static-assets": 4,
@@ -11,12 +12,12 @@
   },
   "priorities": {
     "OK": 2860,
-    "P6": 2263,
-    "P3": 10,
+    "P6": 2258,
     "P4": 346,
     "P2": 186,
     "P1": 246,
-    "P0": 17
+    "P0": 17,
+    "P3": 5
   },
   "operationBreakdown": {
     "validate-code": {
@@ -29,9 +30,9 @@
       "OK": 157
     },
     "read": {
-      "P6": 706,
-      "P3": 8,
-      "OK": 4
+      "P6": 701,
+      "OK": 4,
+      "P3": 3
     },
     "expand": {
       "P4": 346,

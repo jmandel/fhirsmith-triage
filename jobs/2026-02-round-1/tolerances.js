@@ -257,6 +257,20 @@ const tolerances = [
   },
 
   {
+    id: 'missing-dicom-cid29-valueset',
+    description: 'DICOM CID 29 AcquisitionModality ValueSet is not loaded in dev. Prod returns the full ValueSet (51 codes) for both direct reads (/r4/ValueSet/dicom-cid-29-AcquisitionModality) and URL searches (?url=...sect_CID_29.html). Dev returns 404 or empty Bundle. Affects 10 records (5 P3, 5 P6).',
+    kind: 'temp-tolerance',
+    bugId: '51f23f5',
+    tags: ['skip', 'missing-resource', 'dicom'],
+    match({ record }) {
+      if (record.url.includes('dicom-cid-29') || record.url.includes('sect_CID_29')) {
+        return 'skip';
+      }
+      return null;
+    },
+  },
+
+  {
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',

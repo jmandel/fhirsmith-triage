@@ -1,10 +1,10 @@
 # tx-compare Bug Report
 
-_3 bugs (3 open, 0 closed)_
+_4 bugs (4 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
-| P6 | 3 | Content differences |
+| P6 | 4 | Content differences |
 
 ---
 
@@ -117,6 +117,34 @@ Expected elimination: ~44 records.
 #####Representative record ID
 
 `beb4276b-f937-46c3-81ab-7f63cb7798b7` — grep -n 'beb4276b-f937-46c3-81ab-7f63cb7798b7' jobs/2026-02-round-1/comparison.ndjson
+
+---
+
+### [ ] `e09cff6` BCP-47 display text format: dev returns 'Region=...' instead of standard format
+
+#####What differs
+
+For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like "English (Region=United States)" while prod returns the standard format "English (United States)".
+
+Specific example for code en-US:
+- prod: "English (United States)"
+- dev: "English (Region=United States)"
+
+The "Region=" prefix in dev's display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.
+
+#####How widespread
+
+7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.
+
+Search: grep -c 'Region=' deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where "Region=" appears only in diagnostics).
+
+#####What the tolerance covers
+
+Tolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.
+
+#####Representative record
+
+da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47
 
 ---
 

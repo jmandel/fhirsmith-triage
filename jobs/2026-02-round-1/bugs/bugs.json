@@ -130,5 +130,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "e09cff67bf0a5b1a8525ec8c2a9d04e56d19c26d3506de152134a1fd0c339d48",
+        "human_id": "e09cff6",
+        "create_time": {
+            "timestamp": 1770482720,
+            "time": "2026-02-07T10:45:20-06:00",
+            "lamport": 5
+        },
+        "edit_time": {
+            "timestamp": 1770482726,
+            "time": "2026-02-07T10:45:26-06:00",
+            "lamport": 13
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "BCP-47 display text format: dev returns 'Region=...' instead of standard format",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
