@@ -1,0 +1,10 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "diagnostics": "ValueSet not found: http://snomed.info/sct?fhir_vs",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

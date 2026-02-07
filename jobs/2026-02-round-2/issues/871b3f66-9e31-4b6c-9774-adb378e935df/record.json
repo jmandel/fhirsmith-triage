@@ -1,0 +1,23 @@
+{
+  "id": "871b3f66-9e31-4b6c-9774-adb378e935df",
+  "url": "/r4/ValueSet/$expand?url=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&filter=diabetes&count=5",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1255,
+    "hash": "dba9f25d20c4a3f20b71f82c4b62ead0"
+  },
+  "dev": {
+    "status": 404,
+    "contentType": "application/json; charset=utf-8",
+    "size": 152,
+    "hash": "817eaa001aa02ca4547d6de347eb1a01"
+  },
+  "comparison": {
+    "category": "missing-resource",
+    "op": "expand"
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"url\" : \"http://snomed.info/sct?fhir_vs\",\"version\" : \"20250201\",\"name\" : \"ALLSNOMEDCT\",\"title\" : \"SNOMED CT Reference Set (All of SNOMED CT)\",\"status\" : \"active\",\"date\" : \"2026-02-07T08:30:22.973Z\",\"expansion\" : {\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/valueset-unclosed\",\"valueBoolean\" : true}],\"identifier\" : \"urn:uuid:4365b901-8371-41b3-92d8-22df4b2d8f13\",\"timestamp\" : \"2026-02-07T08:30:22.973Z\",\"parameter\" : [{\"name\" : \"filter\",\"valueString\" : \"diabetes\"},{\"name\" : \"count\",\"valueInteger\" : 5},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"}],\"contains\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"405751000\",\"display\" : \"Diabetes type (observable entity)\"},{\"system\" : \"http://snomed.info/sct\",\"code\" : \"703136005\",\"display\" : \"Diabetes mellitus in remission (disorder)\"},{\"system\" : \"http://snomed.info/sct\",\"code\" : \"310425007\",\"display\" : \"Diabetes monitoring invitation\"},{\"system\" : \"http://snomed.info/sct\",\"code\" : \"273413007\",\"display\" : \"Diabetes wellbeing questionnaire\"},{\"system\" : \"http://snomed.info/sct\",\"code\" : \"4481000175102\",\"display\" : \"Diabetes mellitus screening not done (situation)\"}]}}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"diagnostics\":\"ValueSet not found: http://snomed.info/sct?fhir_vs\"}]}"
+}

@@ -2778,6 +2778,20 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'snomed-implicit-valueset-expand-404',
+    description: 'Dev returns 404 for SNOMED CT implicit ValueSet URLs (fhir_vs pattern). These are FHIR-standard implicit ValueSet URLs that prod handles correctly but dev does not recognize.',
+    kind: 'temp-tolerance',
+    bugId: '36da928',
+    tags: ['skip', 'missing-resource', 'snomed', 'implicit-valueset'],
+    match({ record }) {
+      if (record.dev.status !== 404 || record.prod.status !== 200) return null;
+      // Match URLs containing the SNOMED CT implicit ValueSet fhir_vs pattern
+      if (/fhir_vs/.test(decodeURIComponent(record.url))) return 'skip';
+      return null;
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

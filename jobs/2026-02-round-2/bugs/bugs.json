@@ -548,16 +548,61 @@
             "lamport": 14
         },
         "edit_time": {
-            "timestamp": 1770503133,
-            "time": "2026-02-07T16:25:33-06:00",
-            "lamport": 71
+            "timestamp": 1770503440,
+            "time": "2026-02-07T16:30:40-06:00",
+            "lamport": 74
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev omits valueset-toocostly extension and adds spurious used-codesystem on  for grammar-based code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3103b019c8251918d363ebbeb554c204d332477159bb6e25185532dd3da45a87",
+        "human_id": "3103b01",
+        "create_time": {
+            "timestamp": 1770503446,
+            "time": "2026-02-07T16:30:46-06:00",
+            "lamport": 15
+        },
+        "edit_time": {
+            "timestamp": 1770503450,
+            "time": "2026-02-07T16:30:50-06:00",
+            "lamport": 77
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev omits valueset-toocostly extension and adds spurious used-codesystem on  for grammar-based code systems",
+        "title": "Dev returns extra informational HGVS syntax issue in $validate-code for varnomen.hgvs.org",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

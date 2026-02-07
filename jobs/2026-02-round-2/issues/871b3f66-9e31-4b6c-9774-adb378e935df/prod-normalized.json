@@ -1,0 +1,60 @@
+{
+  "date": "2026-02-07T08:30:22.973Z",
+  "expansion": {
+    "contains": [
+      {
+        "code": "405751000",
+        "display": "Diabetes type (observable entity)",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "703136005",
+        "display": "Diabetes mellitus in remission (disorder)",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "310425007",
+        "display": "Diabetes monitoring invitation",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "273413007",
+        "display": "Diabetes wellbeing questionnaire",
+        "system": "http://snomed.info/sct"
+      },
+      {
+        "code": "4481000175102",
+        "display": "Diabetes mellitus screening not done (situation)",
+        "system": "http://snomed.info/sct"
+      }
+    ],
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/valueset-unclosed",
+        "valueBoolean": true
+      }
+    ],
+    "identifier": "urn:uuid:4365b901-8371-41b3-92d8-22df4b2d8f13",
+    "parameter": [
+      {
+        "name": "filter",
+        "valueString": "diabetes"
+      },
+      {
+        "name": "count",
+        "valueInteger": 5
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+      }
+    ],
+    "timestamp": "2026-02-07T08:30:22.973Z"
+  },
+  "name": "ALLSNOMEDCT",
+  "resourceType": "ValueSet",
+  "status": "active",
+  "title": "SNOMED CT Reference Set (All of SNOMED CT)",
+  "url": "http://snomed.info/sct?fhir_vs",
+  "version": "20250201"
+}

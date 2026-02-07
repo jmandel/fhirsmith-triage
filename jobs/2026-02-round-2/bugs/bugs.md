@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_13 bugs (12 open, 1 closed)_
+_14 bugs (13 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -701,7 +701,27 @@ Records-Impacted: 13
 Tolerance-ID: expand-toocostly-extension-and-used-codesystem
 Record-ID: a272aa8c-96d7-4905-a75a-ea21d67b83fc
 
-#####What differs
+
+Prod:
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"_incomplete","valueBoolean":true},{"name":"count","valueInteger":1000},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/ValueSet/mimetypes","compose":{"include":[{"system":"urn:ietf:bcp:13"}]}}}]}' \
+| jq '.expansion.extension, [.expansion.parameter[] | select(.name == "used-codesystem")]'
+```
+
+Dev:
+```bash
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"_incomplete","valueBoolean":true},{"name":"count","valueInteger":1000},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/ValueSet/mimetypes","compose":{"include":[{"system":"urn:ietf:bcp:13"}]}}}]}' \
+| jq '.expansion.extension, [.expansion.parameter[] | select(.name == "used-codesystem")]'
+```
+
+Prod returns `expansion.extension` with `valueset-toocostly: true`, dev returns `null`. Dev includes `used-codesystem: urn:ietf:bcp:13` in parameters, prod does not.
+
 
 For $expand on grammar-based code systems (primarily BCP-13 MIME types via `urn:ietf:bcp:13`, plus one Brazilian ICD-10 ValueSet), both prod and dev return 200 with an empty expansion (total=0, no `contains`). However:
 
@@ -711,13 +731,11 @@ For $expand on grammar-based code systems (primarily BCP-13 MIME types via `urn:
 
 Both differences always co-occur in the same records.
 
-#####How widespread
 
 13 records in the current comparison dataset show both patterns simultaneously. All are successful (200/200) $expand operations. 12 of 13 involve `http://hl7.org/fhir/ValueSet/mimetypes` (BCP-13 MIME types). One involves a Brazilian ValueSet that includes LOINC and a Brazilian ICD-10 code system.
 
 Search: `grep 'valueset-toocostly' deltas.ndjson` found 25 records total; of those, 13 have both sides returning 200 (the rest have status mismatches handled by other tolerances).
 
-#####What the tolerance covers
 
 Tolerance `expand-toocostly-extension-and-used-codesystem` matches $expand records where both return 200, prod has the `valueset-toocostly` extension but dev doesn't, and normalizes by:
 - Removing the `valueset-toocostly` extension from prod
@@ -725,9 +743,42 @@ Tolerance `expand-toocostly-extension-and-used-codesystem` matches $expand recor
 
 Eliminates 13 records from the delta file.
 
-#####Representative record
 
 a272aa8c-96d7-4905-a75a-ea21d67b83fc: POST /r4/ValueSet/$expand — BCP-13 MIME types (http://hl7.org/fhir/ValueSet/mimetypes). Prod returns empty expansion with `valueset-toocostly: true` extension and `limitedExpansion: true` parameter. Dev returns empty expansion with `limitedExpansion: true` and `used-codesystem: urn:ietf:bcp:13` but no toocostly extension.
+
+---
+
+### [ ] `3103b01` Dev returns extra informational HGVS syntax issue in $validate-code for varnomen.hgvs.org
+
+Records-Impacted: 62
+Tolerance-ID: hgvs-extra-syntax-issue
+Record-ID: cdf72565-a646-4daa-86f9-ed5ead0058d6
+
+#####What differs
+
+For $validate-code operations against http://varnomen.hgvs.org, both prod and dev correctly return result=false for invalid HGVS codes. Both return the same error-level OperationOutcome issue ("Unknown code 'X' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'").
+
+However, dev returns an additional informational-level OperationOutcome issue that prod does not:
+
+- severity: "information"
+- code: "code-invalid"
+- text: "Error while processing '<code>': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'."
+
+This appears to be HGVS-specific syntax validation feedback that dev performs but prod does not.
+
+#####How widespread
+
+62 records in content-differs category show this exact pattern. All involve $validate-code POST to /r4/CodeSystem/$validate-code? with system http://varnomen.hgvs.org. All have the same extra informational issue text pattern ("Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'").
+
+Search: grep -c "Missing one of" results/deltas/deltas.ndjson => 62
+
+#####What the tolerance covers
+
+Tolerance ID: hgvs-extra-syntax-issue. Matches $validate-code records for http://varnomen.hgvs.org where dev has more OperationOutcome issues than prod, and the extra issues are informational-level. Normalizes by trimming dev's issue list to match prod's length. Eliminates 62 records.
+
+#####Representative record
+
+cdf72565-a646-4daa-86f9-ed5ead0058d6
 
 ---
 
