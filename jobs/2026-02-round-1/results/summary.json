@@ -1,29 +1,30 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T17:01:43.434Z",
+  "timestamp": "2026-02-07T17:06:30.041Z",
   "totalRecords": 7245,
-  "skipped": 1623,
+  "skipped": 1941,
   "skippedReasons": {
     "missing-dicom-cid29-valueset": 10,
     "expand-422-vs-404-codesystem-not-found": 296,
     "skip-metadata-ops": 780,
+    "skip-truncated-body": 318,
     "skip-prod-xml": 174,
     "skip-static-assets": 4,
     "skip-root-page": 359
   },
   "priorities": {
     "OK": 3351,
-    "P6": 1767,
-    "P4": 50,
+    "P6": 1490,
     "P2": 186,
     "P1": 246,
-    "P0": 17,
-    "P3": 5
+    "P0": 16,
+    "P4": 12,
+    "P3": 3
   },
   "operationBreakdown": {
     "validate-code": {
       "OK": 2694,
-      "P6": 806,
+      "P6": 800,
       "P1": 246,
       "P0": 1
     },
@@ -32,19 +33,19 @@
     },
     "read": {
       "OK": 495,
-      "P6": 210,
-      "P3": 3
+      "P6": 9,
+      "P3": 1
     },
     "expand": {
-      "P6": 742,
-      "P4": 50,
+      "P6": 678,
       "P2": 186,
-      "P0": 16,
+      "P0": 15,
+      "P4": 12,
       "P3": 2
     },
     "batch-validate-code": {
       "OK": 5,
-      "P6": 9
+      "P6": 3
     }
   }
 }

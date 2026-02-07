@@ -1,0 +1,265 @@
+{
+  "resourceType": "Bundle",
+  "type": "searchset",
+  "total": 13818,
+  "link": [
+    {
+      "relation": "self",
+      "url": "http://tx.fhir.org/r4/ValueSet?_elements=url%2Cversion&_ts=1770416165723&_offset=0"
+    },
+    {
+      "relation": "first",
+      "url": "http://tx.fhir.org/r4/ValueSet?_elements=url%2Cversion&_ts=1770416165723&_offset=0"
+    },
+    {
+      "relation": "next",
+      "url": "http://tx.fhir.org/r4/ValueSet?_elements=url%2Cversion&_ts=1770416165723&_offset=20"
+    },
+    {
+      "relation": "last",
+      "url": "http://tx.fhir.org/r4/ValueSet?_elements=url%2Cversion&_ts=1770416165723&_offset=13800"
+    }
+  ],
+  "entry": [
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-accepting-patients",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-accepting-patients",
+        "url": "http://terminology.hl7.org/ValueSet/accepting-patients",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-action-participant-role",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-action-participant-role",
+        "url": "http://terminology.hl7.org/ValueSet/action-participant-role",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-action-type",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-action-type",
+        "url": "http://terminology.hl7.org/ValueSet/action-type",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-activity-definition-category",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-activity-definition-category",
+        "url": "http://terminology.hl7.org/ValueSet/activity-definition-category",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adjudication",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adjudication",
+        "url": "http://terminology.hl7.org/ValueSet/adjudication",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adjudication-error",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adjudication-error",
+        "url": "http://terminology.hl7.org/ValueSet/adjudication-error",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adjudication-reason",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adjudication-reason",
+        "url": "http://terminology.hl7.org/ValueSet/adjudication-reason",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-category",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-category",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-category",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-causality-assess",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-causality-assess",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-causality-assess",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-causality-method",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-causality-method",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-causality-method",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-clinical-research-causality-relatedness",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-clinical-research-causality-relatedness",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-clinical-research-causality-relatedness",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-clinical-research-grades",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-clinical-research-grades",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-clinical-research-grades",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-clinical-research-outcomes",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-clinical-research-outcomes",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-clinical-research-outcomes",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-clinical-research-seriousness-criteria",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-clinical-research-seriousness-criteria",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-clinical-research-seriousness-criteria",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-seriousness",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-seriousness",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-seriousness",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-adverse-event-severity",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-adverse-event-severity",
+        "url": "http://terminology.hl7.org/ValueSet/adverse-event-severity",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-allerg-intol-substance-exp-risk",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-allerg-intol-substance-exp-risk",
+        "url": "http://terminology.hl7.org/ValueSet/allerg-intol-substance-exp-risk",
+        "version": "1.0.0"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-allergyintolerance-clinical",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-allergyintolerance-clinical",
+        "url": "http://terminology.hl7.org/ValueSet/allergyintolerance-clinical",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-allergyintolerance-verification",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-allergyintolerance-verification",
+        "url": "http://terminology.hl7.org/ValueSet/allergyintolerance-verification",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    },
+    {
+      "fullUrl": "http://tx.fhir.org/r4/ValueSet/1-appointment-cancellation-reason",
+      "resource": {
+        "resourceType": "ValueSet",
+        "id": "1-appointment-cancellation-reason",
+        "url": "http://terminology.hl7.org/ValueSet/appointment-cancellation-reason",
+        "version": "1.0.1"
+      },
+      "search": {
+        "mode": "match"
+      }
+    }
+  ]
+}

@@ -80,6 +80,22 @@ const tolerances = [
       return record.prodBody && record.prodBody.trimStart().startsWith('<') ? 'skip' : null;
     },
   },
+  {
+    id: 'skip-truncated-body',
+    description: 'Response body truncated at 50KB during data collection, producing invalid JSON that cannot be parsed. Comparison is impossible. Affects 277 records (ValueSet/CodeSystem searches, large $expand responses).',
+    kind: 'equiv-autofix',
+    tags: ['skip', 'data-collection-artifact'],
+    match({ record }) {
+      const prodLen = (record.prodBody || '').length;
+      const devLen = (record.devBody || '').length;
+      if (prodLen >= 50000 || devLen >= 50000) {
+        // Verify at least one body fails to parse as JSON
+        try { if (prodLen >= 50000) JSON.parse(record.prodBody); } catch { return 'skip'; }
+        try { if (devLen >= 50000) JSON.parse(record.devBody); } catch { return 'skip'; }
+      }
+      return null;
+    },
+  },
 
   // Normalizations
   {

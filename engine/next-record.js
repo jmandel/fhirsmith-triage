@@ -155,13 +155,16 @@ async function main() {
       : '(none)\n'
   );
 
-  // Write pick context so we can track delta count trajectory across rounds
   const remaining = total - analyzed;
   const priority = record.comparison?.priority || '?';
-  fs.writeFileSync(
-    path.join(issueDir, 'pick-context.json'),
-    JSON.stringify({ pickedAt: new Date().toISOString(), total, analyzed, remaining, priority }, null, 2)
-  );
+
+  // Append to job-level progress log (one line per pick)
+  const progressLine = JSON.stringify({
+    pickedAt: new Date().toISOString(),
+    recordId: recordId,
+    total, analyzed, remaining, priority,
+  }) + '\n';
+  fs.appendFileSync(path.join(jobDir, 'progress.ndjson'), progressLine);
 
   // Print summary
   console.log(`Record: ${lineno}/${total} (${analyzed} analyzed, ${remaining} remaining)`);
@@ -170,8 +173,8 @@ async function main() {
   console.log(`Record ID: ${record.id || '?'}`);
   console.log(`URL: ${record.url || '?'}`);
   console.log(`Method: ${record.method || '?'}`);
-  console.log(`Prod status: ${record.prodStatus || '?'}`);
-  console.log(`Dev status: ${record.devStatus || '?'}`);
+  console.log(`Prod status: ${record.prod?.status || '?'}`);
+  console.log(`Dev status: ${record.dev?.status || '?'}`);
   console.log(`Operation: ${record.comparison?.op || '?'}`);
   console.log(`Lookup: grep -n '${record.id}' ${path.join(jobDir, 'comparison.ndjson')}`);
 }

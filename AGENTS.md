@@ -7,26 +7,30 @@ We compare responses from **prod** (tx.fhir.org Java) vs **dev** (FHIRsmith Node
 
 ## Data Format
 
-`comparison.ndjson` contains paired request/response records. Each line:
+Both `comparison.ndjson` (input) and `results/deltas/deltas.ndjson` (output) use the same record schema:
+
 ```json
 {
-  "ts": "ISO timestamp",
-  "id": "UUID",
+  "id": "UUID (stable across reruns)",
   "method": "POST",
   "url": "/r4/Operation/$name?params",
-  "match": false,
   "prod": {"status": 200, "contentType": "application/fhir+json", "size": 1894, "hash": "..."},
   "dev": {"status": 200, "contentType": "application/json; charset=utf-8", "size": 1181, "hash": "..."},
-  "prodBody": "JSON string of FHIR Parameters response",
-  "devBody": "JSON string of FHIR Parameters response",
-  "requestBody": "JSON string of request body (when available)"
+  "prodBody": "JSON string of FHIR response",
+  "devBody": "JSON string of FHIR response",
+  "requestBody": "JSON string of request body (when available)",
+  "comparison": {"priority": "P6", "reason": "content-differs", "op": "validate-code"}
 }
 ```
+
+**HTTP status codes** are at `record.prod.status` and `record.dev.status` (nested inside the `prod`/`dev` objects). This is the same schema that tolerance `match()` and `normalize()` functions receive in `ctx.record`.
+
+The `comparison` field is added by the comparison engine — it's absent in `comparison.ndjson` but present in `deltas.ndjson`. The `comparison.ndjson` input also has `ts`, `match` fields not carried to deltas.
 
 POST requests have `url` with trailing `?` (no query params).
 GET requests (like $lookup) have params in the URL.
 
-The comparison engine writes all non-OK/non-SKIP records to a single `results/deltas/deltas.ndjson` file. Each delta line includes the original record fields plus a `comparison` object with priority, reason, and operation. The priority is metadata embedded in each record — filtering by priority is done at read time, not write time.
+The comparison engine writes all non-OK/non-SKIP records to `results/deltas/deltas.ndjson`. Filtering by priority is done at read time, not write time.
 
 ## FHIR Terminology Operations
 
@@ -151,15 +155,16 @@ Each tolerance has a `match(ctx)` function that returns one of:
 The `ctx` object passed to both functions:
 ```js
 {
-  record: {                // full NDJSON log line
-    url, method,           // request info
-    prod: { status, ... }, // prod response metadata
-    dev:  { status, ... }, // dev response metadata
-    prodBody, devBody,     // raw response body strings
-    requestBody,           // raw request body (when available)
+  record: {                   // full NDJSON record (see Data Format above)
+    url, method,              // request info
+    prod: { status, ... },    // prod response metadata — status is record.prod.status
+    dev:  { status, ... },    // dev response metadata — status is record.dev.status
+    prodBody, devBody,        // raw response body strings
+    requestBody,              // raw request body (when available)
+    comparison: { priority, reason, op },  // only in deltas, not in comparison.ndjson
   },
-  prod: object | null,     // parsed prodBody
-  dev:  object | null,     // parsed devBody
+  prod: object | null,        // parsed prodBody (JSON object)
+  dev:  object | null,        // parsed devBody (JSON object)
 }
 ```
 
@@ -236,6 +241,7 @@ Issue directories are keyed by the record's `id` field (a UUID assigned during d
 Each triage round lives in its own job directory, created by `prompts/start-triage.sh`:
 - `comparison.ndjson` - Raw paired responses (input data for this job)
 - `tolerances.js` - Working tolerances (copied from baseline, built up during triage)
+- `progress.ndjson` - Append-only log, one line per record pick: `{pickedAt, recordId, total, analyzed, remaining, priority}`
 - `results/summary.json` - Comparison stats
 - `results/deltas/deltas.ndjson` - All non-OK/non-SKIP records with priority in comparison metadata
 - `issues/<record-uuid>/` - Per-record triage workspace:

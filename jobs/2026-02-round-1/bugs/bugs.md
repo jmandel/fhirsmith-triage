@@ -1,10 +1,11 @@
 # tx-compare Bug Report
 
-_6 bugs (6 open, 0 closed)_
+_7 bugs (7 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
 | P3 | 1 | Missing resources |
+| P4 | 1 | Status code mismatch |
 | P6 | 5 | Content differences |
 
 ---
@@ -33,6 +34,42 @@ Search: `grep 'dicom-cid-29\|sect_CID_29' deltas.ndjson` finds all 10.
 
 - `3e3359d1-7391-4620-8b72-552f197f21cf` (P6 URL search)
 - `ab5f8ed0-5149-4967-af3a-3c649cbb10c5` (P3 direct read)
+
+---
+
+## P4 -- Status code mismatch
+
+### [ ] `1c145d2` Dev returns 404 instead of 422 for  when referenced CodeSystem is not found
+
+#####What differs
+
+When a ValueSet $expand fails because a referenced CodeSystem definition cannot be found, prod returns HTTP 422 (Unprocessable Entity) while dev returns HTTP 404 (Not Found). The OperationOutcome error message is identical on both sides: "A definition for CodeSystem '...' could not be found, so the value set cannot be expanded". The issue code is `not-found` in both cases.
+
+Additionally, dev includes `location: [null]` and `expression: [null]` arrays in the OperationOutcome issue (prod omits these), and dev omits the `text` narrative element that prod includes. These are secondary cosmetic differences; the primary issue is the status code mismatch.
+
+#####How widespread
+
+296 records in this comparison batch. All are POST /r4/ValueSet/$expand operations where the error message contains "could not be found, so the value set cannot be expanded".
+
+Search: `grep '"prodStatus":422,"devStatus":404' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 296
+
+All 296 have:
+- Operation: POST /r4/ValueSet/$expand
+- Prod status: 422
+- Dev status: 404
+- OperationOutcome issue code: not-found
+- Identical error message text
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-422-vs-404-codesystem-not-found`
+Matches: POST /r4/ValueSet/$expand where prodStatus=422 and devStatus=404, and the OperationOutcome contains "could not be found, so the value set cannot be expanded".
+Normalizes: status code difference, strips null location/expression arrays from dev, strips text narrative from prod. Compares remaining OperationOutcome content.
+Affects: 296 records.
+
+#####Representative record
+
+ID: eee2c985-52e0-4520-b4e4-01766ede5a7d
 
 ---
 
