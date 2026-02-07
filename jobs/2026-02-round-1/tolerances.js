@@ -1673,6 +1673,32 @@ const tolerances = [
   },
 
   {
+    id: 'cpt-validate-code-unknown-vs-invalid-display',
+    description: 'CPT $validate-code result=false: prod finds the code and reports invalid-display (wrong display text), dev cannot find the code at all and reports invalid-code (unknown code). Both agree result=false but for different reasons. Same root cause as bug f559b53 — dev CPT CodeSystem is missing codes. Affects 4 CodeSystem/$validate-code records for code 99235.',
+    kind: 'temp-tolerance',
+    bugId: '79fe417',
+    tags: ['skip', 'cpt', 'validate-code', 'content-differs'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'http://www.ama-assn.org/go/cpt') return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      // Check prod has invalid-display and dev has invalid-code
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      const prodHasInvalidDisplay = prodIssues.issue.some(i =>
+        i.details?.coding?.some(c => c.code === 'invalid-display'));
+      const devHasInvalidCode = devIssues.issue.some(i =>
+        i.details?.coding?.some(c => c.code === 'invalid-code'));
+      if (prodHasInvalidDisplay && devHasInvalidCode) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'cpt-validate-code-missing-info-issue',
     description: 'CPT $validate-code result=false: dev omits informational "Code X not found in CPT" OperationOutcome issue that prod includes. For ValueSet validate-code, prod also prefixes message with this text. Both agree on result=false and the primary error issue. Normalizes by stripping the extra informational issue from prod and removing the message prefix. Affects 10 records (8 CodeSystem, 2 ValueSet).',
     kind: 'temp-tolerance',

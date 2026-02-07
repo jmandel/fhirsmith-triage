@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_41 bugs (38 open, 3 closed)_
+_42 bugs (39 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2279,6 +2279,27 @@ Codes affected: 19304 (2 records), 98000 (2 records), 99201 (6 records).
 #####What the tolerance covers
 
 Tolerance ID: cpt-validate-code-missing-info-issue. Matches CPT validate-code records where result=false and prod has an extra informational "not found in CPT" issue. Normalizes by stripping the extra informational issue from prod and removing the corresponding message prefix. Eliminates 10 records.
+
+---
+
+### [ ] `fd9fd91` Case-insensitive validate-code: dev returns extra normalized-code param, different severity and issue text
+
+Records-Impacted: 4
+Tolerance-ID: case-insensitive-code-validation-diffs
+Record-ID: b6d0a8c8-a6e9-4acb-8228-f08aad1b1c49
+
+When validating codes in case-insensitive code systems (ICD-10, ICD-10-CM) where the submitted code has incorrect casing (e.g., "M80.00xA" instead of "M80.00XA", or "i50" instead of "I50"):
+
+1. Dev returns an extra `normalized-code` output parameter containing the correctly-cased code. Prod omits this parameter entirely. The `normalized-code` parameter is a valid $validate-code output per the FHIR spec, so dev is arguably more informative, but the difference needs tracking.
+
+2. The OperationOutcome issue severity differs: prod returns `"warning"`, dev returns `"information"` for the CODE_CASE_DIFFERENCE issue. Both convey the same message about case differences.
+
+3. The issue details text includes the system URI version in dev but not in prod. Prod: "the code system 'http://hl7.org/fhir/sid/icd-10-cm' is case insensitive". Dev: "the code system 'http://hl7.org/fhir/sid/icd-10-cm|2024' is case insensitive".
+
+All 4 records are POST /r4/CodeSystem/$validate-code with case-insensitive code systems (2 ICD-10-CM with code M80.00xA, 2 ICD-10 with code i50). Both sides agree result=true.
+
+Search: `grep 'normalized-code' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4
+Cross-check: `grep 'CODE_CASE_DIFFERENCE' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4 (same records)
 
 ---
 
