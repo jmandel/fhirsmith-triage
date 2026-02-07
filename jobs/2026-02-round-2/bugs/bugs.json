@@ -413,16 +413,61 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770501936,
-            "time": "2026-02-07T16:05:36-06:00",
-            "lamport": 53
+            "timestamp": 1770502154,
+            "time": "2026-02-07T16:09:14-06:00",
+            "lamport": 56
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev returns extra message/issues for display language resolution on validate-code result=true",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "b6d19d82e59c1d10602e90fe8a6b5176b850d584c239d884423e3589d727c08f",
+        "human_id": "b6d19d8",
+        "create_time": {
+            "timestamp": 1770502337,
+            "time": "2026-02-07T16:12:17-06:00",
+            "lamport": 12
+        },
+        "edit_time": {
+            "timestamp": 1770502342,
+            "time": "2026-02-07T16:12:22-06:00",
+            "lamport": 59
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev returns extra message/issues for display language resolution on validate-code result=true",
+        "title": "Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

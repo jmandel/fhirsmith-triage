@@ -2501,6 +2501,28 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-missing-total',
+    description: 'Dev $expand omits expansion.total when prod includes it. The total field (0..1 integer) tells clients the total concept count for pagination. Neither side has the valueset-unclosed extension — these are complete expansions where dev simply fails to report total. Affects 47 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '2ed80bd',
+    tags: ['normalize', 'expand', 'total'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      const prodHasTotal = prod.expansion.total !== undefined;
+      const devHasTotal = dev.expansion.total !== undefined;
+      if (prodHasTotal && !devHasTotal) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Remove total from prod since dev doesn't have it
+      const { total, ...restExpansion } = prod.expansion;
+      return { prod: { ...prod, expansion: restExpansion }, dev };
+    },
+  },
+
+  {
     id: 'oo-extra-expression-on-info-issues',
     description: 'Dev adds expression: ["code"] on information-severity OperationOutcome issues where prod omits the expression field. Both error-severity issues have expression in both sides. Affects 6 validate-code records (SNOMED and UCUM invalid codes).',
     kind: 'temp-tolerance',

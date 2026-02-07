@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_10 bugs (9 open, 1 closed)_
+_11 bugs (10 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -561,24 +561,79 @@ Records-Impacted: 19
 Tolerance-ID: dev-extra-display-lang-not-found-message
 Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80
 
-#####What differs
 
-When $validate-code returns result=true and a displayLanguage parameter was specified in the request, dev returns extra `message` and `issues` parameters that prod omits entirely. The dev message reads: "There are no valid display names found for the code <system>#<code> for language(s) '<lang>'. The display is '<display>' which is the default language display." The `issues` parameter contains an OperationOutcome with an informational issue (code=invalid, tx-issue-type=invalid-display).
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"urn:iso:std:iso:3166","code":"FR","display":"France"}]}},{"name":"displayLanguage","valueCode":"fr"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"jurisdiction","url":"http://hl7.org/fhir/ValueSet/jurisdiction","version":"4.0.1","compose":{"include":[{"system":"urn:iso:std:iso:3166"},{"system":"urn:iso:std:iso:3166:-2"},{"system":"http://unstats.un.org/unsd/methods/m49/m49.htm","filter":[{"property":"class","op":"=","value":"region"}]}]}}}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"urn:iso:std:iso:3166","code":"FR","display":"France"}]}},{"name":"displayLanguage","valueCode":"fr"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"jurisdiction","url":"http://hl7.org/fhir/ValueSet/jurisdiction","version":"4.0.1","compose":{"include":[{"system":"urn:iso:std:iso:3166"},{"system":"urn:iso:std:iso:3166:-2"},{"system":"http://unstats.un.org/unsd/methods/m49/m49.htm","filter":[{"property":"class","op":"=","value":"region"}]}]}}}]}'
+```
+
+Prod returns parameters: result, system, code, version, display, codeableConcept, diagnostics.
+
+Dev returns the same parameters plus message ("There are no valid display names found for the code urn:iso:std:iso:3166#FR for language(s) 'fr'. The display is 'France' which is the default language display") and issues (OperationOutcome with informational severity).
+
+
+When $validate-code returns result=true and a displayLanguage parameter was specified in the request, dev returns extra message and issues parameters that prod omits entirely. The dev message reads: "There are no valid display names found for the code <system>#<code> for language(s) '<lang>'. The display is '<display>' which is the default language display." The issues parameter contains an OperationOutcome with an informational issue (code=invalid, tx-issue-type=invalid-display).
 
 Prod returns only: result, system, code, version, display, codeableConcept, diagnostics.
 Dev returns all the above plus: message and issues with the display-language-not-found informational feedback.
 
 Both servers agree on result=true, and the validated code/display/version are identical.
 
-#####How widespread
 
 19 records in deltas match this pattern. All are POST /r4/ValueSet/$validate-code with result=true where prod has no message/issues and dev has "no valid display names found" message+issues. 17 of 19 involve urn:iso:std:iso:3166 codes (FR, FRA) with displayLanguage=fr or fr-FR. 2 involve urn:iso:std:iso:3166 with no explicit displayLanguage.
 
-Search: `grep 'There are no valid display names found' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` returns 21 total, but 2 of those have differing prod issues too (SNOMED, different root cause). The 19 clean matches are where prod lacks both message and issues entirely.
+Search: grep 'There are no valid display names found' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l returns 21 total, but 2 of those have differing prod issues too (SNOMED, different root cause). The 19 clean matches are where prod lacks both message and issues entirely.
+
+
+Tolerance dev-extra-display-lang-not-found-message matches validate-code Parameters responses where result=true, prod has no message parameter, and dev has a message containing "There are no valid display names found". It normalizes by stripping the extra message and issues from dev. Eliminates 19 records.
+
+---
+
+### [ ] `b6d19d8` Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system
+
+Records-Impacted: 5
+Tolerance-ID: cc-validate-code-missing-known-coding-params
+Record-ID: 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4
+
+#####What differs
+
+When CodeSystem/$validate-code is called with a codeableConcept containing multiple codings — one from an unknown CodeSystem and one from a known CodeSystem — and result=false:
+
+- **Prod** validates the known coding and returns `system`, `code`, `version`, `display` parameters for it. When the known coding also has issues (e.g. invalid-display), prod includes those as additional OperationOutcome issues.
+- **Dev** only reports the unknown system error and omits the `system`, `code`, `version`, `display` parameters entirely. Dev also omits any additional OperationOutcome issues related to the known coding.
+
+For example, with a codeableConcept containing a LOINC coding (known) and a smartypower coding (unknown):
+- Prod returns: system=http://loinc.org, code=72106-8, version=2.81, display="Total score [MMSE]", plus 2 issues (UNKNOWN_CODESYSTEM + invalid-display)
+- Dev returns: no system/code/version/display params, only 1 issue (UNKNOWN_CODESYSTEM)
+
+#####How widespread
+
+5 records in deltas. All are CodeSystem/$validate-code (both /r4 and /r5) with codeableConcept containing one unknown and one known coding. Both sides agree result=false.
+
+Search: `grep '"missing-in-dev","param":"system"' results/deltas/deltas.ndjson | wc -l` → 5
+
+The 5 records involve 2 unknown systems:
+- https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests (2 records, LOINC known coding)
+- http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs (3 records, SNOMED known coding)
 
 #####What the tolerance covers
 
-Tolerance `dev-extra-display-lang-not-found-message` matches validate-code Parameters responses where result=true, prod has no message parameter, and dev has a message containing "There are no valid display names found". It normalizes by stripping the extra message and issues from dev. Eliminates 19 records.
+Tolerance ID: cc-validate-code-missing-known-coding-params
+Matches: validate-code with codeableConcept, result=false on both sides, x-caused-by-unknown-system present, where prod has system/code params that dev lacks.
+Normalizes by adding prod's system/code/version/display params to dev and canonicalizing issues to prod's set.
+Eliminates: 5 records.
+
+#####Representative records
+
+- 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4 (LOINC + smartypower, /r5)
+- 6f70f14a-81e1-427e-9eed-1b2c53801296 (SNOMED + essilorluxottica, /r4)
 
 ---
 
