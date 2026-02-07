@@ -1,0 +1,28 @@
+{
+  "id": "80a780e6-8842-43a9-a260-889ce87f76ac",
+  "url": "/r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-0360&code=RN",
+  "method": "GET",
+  "prodStatus": 200,
+  "devStatus": 200,
+  "comparison": {
+    "priority": "P6",
+    "reason": "content-differs",
+    "op": "lookup",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "version"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "definition"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "designation"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"name\",\"valueString\" : \"DegreeLicenseCertificate\"},{\"name\" : \"code\",\"valueCode\" : \"RN\"},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/v2-0360\"},{\"name\" : \"version\",\"valueString\" : \"2.0.0\"},{\"name\" : \"display\",\"valueString\" : \"Registered Nurse\"},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"inactive\"},{\"name\" : \"value\",\"valueBoolean\" : false}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"definition\"},{\"name\" : \"value\",\"valueString\" : \"Registered Nurse\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"status\"},{\"name\" : \"value\",\"valueCode\" : \"active\"}]},{\"name\" : \"abstract\",\"valueBoolean\" : false}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"name\",\"valueString\":\"DegreeLicenseCertificate\"},{\"name\":\"code\",\"valueCode\":\"RN\"},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/v2-0360\"},{\"name\":\"version\",\"valueString\":\"3.0.0\"},{\"name\":\"display\",\"valueString\":\"Registered Nurse\"},{\"name\":\"definition\",\"valueString\":\"Registered Nurse\"},{\"name\":\"abstract\",\"valueBoolean\":false},{\"name\":\"property\",\"part\":[{\"name\":\"code\",\"valueCode\":\"inactive\"},{\"name\":\"value\",\"valueBoolean\":false}]},{\"name\":\"designation\",\"part\":[{\"name\":\"use\",\"valueCoding\":{\"system\":\"http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra\",\"code\":\"preferredForLanguage\"}},{\"name\":\"value\",\"valueString\":\"Registered Nurse\"}]},{\"name\":\"property\",\"part\":[{\"name\":\"code\",\"valueCode\":\"status\"},{\"name\":\"value\",\"valueCode\":\"active\"}]}]}"
+}

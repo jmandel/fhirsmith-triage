@@ -1,0 +1,68 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "name",
+      "valueString": "DegreeLicenseCertificate"
+    },
+    {
+      "name": "code",
+      "valueCode": "RN"
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/v2-0360"
+    },
+    {
+      "name": "version",
+      "valueString": "2.0.0"
+    },
+    {
+      "name": "display",
+      "valueString": "Registered Nurse"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "definition"
+        },
+        {
+          "name": "value",
+          "valueString": "Registered Nurse"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "status"
+        },
+        {
+          "name": "value",
+          "valueCode": "active"
+        }
+      ]
+    },
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    }
+  ]
+}

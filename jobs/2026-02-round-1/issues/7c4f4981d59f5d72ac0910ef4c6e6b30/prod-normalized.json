@@ -1,0 +1,68 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "RN"
+    },
+    {
+      "name": "display",
+      "valueString": "Registered Nurse"
+    },
+    {
+      "name": "name",
+      "valueString": "DegreeLicenseCertificate"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "definition"
+        },
+        {
+          "name": "value",
+          "valueString": "Registered Nurse"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "status"
+        },
+        {
+          "name": "value",
+          "valueCode": "active"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/v2-0360"
+    },
+    {
+      "name": "version",
+      "valueString": "2.0.0"
+    }
+  ],
+  "resourceType": "Parameters"
+}

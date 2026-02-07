@@ -115,6 +115,32 @@ const tolerances = [
     },
   },
 
+  // Phase C: Content — temp-tolerances for known bugs
+  {
+    id: 'v2-0360-lookup-version-skew',
+    description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
+    kind: 'temp-tolerance',
+    bugId: 'd3b49ff',
+    match({ record }) {
+      if (record.url.includes('$lookup') && record.url.includes('v2-0360')) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize(ctx) {
+      function clean(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter
+            .filter(p => !['version', 'definition', 'designation'].includes(p.name))
+            .filter(p => !(p.name === 'property' && p.part?.some(pp => pp.name === 'code' && pp.valueCode === 'definition'))),
+        };
+      }
+      return both(ctx, clean);
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
