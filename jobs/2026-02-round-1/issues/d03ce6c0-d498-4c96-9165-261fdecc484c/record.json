@@ -1,0 +1,24 @@
+{
+  "id": "d03ce6c0-d498-4c96-9165-261fdecc484c",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 593,
+    "hash": "cbf68dae764323a5267217fb10389d14"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 492,
+    "hash": "fa64cd42833d863d80483b104e1e7ea9"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "expand",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"status\" : \"active\",\"expansion\" : {\"identifier\" : \"urn:uuid:ccf70713-107a-43be-958d-877ac12d0907\",\"timestamp\" : \"2026-02-06T23:23:46.239Z\",\"total\" : 1,\"offset\" : 0,\"parameter\" : [{\"name\" : \"displayLanguage\",\"valueCode\" : \"en-US\"},{\"name\" : \"excludeNested\",\"valueBoolean\" : true},{\"name\" : \"offset\",\"valueInteger\" : 0},{\"name\" : \"count\",\"valueInteger\" : 1000},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://www.ama-assn.org/go/cpt|2023\"}],\"contains\" : [{\"system\" : \"http://www.ama-assn.org/go/cpt\",\"code\" : \"83036\",\"display\" : \"Hemoglobin; glycosylated (A1C)\"}]}}",
+  "devBody": "{\"resourceType\":\"ValueSet\",\"status\":\"active\",\"id\":\"\",\"expansion\":{\"timestamp\":\"2026-02-06T23:23:46.286Z\",\"identifier\":\"urn:uuid:028fb378-d844-45ba-bc2d-5e32540871db\",\"parameter\":[{\"name\":\"displayLanguage\",\"valueCode\":\"en-US\"},{\"name\":\"excludeNested\",\"valueBoolean\":true},{\"name\":\"includeDefinition\",\"valueBoolean\":false},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"used-codesystem\",\"valueUri\":\"http://www.ama-assn.org/go/cpt|2023\"}],\"offset\":0,\"total\":0}}"
+}

@@ -1,0 +1,39 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "expansion": {
+    "identifier": "urn:uuid:ccf70713-107a-43be-958d-877ac12d0907",
+    "timestamp": "2026-02-06T23:23:46.239Z",
+    "total": 1,
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US"
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://www.ama-assn.org/go/cpt|2023"
+      }
+    ],
+    "contains": [
+      {
+        "system": "http://www.ama-assn.org/go/cpt",
+        "code": "83036",
+        "display": "Hemoglobin; glycosylated (A1C)"
+      }
+    ]
+  }
+}

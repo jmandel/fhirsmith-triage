@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_37 bugs (34 open, 3 closed)_
+_38 bugs (35 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2090,6 +2090,41 @@ Eliminates 3 records.
 - 65fabdc4-930b-49e8-9ff1-60c176cbbfee (SNOMED 19657006 / el-observation-code-cs disorientatedtime)
 - db568fd1-e0b1-4188-b29f-4fe9f7b2529b (SNOMED 85828009 / el-observation-code-cs autoimmune)
 - 2e0dea57-4d5f-4442-99b8-881d1177f561 (SNOMED 26329005 / el-observation-code-cs cognitiveStatusNotNormal)
+
+---
+
+### [ ] `bd0f7f4` Resource read: prod omits text.div when text.status=generated, dev includes it
+
+Records-Impacted: 4
+Tolerance-ID: read-resource-text-div-diff
+Record-ID: 31a631b5-8579-48d8-a95c-e40eadfd4714
+
+#####What differs
+
+When reading ValueSet resources (both direct reads like `/r4/ValueSet/us-core-laboratory-test-codes` and search reads like `/r4/ValueSet?url=...`), prod returns `text: {"status": "generated"}` without the `div` element, while dev returns `text: {"status": "generated", "div": "<div>...</div>"}` with a full generated narrative.
+
+In FHIR R4, when `text.status` is present, the `div` element is required. Prod's omission of `div` with `status=generated` is technically non-conformant. Dev includes the correct generated narrative HTML.
+
+The narrative content itself is auto-generated from the resource structure (e.g., listing included code systems and filters) and has no direct terminology significance.
+
+#####How widespread
+
+4 delta records are affected, all for the same ValueSet (`us-core-laboratory-test-codes`) accessed via 2 URL patterns (direct read and search), each appearing twice in the test data:
+
+- 31a631b5: GET /r4/ValueSet?url=...us-core-laboratory-test-codes (search)
+- 296cf150: GET /r4/ValueSet/us-core-laboratory-test-codes (direct)
+- 9a2a81a0: GET /r4/ValueSet?url=...us-core-laboratory-test-codes (search)
+- 6e354570: GET /r4/ValueSet/us-core-laboratory-test-codes (direct)
+
+Search used: `grep '"op":"read"' deltas.ndjson` then checked all 8 results for text.div presence. Only these 4 had the pattern (the other 4 had different issues: entry count mismatch or other diffs).
+
+#####What the tolerance covers
+
+Tolerance ID: `read-resource-text-div-diff`. Matches read operations (resource reads returning ValueSet, CodeSystem, or Bundle with entries) where both sides have `text.status=generated` but differ on `div` presence. Normalizes by stripping `text.div` from both sides and comparing the rest. Eliminates 4 records.
+
+#####Representative record
+
+`grep -n '31a631b5-8579-48d8-a95c-e40eadfd4714' comparison.ndjson`
 
 ---
 

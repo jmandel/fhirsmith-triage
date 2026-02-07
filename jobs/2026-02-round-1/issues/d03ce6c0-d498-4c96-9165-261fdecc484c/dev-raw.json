@@ -1,0 +1,37 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "id": "",
+  "expansion": {
+    "timestamp": "2026-02-06T23:23:46.286Z",
+    "identifier": "urn:uuid:028fb378-d844-45ba-bc2d-5e32540871db",
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US"
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "includeDefinition",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://www.ama-assn.org/go/cpt|2023"
+      }
+    ],
+    "offset": 0,
+    "total": 0
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "expansion": {
+    "contains": [
+      {
+        "code": "83036",
+        "display": "Hemoglobin; glycosylated (A1C)",
+        "system": "http://www.ama-assn.org/go/cpt"
+      }
+    ],
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US"
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://www.ama-assn.org/go/cpt|2023"
+      }
+    ],
+    "total": 1
+  },
+  "resourceType": "ValueSet",
+  "status": "active"
+}

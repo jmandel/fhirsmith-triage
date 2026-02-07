@@ -1633,6 +1633,26 @@ const tolerances = [
   },
 
   {
+    id: 'cpt-expand-empty-results',
+    description: 'CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes. Prod returns the expected codes. Dev reports used-codesystem http://www.ama-assn.org/go/cpt|2023 but fails to resolve any codes from it. Same root cause as CPT validate-code bug f559b53. Affects 45 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '1176a4a',
+    tags: ['skip', 'expand', 'cpt', 'empty-expansion'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      // Dev returns total=0, prod returns >0
+      if (dev.expansion.total !== 0 || !(prod.expansion.total > 0)) return null;
+      // Check that CPT is the used-codesystem
+      const hasCpt = (prod.expansion.parameter || []).some(p =>
+        p.name === 'used-codesystem' && p.valueUri && p.valueUri.includes('ama-assn.org/go/cpt')
+      );
+      if (!hasCpt) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'read-resource-text-div-diff',
     description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
     kind: 'temp-tolerance',

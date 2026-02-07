@@ -1659,5 +1659,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "bd0f7f43a2ff4ad7b65db0d048485b75d18f73f131fb9de7e68b181416054e94",
+        "human_id": "bd0f7f4",
+        "create_time": {
+            "timestamp": 1770494741,
+            "time": "2026-02-07T14:05:41-06:00",
+            "lamport": 39
+        },
+        "edit_time": {
+            "timestamp": 1770494746,
+            "time": "2026-02-07T14:05:46-06:00",
+            "lamport": 196
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Resource read: prod omits text.div when text.status=generated, dev includes it",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
