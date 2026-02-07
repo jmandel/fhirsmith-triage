@@ -1,0 +1,88 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "785126002",
+            "display": "Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "this-code-not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#785126002 ('Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet')' was not found in the value set 'http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0'"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "severity": "information"
+          },
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is one of 4 choices: 'Methylphenidate hydrochloride 5 mg chewable tablet' (en), 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en), 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) or 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en) (for the language(s) 'en-US')"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0'"
+            },
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

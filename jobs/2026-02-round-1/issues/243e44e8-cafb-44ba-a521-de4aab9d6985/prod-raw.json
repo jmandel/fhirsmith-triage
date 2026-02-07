@@ -1,0 +1,78 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "785126002"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Methylphenidate hydrochloride 5 mg chewable tablet"
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "785126002",
+            "display": "Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) (for the language(s) 'en-US')"
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0 for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\r\n16 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<763158003)\"\r\n31 15   : 15ms : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 15ms : Prepare include: \"(http://snomed.info/sct)(concept<<787481004)\"\r\n31 0    : 15ms : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 15ms : Prepare exclude: \"(http://snomed.info/sct)(concept<<787859002)\"\r\n31 0    : 15ms : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n31 0    : 15ms : Validate \"[http://snomed.info/sct#785126002 (\"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet\")]\"\r\n31 0    : 15ms : Check \"http://snomed.info/sct#785126002\"\r\n31 0    : 15ms : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n31 0    : 15ms : check code in (http://snomed.info/sct)(concept<763158003) at CodeableConcept.coding[0]\r\n31 0    : 15ms : Filter \"concept<763158003\": Code \"785126002\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n31 0    : 15ms : check code not in (http://snomed.info/sct)(concept<<787859002) at CodeableConcept.coding[0]\r\n31 0    : 15ms : Filter \"concept<<787859002\": Code \"785126002\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n"
+    }
+  ]
+}

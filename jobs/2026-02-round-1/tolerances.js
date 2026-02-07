@@ -1381,6 +1381,32 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-undefined-system-missing-params',
+    description: 'POST $validate-code result=false: dev missing code/system/display params and has extra issues due to undefined system extraction. Both agree result=false (display text is wrong) but dev response shape differs because it failed to extract the system from the POST body. Dev diagnostics show "undefined" system. Same root cause as bug 19283df (result-disagrees variant). Affects 3 records.',
+    kind: 'temp-tolerance',
+    bugId: '530eeb3',
+    tags: ['skip', 'validate-code', 'undefined-system', 'content-differs'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$validate-code')) return null;
+      if (record.method !== 'POST') return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      // Prod has code/system params, dev doesn't
+      const prodCode = getParamValue(prod, 'code');
+      const devCode = getParamValue(dev, 'code');
+      if (prodCode === undefined || devCode !== undefined) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      const devSystem = getParamValue(dev, 'system');
+      if (prodSystem === undefined || devSystem !== undefined) return null;
+      // Confirm undefined system in dev diagnostics
+      if (!record.devBody || !record.devBody.includes('undefined')) return null;
+      return 'skip';
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

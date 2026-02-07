@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_32 bugs (29 open, 3 closed)_
+_33 bugs (30 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1769,6 +1769,41 @@ ValueSets affected include medication-form-codes, problems-uv-ips, vaccines-uv-i
 Tolerance ID: validate-code-filter-miss-message-prefix
 Matches: validate-code where result=false on both sides, dev's message ends with prod's message, and the extra prefix contains "is not in the specified filter".
 Normalizes: sets dev's message to prod's message value.
+
+---
+
+### [ ] `645fdcf` SNOMED inactive display message lists extra synonyms vs prod
+
+Records-Impacted: 3
+Tolerance-ID: inactive-display-message-extra-synonyms
+Record-ID: 292172fe-c9f1-4ca4-b1a7-1f353187c9ba
+
+#####What differs
+
+When validating a code with an inactive display (INACTIVE_DISPLAY_FOUND), the OperationOutcome issue details.text "correct display" list differs between prod and dev:
+
+- Prod: "'Moderate' is no longer considered a correct display for code '6736007' (status = inactive). The correct display is one of Midgrade"
+- Dev: "'Moderate' is no longer considered a correct display for code '6736007' (status = inactive). The correct display is one of Midgrade,Moderate (severity modifier) (qualifier value),Moderate (severity modifier),Moderate severity"
+
+Prod lists only the preferred display term. Dev lists multiple synonyms/designations in addition to the preferred term.
+
+Same pattern for code 78421000 (Intramuscular): prod lists only "Intramuscular route" (quoted), dev lists "Intramuscular route,Intramuscular route (qualifier value),Intramuscular use,IM route,IM use".
+
+#####How widespread
+
+3 records in the comparison dataset, all in deltas:
+- 292172fe: POST /r4/ValueSet/$validate-code (SNOMED 6736007)
+- 01902b33: POST /r4/CodeSystem/$validate-code (SNOMED 78421000)
+- a0e9c508: POST /r4/CodeSystem/$validate-code (SNOMED 78421000)
+
+All are SNOMED validate-code with display-comment issue type and INACTIVE_DISPLAY_FOUND message ID.
+
+Search: grep 'INACTIVE_DISPLAY_FOUND' deltas.ndjson | wc -l → 3
+
+#####What the tolerance covers
+
+Tolerance ID: inactive-display-message-extra-synonyms
+Matches validate-code records where OperationOutcome has display-comment issues with differing details.text that share the same prefix up to "The correct display is one of". Normalizes both sides to prod's text. Eliminates 3 records.
 
 ---
 

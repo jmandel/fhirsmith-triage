@@ -1433,5 +1433,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "645fdcff803b5e67f33cb7f694c0540ecbc4c9314c9ce4772d7aa35e4c10fe3e",
+        "human_id": "645fdcf",
+        "create_time": {
+            "timestamp": 1770493086,
+            "time": "2026-02-07T13:38:06-06:00",
+            "lamport": 34
+        },
+        "edit_time": {
+            "timestamp": 1770493091,
+            "time": "2026-02-07T13:38:11-06:00",
+            "lamport": 169
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "SNOMED inactive display message lists extra synonyms vs prod",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

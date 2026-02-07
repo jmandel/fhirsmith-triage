@@ -1,0 +1,68 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "785126002"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "785126002",
+            "display": "Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Methylphenidate hydrochloride 5 mg chewable tablet"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) (for the language(s) 'en-US')"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

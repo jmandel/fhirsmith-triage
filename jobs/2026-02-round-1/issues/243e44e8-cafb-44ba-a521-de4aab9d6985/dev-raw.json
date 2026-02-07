@@ -1,0 +1,116 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0'; Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is one of 4 choices: 'Methylphenidate hydrochloride 5 mg chewable tablet' (en), 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en), 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) or 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en) (for the language(s) 'en-US')"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "785126002",
+            "display": "Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://snomed.info/sct#785126002 ('Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet')' was not found in the value set 'http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "text": "Wrong Display Name 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet' for http://snomed.info/sct#785126002. Valid display is one of 4 choices: 'Methylphenidate hydrochloride 5 mg chewable tablet' (en), 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en), 'Methylphenidate hydrochloride 5 mg chewable tablet' (en) or 'Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet (clinical drug)' (en) (for the language(s) 'en-US')",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ]
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              ""
+            ],
+            "expression": [
+              ""
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Analysing http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0 for validation purposes\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Prepare include[0]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Prepare include[1]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Prepare exclude[0]: \"()\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Validate \"[undefined#785126002 (\"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet\")]\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Check \"http://snomed.info/sct#785126002\"\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n0ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0: Filter undefined: Code \"785126002\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ]
+}
