@@ -184,51 +184,79 @@ const tolerances = [
 
   {
     id: 'oo-missing-location-field',
-    description: 'Dev omits deprecated `location` field on OperationOutcome issues that prod includes. In FHIR R4, `location` is deprecated in favor of `expression`, but prod still populates both. In all observed cases, `location` exactly equals `expression`. Normalizes by stripping `location` from prod when dev lacks it. Affects 3019 validate-code records.',
+    description: 'Dev omits deprecated `location` field on OperationOutcome issues that prod includes. In FHIR R4, `location` is deprecated in favor of `expression`, but prod still populates both. In all observed cases, `location` exactly equals `expression`. Normalizes by stripping `location` from prod when dev lacks it. Handles both flat validate-code and nested batch-validate-code structures. Affects ~3069 records.',
     kind: 'temp-tolerance',
     bugId: 'a9cf20c',
     tags: ['normalize', 'operationoutcome', 'missing-location'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
+      // Check OO issues for location mismatch (works for any Parameters body)
+      function checkIssues(prodIssues, devIssues) {
+        if (!prodIssues?.issue || !devIssues?.issue) return false;
+        for (let i = 0; i < prodIssues.issue.length; i++) {
+          const pi = prodIssues.issue[i];
+          const di = devIssues.issue[i];
+          if (!di) continue;
+          if (pi.location && !di.location &&
+              JSON.stringify(pi.location) === JSON.stringify(pi.expression)) {
+            return true;
+          }
+        }
+        return false;
+      }
+      // Top-level issues (regular validate-code)
       const prodIssues = getParamValue(prod, 'issues');
       const devIssues = getParamValue(dev, 'issues');
-      if (!prodIssues?.issue || !devIssues?.issue) return null;
-      for (let i = 0; i < prodIssues.issue.length; i++) {
-        const pi = prodIssues.issue[i];
-        const di = devIssues.issue[i];
-        if (!di) continue;
-        if (pi.location && !di.location &&
-            JSON.stringify(pi.location) === JSON.stringify(pi.expression)) {
-          return 'normalize';
+      if (checkIssues(prodIssues, devIssues)) return 'normalize';
+      // Nested issues inside validation resources (batch-validate-code)
+      if (prod.parameter && dev.parameter) {
+        for (let i = 0; i < prod.parameter.length; i++) {
+          const pp = prod.parameter[i];
+          const dp = dev.parameter[i];
+          if (!dp) continue;
+          if (pp.name === 'validation' && dp.name === 'validation' &&
+              pp.resource?.resourceType === 'Parameters' &&
+              dp.resource?.resourceType === 'Parameters') {
+            const nestedProdIssues = getParamValue(pp.resource, 'issues');
+            const nestedDevIssues = getParamValue(dp.resource, 'issues');
+            if (checkIssues(nestedProdIssues, nestedDevIssues)) return 'normalize';
+          }
         }
       }
       return null;
     },
     normalize({ prod, dev }) {
-      function stripLocation(body) {
+      function stripLocationFromIssues(body) {
         if (!body?.parameter) return body;
         return {
           ...body,
           parameter: body.parameter.map(p => {
-            if (p.name !== 'issues' || !p.resource?.issue) return p;
-            return {
-              ...p,
-              resource: {
-                ...p.resource,
-                issue: p.resource.issue.map(iss => {
-                  if (!iss.location) return iss;
-                  if (JSON.stringify(iss.location) === JSON.stringify(iss.expression)) {
-                    const { location, ...rest } = iss;
-                    return rest;
-                  }
-                  return iss;
-                }),
-              },
-            };
+            // Strip location from direct issues parameter
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => {
+                    if (!iss.location) return iss;
+                    if (JSON.stringify(iss.location) === JSON.stringify(iss.expression)) {
+                      const { location, ...rest } = iss;
+                      return rest;
+                    }
+                    return iss;
+                  }),
+                },
+              };
+            }
+            // Recurse into nested validation Parameters (batch-validate-code)
+            if (p.name === 'validation' && p.resource?.resourceType === 'Parameters') {
+              return { ...p, resource: stripLocationFromIssues(p.resource) };
+            }
+            return p;
           }),
         };
       }
-      return { prod: stripLocation(prod), dev };
+      return { prod: stripLocationFromIssues(prod), dev };
     },
   },
 

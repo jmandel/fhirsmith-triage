@@ -1,0 +1,30 @@
+{
+  "id": "1697b0cd-971b-475c-8075-f249215b1205",
+  "url": "/r4/ValueSet/$batch-validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1169,
+    "hash": "a076fdd5d9e21664df12690f21e5bc54"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1075,
+    "hash": "c783e27ed4b2f7268c543d4db060d778"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "batch-validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "validation"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"validation\",\"resource\" : {\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"823881000000104\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/83821000000107/version/20230412\"},{\"name\" : \"display\",\"valueString\" : \"Do not attempt cardiopulmonary resuscitation order\"},{\"name\" : \"inactive\",\"valueBoolean\" : true},{\"name\" : \"message\",\"valueString\" : \"The concept '823881000000104' has a status of inactive and its use should be reviewed\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"INACTIVE_CONCEPT_FOUND\"}],\"severity\" : \"warning\",\"code\" : \"business-rule\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"code-comment\"}],\"text\" : \"The concept '823881000000104' has a status of inactive and its use should be reviewed\"},\"location\" : [\"Coding\"],\"expression\" : [\"Coding\"]}]}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"823881000000104\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/83821000000107/version/20230412\"},{\"name\":\"display\",\"valueString\":\"Do not attempt cardiopulmonary resuscitation order\"},{\"name\":\"inactive\",\"valueBoolean\":true},{\"name\":\"message\",\"valueString\":\"The concept '823881000000104' has a status of inactive and its use should be reviewed\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"warning\",\"code\":\"business-rule\",\"details\":{\"text\":\"The concept '823881000000104' has a status of inactive and its use should be reviewed\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"code-comment\"}]},\"expression\":[\"Coding\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"INACTIVE_CONCEPT_FOUND\"}]}]}}]}}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"823881000000104\"}},{\"name\":\"system-version\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/83821000000107\"},{\"name\":\"defaultDisplayLanguage\",\"valueCode\":\"en-GB\"},{\"name\":\"displayLanguage\",\"valueString\":\"en, en-US\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true}]}}]}"
+}

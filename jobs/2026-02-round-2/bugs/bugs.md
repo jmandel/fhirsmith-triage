@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_14 bugs (13 open, 1 closed)_
+_15 bugs (14 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -754,7 +754,21 @@ Records-Impacted: 62
 Tolerance-ID: hgvs-extra-syntax-issue
 Record-ID: cdf72565-a646-4daa-86f9-ed5ead0058d6
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"NC_000003.11"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"NC_000003.11"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+Prod returns 1 OperationOutcome issue (error-level only), dev returns 2 issues (error-level plus an additional informational-level issue with text: "Error while processing 'NC_000003.11': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'.")
+
 
 For $validate-code operations against http://varnomen.hgvs.org, both prod and dev correctly return result=false for invalid HGVS codes. Both return the same error-level OperationOutcome issue ("Unknown code 'X' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'").
 
@@ -766,19 +780,60 @@ However, dev returns an additional informational-level OperationOutcome issue th
 
 This appears to be HGVS-specific syntax validation feedback that dev performs but prod does not.
 
-#####How widespread
 
 62 records in content-differs category show this exact pattern. All involve $validate-code POST to /r4/CodeSystem/$validate-code? with system http://varnomen.hgvs.org. All have the same extra informational issue text pattern ("Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'").
 
 Search: grep -c "Missing one of" results/deltas/deltas.ndjson => 62
 
-#####What the tolerance covers
 
 Tolerance ID: hgvs-extra-syntax-issue. Matches $validate-code records for http://varnomen.hgvs.org where dev has more OperationOutcome issues than prod, and the extra issues are informational-level. Normalizes by trimming dev's issue list to match prod's length. Eliminates 62 records.
 
-#####Representative record
 
 cdf72565-a646-4daa-86f9-ed5ead0058d6
+
+---
+
+### [ ] `36da928` Dev returns 404 for SNOMED CT implicit ValueSet  (fhir_vs URLs)
+
+Records-Impacted: 36
+Tolerance-ID: snomed-implicit-valueset-expand-404
+Record-ID: 871b3f66-9e31-4b6c-9774-adb378e935df
+
+#####What differs
+
+When expanding SNOMED CT implicit ValueSets using the standard `fhir_vs` URL pattern, prod returns 200 with a valid ValueSet expansion, while dev returns 404 with OperationOutcome "ValueSet not found: http://snomed.info/sct?fhir_vs".
+
+This affects all SNOMED CT implicit ValueSet URLs:
+- `http://snomed.info/sct?fhir_vs` (all of SNOMED CT)
+- `http://snomed.info/sct?fhir_vs=isa/<sctid>` (descendants of a concept)
+
+These are FHIR-standard implicit ValueSet URLs defined in the SNOMED CT FHIR usage guide. A terminology server must recognize these URL patterns and synthesize the corresponding ValueSet rather than looking for a stored resource.
+
+#####How widespread
+
+36 records in the delta file show this pattern. All are `missing-resource` category, `expand` operation. All have prod=200, dev=404.
+
+```
+grep -c 'fhir_vs' jobs/2026-02-round-2/results/deltas/deltas.ndjson
+####→ 36
+```
+
+The pattern is predicted by the URL containing `fhir_vs` combined with the $expand operation. Both /r4/ and /r5/ FHIR version prefixes are affected. Various filter and count parameters are used across the records but all fail the same way.
+
+176 total records in comparison.ndjson contain `fhir_vs`; the other 140 are already handled (matched OK or skipped by existing tolerances).
+
+#####What the tolerance covers
+
+Tolerance `snomed-implicit-valueset-expand-404` matches records where:
+- The URL contains `fhir_vs`
+- Dev returns status 404
+- Prod returns status 200
+
+It skips these records entirely since no meaningful comparison is possible (dev doesn't return FHIR content). Eliminates 36 delta records.
+
+#####Representative record
+
+`871b3f66-9e31-4b6c-9774-adb378e935df` — GET /r4/ValueSet/$expand?url=http%3A%2F%2Fsnomed.info%2Fsct%3Ffhir_vs&filter=diabetes&count=5
 
 ---
 

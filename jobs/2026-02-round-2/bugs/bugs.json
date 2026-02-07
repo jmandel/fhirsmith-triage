@@ -593,16 +593,61 @@
             "lamport": 15
         },
         "edit_time": {
-            "timestamp": 1770503450,
-            "time": "2026-02-07T16:30:50-06:00",
-            "lamport": 77
+            "timestamp": 1770503856,
+            "time": "2026-02-07T16:37:36-06:00",
+            "lamport": 82
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev returns extra informational HGVS syntax issue in $validate-code for varnomen.hgvs.org",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "36da92832b377221c0e061ab165aaa64e0064dc9dfac314c539870aa9f8846fd",
+        "human_id": "36da928",
+        "create_time": {
+            "timestamp": 1770503844,
+            "time": "2026-02-07T16:37:24-06:00",
+            "lamport": 16
+        },
+        "edit_time": {
+            "timestamp": 1770503848,
+            "time": "2026-02-07T16:37:28-06:00",
+            "lamport": 80
+        },
+        "status": "open",
+        "labels": [
+            "missing-resource",
+            "tx-compare"
+        ],
+        "title": "Dev returns 404 for SNOMED CT implicit ValueSet  (fhir_vs URLs)",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
