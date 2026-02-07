@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_24 bugs (22 open, 2 closed)_
+_25 bugs (23 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1288,6 +1288,43 @@ with open('jobs/2026-02-round-1/results/deltas/deltas.ndjson') as f:
 #####What the tolerance covers
 
 Tolerance `expand-iso3166-extra-reserved-codes` matches expand records where both prod and dev use urn:iso:std:iso:3166 and prod.expansion.total > dev.expansion.total. It normalizes by filtering prod's contains array to only include codes present in dev, and sets both totals to dev's count. This eliminates 7 records while preserving any other differences (display text, etc.) for detection.
+
+---
+
+### [ ] `2ae971e` Dev crashes (500) on valid $expand requests with JavaScript TypeErrors
+
+Records-Impacted: 15
+Tolerance-ID: expand-dev-crash-on-valid
+Record-ID: 7598431b-1c90-409c-b8f2-2be8358e8be3
+
+#####What differs
+
+Prod returns 200 with valid ValueSet expansion; dev returns 500 with OperationOutcome containing JavaScript TypeErrors. Two distinct error messages observed:
+
+1. `vs.expansion.parameter is not iterable` (1 record) — triggered when expanding `http://hl7.org/fhir/us/core/ValueSet/us-core-pregnancy-status`
+2. `exp.addParamUri is not a function` (14 records) — triggered when expanding Verily phenotype ValueSets (e.g., `http://fhir.verily.com/ValueSet/verily-phenotype-*`)
+
+Both are unhandled JS TypeErrors during the expand code path, causing 500 instead of a valid expansion.
+
+#####How widespread
+
+15 records in deltas, all `POST /r4/ValueSet/$expand` with prod=200, dev=500:
+
+```
+grep '"dev-crash-on-valid"' results/deltas/deltas.ndjson | grep expand | wc -l
+####15
+```
+
+The `addParamUri` errors are all Verily phenotype ValueSets (14 records). The `parameter is not iterable` error affects 1 US Core ValueSet.
+
+#####What the tolerance covers
+
+Tolerance `expand-dev-crash-on-valid` matches POST /r4/ValueSet/$expand where prod=200 and dev=500. Eliminates all 15 records.
+
+#####Representative record IDs
+
+- `7598431b-1c90-409c-b8f2-2be8358e8be3` (parameter is not iterable)
+- `9ec233b5-f523-4ec4-b4f9-fcdf8b63d17f` (addParamUri)
 
 ---
 

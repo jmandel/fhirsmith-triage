@@ -1,0 +1,29 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:oid:2.16.840.1.113883.6.238"
+    },
+    {
+      "name": "code",
+      "valueCode": "2108-9"
+    },
+    {
+      "name": "version",
+      "valueString": "1.2"
+    },
+    {
+      "name": "display",
+      "valueString": "European"
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n218 218 : 0ms  : Analysing http://hl7.org/fhir/us/core/ValueSet/detailed-race|6.1.0 for validation purposes\r\n218 0   : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n218 0   : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n218 0   : 0ms  : Prepare include: \"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914)\"\r\n218 0   : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914|20190522 for validation purposes\r\n218 0   : 0ms    : Prepare include: \"(urn:oid:2.16.840.1.113883.6.238)(concept<1000-9)\"\r\n218 0   : 0ms    : CodeSystem found: \"urn:oid:2.16.840.1.113883.6.238|1.2 (from us.nlm.vsac#0.24.0)\"\r\n218 0   : 0ms  : Prepare include: \"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103)\"\r\n218 0   : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113 for validation purposes\r\n218 0   : 0ms    : Prepare include: \"(http://terminology.hl7.org/CodeSystem/v3-NullFlavor)(ASKU,OTH,UNK)\"\r\n218 0   : 0ms    : CodeSystem found: \"http://terminology.hl7.org/CodeSystem/v3-NullFlavor|3.0.0\"\r\n218 0   : 0ms  : Prepare exclude: \"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3)\"\r\n218 0   : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213 for validation purposes\r\n218 0   : 0ms    : Prepare include: \"(urn:oid:2.16.840.1.113883.6.238)(1002-5,2028-9,2054-5,2076-8,2106-3)\"\r\n218 0   : 0ms    : CodeSystem found: \"urn:oid:2.16.840.1.113883.6.238|1.2 (from us.nlm.vsac#0.24.0)\"\r\n218 0   : 0ms  : Validate \"[urn:oid:2.16.840.1.113883.6.238#2108-9 (\"EUROPEAN\")]\"\r\n218 0   : 0ms  : Check \"urn:oid:2.16.840.1.113883.6.238#2108-9\"\r\n218 0   : 0ms  : Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914\r\n218 0   : 0ms    : Check \"urn:oid:2.16.840.1.113883.6.238#2108-9\"\r\n218 0   : 0ms    : CodeSystem found: urn:oid:2.16.840.1.113883.6.238|1.2 (from us.nlm.vsac#0.24.0) for urn:oid:2.16.840.1.113883.6.238|1.2\r\n218 0   : 0ms    : check code in (urn:oid:2.16.840.1.113883.6.238)(concept<1000-9) at Coding\r\n218 0   : 0ms    : Filter \"concept<1000-9\": Code \"2108-9\" found in urn:oid:2.16.840.1.113883.6.238|1.2 (from us.nlm.vsac#0.24.0)\r\n218 0   : 0ms    : Check \"urn:oid:2.16.840.1.113883.6.238#2108-9\"\r\n218 0   : 0ms    : CodeSystem found: urn:oid:2.16.840.1.113883.6.238|1.2 (from us.nlm.vsac#0.24.0) for urn:oid:2.16.840.1.113883.6.238\r\n218 0   : 0ms    : check code in (urn:oid:2.16.840.1.113883.6.238)(1002-5,2028-9,2054-5,2076-8,2106-3) at Coding\r\n"
+    }
+  ]
+}

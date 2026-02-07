@@ -1054,5 +1054,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "2ae971e97e9b4256fb7dce6a4e6a46d6310e8d92931e0878aba12ca1c9c78a0c",
+        "human_id": "2ae971e",
+        "create_time": {
+            "timestamp": 1770490794,
+            "time": "2026-02-07T12:59:54-06:00",
+            "lamport": 26
+        },
+        "edit_time": {
+            "timestamp": 1770490799,
+            "time": "2026-02-07T12:59:59-06:00",
+            "lamport": 104
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on valid $expand requests with JavaScript TypeErrors",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

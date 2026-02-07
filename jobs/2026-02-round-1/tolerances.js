@@ -1114,6 +1114,22 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-crash-undefined-system-code',
+    description: 'Dev crashes (500) on POST /r4/ValueSet/$validate-code with error "No Match for undefined|undefined". Dev fails to extract system and code from the request body, receiving them as JavaScript undefined. Prod returns 200 with successful validation. Affects 1 record (detailed-race ValueSet, code 2108-9).',
+    kind: 'temp-tolerance',
+    bugId: '4cdcd85',
+    tags: ['skip', 'dev-crash-on-valid', 'validate-code'],
+    match({ record, dev }) {
+      if (!record.url.includes('$validate-code')) return null;
+      if (record.prod?.status !== 200 || record.dev?.status !== 500) return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      const errorText = dev?.issue?.[0]?.details?.text || '';
+      if (errorText.includes('undefined|undefined')) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',
