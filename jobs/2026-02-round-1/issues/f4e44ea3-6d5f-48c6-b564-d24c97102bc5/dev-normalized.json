@@ -1,0 +1,638 @@
+{
+  "expansion": {
+    "contains": [
+      {
+        "code": "11526-1",
+        "display": "Pathology study",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11488-4",
+        "display": "Consult note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "80792-5",
+        "display": "Pulmonary Diagnostic study note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "47420-5",
+        "display": "Functional status assessment note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "34117-2",
+        "display": "History and physical note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "74156-1",
+        "display": "Oncology Plan of care and summary note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18776-5",
+        "display": "Plan of care note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "80785-9",
+        "display": "Radiation oncology Plan of care note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11506-3",
+        "display": "Progress note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11504-8",
+        "display": "Surgical operation note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18842-5",
+        "display": "Discharge summary",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "34133-9",
+        "display": "Summary of episode note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18761-7",
+        "display": "Transfer summary note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "80565-5",
+        "display": "Medication administration record",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "28570-0",
+        "display": "Procedure note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "57133-1",
+        "display": "Referral note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52027-0",
+        "display": "Abortion consent Document",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52028-8",
+        "display": "Hysterectomy consent Document",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52029-6",
+        "display": "Sterilization consent Document",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53245-7",
+        "display": "Driver license",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "57828-6",
+        "display": "Prescription list",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18682-5",
+        "display": "Ambulance records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52063-5",
+        "display": "Prescription for durable medical equipment (DME)",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52062-7",
+        "display": "Transcutaneous electrical neural stimulation (TENS) attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52073-4",
+        "display": "Vision services attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52070-0",
+        "display": "Workers compensation attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "80405-4",
+        "display": "Provider Certification [Type]",
+        "extension": [
+          {
+            "extension": [
+              {
+                "url": "code",
+                "valueCode": "status"
+              },
+              {
+                "url": "value",
+                "valueCode": "TRIAL"
+              }
+            ],
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property"
+          }
+        ],
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53242-4",
+        "display": "Charge ticket or encounter form",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52042-9",
+        "display": "Continuous positive airway pressure (CPAP) attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52040-3",
+        "display": "Dental X-rays and other images (not DICOM)",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18748-4",
+        "display": "Diagnostic imaging study",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53243-2",
+        "display": "Advanced beneficiary notice",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53247-3",
+        "display": "Eligibility acknowledgement",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52071-8",
+        "display": "Employee assistance program attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "67796-3",
+        "display": "EMS patient care report - version 3 Document NEMSIS",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "77601-3",
+        "display": "Enhanced note",
+        "extension": [
+          {
+            "extension": [
+              {
+                "url": "code",
+                "valueCode": "status"
+              },
+              {
+                "url": "value",
+                "valueCode": "TRIAL"
+              }
+            ],
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property"
+          }
+        ],
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52043-7",
+        "display": "Enteral nutrition attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11514-7",
+        "display": "Chiropractic Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11521-2",
+        "display": "Occupational therapy Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11515-4",
+        "display": "Physical therapy Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11516-2",
+        "display": "Physician Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11517-0",
+        "display": "Podiatry Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11518-8",
+        "display": "Psychology Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11519-6",
+        "display": "Social service Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11520-4",
+        "display": "Speech therapy Episode of care medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52030-4",
+        "display": "Explanation of benefits",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52031-2",
+        "display": "Explanation of benefits to subscriber",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52044-5",
+        "display": "External infusion pump attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "103567-4",
+        "display": "Previous cancer therapy (narrative)",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52064-3",
+        "display": "Worker's compensation first report of injury attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52045-2",
+        "display": "Gait trainers attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52033-8",
+        "display": "General correspondence attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11485-0",
+        "display": "Anesthesia records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52035-3",
+        "display": "Home health claims",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52036-1",
+        "display": "Home health prior authorization",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52046-0",
+        "display": "Hospital beds attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52032-0",
+        "display": "Appeal denial letter",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52047-8",
+        "display": "Immunosuppressive drug attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "77600-5",
+        "display": "Interval note",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "94093-2",
+        "display": "Itemized bill",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "15508-5",
+        "display": "Labor and delivery records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11502-2",
+        "display": "Laboratory report",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52048-6",
+        "display": "Lymphedema pump attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52049-4",
+        "display": "Manual wheelchair attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "11503-0",
+        "display": "Medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "28011-5",
+        "display": "Emergency department Medical records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "94118-7",
+        "display": "Medical records in response to authorization denial",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52037-9",
+        "display": "Member ID card copy",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52065-0",
+        "display": "Automobile liability attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52050-2",
+        "display": "Motorized wheelchair attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "76641-0",
+        "display": "Neurology study",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52072-6",
+        "display": "Non-emergency transportation attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53246-5",
+        "display": "Non-medical services attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52066-8",
+        "display": "Notice of Discharge Medicare Appeal Rights (NODMAR) form",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "53244-0",
+        "display": "Notice of privacy practices receipt",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52051-0",
+        "display": "Orthotic/Prosthetic attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52052-8",
+        "display": "Osteogenesis stimulator attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52053-6",
+        "display": "Oxygen attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52054-4",
+        "display": "Parenteral nutrition attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52067-6",
+        "display": "Past filing limit justification",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52034-6",
+        "display": "Payer letter",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "28629-4",
+        "display": "Perimetry study",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "74030-8",
+        "display": "Periodontal service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "28633-6",
+        "display": "Polysomnography (sleep) study",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52055-1",
+        "display": "Power operated vehicle attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "57073-9",
+        "display": "Prenatal records",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52041-1",
+        "display": "Blood glucose monitor attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52068-4",
+        "display": "Property and casualty state mandated forms",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52075-9",
+        "display": "Purchase invoice",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18823-5",
+        "display": "Alcohol and/or substance abuse service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18824-3",
+        "display": "Cardiac service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18825-0",
+        "display": "Medical social services attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18826-8",
+        "display": "Occupational therapy service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "19002-5",
+        "display": "Physical therapy service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "18594-2",
+        "display": "Psychiatric service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52184-9",
+        "display": "Pulmonary therapy service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "19003-3",
+        "display": "Respiratory therapy service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "29206-0",
+        "display": "Speech therapy service attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52056-9",
+        "display": "Repair of durable medical equipment attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52057-7",
+        "display": "Seat lift mechanism attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52058-5",
+        "display": "Seating system attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52039-5",
+        "display": "Skilled Nursing Facility (SNF) record",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "101657-5",
+        "display": "Special investigation unit (SIU) medical record request Document",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52059-3",
+        "display": "Speech generating device attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52060-1",
+        "display": "Standers/standing frame attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52038-7",
+        "display": "Subscriber Information including retroactive and presumptive eligibility",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52061-9",
+        "display": "Support surface attachment",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52069-2",
+        "display": "Tax ID number - IRS form W9",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "103595-5",
+        "display": "Certificate of Medical Necessity",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "103596-3",
+        "display": "Durable medical equipment proof of delivery receipt",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "103597-1",
+        "display": "Pain management form or template",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "46212-7",
+        "display": "Pre operative photo",
+        "system": "http://loinc.org"
+      },
+      {
+        "code": "52459-5",
+        "display": "CMS certification number (CCN) Provider",
+        "system": "http://loinc.org"
+      }
+    ],
+    "extension": [
+      {
+        "extension": [
+          {
+            "url": "code",
+            "valueCode": "status"
+          },
+          {
+            "url": "uri",
+            "valueUri": "http://hl7.org/fhir/concept-properties#status"
+          }
+        ],
+        "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property"
+      }
+    ],
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://loinc.org|2.81"
+      }
+    ],
+    "total": 113
+  },
+  "resourceType": "ValueSet",
+  "status": "active"
+}

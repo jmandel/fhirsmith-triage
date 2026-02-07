@@ -658,5 +658,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "7258b412fcde932e06b92dd648348e482383162247b061e4d593b055387670e4",
+        "human_id": "7258b41",
+        "create_time": {
+            "timestamp": 1770486521,
+            "time": "2026-02-07T11:48:41-06:00",
+            "lamport": 17
+        },
+        "edit_time": {
+            "timestamp": 1770486527,
+            "time": "2026-02-07T11:48:47-06:00",
+            "lamport": 58
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "NDC validate-code: dev returns inactive/version/message/issues params that prod omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

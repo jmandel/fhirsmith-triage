@@ -812,8 +812,8 @@ document.getElementById("gen-time").textContent = new Date().toLocaleString();
   const bar = document.getElementById("pipeline-bar");
   const segs = [
     {{ value: job.matchedPerfectly, label: "matched perfectly", cls: "seg-perfect" }},
-    {{ value: job.matchedEquiv, label: "matched after judgment calls", cls: "seg-equiv" }},
-    {{ value: job.knownIssues, label: "known issues", cls: "seg-known" }},
+    {{ value: job.matchedEquiv, label: "considered equivalent by Claude", cls: "seg-equiv" }},
+    {{ value: job.knownIssues, label: "considered mismatches by Claude; bugs listed below", cls: "seg-known" }},
     {{ value: job.untriaged, label: "untriaged", cls: "seg-untriaged" }},
   ];
   const total = job.total;
@@ -836,11 +836,6 @@ document.getElementById("gen-time").textContent = new Date().toLocaleString();
   html += `<div class="stat-divider"></div>`;
   html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${{STATS.open}}</span> open</div>`;
   html += `<div class="stat"><span class="stat-value">${{STATS.closed}}</span> closed</div>`;
-  const totalImpact = BUGS.reduce((s, b) => s + (b.impact || 0), 0);
-  if (totalImpact > 0) {{
-    html += `<div class="stat-divider"></div>`;
-    html += `<div class="stat"><span class="stat-value">${{totalImpact.toLocaleString()}}</span> records impacted</div>`;
-  }}
   bar.innerHTML = html;
 }})();
 

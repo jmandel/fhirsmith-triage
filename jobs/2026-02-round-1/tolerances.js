@@ -462,6 +462,54 @@ const tolerances = [
   },
 
   {
+    id: 'expand-extension-child-order',
+    description: 'Extension child element ordering within ValueSet.expansion.extension differs between implementations. Prod orders sub-extensions as [uri, code], dev orders as [code, uri]. Extension child order has no semantic meaning in FHIR. Affects 15 $expand records with R5 backport expansion.property extensions.',
+    kind: 'equiv-autofix',
+    tags: ['normalize', 'expand', 'extension-ordering'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.extension || !dev?.expansion?.extension) return null;
+      // Check if any expansion-level extension has differently-ordered children
+      for (let i = 0; i < prod.expansion.extension.length; i++) {
+        const pe = prod.expansion.extension[i];
+        const de = dev.expansion.extension[i];
+        if (!pe?.extension || !de?.extension) continue;
+        if (pe.extension.length !== de.extension.length) continue;
+        const pUrls = pe.extension.map(e => e.url).join(',');
+        const dUrls = de.extension.map(e => e.url).join(',');
+        if (pUrls !== dUrls) {
+          // Check same set of URLs, just different order
+          const pSorted = [...pe.extension].map(e => e.url).sort().join(',');
+          const dSorted = [...de.extension].map(e => e.url).sort().join(',');
+          if (pSorted === dSorted) return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function sortExtChildren(expansion) {
+        if (!expansion?.extension) return expansion;
+        return {
+          ...expansion,
+          extension: expansion.extension.map(ext => {
+            if (!ext.extension) return ext;
+            return {
+              ...ext,
+              extension: [...ext.extension].sort((a, b) =>
+                (a.url || '').localeCompare(b.url || '')
+              ),
+            };
+          }),
+        };
+      }
+      return {
+        prod: { ...prod, expansion: sortExtChildren(prod.expansion) },
+        dev: { ...dev, expansion: sortExtChildren(dev.expansion) },
+      };
+    },
+  },
+
+  {
     id: 'expand-dev-empty-id',
     description: 'Dev $expand returns "id":"" (empty string) on ValueSet responses. Prod omits id. Empty string is invalid FHIR. Affects 690 expand records.',
     kind: 'temp-tolerance',

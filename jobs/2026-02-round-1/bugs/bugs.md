@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_15 bugs (15 open, 0 closed)_
+_16 bugs (16 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -586,6 +586,41 @@ All 4 records agree on result (true), system, code, version, and display. The on
 #####What the tolerance covers
 
 Tolerance ID: `draft-codesystem-message-provenance-suffix`. Matches validate-code Parameters responses where OperationOutcome issue text in prod ends with ` from <package>#<version>` and dev has the same text without that suffix. Normalizes both sides to the prod text (which includes provenance). Eliminates 4 records.
+
+---
+
+### [ ] `7258b41` NDC validate-code: dev returns inactive/version/message/issues params that prod omits
+
+Records-Impacted: 16
+Tolerance-ID: ndc-validate-code-extra-inactive-params
+Record-ID: ac23726f-6ff2-4b72-b2c8-584922d04c92
+
+#####What differs
+
+For NDC ($validate-code on http://hl7.org/fhir/sid/ndc), both servers agree result=true and return matching system, code, and display. However, dev returns four additional parameters that prod omits entirely:
+
+- `version: "2021-11-01"` — the NDC code system version
+- `inactive: true` — flags the concept as inactive
+- `message: "The concept '<code>' has a status of null and its use should be reviewed"` — a warning about the concept status
+- `issues` — an OperationOutcome with a warning (severity=warning, code=business-rule, tx-issue-type=code-comment, message-id=INACTIVE_CONCEPT_FOUND)
+
+Prod's diagnostics show it uses NDC with no version: `Using CodeSystem "http://hl7.org/fhir/sid/ndc|" (content = complete)` (empty string after the pipe). Dev uses NDC version 2021-11-01.
+
+#####How widespread
+
+16 records in deltas.ndjson match this exact pattern. All are POST /r4/CodeSystem/$validate-code? for http://hl7.org/fhir/sid/ndc. Three distinct NDC codes are affected: 0777-3105-02, 0002-8215-01, and 0169-4132-12.
+
+Search: `grep '"param":"inactive"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 16
+
+All 16 have the same diff signature: extra-in-dev for inactive, issues, message, and version.
+
+#####What the tolerance covers
+
+Tolerance `ndc-validate-code-extra-inactive-params` matches validate-code responses where system is http://hl7.org/fhir/sid/ndc and dev has inactive/version/message/issues parameters that prod lacks. It strips the four extra parameters from dev to eliminate the diff. Eliminates 16 records.
+
+#####Representative record
+
+ac23726f-6ff2-4b72-b2c8-584922d04c92 — NDC code 0777-3105-02 (Prozac 100 capsule)
 
 ---
 
