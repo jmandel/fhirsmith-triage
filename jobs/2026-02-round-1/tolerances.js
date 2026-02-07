@@ -1078,6 +1078,29 @@ const tolerances = [
   },
 
   {
+    id: 'ndc-valueset-validate-code-extra-version',
+    description: 'NDC ValueSet $validate-code result=false: dev returns extra version parameter ("2021-11-01") that prod omits. These are ValueSet validate-code with codeableConcept containing NDC codes — the code is not found in the ValueSet but dev still reports its NDC edition version. Same root cause as other NDC version skew (bug 7258b41). Affects 2 records.',
+    kind: 'temp-tolerance',
+    bugId: '7258b41',
+    tags: ['normalize', 'ndc', 'validate-code', 'extra-version'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      if (prodResult !== false) return null;
+      const devVersion = getParamValue(dev, 'version');
+      const prodVersion = getParamValue(prod, 'version');
+      if (devVersion === undefined || prodVersion !== undefined) return null;
+      // Check codeableConcept contains NDC
+      const cc = getParamValue(dev, 'codeableConcept') || getParamValue(prod, 'codeableConcept');
+      if (!cc?.coding?.some(c => c.system === 'http://hl7.org/fhir/sid/ndc')) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      return { prod, dev: stripParams(dev, 'version') };
+    },
+  },
+
+  {
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',

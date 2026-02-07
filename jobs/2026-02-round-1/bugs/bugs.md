@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_23 bugs (21 open, 2 closed)_
+_24 bugs (22 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1244,6 +1244,50 @@ field differences.
 - 6d25c912-25f4-45cf-8dea-3dd07d9d7e1e (SNOMED 116101001)
 - 44f0851b-80e8-4a27-b05e-551c0522e39b (SNOMED 425901007, 161744009)
 - 2ff10aef-7210-489d-bb28-6c7739c27027 (ISO 3166 CUW, ALA, CIV)
+
+---
+
+### [ ] `e5a78af` ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits
+
+Records-Impacted: 7
+Tolerance-ID: expand-iso3166-extra-reserved-codes
+Record-ID: 70faaf64-3ca5-4ee1-94f1-7f89ad1cf7ed
+
+#####What differs
+
+POST /r4/ValueSet/$expand for ValueSets containing urn:iso:std:iso:3166: prod returns 291 codes (total=291), dev returns 249 codes (total=249). The 42 extra codes in prod are all ISO 3166-1 reserved/user-assigned codes:
+
+- AA (User-assigned)
+- QM through QZ (15 User-assigned codes)
+- XA through XJ, XL through XZ (24 codes: mostly User-assigned, plus XK=Kosovo, XX=Unknown, XZ=International Waters)
+- ZZ (Unknown or Invalid Territory)
+
+Dev returns only the 249 standard assigned country codes.
+
+#####How widespread
+
+7 $expand records in deltas show this exact pattern (prod_total=291, dev_total=249):
+- `grep 'iso:3166' jobs/2026-02-round-1/results/deltas/deltas.ndjson` finds 14 records total (including reads and a dev-crash)
+- All 7 content-differs expand records share the same 291 vs 249 pattern
+
+Search used:
+```
+python3 -c "
+import json
+with open('jobs/2026-02-round-1/results/deltas/deltas.ndjson') as f:
+  for line in f:
+      r = json.loads(line)
+      if 'iso:3166' in r.get('prodBody',''):
+          prod = json.loads(r['prodBody'])
+          dev = json.loads(r['devBody'])
+          if prod.get('expansion',{}).get('total') == 291:
+              print(r['id'][:12])
+"
+```
+
+#####What the tolerance covers
+
+Tolerance `expand-iso3166-extra-reserved-codes` matches expand records where both prod and dev use urn:iso:std:iso:3166 and prod.expansion.total > dev.expansion.total. It normalizes by filtering prod's contains array to only include codes present in dev, and sets both totals to dev's count. This eliminates 7 records while preserving any other differences (display text, etc.) for detection.
 
 ---
 

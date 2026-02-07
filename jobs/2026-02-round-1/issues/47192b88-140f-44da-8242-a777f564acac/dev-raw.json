@@ -1,0 +1,90 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "2021-11-01"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/sid/ndc",
+            "code": "0777-3105-02"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://hl7.org/fhir/sid/ndc#0777-3105-02' was not found in the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              ""
+            ],
+            "expression": [
+              ""
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606 for validation purposes\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Prepare include[0]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627 for validation purposes\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[0]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[1]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[2]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[3]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[4]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Prepare include[1]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627 for validation purposes\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[0]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[1]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[2]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[3]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[4]: \"()\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 11042024 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|11042024\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Validate \"[undefined#0777-3105-02 (\"undefined\")]\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check \"http://hl7.org/fhir/sid/ndc#0777-3105-02\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Check \"http://hl7.org/fhir/sid/ndc#0777-3105-02\"\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17\n270ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Check \"http://hl7.org/fhir/sid/ndc#0777-3105-02\""
+    }
+  ]
+}

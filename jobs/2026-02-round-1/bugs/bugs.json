@@ -1010,5 +1010,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "e5a78af3041365daf2e2e7331dcca910eb31a44a0cd1db1620d94f1469715257",
+        "human_id": "e5a78af",
+        "create_time": {
+            "timestamp": 1770490335,
+            "time": "2026-02-07T12:52:15-06:00",
+            "lamport": 25
+        },
+        "edit_time": {
+            "timestamp": 1770490340,
+            "time": "2026-02-07T12:52:20-06:00",
+            "lamport": 101
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
