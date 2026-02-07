@@ -184,6 +184,18 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'skip-truncated-body',
+    description: 'Response body truncated at 50k chars during recording, producing invalid JSON. 277 P6 records affected.',
+    kind: 'temp-tolerance',
+    bugId: 'dc6c82a',
+    match({ record }) {
+      if (record.prodBody && record.prodBody.length === 50000) return 'skip';
+      if (record.devBody && record.devBody.length === 50000) return 'skip';
+      return null;
+    },
+  },
+
   // ============================================================
   // Phase A (cont.): Temp-tolerance skips
   // ============================================================
