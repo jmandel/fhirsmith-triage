@@ -331,6 +331,24 @@ const tolerances = [
   },
 
   {
+    id: 'temp-validate-code-display-differs',
+    description: 'validate-code display parameter differs between prod and dev across UCUM (prod echoes code, dev returns name), SNOMED (different preferred terms), and BCP47 (format). 286 display-only P6 records.',
+    kind: 'temp-tolerance',
+    bugId: '5c34436',
+    match({ record, prod, dev }) {
+      if (!/\$validate-code/.test(record.url)) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (prodDisplay !== undefined && devDisplay !== undefined && prodDisplay !== devDisplay) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      return both(ctx, body => stripParams(body, 'display'));
+    },
+  },
+
+  {
     id: 'strip-expansion-metadata',
     description: 'Expansion metadata (timestamp, identifier, includeDefinition=false default, empty id) are cosmetic server-generated differences.',
     kind: 'equiv-autofix',
