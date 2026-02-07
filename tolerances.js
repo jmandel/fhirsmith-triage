@@ -29,7 +29,7 @@
  *       dev:     { status, contentType, size, hash },
  *       prodBody: string,      // raw response body (unparsed JSON string)
  *       devBody:  string,      // raw response body (unparsed JSON string)
- *       requestBody: string,   // raw request body (when available; not yet captured)
+ *       requestBody: string,   // raw request body (when available)
  *     },
  *     prod: object | null,     // parsed prodBody (null if unparseable)
  *     dev:  object | null,     // parsed devBody  (null if unparseable)
@@ -69,10 +69,6 @@ function getParamValue(params, name) {
     if (key === 'resource') return p[key];
   }
   return undefined;
-}
-
-function getSystem(params) {
-  return getParamValue(params, 'system');
 }
 
 function stripParams(body, ...names) {
@@ -136,6 +132,14 @@ function both(ctx, fn) {
   return { prod: fn(ctx.prod), dev: fn(ctx.dev) };
 }
 
+function hasOperationOutcome(prod, dev) {
+  if (prod?.resourceType === 'OperationOutcome') return true;
+  if (dev?.resourceType === 'OperationOutcome') return true;
+  if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return true;
+  if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return true;
+  return false;
+}
+
 // ---- Tolerance definitions ----
 
 const tolerances = [
@@ -180,72 +184,16 @@ const tolerances = [
     },
   },
 
-  {
-    id: 'skip-truncated',
-    description: 'Response body truncated at ~50K chars during capture. 277 total records. Need re-capture with higher limit.',
-    kind: 'temp-tolerance',
-    bugId: ['abb1fe1', 'c10fd57'],
-    match({ record }) {
-      const TRUNC = 49990;
-      if (record.prodBody && record.prodBody.length >= TRUNC) return 'skip';
-      if (record.devBody && record.devBody.length >= TRUNC) return 'skip';
-      return null;
-    },
-  },
-
   // ============================================================
   // Phase B: Structural cleanup
   // ============================================================
 
-  // T06: Strip empty/null location and expression from OperationOutcome issues
-  {
-    id: 'strip-empty-location-expression',
-    description: 'Dev emits location:[""] and expression:[""] on OperationOutcome issues where prod omits them. Empty strings are invalid FHIR. Also handles location:[null]/expression:[null]. ~260 P6 records.',
-    kind: 'temp-tolerance',
-    bugId: 'a151f3c',
-    match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
-    },
-    normalize(ctx) {
-      function fixIssues(oo) {
-        if (!oo.issue) return oo;
-        return {
-          ...oo,
-          issue: oo.issue.map(issue => {
-            const fixed = { ...issue };
-            if (Array.isArray(fixed.location) &&
-                fixed.location.length === 1 &&
-                (fixed.location[0] === '' || fixed.location[0] === null)) {
-              delete fixed.location;
-            }
-            if (Array.isArray(fixed.expression) &&
-                fixed.expression.length === 1 &&
-                (fixed.expression[0] === '' || fixed.expression[0] === null)) {
-              delete fixed.expression;
-            }
-            return fixed;
-          }),
-        };
-      }
-      return both(ctx, body => transformOperationOutcomes(body, fixIssues));
-    },
-  },
-
-  // T07: Normalize OperationOutcome issue extensions
   {
     id: 'normalize-issue-extensions',
     description: 'Strip operationoutcome-message-id extensions (server metadata) and sort remaining extensions by URL for stable comparison.',
     kind: 'equiv-autofix',
     match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
+      return hasOperationOutcome(prod, dev) ? 'normalize' : null;
     },
     normalize(ctx) {
       function fixIssues(oo) {
@@ -275,17 +223,12 @@ const tolerances = [
     },
   },
 
-  // T08: Sort coding arrays in OperationOutcome issue details
   {
     id: 'normalize-issue-coding-order',
     description: 'Sort details.coding arrays by system|code for stable comparison.',
     kind: 'equiv-autofix',
     match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
+      return hasOperationOutcome(prod, dev) ? 'normalize' : null;
     },
     normalize(ctx) {
       function fixIssues(oo) {
@@ -314,7 +257,6 @@ const tolerances = [
   // Phase C: Content-specific normalizations
   // ============================================================
 
-  // T09: Strip diagnostics parameter
   {
     id: 'strip-diagnostics',
     description: 'Trace diagnostics parameter has completely different formats between implementations (by design).',
@@ -327,247 +269,6 @@ const tolerances = [
     },
   },
 
-  // T10: Strip version parameter
-  {
-    id: 'strip-version-param',
-    description: 'Version parameter differs due to different terminology editions loaded (SNOMED, LOINC, etc). 438 P6 records.',
-    kind: 'temp-tolerance',
-    bugId: '7b80bc3',
-    match({ prod, dev }) {
-      return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'version'));
-    },
-  },
-
-  // T11: Strip definition/designation from $lookup responses
-  {
-    id: 'strip-lookup-definition-designation',
-    description: 'Version difference (v2-0360 2.0.0 vs 3.0.0) causes extra definition/designation parameters and property(definition) diffs in $lookup. 157 P6 records.',
-    kind: 'temp-tolerance',
-    bugId: '7b80bc3',
-    match({ prod, dev }) {
-      return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      function strip(body) {
-        if (!body?.parameter) return body;
-        return {
-          ...body,
-          parameter: body.parameter
-            .filter(p => p.name !== 'definition' && p.name !== 'designation')
-            .filter(p => !(p.name === 'property' && p.part &&
-              p.part.some(pp => pp.name === 'code' && pp.valueCode === 'definition'))),
-        };
-      }
-      return both(ctx, strip);
-    },
-  },
-
-  // T12: Strip message parameter
-  {
-    id: 'strip-message-param',
-    description: 'Message parameter in validate-code responses has inconsistent behavior between prod and dev. 184 P6 records.',
-    kind: 'temp-tolerance',
-    bugId: '80a3a59',
-    match({ prod, dev }) {
-      return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'message'));
-    },
-  },
-
-  // T13: Normalize version strings in OperationOutcome issue text
-  {
-    id: 'normalize-version-in-issue-text',
-    description: "Version strings in issue text differ due to different terminology editions. Same root cause as strip-version-param. ~15 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: '7b80bc3',
-    match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
-    },
-    normalize(ctx) {
-      function fixIssues(oo) {
-        if (!oo.issue) return oo;
-        return {
-          ...oo,
-          issue: oo.issue.map(issue => {
-            if (!issue.details?.text) return issue;
-            return {
-              ...issue,
-              details: {
-                ...issue.details,
-                text: issue.details.text.replace(/version '([^']*)'/g, "version '<VERSION>'"),
-              },
-            };
-          }),
-        };
-      }
-      return both(ctx, body => transformOperationOutcomes(body, fixIssues));
-    },
-  },
-
-  // T14: Normalize "Wrong Display Name" alternatives in issue text
-  {
-    id: 'normalize-display-alternatives-in-issue-text',
-    description: "Wrong Display Name issue text differs in how many valid display alternatives are listed. Prod lists 1, dev lists multiple. 31 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: '3b162b8',
-    match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
-    },
-    normalize(ctx) {
-      function fixIssues(oo) {
-        if (!oo.issue) return oo;
-        return {
-          ...oo,
-          issue: oo.issue.map(issue => {
-            if (!issue.details?.text) return issue;
-            const text = issue.details.text.replace(
-              /Valid display is (one of \d+ choices: )?'[^']*'(?: \([^)]*\))?(?:,? (?:or )?'[^']*'(?: \([^)]*\))?)*(?: \(for the language\(s\) '[^']*'\))?/g,
-              "Valid display is <DISPLAY_ALTERNATIVES>"
-            );
-            return {
-              ...issue,
-              details: { ...issue.details, text },
-            };
-          }),
-        };
-      }
-      return both(ctx, body => transformOperationOutcomes(body, fixIssues));
-    },
-  },
-
-  // T15: Strip informational "Code X not found in Y" issues
-  {
-    id: 'strip-info-not-found-issue',
-    description: "Dev omits informational 'Code X not found in Y' OperationOutcome issues that prod generates. 27 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: 'e566efc',
-    match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
-    },
-    normalize(ctx) {
-      function fixIssues(oo) {
-        if (!oo.issue) return oo;
-        return {
-          ...oo,
-          issue: oo.issue.filter(i =>
-            !(i.severity === 'information' && i.code === 'code-invalid' &&
-              (i.details?.text || '').match(/not found in /))
-          ),
-        };
-      }
-      return both(ctx, body => transformOperationOutcomes(body, fixIssues));
-    },
-  },
-
-  // T16: Strip UCUM display parameter
-  {
-    id: 'strip-ucum-display',
-    description: "UCUM display text selection differs: prod returns code symbol ('%', '[in_i]'), dev returns print name ('(percent)', '(inch)'). 220 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: '94d94ac',
-    match({ prod }) {
-      return getSystem(prod) === 'http://unitsofmeasure.org' ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'display'));
-    },
-  },
-
-  // T17: Strip SNOMED display (both Parameters and expansion contains)
-  {
-    id: 'strip-snomed-display',
-    description: 'SNOMED display text selection differs between prod and dev (FSN vs PT). 274 P6 records (134 expand, 140 validate-code).',
-    kind: 'temp-tolerance',
-    bugId: '01da2dd',
-    match({ prod, dev }) {
-      if (getSystem(prod) === 'http://snomed.info/sct') return 'normalize';
-      // Also match ValueSet expansions containing SNOMED entries
-      const hasSnomedExpansion = (body) =>
-        body?.resourceType === 'ValueSet' &&
-        body?.expansion?.contains?.some(c => c.system === 'http://snomed.info/sct');
-      if (hasSnomedExpansion(prod) || hasSnomedExpansion(dev)) return 'normalize';
-      return null;
-    },
-    normalize(ctx) {
-      function stripFromParams(body) {
-        if (getSystem(body) === 'http://snomed.info/sct') {
-          return stripParams(body, 'display');
-        }
-        return body;
-      }
-      function stripFromExpansion(vs) {
-        if (!vs.expansion?.contains) return vs;
-        return {
-          ...vs,
-          expansion: {
-            ...vs.expansion,
-            contains: vs.expansion.contains.map(c => {
-              if (c.system === 'http://snomed.info/sct') {
-                const copy = { ...c };
-                delete copy.display;
-                return copy;
-              }
-              return c;
-            }),
-          },
-        };
-      }
-      return {
-        prod: transformExpansions(stripFromParams(ctx.prod), stripFromExpansion),
-        dev: transformExpansions(stripFromParams(ctx.dev), stripFromExpansion),
-      };
-    },
-  },
-
-  // T18: Strip NDC inactive and issues parameters
-  {
-    id: 'strip-ndc-inactive-issues',
-    description: "Dev returns extra 'inactive: true' and 'issues' for NDC codes in validate-code. Related to NDC version difference. 16 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: 'acaf908',
-    match({ prod }) {
-      return getSystem(prod) === 'http://hl7.org/fhir/sid/ndc' ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'inactive', 'issues'));
-    },
-  },
-
-  // T19: Strip display for unknown system failures
-  {
-    id: 'strip-display-unknown-system',
-    description: "Dev returns display parameter for unknown code systems in validate-code where prod omits it. 73 P6 records.",
-    kind: 'temp-tolerance',
-    bugId: '94942b1',
-    match({ prod }) {
-      if (!prod?.parameter) return null;
-      const hasUnknown = prod.parameter.some(p => p.name === 'x-caused-by-unknown-system');
-      const resultFalse = prod.parameter.some(p => p.name === 'result' && p.valueBoolean === false);
-      return (hasUnknown && resultFalse) ? 'normalize' : null;
-    },
-    normalize(ctx) {
-      return both(ctx, body => stripParams(body, 'display'));
-    },
-  },
-
-  // T20: Strip expansion metadata (timestamp, identifier, includeDefinition, empty id)
   {
     id: 'strip-expansion-metadata',
     description: 'Expansion metadata (timestamp, identifier, includeDefinition=false default, empty id) are cosmetic server-generated differences.',
@@ -602,7 +303,6 @@ const tolerances = [
   // Phase D: Sorting (after all content transforms)
   // ============================================================
 
-  // T21: Sort parameters by name
   {
     id: 'sort-parameters',
     description: 'Parameter ordering in FHIR Parameters resources is not semantically meaningful.',
@@ -622,17 +322,12 @@ const tolerances = [
     },
   },
 
-  // T22: Sort OperationOutcome issues by severity|code|details.text
   {
     id: 'sort-operation-outcome-issues',
     description: 'Sort OperationOutcome issues for stable comparison (ordering may differ between implementations).',
     kind: 'equiv-autofix',
     match({ prod, dev }) {
-      if (prod?.resourceType === 'OperationOutcome') return 'normalize';
-      if (dev?.resourceType === 'OperationOutcome') return 'normalize';
-      if (prod?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      if (dev?.parameter?.some(p => p.resource?.resourceType === 'OperationOutcome')) return 'normalize';
-      return null;
+      return hasOperationOutcome(prod, dev) ? 'normalize' : null;
     },
     normalize(ctx) {
       function sortIssues(oo) {
@@ -650,7 +345,6 @@ const tolerances = [
     },
   },
 
-  // T23: Sort expansion contains by system|code
   {
     id: 'sort-expansion-contains',
     description: 'Sort ValueSet expansion contains by system|code for stable comparison.',
@@ -681,10 +375,9 @@ const tolerances = [
   // Phase E: Bundle-level normalization
   // ============================================================
 
-  // T24: Normalize empty searchset Bundles
   {
     id: 'normalize-empty-searchset-bundle',
-    description: 'Strip server-generated metadata (id, meta, link, empty entry) from empty searchset Bundles. 491 P6 records.',
+    description: 'Strip server-generated metadata (id, meta, link, empty entry) from empty searchset Bundles.',
     kind: 'equiv-autofix',
     match({ prod, dev }) {
       const isEmptySearchset = (body) =>

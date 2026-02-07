@@ -1,7 +1,8 @@
-# Archived p6 snapshots (timestamped backups, large)
-results/deltas/p6.2*.ndjson
+# Archived delta snapshots (timestamped backups, large)
+results/deltas/*.2*.ndjson
 # Triage round logs (stream-json output, verbose)
-results/p6-triage-logs/
+results/triage-logs/
 # Error log
-results/p6-triage-errors.log
-analyze-p6*.js
+results/triage-errors.log
+# Lock file
+.triage.lock
