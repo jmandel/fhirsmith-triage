@@ -1,11 +1,11 @@
 # tx-compare Bug Report
 
-_5 bugs (5 open, 0 closed)_
+_6 bugs (6 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
 | P3 | 1 | Missing resources |
-| P6 | 4 | Content differences |
+| P6 | 5 | Content differences |
 
 ---
 
@@ -173,6 +173,39 @@ Tolerance: bcp47-display-format. Matches $validate-code records where system=urn
 #####Representative record
 
 da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47
+
+---
+
+### [ ] `4233647` Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs
+
+#####What differs
+
+Dev's searchset Bundle responses differ from prod in several ways:
+
+1. **`entry: []` on empty results**: When a search returns no results (total: 0), dev includes `entry: []` (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR's general rule that arrays, if present, must be non-empty.
+
+2. **Extra pagination link relations**: Dev returns `self`, `first`, and `last` link relations. Prod returns only `self`. This applies to both empty and non-empty search results.
+
+3. **Absolute vs relative link URLs**: Dev uses absolute URLs with full host prefix (e.g., `http://tx.fhir.org/r4/ValueSet?...&_offset=0`). Prod uses relative URLs (e.g., `ValueSet?&url=...`). Dev also appends `_offset=0` to search links.
+
+4. **Server-generated metadata**: Prod includes `id` and `meta.lastUpdated` on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)
+
+#####How widespread
+
+Affects all searchset Bundle responses for ValueSet and CodeSystem searches:
+- 337 empty ValueSet search Bundles
+- 154 empty CodeSystem search Bundles  
+- 7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)
+
+Total: **498 records** in the deltas file.
+
+Search used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL where prodBody contains a Bundle with type "searchset".
+
+#####Representative record IDs
+
+- `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)
+- `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)
+- `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)
 
 ---
 

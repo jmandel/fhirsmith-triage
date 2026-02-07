@@ -1,0 +1,28 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "details": {
+        "coding": [
+          {
+            "code": "not-found",
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+          }
+        ],
+        "text": "A definition for CodeSystem 'http://ontariohealth.ca/fhir/questionnaire/CodeSystem/breastSiteCodes' could not be found, so the value set cannot be expanded"
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueString": "UNKNOWN_CODESYSTEM_EXP"
+        }
+      ],
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome",
+  "text": {
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>A definition for CodeSystem 'http://ontariohealth.ca/fhir/questionnaire/CodeSystem/breastSiteCodes' could not be found, so the value set cannot be expanded</p></div>",
+    "status": "generated"
+  }
+}

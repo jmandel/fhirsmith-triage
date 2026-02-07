@@ -218,5 +218,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "4233647ba4b02b4c4aeeddb23c44d69d1208ffaa8836f0ce4d9c9b452cbd622e",
+        "human_id": "4233647",
+        "create_time": {
+            "timestamp": 1770483291,
+            "time": "2026-02-07T10:54:51-06:00",
+            "lamport": 7
+        },
+        "edit_time": {
+            "timestamp": 1770483296,
+            "time": "2026-02-07T10:54:56-06:00",
+            "lamport": 19
+        },
+        "status": "open",
+        "labels": [
+            "P6",
+            "tx-compare"
+        ],
+        "title": "Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
