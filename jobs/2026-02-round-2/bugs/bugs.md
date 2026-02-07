@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_9 bugs (8 open, 1 closed)_
+_10 bugs (9 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -512,6 +512,22 @@ Records-Impacted: 6
 Tolerance-ID: oo-extra-expression-on-info-issues
 Record-ID: 9160e659-1af6-4bc6-9c89-e0a8b4df55cf
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
+-H 'Accept: application/fhir+json' | \
+jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
+-H 'Accept: application/fhir+json' | \
+jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
+```
+
+Prod returns `"expression": null` (field absent) on the informational issue, dev returns `"expression": ["code"]`.
+
 #####What differs
 
 In $validate-code responses, both prod and dev return OperationOutcome issues. On error-severity issues, both include `expression: ["code"]`. On information-severity issues, prod omits the `expression` field entirely while dev includes `expression: ["code"]`.
@@ -536,6 +552,33 @@ Search: node script checking all 3948 delta records for issues where dev has `ex
 #####What the tolerance covers
 
 Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters responses where any OperationOutcome information-severity issue in dev has `expression` that prod lacks. Normalizes by removing the extra `expression` from dev to match prod. Eliminates 6 records.
+
+---
+
+### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
+
+Records-Impacted: 19
+Tolerance-ID: dev-extra-display-lang-not-found-message
+Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80
+
+#####What differs
+
+When $validate-code returns result=true and a displayLanguage parameter was specified in the request, dev returns extra `message` and `issues` parameters that prod omits entirely. The dev message reads: "There are no valid display names found for the code <system>#<code> for language(s) '<lang>'. The display is '<display>' which is the default language display." The `issues` parameter contains an OperationOutcome with an informational issue (code=invalid, tx-issue-type=invalid-display).
+
+Prod returns only: result, system, code, version, display, codeableConcept, diagnostics.
+Dev returns all the above plus: message and issues with the display-language-not-found informational feedback.
+
+Both servers agree on result=true, and the validated code/display/version are identical.
+
+#####How widespread
+
+19 records in deltas match this pattern. All are POST /r4/ValueSet/$validate-code with result=true where prod has no message/issues and dev has "no valid display names found" message+issues. 17 of 19 involve urn:iso:std:iso:3166 codes (FR, FRA) with displayLanguage=fr or fr-FR. 2 involve urn:iso:std:iso:3166 with no explicit displayLanguage.
+
+Search: `grep 'There are no valid display names found' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` returns 21 total, but 2 of those have differing prod issues too (SNOMED, different root cause). The 19 clean matches are where prod lacks both message and issues entirely.
+
+#####What the tolerance covers
+
+Tolerance `dev-extra-display-lang-not-found-message` matches validate-code Parameters responses where result=true, prod has no message parameter, and dev has a message containing "There are no valid display names found". It normalizes by stripping the extra message and issues from dev. Eliminates 19 records.
 
 ---
 

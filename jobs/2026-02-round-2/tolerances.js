@@ -2593,6 +2593,63 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'cc-validate-code-missing-known-coding-params',
+    description: 'CodeSystem/$validate-code with codeableConcept containing unknown + known coding: dev omits system/code/version/display params for the known coding. Prod validates the known coding and returns these details plus additional OperationOutcome issues. Dev stops at the unknown system error. Affects 5 records (2 LOINC, 3 SNOMED).',
+    kind: 'temp-tolerance',
+    bugId: 'b6d19d8',
+    tags: ['normalize', 'validate-code', 'codeableConcept', 'unknown-system'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      // Must have x-caused-by-unknown-system on either side
+      const unknown = getParamValue(prod, 'x-caused-by-unknown-system') ||
+                       getParamValue(dev, 'x-caused-by-unknown-system');
+      if (!unknown) return null;
+      // Must have codeableConcept
+      const cc = getParamValue(prod, 'codeableConcept') || getParamValue(dev, 'codeableConcept');
+      if (!cc) return null;
+      // Prod has system param, dev doesn't
+      const prodSystem = getParamValue(prod, 'system');
+      const devSystem = getParamValue(dev, 'system');
+      if (prodSystem === undefined || devSystem !== undefined) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      // Add missing params from prod to dev
+      const devNames = new Set(dev.parameter.map(p => p.name));
+      const paramsToAdd = ['system', 'code', 'version', 'display'];
+      const newParams = [...dev.parameter];
+      for (const name of paramsToAdd) {
+        if (devNames.has(name)) continue;
+        const prodParam = prod.parameter.find(p => p.name === name);
+        if (prodParam) newParams.push(prodParam);
+      }
+      let devNorm = { ...dev, parameter: newParams };
+      // Canonicalize issues to prod's set
+      const prodIssues = getParamValue(prod, 'issues');
+      if (prodIssues) {
+        devNorm = {
+          ...devNorm,
+          parameter: devNorm.parameter.map(p =>
+            p.name === 'issues' ? { ...p, resource: prodIssues } : p
+          ),
+        };
+      }
+      // Re-sort parameters by name (sort-parameters-by-name already ran)
+      devNorm = {
+        ...devNorm,
+        parameter: [...devNorm.parameter].sort((a, b) =>
+          (a.name || '').localeCompare(b.name || '')
+        ),
+      };
+      return { prod, dev: devNorm };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

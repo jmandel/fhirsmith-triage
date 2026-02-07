@@ -309,9 +309,105 @@ echo "=== Parallel triage complete ==="
 - With 3 agents: ~5 min analysis parallelized, agents land on main independently = ~36 records/hour (3x)
 - The rebase-push is fast (~seconds). Races are resolved by the agent retrying, not the orchestrator
 
-## Known rough edges
+## Validated by synthetic test
 
-- The `receive.denyCurrentBranch=updateInstead` setting and `git push . HEAD:main` from worktrees needs testing
-- If an agent fails mid-analysis, its claimed record has no analysis.md — needs a cleanup/retry mechanism
-- The merge-time compare.js validation could be smarter about detecting interaction effects
-- The triage prompt needs a new final step: "rebase onto main and resolve any conflicts before finishing"
+The core git mechanics were tested in an isolated temp repo (2 worktrees, parallel appends to a shared file):
+
+- **`receive.denyCurrentBranch=updateInstead` works** — main worktree files update on disk immediately after `git push . HEAD:main`
+- **`git push . HEAD:main` only accepts fast-forwards** — agents cannot overwrite each other; a non-rebased push is rejected with `non-fast-forward`
+- **Rebase surfaces conflicts cleanly** — standard conflict markers when both agents append to the same file at the same location
+- **After conflict resolution + push, main has both additions** — linear history, no merge commits
+- **Race condition is safe** — if main moves between rebase and push, push fails and agent can retry
+
+## Remaining work
+
+### 1. Triage prompt: add rebase-and-land step
+
+Add a new **Step 7** to `prompts/triage-prompt.md` after the current Step 6 (write analysis.md):
+
+```markdown
+## Step 7: Land your changes on main
+
+After committing your work to your branch, land it on main:
+
+1. Run `git rebase main` to rebase your branch onto the current main
+2. If there are conflicts (typically in `tolerances.js` because another agent landed while you worked):
+   - Open the conflicting file and keep BOTH additions (yours and the other agent's)
+   - `git add` the resolved file and `git rebase --continue`
+3. Run `git push . HEAD:main` to update main with your rebased commits
+4. If the push fails with "non-fast-forward" (another agent landed between your rebase and push):
+   - Run `git rebase main` again to incorporate the new changes
+   - Resolve any new conflicts the same way (keep both additions)
+   - Retry `git push . HEAD:main`
+5. Repeat until the push succeeds (rarely more than one retry)
+```
+
+This step is only relevant in the parallel workflow. For the single-agent `triage-loop.sh`, the loop itself handles committing to main, so this step is a no-op. The prompt could conditionally include it, or just always include it (rebasing onto main when already on main is harmless).
+
+### 2. Failed agent recovery
+
+If an agent times out or crashes, it leaves a claimed record (issue dir exists) with no `analysis.md`. The orchestrator needs to detect and handle this.
+
+**Detection**: After an agent process exits with non-zero or timeout:
+```bash
+if [ ! -f "$issue_dir/analysis.md" ]; then
+  echo "$(date -Is) agent-$i failed on $record_id, unclaiming" | tee -a "$ERROR_LOG"
+  # Remove the issue dir so next-record.js will pick it up again
+  rm -rf "$issue_dir"
+  git add -A && git commit -m "Unclaim failed record $record_id" --quiet
+fi
+```
+
+**In the orchestrator's main loop**, after detecting an agent finished:
+```bash
+# Check agent exit code
+wait "$pid"
+exit_code=$?
+
+if [ "$exit_code" -ne 0 ] || [ ! -f "${ISSUE_DIRS[$i]}/analysis.md" ]; then
+  # Agent failed — unclaim the record so it can be retried
+  rm -rf "${ISSUE_DIRS[$i]}"
+  cd "$TRIAGE_DIR"
+  git add -A && git commit -m "Unclaim failed record ${RECORDS[$i]}" --quiet
+fi
+```
+
+This puts the record back in the pool for another agent (or retry). The agent's partial work (if any) is discarded.
+
+**Optional**: Track failure count per record to avoid infinite retry loops. If a record fails 3 times, mark it with a `failed-analysis.md` and skip it.
+
+### 3. Tolerance interaction detection
+
+When the orchestrator detects that main has moved (an agent landed), it should rerun compare.js and check whether the combined tolerance set produces unexpected results.
+
+**After each agent lands on main**, the orchestrator:
+```bash
+# Sync orchestrator working tree
+git reset --hard main
+
+# Rerun compare.js with all combined tolerances
+OLD_DELTAS=$(wc -l < "$JOB_DIR/results/deltas/deltas.ndjson")
+node engine/compare.js --job "$JOB_REL" 2>&1 | tail -3
+NEW_DELTAS=$(wc -l < "$JOB_DIR/results/deltas/deltas.ndjson")
+
+ELIMINATED=$((OLD_DELTAS - NEW_DELTAS))
+echo "$(date -Is) agent-$i landed: $OLD_DELTAS -> $NEW_DELTAS deltas ($ELIMINATED eliminated)" | tee -a "$ERROR_LOG"
+
+# Sanity check: agent reported eliminating N records in its analysis.
+# If the combined elimination is significantly MORE than expected,
+# two tolerances may be interacting.
+# For now, just log it — human reviews if the numbers look off.
+if [ "$ELIMINATED" -gt "$((EXPECTED * 2))" ]; then
+  echo "$(date -Is) WARNING: agent-$i eliminated $ELIMINATED records (expected ~$EXPECTED)" | tee -a "$ERROR_LOG"
+fi
+
+git add -A
+git commit -m "Rerun compare.js after agent-$i landed ($NEW_DELTAS deltas)" --quiet 2>/dev/null || true
+```
+
+**Where does `EXPECTED` come from?** The agent writes `Records-Impacted: N` in its bug report and in `analysis.md`. The orchestrator could parse this from the analysis file:
+```bash
+EXPECTED=$(grep -oP 'Records-Impacted:\s*\K\d+' "$issue_dir/analysis.md" 2>/dev/null || echo 0)
+```
+
+If `ELIMINATED` is much larger than `EXPECTED`, it means the agent's tolerance combined with other tolerances to eliminate records beyond what the agent validated in isolation. This is the interaction effect we're watching for. In practice this should be rare, and logging is sufficient — a human can review the flagged rounds.

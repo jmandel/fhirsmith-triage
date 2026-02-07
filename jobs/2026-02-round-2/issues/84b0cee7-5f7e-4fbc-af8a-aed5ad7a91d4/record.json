@@ -1,0 +1,46 @@
+{
+  "id": "84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4",
+  "url": "/r5/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 3473,
+    "hash": "47827c39c71f2c28bc39f417a769f73f"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1333,
+    "hash": "d0c46a0712ac8a1d4516ce0c9a45bedd"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "code"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "display"
+      },
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "system"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "version"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://loinc.org\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\"},{\"name\" : \"code\",\"valueCode\" : \"72106-8\"},{\"name\" : \"version\",\"valueString\" : \"2.81\"},{\"name\" : \"display\",\"valueString\" : \"Total score [MMSE]\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated; Wrong Display Name 'Cognitive functioning [Interpretation]' for http://loinc.org#72106-8. Valid display is one of 2 choices: 'Total score [MMSE]' (en-US) or 'Total score [MMSE]' (en-US) (for the language(s) 'en')\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\",\"code\" : \"SP-QUICKSTOP\",\"display\" : \"QuickStop Response Inhibition Test\"},{\"system\" : \"http://loinc.org\",\"code\" : \"72106-8\",\"display\" : \"Cognitive functioning [Interpretation]\"}],\"text\" : \"Go/No-Go task measuring response inhibition and impulse control\"}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated\"},\"location\" : [\"CodeableConcept.coding[0].system\"],\"expression\" : [\"CodeableConcept.coding[0].system\"]},{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Display_Name_for__should_be_one_of__instead_of\"}],\"severity\" : \"error\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-display\"}],\"text\" : \"Wrong Display Name 'Cognitive functioning [Interpretation]' for http://loinc.org#72106-8. Valid display is one of 2 choices: 'Total score [MMSE]' (en-US) or 'Total score [MMSE]' (en-US) (for the language(s) 'en')\"},\"location\" : [\"CodeableConcept.coding[1].display\"],\"expression\" : [\"CodeableConcept.coding[1].display\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests#SP-QUICKSTOP (\\\"QuickStop Response Inhibition Test\\\"), http://loinc.org#72106-8 (\\\"Cognitive functioning [Interpretation]\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests#SP-QUICKSTOP\\\"\\r\\n0 0     : 0ms  : Didn't find CodeSystem \\\"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\\\"\\r\\n0 0     : 0ms  : Check \\\"http://loinc.org#72106-8\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://loinc.org|2.81\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"CodeableConcept.coding[0].system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\",\"code\":\"SP-QUICKSTOP\",\"display\":\"QuickStop Response Inhibition Test\"},{\"system\":\"http://loinc.org\",\"code\":\"72106-8\",\"display\":\"Cognitive functioning [Interpretation]\"}],\"text\":\"Go/No-Go task measuring response inhibition and impulse control\"}},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests\",\"code\":\"SP-QUICKSTOP\",\"display\":\"QuickStop Response Inhibition Test\"},{\"system\":\"http://loinc.org\",\"code\":\"72106-8\",\"display\":\"Cognitive functioning [Interpretation]\"}],\"text\":\"Go/No-Go task measuring response inhibition and impulse control\"}},{\"name\":\"displayLanguage\",\"valueString\":\"en\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"fe715271-177c-479d-a464-8d886ba22c65\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueCanonical\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

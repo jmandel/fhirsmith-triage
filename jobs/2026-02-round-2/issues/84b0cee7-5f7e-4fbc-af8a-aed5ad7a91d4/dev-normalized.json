@@ -1,0 +1,59 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "SP-QUICKSTOP",
+            "display": "QuickStop Response Inhibition Test",
+            "system": "https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests"
+          },
+          {
+            "code": "72106-8",
+            "display": "Cognitive functioning [Interpretation]",
+            "system": "http://loinc.org"
+          }
+        ],
+        "text": "Go/No-Go task measuring response inhibition and impulse control"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].system"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests' could not be found, so the code cannot be validated; Wrong Display Name 'Cognitive functioning [Interpretation]' for http://loinc.org#72106-8. Valid display is one of 2 choices: 'Total score [MMSE]' (en-US) or 'Total score [MMSE]' (en-US) (for the language(s) 'en')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests"
+    }
+  ],
+  "resourceType": "Parameters"
+}

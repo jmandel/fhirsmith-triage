@@ -368,16 +368,61 @@
             "lamport": 10
         },
         "edit_time": {
-            "timestamp": 1770501561,
-            "time": "2026-02-07T15:59:21-06:00",
-            "lamport": 48
+            "timestamp": 1770501822,
+            "time": "2026-02-07T16:03:42-06:00",
+            "lamport": 50
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev adds expression field on informational OperationOutcome issues where prod omits it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "bd89513a2037faa19ab77a8303238bdaf86624bc1ddcebf0309e6335546492fc",
+        "human_id": "bd89513",
+        "create_time": {
+            "timestamp": 1770501931,
+            "time": "2026-02-07T16:05:31-06:00",
+            "lamport": 11
+        },
+        "edit_time": {
+            "timestamp": 1770501936,
+            "time": "2026-02-07T16:05:36-06:00",
+            "lamport": 53
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev adds expression field on informational OperationOutcome issues where prod omits it",
+        "title": "Dev returns extra message/issues for display language resolution on validate-code result=true",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
