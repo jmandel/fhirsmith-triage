@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_29 bugs (26 open, 3 closed)_
+_30 bugs (27 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1554,6 +1554,24 @@ Records-Impacted: 12
 Tolerance-ID: expand-too-costly-succeeds
 Record-ID: 4fe6282f-ccf2-4340-9758-cbc70b7d2b79
 
+#####Repro
+
+```bash
+####Prod (returns 422 too-costly)
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt"}]}}}]}'
+
+####Dev (returns 200 with 7 codes)
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt"}]}}}]}'
+```
+
+Prod returns HTTP 422 with OperationOutcome code `too-costly`: "The code System has a grammar, and cannot be enumerated directly". Dev returns HTTP 200 with a ValueSet expansion containing 7 CPT codes (99202, 99203, 0001A, 25, P1, 1P, F1).
+
 #####What differs
 
 Prod returns HTTP 422 with an OperationOutcome containing issue code `too-costly` for certain $expand requests. Dev returns HTTP 200 with a successful ValueSet expansion containing codes.
@@ -1593,6 +1611,20 @@ Records-Impacted: 59
 Tolerance-ID: snomed-same-version-display-differs
 Record-ID: 9e9e9c20-cc34-43f8-a0fa-54e8cac48e55
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http://snomed.info/sct&code=48546005' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http://snomed.info/sct&code=48546005' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `display: "Product containing diazepam (medicinal product)"`, dev returns `display: "Diazepam"`. Both report version `http://snomed.info/sct/900000000000207008/version/20250201`. Also confirmed with code 409063005: prod returns `"Counselling"`, dev returns `"Counseling (regime/therapy)"`.
+
 #####What differs
 
 For SNOMED $validate-code requests where both prod and dev report the same SNOMED CT edition version (e.g., 20250201), the display text returned for certain codes differs between the two servers. Examples:
@@ -1616,6 +1648,40 @@ then filtering to records where prod and dev version parameters are identical.
 #####What the tolerance covers
 
 Tolerance ID: snomed-same-version-display-differs. Matches SNOMED validate-code Parameters responses where versions are identical but display text differs. Normalizes both sides to prod's display value.
+
+---
+
+### [ ] `eaeccdd` Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code
+
+Records-Impacted: 12
+Tolerance-ID: validate-code-extra-filter-miss-message
+Record-ID: 7c3bf322-7db7-42f5-82d6-dd1ef9bd9588
+
+#####What differs
+
+On $validate-code requests against ValueSets with multiple include filters (e.g. IPS allergies-intolerances, medical-devices), when the code is valid (result=true, found in at least one filter), dev returns an extra `message` parameter containing "Code X is not in the specified filter" for each filter the code did NOT match. Prod omits the `message` parameter entirely when the overall result is true.
+
+Example (record 7c3bf322):
+- Prod: result=true, no message parameter
+- Dev: result=true, message="Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter"
+
+The code 716186003 (No known allergy) is valid in the IPS allergies ValueSet but only matches the 4th include filter (concept<<716186003). Dev reports failure messages for the 3 filters it didn't match.
+
+#####How widespread
+
+12 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=true. All involve SNOMED codes against IPS ValueSets with multiple include filters. Found via:
+```
+grep 'extra-in-dev' results/deltas/deltas.ndjson | grep '"message"' → 23 hits
+```
+Of those, 12 have this pattern (single diff: extra-in-dev:message, result=true on both sides, dev message contains "is not in the specified filter", prod has no message param).
+
+The remaining 11 are different patterns (multiple diffs, result=false, or different message content).
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-extra-filter-miss-message
+Matches: validate-code where result=true on both sides, dev has a `message` parameter that prod lacks, and the dev message matches the pattern "is not in the specified filter".
+Normalizes: strips the extra `message` parameter from dev.
 
 ---
 

@@ -1220,12 +1220,13 @@
             "lamport": 29
         },
         "edit_time": {
-            "timestamp": 1770491534,
-            "time": "2026-02-07T13:12:14-06:00",
-            "lamport": 115
+            "timestamp": 1770492034,
+            "time": "2026-02-07T13:20:34-06:00",
+            "lamport": 153
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
@@ -1264,16 +1265,61 @@
             "lamport": 30
         },
         "edit_time": {
-            "timestamp": 1770491905,
-            "time": "2026-02-07T13:18:25-06:00",
-            "lamport": 151
+            "timestamp": 1770492229,
+            "time": "2026-02-07T13:23:49-06:00",
+            "lamport": 158
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "SNOMED display text differs for same edition version",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "eaeccdda75bdf53ee08d83539e7b799e2e68d29061615e93d13792d6fae228d4",
+        "human_id": "eaeccdd",
+        "create_time": {
+            "timestamp": 1770492188,
+            "time": "2026-02-07T13:23:08-06:00",
+            "lamport": 31
+        },
+        "edit_time": {
+            "timestamp": 1770492192,
+            "time": "2026-02-07T13:23:12-06:00",
+            "lamport": 156
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "SNOMED display text differs for same edition version",
+        "title": "Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

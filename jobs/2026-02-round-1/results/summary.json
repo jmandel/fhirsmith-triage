@@ -1,10 +1,10 @@
 {
-  "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T19:23:41.748Z",
+  "jobDir": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-1",
+  "timestamp": "2026-02-07T19:30:31.017Z",
   "totalRecords": 7245,
-  "skipped": 2315,
+  "skipped": 2404,
   "skippedByKind": {
-    "temp-tolerance": 680,
+    "temp-tolerance": 769,
     "equiv-autofix": 1635
   },
   "skippedReasons": {
@@ -21,12 +21,12 @@
     "validate-code-crash-undefined-system-code": 1,
     "bcp47-case-sensitive-validation": 2,
     "expand-too-costly-succeeds": 12,
+    "validate-code-undefined-system-result-disagrees": 89,
     "skip-static-assets": 4,
     "skip-root-page": 359
   },
   "categories": {
     "OK": 4658,
-    "result-disagrees": 89,
     "content-differs": 180,
     "missing-resource": 3
   },
@@ -38,7 +38,6 @@
   "operationBreakdown": {
     "validate-code": {
       "OK": 3370,
-      "result-disagrees": 89,
       "content-differs": 121
     },
     "lookup": {

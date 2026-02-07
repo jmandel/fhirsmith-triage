@@ -1,0 +1,41 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "48546005"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Product containing diazepam (medicinal product)"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "48546005",
+            "display": "Diazepam-containing product"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0 for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\r\n16 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<763158003)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n16 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<<787481004)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n16 0    : 0ms  : Prepare exclude: \"(http://snomed.info/sct)(concept<<787859002)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n16 0    : 0ms  : Validate \"[http://snomed.info/sct#48546005 (\"Diazepam-containing product\")]\"\r\n16 0    : 0ms  : Check \"http://snomed.info/sct#48546005\"\r\n16 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\r\n16 0    : 0ms  : check code in (http://snomed.info/sct)(concept<763158003) at CodeableConcept.coding[0]\r\n16 0    : 0ms  : Filter \"concept<763158003\": Code \"48546005\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n16 0    : 0ms  : check code not in (http://snomed.info/sct)(concept<<787859002) at CodeableConcept.coding[0]\r\n16 0    : 0ms  : Filter \"concept<<787859002\": Code \"48546005\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n"
+    }
+  ]
+}

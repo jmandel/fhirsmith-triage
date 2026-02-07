@@ -1258,6 +1258,26 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-undefined-system-result-disagrees',
+    description: 'POST $validate-code: dev returns result=false because it fails to extract the system URI from the request body — system appears as JavaScript "undefined" in dev diagnostics. Prod correctly validates result=true. Affects 89 records (74 ValueSet, 15 CodeSystem) across LOINC, SNOMED, and RxNorm. Related to bug 4cdcd85 (crash variant).',
+    kind: 'temp-tolerance',
+    bugId: '19283df',
+    tags: ['skip', 'result-disagrees', 'validate-code', 'undefined-system'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$validate-code')) return null;
+      if (record.method !== 'POST') return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== false) return null;
+      // Diagnostics are already stripped by strip-diagnostics tolerance,
+      // so check the raw devBody string for the telltale "undefined" system
+      if (!record.devBody || !record.devBody.includes('undefined')) return null;
+      return 'skip';
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

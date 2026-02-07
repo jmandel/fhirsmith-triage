@@ -26,3 +26,4 @@
 {"pickedAt":"2026-02-07T19:09:26.621Z","recordId":"4fe6282f-ccf2-4340-9758-cbc70b7d2b79","total":434,"analyzed":0,"remaining":434,"category":"status-mismatch"}
 {"pickedAt":"2026-02-07T19:14:06.274Z","recordId":"910db7b8-1f3e-44e2-891c-0f21c756520d","total":422,"analyzed":0,"remaining":422,"category":"content-differs"}
 {"pickedAt":"2026-02-07T19:19:45.349Z","recordId":"7c3bf322-7db7-42f5-82d6-dd1ef9bd9588","total":284,"analyzed":0,"remaining":284,"category":"content-differs"}
+{"pickedAt":"2026-02-07T19:24:41.380Z","recordId":"a27be88a-8e1e-4ce8-8167-af0515f294d3","total":272,"analyzed":0,"remaining":272,"category":"result-disagrees"}
