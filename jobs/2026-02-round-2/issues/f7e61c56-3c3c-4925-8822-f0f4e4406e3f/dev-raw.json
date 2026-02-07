@@ -1,0 +1,68 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "??"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://www.nlm.nih.gov/research/umls/rxnorm|04072025"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found, so the code cannot be validated. Valid versions: ??; A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found, so the code cannot be validated. Valid versions: ??"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "860995",
+            "display": "metformin hydrochloride 1000 MG"
+          }
+        ],
+        "text": "metformin hydrochloride 1000 MG"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "text": "A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found, so the code cannot be validated. Valid versions: ??",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[0].system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606 for validation purposes\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Prepare include[0]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627 for validation purposes\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[0]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[1]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[2]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[3]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Prepare include[4]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Prepare include[1]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627 for validation purposes\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[0]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[1]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[2]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[3]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Prepare include[4]: \"()\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem version 04072025 not found: \"http://www.nlm.nih.gov/research/umls/rxnorm|04072025\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Validate \"[undefined#860995 (\"metformin hydrochloride 1000 MG\")]\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5\n302ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\n303ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627: CodeSystem not found: http://www.nlm.nih.gov/research/umls/rxnorm|04072025\n303ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17\n303ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\n303ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627: CodeSystem not found: http://www.nlm.nih.gov/research/umls/rxnorm|04072025"
+    }
+  ]
+}

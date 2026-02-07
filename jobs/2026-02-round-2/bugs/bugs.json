@@ -728,13 +728,14 @@
             "lamport": 18
         },
         "edit_time": {
-            "timestamp": 1770505775,
-            "time": "2026-02-07T17:09:35-06:00",
-            "lamport": 93
+            "timestamp": 1770507364,
+            "time": "2026-02-07T17:36:04-06:00",
+            "lamport": 114
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev message parameter omits issue texts when validating CodeableConcept with multiple coding errors",
@@ -772,13 +773,14 @@
             "lamport": 19
         },
         "edit_time": {
-            "timestamp": 1770506161,
-            "time": "2026-02-07T17:16:01-06:00",
-            "lamport": 96
+            "timestamp": 1770507340,
+            "time": "2026-02-07T17:35:40-06:00",
+            "lamport": 111
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "validate-code: unknown version message says 'no versions known' when valid versions exist",
@@ -816,13 +818,14 @@
             "lamport": 20
         },
         "edit_time": {
-            "timestamp": 1770506560,
-            "time": "2026-02-07T17:22:40-06:00",
-            "lamport": 99
+            "timestamp": 1770507229,
+            "time": "2026-02-07T17:33:49-06:00",
+            "lamport": 104
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets",
@@ -860,16 +863,61 @@
             "lamport": 21
         },
         "edit_time": {
-            "timestamp": 1770506932,
-            "time": "2026-02-07T17:28:52-06:00",
-            "lamport": 102
+            "timestamp": 1770507355,
+            "time": "2026-02-07T17:35:55-06:00",
+            "lamport": 113
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "44d191626345e578c625ffe63efc4694bb5cb46da2367a764cfac7816f47434f",
+        "human_id": "44d1916",
+        "create_time": {
+            "timestamp": 1770507293,
+            "time": "2026-02-07T17:34:53-06:00",
+            "lamport": 22
+        },
+        "edit_time": {
+            "timestamp": 1770507298,
+            "time": "2026-02-07T17:34:58-06:00",
+            "lamport": 107
         },
         "status": "open",
         "labels": [
             "status-mismatch",
             "tx-compare"
         ],
-        "title": "Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems",
+        "title": "Dev returns 200 expansion instead of 422 too-costly for large code systems (LOINC, MIME types)",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

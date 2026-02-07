@@ -1,0 +1,86 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "??"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+            "code": "860995",
+            "display": "metformin hydrochloride 1000 MG"
+          }
+        ],
+        "text": "metformin hydrochloride 1000 MG"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://www.nlm.nih.gov/research/umls/rxnorm#860995 ('metformin hydrochloride 1000 MG')' was not found in the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'"
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606'"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16860 16860: 0ms  : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.4|20240606 for validation purposes\r\n16860 0 : 0ms  : Parameters: disp-lang=en-US, default-to-latest\r\n16860 0 : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\r\n16860 0 : 0ms  : Prepare include: \"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5)\"\r\n16860 0 : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5|20240627 for validation purposes\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBDG)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBDF)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBD)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=BPCK)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=BN)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms  : Prepare include: \"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17)\"\r\n16860 0 : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17|20240627 for validation purposes\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCDG)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCDF)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCD)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=GPCK)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms    : Prepare include: \"(http://www.nlm.nih.gov/research/umls/rxnorm)(tty=IN)\"\r\n16860 0 : 0ms    : CodeSystem found: \"http://www.nlm.nih.gov/research/umls/rxnorm|??\"\r\n16860 0 : 0ms  : Validate \"[http://www.nlm.nih.gov/research/umls/rxnorm#860995 (\"metformin hydrochloride 1000 MG\")]\"\r\n16860 0 : 0ms  : Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\r\n16860 0 : 0ms  : Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1010.5\r\n16860 0 : 0ms    : Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBDG) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SBDG\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBDF) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SBDF\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SBD) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SBD\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=BPCK) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=BPCK\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=BN) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=BN\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms  : Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.88.12.80.17\r\n16860 0 : 0ms    : Check \"http://www.nlm.nih.gov/research/umls/rxnorm#860995\"\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCDG) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SCDG\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCDF) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SCDF\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=SCD) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=SCD\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=GPCK) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=GPCK\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n16860 0 : 0ms    : CodeSystem found: http://www.nlm.nih.gov/research/umls/rxnorm|?? for http://www.nlm.nih.gov/research/umls/rxnorm|04072025\r\n16860 0 : 0ms    : check code in (http://www.nlm.nih.gov/research/umls/rxnorm)(tty=IN) at CodeableConcept.coding[0]\r\n16860 0 : 0ms    : Filter \"tty=IN\": Code \"860995\" not found in http://www.nlm.nih.gov/research/umls/rxnorm|??\r\n"
+    }
+  ]
+}

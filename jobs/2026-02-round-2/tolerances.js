@@ -2227,21 +2227,21 @@ const tolerances = [
 
   {
     id: 'validate-code-x-unknown-system-extra',
-    description: 'Dev returns x-unknown-system parameter, extra UNKNOWN_CODESYSTEM_VERSION issue, and different message/display/version when a requested code system version is not found. Prod falls back to a known version and provides display/version details. Both agree result=false. Affects 5 validate-code content-differs records.',
+    description: 'Dev returns x-caused-by-unknown-system or x-unknown-system parameter for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301/20250301). Prod falls back to a known version and performs actual validation. Dev fails at CodeSystem-not-found level. Both agree result=false but for different reasons. Affects 10 validate-code content-differs records.',
     kind: 'temp-tolerance',
-    bugId: '451c583',
+    bugId: '1bc5e64',
     tags: ['normalize', 'validate-code', 'unknown-system-version'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
-      const devUnknown = getParamValue(dev, 'x-unknown-system');
-      const prodUnknown = getParamValue(prod, 'x-unknown-system');
+      const devUnknown = getParamValue(dev, 'x-caused-by-unknown-system') || getParamValue(dev, 'x-unknown-system');
+      const prodUnknown = getParamValue(prod, 'x-caused-by-unknown-system') || getParamValue(prod, 'x-unknown-system');
       if (devUnknown && !prodUnknown) return 'normalize';
       return null;
     },
     normalize({ prod, dev }) {
       if (!prod?.parameter || !dev?.parameter) return { prod, dev };
-      // Strip x-unknown-system from dev
-      let devNorm = stripParams(dev, 'x-unknown-system');
+      // Strip x-caused-by-unknown-system and x-unknown-system from dev
+      let devNorm = stripParams(dev, 'x-caused-by-unknown-system', 'x-unknown-system');
       // Canonicalize message to prod's value
       const prodMsg = getParamValue(prod, 'message');
       if (prodMsg) {
