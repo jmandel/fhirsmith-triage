@@ -1,0 +1,59 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "22298006",
+            "display": "Myocardial infarction (disorder)",
+            "system": "http://snomed.info/sct"
+          }
+        ],
+        "text": "Secondary prevention of cardiovascular events"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found"
+            },
+            "expression": [
+              null
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unable_to_resolve_value_Set_"
+              }
+            ],
+            "location": [
+              null
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    }
+  ],
+  "resourceType": "Parameters"
+}

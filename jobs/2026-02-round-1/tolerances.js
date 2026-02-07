@@ -131,6 +131,106 @@ const tolerances = [
   },
 
   {
+    id: 'strip-oo-message-id-extension',
+    description: 'OperationOutcome issue extensions for operationoutcome-message-id are server-generated message identifiers. Both servers include them inconsistently — sometimes both have matching IDs, sometimes they differ, sometimes only one side has them. These are implementation-specific metadata with no terminology significance. Listed in Known Cosmetic Differences. Affects ~264 delta records where the extension presence or value differs.',
+    kind: 'equiv-autofix',
+    tags: ['normalize', 'operationoutcome', 'message-id-extension'],
+    match({ prod, dev }) {
+      function hasMessageIdExt(body) {
+        if (!isParameters(body)) return false;
+        const issues = getParamValue(body, 'issues');
+        if (!issues?.issue) return false;
+        return issues.issue.some(iss =>
+          iss.extension?.some(ext =>
+            ext.url === 'http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id'
+          )
+        );
+      }
+      if (hasMessageIdExt(prod) || hasMessageIdExt(dev)) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      function stripMessageIdExt(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map(iss => {
+                  if (!iss.extension) return iss;
+                  const filtered = iss.extension.filter(ext =>
+                    ext.url !== 'http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id'
+                  );
+                  const result = { ...iss };
+                  if (filtered.length === 0) {
+                    delete result.extension;
+                  } else {
+                    result.extension = filtered;
+                  }
+                  return result;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return both(ctx, stripMessageIdExt);
+    },
+  },
+
+  {
+    id: 'dev-null-expression-location',
+    description: 'Dev returns expression:[null] and location:[null] on OperationOutcome issues that have no specific location. Prod correctly omits these fields. Null values in arrays are invalid FHIR. Same root cause as empty-string variant (bug e9c7e58). Affects 5 records total (2 in deltas).',
+    kind: 'temp-tolerance',
+    bugId: 'e9c7e58',
+    tags: ['normalize', 'operationoutcome', 'invalid-fhir'],
+    match({ dev }) {
+      if (!isParameters(dev)) return null;
+      const issues = getParamValue(dev, 'issues');
+      if (!issues?.issue) return null;
+      for (const iss of issues.issue) {
+        if ((iss.expression && iss.expression.includes(null)) ||
+            (iss.location && iss.location.includes(null))) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function removeNullArrays(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map(iss => {
+                  const result = { ...iss };
+                  if (result.expression && result.expression.length === 1 && result.expression[0] === null) {
+                    delete result.expression;
+                  }
+                  if (result.location && result.location.length === 1 && result.location[0] === null) {
+                    delete result.location;
+                  }
+                  return result;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: removeNullArrays(dev) };
+    },
+  },
+
+  {
     id: 'dev-empty-string-expression-location',
     description: 'Dev returns expression:[""] and location:[""] on OperationOutcome issues that have no specific location (e.g. TX_GENERAL_CC_ERROR_MESSAGE, MSG_DRAFT, MSG_DEPRECATED). Prod correctly omits these fields. Empty strings are invalid FHIR. Affects 318 validate-code records.',
     kind: 'temp-tolerance',

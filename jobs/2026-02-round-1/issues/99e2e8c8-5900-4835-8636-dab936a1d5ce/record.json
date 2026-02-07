@@ -1,0 +1,29 @@
+{
+  "id": "99e2e8c8-5900-4835-8636-dab936a1d5ce",
+  "url": "/r4/ValueSet/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 822,
+    "hash": "96c06f81669d6540dd676ed048ec2fc5"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 949,
+    "hash": "ff93b3a95fc7fb25944a1b633e40f8d7"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found\"}}]}},{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"message\",\"valueString\" : \"A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"22298006\",\"display\" : \"Myocardial infarction (disorder)\"}],\"text\" : \"Secondary prevention of cardiovascular events\"}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"location\":[null],\"expression\":[null],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unable_to_resolve_value_Set_\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for the value Set 'http://snomed.info/sct?fhir_vs=refset/92991000087108' could not be found\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"22298006\",\"display\":\"Myocardial infarction (disorder)\"}],\"text\":\"Secondary prevention of cardiovascular events\"}}]}"
+}

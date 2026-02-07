@@ -832,7 +832,7 @@ document.getElementById("gen-time").textContent = new Date().toLocaleString();
 // Stats bar
 (function() {{
   const bar = document.getElementById("stats-bar");
-  let html = `<div class="stat"><span class="stat-value">${{STATS.total}}</span> total</div>`;
+  let html = `<div class="stat"><span class="stat-value">${{STATS.total}}</span> bugs total</div>`;
   html += `<div class="stat-divider"></div>`;
   html += `<div class="stat"><span class="stat-value" style="color:var(--status-open-fg)">${{STATS.open}}</span> open</div>`;
   html += `<div class="stat"><span class="stat-value">${{STATS.closed}}</span> closed</div>`;
