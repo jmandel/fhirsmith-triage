@@ -2442,6 +2442,65 @@ const tolerances = [
   },
 
   {
+    id: 'expand-unclosed-extension-and-total',
+    description: 'Dev $expand: missing valueset-unclosed extension and spurious expansion.total on incomplete expansions. Prod marks truncated expansions with the valueset-unclosed extension and omits total; dev omits the extension but includes total. 292 records.',
+    kind: 'temp-tolerance',
+    bugId: 'f2b2cef',
+    tags: ['normalize', 'expand', 'unclosed', 'total'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+
+      const prodHasUnclosed = (prod.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+      const devHasUnclosed = (dev.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+      const prodHasTotal = prod.expansion.total !== undefined;
+      const devHasTotal = dev.expansion.total !== undefined;
+
+      if (prodHasUnclosed && !devHasUnclosed) return 'normalize';
+      if (!prodHasTotal && devHasTotal) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev, record }) {
+      let newProd = prod;
+      let newDev = dev;
+
+      const prodHasUnclosed = (prod.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+      const devHasUnclosed = (dev.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+
+      // Remove valueset-unclosed extension from prod if dev doesn't have it
+      if (prodHasUnclosed && !devHasUnclosed) {
+        const filteredExt = (newProd.expansion.extension || []).filter(
+          e => e.url !== 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+        );
+        const newExpansion = { ...newProd.expansion };
+        if (filteredExt.length > 0) {
+          newExpansion.extension = filteredExt;
+        } else {
+          delete newExpansion.extension;
+        }
+        newProd = { ...newProd, expansion: newExpansion };
+      }
+
+      // Remove total from dev if prod doesn't have it
+      if (prod.expansion.total === undefined && dev.expansion.total !== undefined) {
+        const { total, ...restExpansion } = newDev.expansion;
+        newDev = { ...newDev, expansion: restExpansion };
+      }
+
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
     id: 'expand-valueset-not-found-status-mismatch',
     description: 'Prod returns 422 with issue code "unknown", dev returns 404 with issue code "not-found" when a ValueSet cannot be found for $expand. Both communicate the same meaning but differ in HTTP status and OperationOutcome structure. 756 records.',
     kind: 'temp-tolerance',

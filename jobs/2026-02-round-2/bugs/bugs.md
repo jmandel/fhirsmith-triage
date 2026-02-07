@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_6 bugs (5 open, 1 closed)_
+_7 bugs (6 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -335,6 +335,47 @@ The HL7 terminology CodeSystem version skew also affects $expand operations. Dev
 Additionally, 246 expand records show dev returning total=1 where prod returns many codes for v3 ValueSets. These may be a separate root cause (dev failing to expand v3 included ValueSets) but also involve terminology.hl7.org CodeSystems.
 
 Adding tolerance `expand-hl7-terminology-version-skew-content` for the 163 minor-diff records.
+
+---
+
+### [ ] `4336772` Dev  returns only root concept for v3 hierarchical ValueSets (missing child codes)
+
+Records-Impacted: 246
+Tolerance-ID: expand-v3-hierarchical-incomplete
+Record-ID: 18d8209b-15f4-486d-8009-25ed8cb2cbcb
+
+#####What differs
+
+When expanding v3 ValueSets that include hierarchical concepts from `terminology.hl7.org/CodeSystem/v3-ActReason`, dev returns only the root abstract concept while prod returns the full hierarchy of child codes.
+
+For example, expanding `http://terminology.hl7.org/ValueSet/v3-PurposeOfUse`:
+- Prod: `expansion.total=63`, contains 63 codes (PurposeOfUse root + 62 child codes like HMARKT, HOPERAT, TREAT, etc.)
+- Dev: `expansion.total=1`, contains only the root abstract concept `PurposeOfUse`
+
+The same pattern affects 4 distinct v3 ValueSets:
+- `v3-ActEncounterCode`: prod=12 codes, dev=1 (209 records)
+- `v3-ServiceDeliveryLocationRoleType`: prod=139 codes, dev=1 (24 records)
+- `v3-PurposeOfUse`: prod=63 codes, dev=1 (6 records)
+- `v3-ActPharmacySupplyType`: prod=35 codes, dev=1 (7 records)
+
+In all cases, dev returns only the root concept and completely omits the descendant codes that should be included in the expansion.
+
+#####How widespread
+
+246 records across the 4 ValueSets listed above. Found via:
+```bash
+grep '"op":"expand"' jobs/2026-02-round-2/results/deltas/deltas.ndjson | python3 -c '...' # script checking prod_total>1 and dev_total==1
+```
+
+All are GET requests to `/r4/ValueSet/$expand` with `url=http://terminology.hl7.org/ValueSet/v3-*`.
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-v3-hierarchical-incomplete`. Matches expand operations where both prod and dev return 200, the ValueSet URL matches `terminology.hl7.org/ValueSet/v3-`, and dev expansion total is 1 while prod expansion total is greater than 1. Skips these records. Eliminates 246 records.
+
+#####Note
+
+Bug 6edc96c mentions these 246 records in a comment as potentially a separate root cause from the version skew issue. This bug tracks the specific failure to expand hierarchical v3 ValueSets.
 
 ---
 

@@ -268,5 +268,49 @@
         },
         "comments": 2,
         "metadata": {}
+    },
+    {
+        "id": "4336772672340872069d94336eb1f77be6e1ad9e869a08ce8da979ba32ccde01",
+        "human_id": "4336772",
+        "create_time": {
+            "timestamp": 1770500740,
+            "time": "2026-02-07T15:45:40-06:00",
+            "lamport": 8
+        },
+        "edit_time": {
+            "timestamp": 1770500745,
+            "time": "2026-02-07T15:45:45-06:00",
+            "lamport": 38
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev  returns only root concept for v3 hierarchical ValueSets (missing child codes)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
