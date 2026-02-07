@@ -1700,6 +1700,58 @@ Records-Impacted: 89
 Tolerance-ID: validate-code-undefined-system-result-disagrees
 Record-ID: a27be88a-8e1e-4ce8-8167-af0515f294d3
 
+#####Repro
+
+**Attempt 1** — CodeSystem/$validate-code with SNOMED 26643006:
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"26643006"},{"name":"display","valueString":"oral"},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"26643006"},{"name":"display","valueString":"oral"},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+Result: Both servers now return `result: true`. Bug no longer reproduces on this endpoint.
+
+**Attempt 2** — ValueSet/$validate-code with LOINC 8302-2 against vital signs ValueSet:
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"system","valueUri":"http://loinc.org"},{"name":"code","valueCode":"8302-2"},{"name":"display","valueString":"Body height"},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult"},{"name":"system","valueUri":"http://loinc.org"},{"name":"code","valueCode":"8302-2"},{"name":"display","valueString":"Body height"},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+Result: Both servers now return `result: true`. Bug no longer reproduces on this endpoint.
+
+**Attempt 3** — ValueSet/$validate-code with SNOMED 116154003 against CTS ValueSet:
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1099.30"},{"name":"valueSetVersion","valueString":"20190418"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"116154003","display":"Patient (person)"}],"text":"Patient"}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1099.30"},{"name":"valueSetVersion","valueString":"20190418"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"116154003","display":"Patient (person)"}],"text":"Patient"}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+Result: Prod returns `result: true`, dev returns `result: false`. Dev's error message ends with "and undefined" in the valid SNOMED versions list, confirming the "undefined" leak persists in dev's internal data. However, the primary failure is a SNOMED US Edition version mismatch (dev looks for version `20250301` which it doesn't have), so this is not a clean repro of the POST body extraction bug specifically.
+
+**Conclusion**: The original bug (system=undefined in POST body extraction causing result=false) no longer reproduces on simple CodeSystem and ValueSet endpoints. Dev may have partially fixed the POST body parameter extraction. However, "undefined" still appears in dev's valid-versions list, suggesting residual issues. The original IPS ValueSets (medication-uv-ips, results-laboratory-pathology-observations-uv-ips) used by the 89 affected records are no longer available on either server.
+
 #####What differs
 
 Dev returns `result: false` on POST $validate-code requests where prod returns `result: true`. Dev's diagnostics reveal the system URI is "undefined" during validation:

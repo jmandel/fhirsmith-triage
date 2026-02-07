@@ -1,0 +1,42 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "physical.evaluation.alertnessAndOrientation.disorientatedtime"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "physical.evaluation.alertnessAndOrientation.disorientatedtime",
+            "display": "Patient is not alert & oriented to time",
+            "system": "http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs"
+          },
+          {
+            "code": "19657006",
+            "display": "Disorientated in time (finding)",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Disturbance of orientation in time"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs"
+    },
+    {
+      "name": "version",
+      "valueString": "1.0.0"
+    }
+  ],
+  "resourceType": "Parameters"
+}

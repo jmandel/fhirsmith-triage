@@ -1355,12 +1355,13 @@
             "lamport": 32
         },
         "edit_time": {
-            "timestamp": 1770492553,
-            "time": "2026-02-07T13:29:13-06:00",
-            "lamport": 163
+            "timestamp": 1770494132,
+            "time": "2026-02-07T13:55:32-06:00",
+            "lamport": 186
         },
         "status": "open",
         "labels": [
+            "repro-inconclusive",
             "result-disagrees",
             "tx-compare"
         ],

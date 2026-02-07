@@ -1568,6 +1568,45 @@ const tolerances = [
   },
 
   {
+    id: 'multi-coding-cc-system-code-version-disagree',
+    description: 'POST CodeSystem/$validate-code with multi-coding CodeableConcept: prod reports SNOMED coding in system/code/version output params, dev reports the custom CodeSystem coding. Both agree result=true and return identical codeableConcept. Normalizes system/code/version to prod values. Affects 3 records (all el-observation-code-cs + SNOMED pairs).',
+    kind: 'temp-tolerance',
+    bugId: '43d6cfa',
+    tags: ['normalize', 'validate-code', 'multi-coding', 'system-code-disagree'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== true) return null;
+      const prodSystem = getParamValue(prod, 'system');
+      const devSystem = getParamValue(dev, 'system');
+      if (!prodSystem || !devSystem || prodSystem === devSystem) return null;
+      // Check that codeableConcept has multiple codings
+      const cc = getParamValue(prod, 'codeableConcept') || getParamValue(dev, 'codeableConcept');
+      if (!cc?.coding || cc.coding.length < 2) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodSystem = getParamValue(prod, 'system');
+      const prodCode = getParamValue(prod, 'code');
+      const prodVersion = getParamValue(prod, 'version');
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'system') return { ...p, valueUri: prodSystem };
+            if (p.name === 'code') return { ...p, valueCode: prodCode };
+            if (p.name === 'version') return { ...p, valueString: prodVersion };
+            return p;
+          }),
+        };
+      }
+      return both({ prod, dev }, canonicalize);
+    },
+  },
+
+  {
     id: 'validate-code-undefined-system-missing-params',
     description: 'POST $validate-code result=false: dev missing code/system/display params and has extra issues due to undefined system extraction. Both agree result=false (display text is wrong) but dev response shape differs because it failed to extract the system from the POST body. Dev diagnostics show "undefined" system. Same root cause as bug 19283df (result-disagrees variant). Affects 3 records.',
     kind: 'temp-tolerance',

@@ -1,0 +1,37 @@
+{
+  "id": "65fabdc4-930b-49e8-9ff1-60c176cbbfee",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1803,
+    "hash": "3965e94b101390697a97ef72867dcc6a"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 2077,
+    "hash": "e3bec8421c2b898ec39dac96e320e2c6"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "code"
+      },
+      {
+        "type": "value-differs",
+        "param": "system"
+      },
+      {
+        "type": "value-differs",
+        "param": "version"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"19657006\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Disturbance of orientation in time\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs\",\"code\" : \"physical.evaluation.alertnessAndOrientation.disorientatedtime\",\"display\" : \"Patient is not alert & oriented to time\"},{\"system\" : \"http://snomed.info/sct\",\"code\" : \"19657006\",\"display\" : \"Disorientated in time (finding)\"}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n31 31   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n31 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n31 0    : 0ms  : Prepare include: \\\"()\\\"\\r\\n31 0    : 0ms  : Validate \\\"[http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs#physical.evaluation.alertnessAndOrientation.disorientatedtime (\\\"Patient is not alert & oriented to time\\\"), http://snomed.info/sct#19657006 (\\\"Disorientated in time (finding)\\\")]\\\"\\r\\n31 0    : 0ms  : Check \\\"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs#physical.evaluation.alertnessAndOrientation.disorientatedtime\\\"\\r\\n31 0    : 0ms  : Using CodeSystem \\\"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs|1.0.0\\\" (content = complete)\\r\\n31 0    : 0ms  : Check \\\"http://snomed.info/sct#19657006\\\"\\r\\n31 0    : 0ms  : Using CodeSystem \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"version\",\"valueString\":\"1.0.0\"},{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs\"},{\"name\":\"code\",\"valueCode\":\"physical.evaluation.alertnessAndOrientation.disorientatedtime\"},{\"name\":\"display\",\"valueString\":\"Disorientation as to time\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs\",\"code\":\"physical.evaluation.alertnessAndOrientation.disorientatedtime\",\"display\":\"Patient is not alert & oriented to time\"},{\"system\":\"http://snomed.info/sct\",\"code\":\"19657006\",\"display\":\"Disorientated in time (finding)\"}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: Validate \\\"[undefined#physical.evaluation.alertnessAndOrientation.disorientatedtime (\\\"Patient is not alert & oriented to time\\\"), undefined#19657006 (\\\"Disorientated in time (finding)\\\")]\\\"\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: Check \\\"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs#physical.evaluation.alertnessAndOrientation.disorientatedtime\\\"\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: CodeSystem found: http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs|1.0.0 for http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs|1.0.0\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: check code in () at CodeableConcept.coding[0]\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: Code \\\"physical.evaluation.alertnessAndOrientation.disorientatedtime\\\" found in http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs|1.0.0\\n1ms http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs/vs|1.0.0: Check \\\"http://snomed.info/sct#19657006\\\"\"}]}"
+}
