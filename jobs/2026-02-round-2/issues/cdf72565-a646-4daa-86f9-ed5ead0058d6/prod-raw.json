@@ -1,0 +1,58 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://varnomen.hgvs.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "NC_000003.11"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'"
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en-GB, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/83821000000107\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://varnomen.hgvs.org#NC_000003.11 (\"\")]\"\r\n0 0     : 0ms  : Check \"http://varnomen.hgvs.org#NC_000003.11\"\r\n0 0     : 0ms  : Using CodeSystem \"http://varnomen.hgvs.org|2.0\" (content = complete)\r\n"
+    }
+  ]
+}

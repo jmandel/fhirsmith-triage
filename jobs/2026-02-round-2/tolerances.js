@@ -2730,6 +2730,54 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'hgvs-extra-syntax-issue',
+    description: 'Dev returns extra informational OperationOutcome issue for HGVS (varnomen.hgvs.org) $validate-code operations. Dev includes an additional informational-level issue with HGVS syntax validation feedback ("Missing one of \'c\', \'g\', \'m\', \'n\', \'p\', \'r\' followed by \'.\'") that prod does not return. Both agree on result=false and the error-level issue. Affects 62 records.',
+    kind: 'temp-tolerance',
+    bugId: '3103b01',
+    tags: ['normalize', 'operationoutcome', 'hgvs', 'extra-issue'],
+    match({ prod, dev, record }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      if (devIssues.issue.length <= prodIssues.issue.length) return null;
+      // Check that the extra issues are informational HGVS syntax issues
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'http://varnomen.hgvs.org') return null;
+      // Verify that dev has informational issues with the HGVS syntax message that prod doesn't
+      const hasHgvsSyntaxIssue = devIssues.issue.some(i =>
+        i.severity === 'information' &&
+        (i.details?.text || '').startsWith('Error while processing')
+      );
+      if (!hasHgvsSyntaxIssue) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev, record }) {
+      function filterHgvsSyntaxIssues(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter(i =>
+              !(i.severity === 'information' &&
+                (i.details?.text || '').startsWith('Error while processing'))
+            );
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: filtered,
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: filterHgvsSyntaxIssues(dev) };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

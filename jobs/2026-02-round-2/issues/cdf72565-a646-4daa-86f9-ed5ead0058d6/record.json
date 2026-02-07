@@ -1,0 +1,30 @@
+{
+  "id": "cdf72565-a646-4daa-86f9-ed5ead0058d6",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1474,
+    "hash": "46ebbb8bcb7de7be8a4bde5f558666d5"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1608,
+    "hash": "b7d1aca4e0122afb2991027fa6da1f54"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://varnomen.hgvs.org\"},{\"name\" : \"code\",\"valueCode\" : \"NC_000003.11\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-GB, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/83821000000107\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://varnomen.hgvs.org#NC_000003.11 (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://varnomen.hgvs.org#NC_000003.11\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://varnomen.hgvs.org|2.0\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://varnomen.hgvs.org\"},{\"name\":\"code\",\"valueCode\":\"NC_000003.11\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"information\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Error while processing 'NC_000003.11': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'.\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n1ms http://varnomen.hgvs.org/vs|2.0: Validate \\\"[undefined#NC_000003.11 (\\\"undefined\\\")]\\\"\\n1ms http://varnomen.hgvs.org/vs|2.0: Check \\\"http://varnomen.hgvs.org#NC_000003.11\\\"\\n1ms http://varnomen.hgvs.org/vs|2.0: CodeSystem found: http://varnomen.hgvs.org|2.0 for http://varnomen.hgvs.org|2.0\\n1ms http://varnomen.hgvs.org/vs|2.0: check code in () at Coding\\n188ms http://varnomen.hgvs.org/vs|2.0: Code \\\"NC_000003.11\\\" not found in http://varnomen.hgvs.org|2.0: undefined\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://varnomen.hgvs.org\",\"code\":\"NC_000003.11\"}},{\"name\":\"displayLanguage\",\"valueString\":\"en-GB\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"7743c2e6-5b90-4b62-bcd2-6695b993e76b\"},{\"name\":\"system-version\",\"valueUri\":\"http://snomed.info/sct|http://snomed.info/sct/83821000000107\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

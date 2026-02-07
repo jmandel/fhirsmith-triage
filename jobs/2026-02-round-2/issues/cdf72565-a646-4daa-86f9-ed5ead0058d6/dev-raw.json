@@ -1,0 +1,71 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://varnomen.hgvs.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "NC_000003.11"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code 'NC_000003.11' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "Error while processing 'NC_000003.11': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'.",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n1ms http://varnomen.hgvs.org/vs|2.0: Validate \"[undefined#NC_000003.11 (\"undefined\")]\"\n1ms http://varnomen.hgvs.org/vs|2.0: Check \"http://varnomen.hgvs.org#NC_000003.11\"\n1ms http://varnomen.hgvs.org/vs|2.0: CodeSystem found: http://varnomen.hgvs.org|2.0 for http://varnomen.hgvs.org|2.0\n1ms http://varnomen.hgvs.org/vs|2.0: check code in () at Coding\n188ms http://varnomen.hgvs.org/vs|2.0: Code \"NC_000003.11\" not found in http://varnomen.hgvs.org|2.0: undefined"
+    }
+  ]
+}

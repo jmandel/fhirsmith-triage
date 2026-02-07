@@ -503,16 +503,61 @@
             "lamport": 13
         },
         "edit_time": {
-            "timestamp": 1770502729,
-            "time": "2026-02-07T16:18:49-06:00",
-            "lamport": 64
+            "timestamp": 1770503076,
+            "time": "2026-02-07T16:24:36-06:00",
+            "lamport": 68
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev  omits expansion.total when prod includes it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c7004d34b2d72ef446ebbafc4f561e145350d8759ee034e08bbb5cbcb8f6faac",
+        "human_id": "c7004d3",
+        "create_time": {
+            "timestamp": 1770503128,
+            "time": "2026-02-07T16:25:28-06:00",
+            "lamport": 14
+        },
+        "edit_time": {
+            "timestamp": 1770503133,
+            "time": "2026-02-07T16:25:33-06:00",
+            "lamport": 71
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev  omits expansion.total when prod includes it",
+        "title": "Dev omits valueset-toocostly extension and adds spurious used-codesystem on  for grammar-based code systems",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

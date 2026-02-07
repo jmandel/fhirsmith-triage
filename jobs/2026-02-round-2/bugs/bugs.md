@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_12 bugs (11 open, 1 closed)_
+_13 bugs (12 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -654,6 +654,18 @@ Records-Impacted: 47
 Tolerance-ID: expand-dev-missing-total
 Record-ID: a1f653a2-a199-4228-a7f7-2522abde6953
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' -H 'Accept: application/fhir+json' -H 'Content-Type: application/fhir+json' -d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/11000315107"},{"name":"displayLanguage","valueCode":"fr"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":true},{"name":"cache-id","valueId":"4d94febc-fb6a-407d-a69c-29b8de3c56c3"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"urn:iso:std:iso:3166:-2"}]}}}]}' | jq '.expansion | {total, contains_count: (.contains | length)}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' -H 'Accept: application/fhir+json' -H 'Content-Type: application/fhir+json' -d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/11000315107"},{"name":"displayLanguage","valueCode":"fr"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":true},{"name":"cache-id","valueId":"4d94febc-fb6a-407d-a69c-29b8de3c56c3"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"urn:iso:std:iso:3166:-2"}]}}}]}' | jq '.expansion | {total, contains_count: (.contains | length)}'
+```
+
+Prod returns `"total": 5099` with 1000 contains entries. Dev returns `"total": null` (field missing) with 1000 contains entries.
+
 #####What differs
 
 In $expand responses (POST /r4/ValueSet/$expand), prod returns `expansion.total` (the total count of matching concepts) while dev omits it entirely. The `total` field is a 0..1 optional integer in FHIR R4's ValueSet.expansion, documented as "Total concept count; permits server pagination." Without it, clients cannot determine how many pages exist in a paged expansion.
@@ -680,6 +692,42 @@ Note: There is a separate existing tolerance (expand-unclosed-extension-and-tota
 Tolerance ID: expand-dev-missing-total
 Matches: $expand responses (POST /r4/ValueSet/$expand) where both sides return 200, prod has expansion.total, and dev doesn't.
 Normalizes by removing expansion.total from prod (since dev lacks it) to prevent re-triaging.
+
+---
+
+### [ ] `c7004d3` Dev omits valueset-toocostly extension and adds spurious used-codesystem on  for grammar-based code systems
+
+Records-Impacted: 13
+Tolerance-ID: expand-toocostly-extension-and-used-codesystem
+Record-ID: a272aa8c-96d7-4905-a75a-ea21d67b83fc
+
+#####What differs
+
+For $expand on grammar-based code systems (primarily BCP-13 MIME types via `urn:ietf:bcp:13`, plus one Brazilian ICD-10 ValueSet), both prod and dev return 200 with an empty expansion (total=0, no `contains`). However:
+
+1. **Prod includes `expansion.extension` with `valueset-toocostly: true`; dev omits it.** This extension signals that the expansion could not be performed because the code system is grammar-based or too costly to enumerate. Prod correctly marks these expansions; dev does not.
+
+2. **Dev includes `expansion.parameter` with `used-codesystem` (e.g., `urn:ietf:bcp:13`); prod omits it.** Dev reports which code system it consulted, even though the expansion returned no results. Prod does not report a used-codesystem on these too-costly expansions.
+
+Both differences always co-occur in the same records.
+
+#####How widespread
+
+13 records in the current comparison dataset show both patterns simultaneously. All are successful (200/200) $expand operations. 12 of 13 involve `http://hl7.org/fhir/ValueSet/mimetypes` (BCP-13 MIME types). One involves a Brazilian ValueSet that includes LOINC and a Brazilian ICD-10 code system.
+
+Search: `grep 'valueset-toocostly' deltas.ndjson` found 25 records total; of those, 13 have both sides returning 200 (the rest have status mismatches handled by other tolerances).
+
+#####What the tolerance covers
+
+Tolerance `expand-toocostly-extension-and-used-codesystem` matches $expand records where both return 200, prod has the `valueset-toocostly` extension but dev doesn't, and normalizes by:
+- Removing the `valueset-toocostly` extension from prod
+- Removing any dev-only `used-codesystem` parameters
+
+Eliminates 13 records from the delta file.
+
+#####Representative record
+
+a272aa8c-96d7-4905-a75a-ea21d67b83fc: POST /r4/ValueSet/$expand — BCP-13 MIME types (http://hl7.org/fhir/ValueSet/mimetypes). Prod returns empty expansion with `valueset-toocostly: true` extension and `limitedExpansion: true` parameter. Dev returns empty expansion with `limitedExpansion: true` and `used-codesystem: urn:ietf:bcp:13` but no toocostly extension.
 
 ---
 
