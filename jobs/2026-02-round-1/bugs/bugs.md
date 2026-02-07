@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_36 bugs (33 open, 3 closed)_
+_37 bugs (34 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1962,6 +1962,20 @@ Records-Impacted: 1
 Tolerance-ID: expand-dev-warning-experimental-param
 Record-ID: 5d1cbf41-db75-4663-8f3a-c492eb8a33aa
 
+#####Repro
+
+```bash
+####Prod
+curl -sL 'https://tx.fhir.org/r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Flanguages&count=50' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -sL 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Flanguages&count=50' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod expansion parameters: `["count", "used-codesystem"]`. Dev expansion parameters: `["warning-experimental", "count", "used-codesystem"]`. Dev includes `{"name":"warning-experimental","valueUri":"http://hl7.org/fhir/ValueSet/languages|4.0.1"}` that prod omits entirely.
+
 #####What differs
 
 Dev $expand for http://hl7.org/fhir/ValueSet/languages includes an extra expansion.parameter `{"name":"warning-experimental","valueUri":"http://hl7.org/fhir/ValueSet/languages|4.0.1"}` that prod omits entirely.
@@ -1993,6 +2007,24 @@ Records-Impacted: 2
 Tolerance-ID: snomed-expression-parse-message-diff
 Record-ID: 2a323fee-2b5e-4c5f-ad4d-d623797b7f6f
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"freetext"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"freetext"}]}'
+```
+
+Prod returns `"...and neither could it be parsed as an expression (Concept not found (next char = "f", in "freetext") at character 1)"`, dev returns `"...and could not be parsed as an expression (Concept not found (next char = "f", in "freetext") at character 0)"`.
+
 #####What differs
 
 When validating an invalid SNOMED CT code (e.g. "freetext"), both prod and dev return an informational issue with a SNOMED expression parse error. The message text differs in two ways:
@@ -2020,6 +2052,44 @@ The pattern is specific to invalid SNOMED codes that trigger the expression pars
 Tolerance ID: snomed-expression-parse-message-diff
 Matches: OperationOutcome issues where prod text contains "neither could it be parsed as an expression" and dev text contains "could not be parsed as an expression" for the same issue. Normalizes dev text to prod text.
 Eliminates: 2 records.
+
+---
+
+### [ ] `43d6cfa` CodeSystem/-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params
+
+Records-Impacted: 3
+Tolerance-ID: multi-coding-cc-system-code-version-disagree
+Record-ID: 65fabdc4-930b-49e8-9ff1-60c176cbbfee
+
+#####What differs
+
+When POST /r4/CodeSystem/$validate-code is called with a CodeableConcept containing two codings (one from a custom CodeSystem `http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs` and one from SNOMED CT), both servers return result=true and return identical codeableConcept parameters. However, the scalar output parameters (system, code, version) disagree on which coding to report:
+
+- **Prod** reports the SNOMED coding: system=http://snomed.info/sct, code=19657006, version=http://snomed.info/sct/900000000000207008/version/20250201
+- **Dev** reports the custom CodeSystem coding: system=http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs, code=physical.evaluation.alertnessAndOrientation.disorientatedtime, version=1.0.0
+
+#####How widespread
+
+3 records, all POST /r4/CodeSystem/$validate-code? with CodeableConcept containing one el-observation-code-cs coding and one SNOMED coding. Found by searching for validate-code records where prod and dev return different system parameter values:
+
+```
+grep 'el-observation-code-cs' comparison.ndjson | wc -l  # 3
+```
+
+All 3 are currently in deltas. All involve the same custom CodeSystem paired with SNOMED.
+
+#####What the tolerance covers
+
+Tolerance ID: multi-coding-cc-system-code-version-disagree
+Matches: POST $validate-code where result=true, both sides have codeableConcept with >1 coding, and system param differs between prod and dev.
+Normalizes system, code, and version params to prod values on both sides.
+Eliminates 3 records.
+
+#####Representative record IDs
+
+- 65fabdc4-930b-49e8-9ff1-60c176cbbfee (SNOMED 19657006 / el-observation-code-cs disorientatedtime)
+- db568fd1-e0b1-4188-b29f-4fe9f7b2529b (SNOMED 85828009 / el-observation-code-cs autoimmune)
+- 2e0dea57-4d5f-4442-99b8-881d1177f561 (SNOMED 26329005 / el-observation-code-cs cognitiveStatusNotNormal)
 
 ---
 

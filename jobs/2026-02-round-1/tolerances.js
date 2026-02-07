@@ -1632,6 +1632,66 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'read-resource-text-div-diff',
+    description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
+    kind: 'temp-tolerance',
+    bugId: 'bd0f7f4',
+    tags: ['normalize', 'read', 'text-div', 'narrative'],
+    match({ prod, dev }) {
+      // Match resources where text.status exists on at least one side
+      // and div presence differs
+      function hasTextDivDiff(prodRes, devRes) {
+        const pt = prodRes?.text;
+        const dt = devRes?.text;
+        if (!pt && !dt) return false;
+        if (pt?.status === 'generated' || dt?.status === 'generated') {
+          const pdiv = !!pt?.div;
+          const ddiv = !!dt?.div;
+          if (pdiv !== ddiv) return true;
+        }
+        return false;
+      }
+
+      // Check Bundle entries
+      if (prod?.resourceType === 'Bundle' && dev?.resourceType === 'Bundle') {
+        const prodEntries = prod.entry || [];
+        const devEntries = dev.entry || [];
+        for (let i = 0; i < Math.min(prodEntries.length, devEntries.length); i++) {
+          if (hasTextDivDiff(prodEntries[i]?.resource, devEntries[i]?.resource)) return 'normalize';
+        }
+        return null;
+      }
+
+      // Check direct resource reads
+      if (hasTextDivDiff(prod, dev)) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      function stripDiv(resource) {
+        if (!resource?.text?.div) return resource;
+        const { div, ...textRest } = resource.text;
+        return { ...resource, text: textRest };
+      }
+
+      function cleanBody(body) {
+        if (!body) return body;
+        if (body.resourceType === 'Bundle' && Array.isArray(body.entry)) {
+          return {
+            ...body,
+            entry: body.entry.map(e => {
+              if (!e.resource) return e;
+              return { ...e, resource: stripDiv(e.resource) };
+            }),
+          };
+        }
+        return stripDiv(body);
+      }
+
+      return both(ctx, cleanBody);
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
