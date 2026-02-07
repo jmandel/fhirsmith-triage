@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_35 bugs (32 open, 3 closed)_
+_36 bugs (33 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1741,6 +1741,24 @@ Records-Impacted: 32
 Tolerance-ID: validate-code-filter-miss-message-prefix
 Record-ID: 6d44fc66-34dd-4ebe-889e-02cf345990f3
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-form-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"385049006","display":"Capsule"}]}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-form-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"385049006","display":"Capsule"}]}}]}'
+```
+
+Prod message: `"No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"`, dev message: `"Code 385049006 is not in the specified filter; No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"`. Dev prepends the filter-miss detail exactly as described.
+
 #####What differs
 
 On $validate-code requests against ValueSets with include filters, when the code is not found (result=false on both sides), dev prepends "Code X is not in the specified filter; " to its `message` parameter. Prod returns only the standard error message (e.g. "No valid coding was found for the value set '...'").
@@ -1778,6 +1796,24 @@ Records-Impacted: 3
 Tolerance-ID: inactive-display-message-extra-synonyms
 Record-ID: 292172fe-c9f1-4ca4-b1a7-1f353187c9ba
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/condition-severity"},{"name":"coding","valueCoding":{"system":"http://snomed.info/sct","code":"6736007","display":"Moderate"}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/condition-severity"},{"name":"coding","valueCoding":{"system":"http://snomed.info/sct","code":"6736007","display":"Moderate"}}]}'
+```
+
+Prod returns `"The correct display is one of Midgrade"`, dev returns `"The correct display is one of Midgrade,Moderate (severity modifier) (qualifier value),Moderate (severity modifier),Moderate severity"`.
+
 #####What differs
 
 When validating a code with an inactive display (INACTIVE_DISPLAY_FOUND), the OperationOutcome issue details.text "correct display" list differs between prod and dev:
@@ -1812,6 +1848,29 @@ Matches validate-code records where OperationOutcome has display-comment issues 
 Records-Impacted: 3
 Tolerance-ID: validate-code-undefined-system-missing-params
 Record-ID: 243e44e8-cafb-44ba-a521-de4aab9d6985
+
+#####Repro
+
+Could not reproduce live. The original request was a POST to `/r4/ValueSet/$validate-code` with a `codeableConcept` parameter (SNOMED code 785126002) validated against the IPS medication ValueSet (`http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0`). The ValueSet is not natively available on either server — it was provided inline via the test framework (likely as a `tx-resource` parameter). The request body was not stored in the comparison data, and the inline ValueSet definition is not available, so the exact request cannot be reconstructed.
+
+Attempted with a server-resident ValueSet (`http://hl7.org/fhir/ValueSet/medication-codes`), but both servers correctly return `system`, `code`, and `display` for that case — the undefined system extraction bug only manifests when the ValueSet is provided inline via the test framework's request format.
+
+```bash
+####These commands work but do NOT reproduce the bug (different code path):
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"785126002","display":"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"}]}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"785126002","display":"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"}]}}]}'
+```
+
+Both servers return matching `system`, `code`, and `display` parameters with server-resident ValueSets. The bug requires the inline ValueSet provision path used by the Java validator test framework.
 
 #####What differs
 
@@ -1873,6 +1932,42 @@ Tolerance `expand-dev-warning-experimental-param` matches $expand responses (Val
 #####Representative record
 
 `5d1cbf41-db75-4663-8f3a-c492eb8a33aa` — GET /r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Flanguages&count=50
+
+---
+
+### [ ] `36675d4` SNOMED expression parse error message differs: wording and character offset
+
+Records-Impacted: 2
+Tolerance-ID: snomed-expression-parse-message-diff
+Record-ID: 2a323fee-2b5e-4c5f-ad4d-d623797b7f6f
+
+#####What differs
+
+When validating an invalid SNOMED CT code (e.g. "freetext"), both prod and dev return an informational issue with a SNOMED expression parse error. The message text differs in two ways:
+
+- **Wording**: prod says "and neither could it be parsed as an expression", dev says "and could not be parsed as an expression"
+- **Character offset**: prod reports "at character 1", dev reports "at character 0"
+
+Prod: `Code freetext is not a valid SNOMED CT Term, and neither could it be parsed as an expression (Concept not found (next char = "f", in "freetext") at character 1)`
+Dev:  `Code freetext is not a valid SNOMED CT Term, and could not be parsed as an expression (Concept not found (next char = "f", in "freetext") at character 0)`
+
+All other aspects of the response match (result=false, system, code, error issues, etc.).
+
+#####How widespread
+
+2 records in the delta file, both for SNOMED code "freetext":
+- 2a323fee: POST /r4/ValueSet/$batch-validate-code (batch-validate-code op)
+- 1160ac1d: POST /r4/CodeSystem/$validate-code (validate-code op)
+
+Search: `grep -c 'neither could it be parsed' deltas.ndjson` → 2
+
+The pattern is specific to invalid SNOMED codes that trigger the expression parser fallback. Only "freetext" triggers it in this dataset.
+
+#####What the tolerance covers
+
+Tolerance ID: snomed-expression-parse-message-diff
+Matches: OperationOutcome issues where prod text contains "neither could it be parsed as an expression" and dev text contains "could not be parsed as an expression" for the same issue. Normalizes dev text to prod text.
+Eliminates: 2 records.
 
 ---
 

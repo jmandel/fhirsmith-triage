@@ -538,6 +538,64 @@ const tolerances = [
   },
 
   {
+    id: 'batch-validate-snomed-display-differs',
+    description: 'Batch $validate-code: SNOMED display text differs inside nested validation resources even when both sides use the same SNOMED CT edition version. Same root cause as snomed-same-version-display-differs (bug 8f739e9) — the existing tolerance only handles top-level Parameters, not the batch wrapper. Normalizes each validation resource display to prod value. Affects batch-validate-code records with SNOMED codes.',
+    kind: 'temp-tolerance',
+    bugId: '8f739e9',
+    tags: ['normalize', 'display-text', 'snomed', 'batch-validate-code'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$batch-validate-code')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodValidations = (prod.parameter || []).filter(p => p.name === 'validation');
+      const devValidations = (dev.parameter || []).filter(p => p.name === 'validation');
+      if (prodValidations.length !== devValidations.length) return null;
+      for (let i = 0; i < prodValidations.length; i++) {
+        const pRes = prodValidations[i].resource;
+        const dRes = devValidations[i].resource;
+        if (!pRes?.parameter || !dRes?.parameter) continue;
+        const pSystem = getParamValue(pRes, 'system');
+        if (pSystem !== 'http://snomed.info/sct') continue;
+        const pVersion = getParamValue(pRes, 'version');
+        const dVersion = getParamValue(dRes, 'version');
+        if (!pVersion || pVersion !== dVersion) continue;
+        const pDisplay = getParamValue(pRes, 'display');
+        const dDisplay = getParamValue(dRes, 'display');
+        if (pDisplay && dDisplay && pDisplay !== dDisplay) return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      const newDevParams = dev.parameter.map((dp, i) => {
+        if (dp.name !== 'validation') return dp;
+        const pp = prod.parameter[i];
+        if (!pp || pp.name !== 'validation') return dp;
+        const pRes = pp.resource;
+        const dRes = dp.resource;
+        if (!pRes?.parameter || !dRes?.parameter) return dp;
+        const pSystem = getParamValue(pRes, 'system');
+        if (pSystem !== 'http://snomed.info/sct') return dp;
+        const pVersion = getParamValue(pRes, 'version');
+        const dVersion = getParamValue(dRes, 'version');
+        if (!pVersion || pVersion !== dVersion) return dp;
+        const pDisplay = getParamValue(pRes, 'display');
+        const dDisplay = getParamValue(dRes, 'display');
+        if (!pDisplay || !dDisplay || pDisplay === dDisplay) return dp;
+        return {
+          ...dp,
+          resource: {
+            ...dRes,
+            parameter: dRes.parameter.map(p =>
+              p.name === 'display' ? { ...p, valueString: pDisplay } : p
+            ),
+          },
+        };
+      });
+      return { prod, dev: { ...dev, parameter: newDevParams } };
+    },
+  },
+
+  {
     id: 'inactive-display-message-extra-synonyms',
     description: 'SNOMED validate-code with INACTIVE_DISPLAY_FOUND: dev lists multiple synonyms/designations in "The correct display is one of" message, prod lists only the preferred term. Both identify the same code as having an inactive display. Affects 3 validate-code records for display-comment issues.',
     kind: 'temp-tolerance',

@@ -1,0 +1,29 @@
+{
+  "id": "58033385-831c-4e04-8f7f-684dcc4355d5",
+  "url": "/r4/ValueSet/$batch-validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 850,
+    "hash": "d8bf357419bf4248debb0eaf84cc7b30"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 772,
+    "hash": "aa7f239517a597359a9e2a220367e5c3"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "batch-validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "validation"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"validation\",\"resource\" : {\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"72440003\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Disturbance of orientation to place\"}]}},{\"name\" : \"validation\",\"resource\" : {\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"62766000\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Disturbance of orientation to person\"}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"72440003\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Disorientation as to place\"}]}},{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"62766000\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Disorientation as to people\"}]}}]}"
+}

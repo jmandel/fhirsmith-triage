@@ -1399,13 +1399,14 @@
             "lamport": 33
         },
         "edit_time": {
-            "timestamp": 1770492868,
-            "time": "2026-02-07T13:34:28-06:00",
-            "lamport": 166
+            "timestamp": 1770493791,
+            "time": "2026-02-07T13:49:51-06:00",
+            "lamport": 179
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev prepends filter-miss details to validate-code message when result=false",
@@ -1443,13 +1444,14 @@
             "lamport": 34
         },
         "edit_time": {
-            "timestamp": 1770493091,
-            "time": "2026-02-07T13:38:11-06:00",
-            "lamport": 169
+            "timestamp": 1770493773,
+            "time": "2026-02-07T13:49:33-06:00",
+            "lamport": 177
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "SNOMED inactive display message lists extra synonyms vs prod",
@@ -1487,13 +1489,14 @@
             "lamport": 35
         },
         "edit_time": {
-            "timestamp": 1770493418,
-            "time": "2026-02-07T13:43:38-06:00",
-            "lamport": 172
+            "timestamp": 1770493925,
+            "time": "2026-02-07T13:52:05-06:00",
+            "lamport": 181
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "repro-inconclusive",
             "tx-compare"
         ],
         "title": "POST -code: dev missing code/system/display params and extra issues due to undefined system extraction",
@@ -1541,6 +1544,50 @@
             "tx-compare"
         ],
         "title": "Dev  includes warning-experimental expansion parameter that prod omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "36675d40a54faca13e56ad82168c14b89142a461708a1405f1808a4f71e26e73",
+        "human_id": "36675d4",
+        "create_time": {
+            "timestamp": 1770493935,
+            "time": "2026-02-07T13:52:15-06:00",
+            "lamport": 37
+        },
+        "edit_time": {
+            "timestamp": 1770493941,
+            "time": "2026-02-07T13:52:21-06:00",
+            "lamport": 184
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "SNOMED expression parse error message differs: wording and character offset",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

@@ -1,0 +1,61 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "http://snomed.info/sct"
+          },
+          {
+            "name": "code",
+            "valueCode": "72440003"
+          },
+          {
+            "name": "version",
+            "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+          },
+          {
+            "name": "display",
+            "valueString": "Disturbance of orientation to place"
+          }
+        ]
+      }
+    },
+    {
+      "name": "validation",
+      "resource": {
+        "resourceType": "Parameters",
+        "parameter": [
+          {
+            "name": "result",
+            "valueBoolean": true
+          },
+          {
+            "name": "system",
+            "valueUri": "http://snomed.info/sct"
+          },
+          {
+            "name": "code",
+            "valueCode": "62766000"
+          },
+          {
+            "name": "version",
+            "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+          },
+          {
+            "name": "display",
+            "valueString": "Disturbance of orientation to person"
+          }
+        ]
+      }
+    }
+  ]
+}
