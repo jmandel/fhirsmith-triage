@@ -2672,6 +2672,64 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'expand-toocostly-extension-and-used-codesystem',
+    description: 'Dev $expand: missing valueset-toocostly extension and spurious used-codesystem parameter on grammar-based code system expansions. Prod marks empty expansions of grammar-based systems (BCP-13 MIME types, etc.) with valueset-toocostly extension and omits used-codesystem. Dev omits the toocostly extension but includes used-codesystem. Affects 13 records.',
+    kind: 'temp-tolerance',
+    bugId: 'c7004d3',
+    tags: ['normalize', 'expand', 'toocostly', 'used-codesystem'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+
+      const prodHasTooCostly = (prod.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+      );
+      const devHasTooCostly = (dev.expansion.extension || []).some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+      );
+
+      if (prodHasTooCostly && !devHasTooCostly) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      let newProd = prod;
+      let newDev = dev;
+
+      // Remove valueset-toocostly extension from prod
+      const filteredExt = (newProd.expansion.extension || []).filter(
+        e => e.url !== 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+      );
+      const newExpansion = { ...newProd.expansion };
+      if (filteredExt.length > 0) {
+        newExpansion.extension = filteredExt;
+      } else {
+        delete newExpansion.extension;
+      }
+      newProd = { ...newProd, expansion: newExpansion };
+
+      // Remove dev-only used-codesystem parameters (prod doesn't have them for toocostly expansions)
+      if (dev.expansion.parameter) {
+        const prodUcsUris = new Set(
+          (prod.expansion.parameter || [])
+            .filter(p => p.name === 'used-codesystem')
+            .map(p => p.valueUri)
+        );
+        const filteredParams = dev.expansion.parameter.filter(p => {
+          if (p.name !== 'used-codesystem') return true;
+          return prodUcsUris.has(p.valueUri);
+        });
+        newDev = {
+          ...newDev,
+          expansion: { ...newDev.expansion, parameter: filteredParams },
+        };
+      }
+
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

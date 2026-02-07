@@ -458,16 +458,61 @@
             "lamport": 12
         },
         "edit_time": {
-            "timestamp": 1770502342,
-            "time": "2026-02-07T16:12:22-06:00",
-            "lamport": 59
+            "timestamp": 1770502588,
+            "time": "2026-02-07T16:16:28-06:00",
+            "lamport": 61
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2ed80bd2d6bf284f3a0322d151c3a784b6b7ca0900296d43dfb32fc0ed8fe6d4",
+        "human_id": "2ed80bd",
+        "create_time": {
+            "timestamp": 1770502724,
+            "time": "2026-02-07T16:18:44-06:00",
+            "lamport": 13
+        },
+        "edit_time": {
+            "timestamp": 1770502729,
+            "time": "2026-02-07T16:18:49-06:00",
+            "lamport": 64
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system",
+        "title": "Dev  omits expansion.total when prod includes it",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_11 bugs (10 open, 1 closed)_
+_12 bugs (11 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -602,7 +602,21 @@ Records-Impacted: 5
 Tolerance-ID: cc-validate-code-missing-known-coding-params
 Record-ID: 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r5/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests","code":"SP-QUICKSTOP","display":"QuickStop Response Inhibition Test"},{"system":"http://loinc.org","code":"72106-8","display":"Cognitive functioning [Interpretation]"}],"text":"Go/No-Go task measuring response inhibition and impulse control"}},{"name":"displayLanguage","valueString":"en"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+curl -s 'https://tx-dev.fhir.org/r5/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests","code":"SP-QUICKSTOP","display":"QuickStop Response Inhibition Test"},{"system":"http://loinc.org","code":"72106-8","display":"Cognitive functioning [Interpretation]"}],"text":"Go/No-Go task measuring response inhibition and impulse control"}},{"name":"displayLanguage","valueString":"en"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+Prod returns `system=http://loinc.org`, `code=72106-8`, `display=Total score [MMSE]`, plus 2 OperationOutcome issues (UNKNOWN_CODESYSTEM + Display_Name_for__should_be_one_of__instead_of). Dev returns no system/code/display params and only 1 issue (UNKNOWN_CODESYSTEM).
+
 
 When CodeSystem/$validate-code is called with a codeableConcept containing multiple codings — one from an unknown CodeSystem and one from a known CodeSystem — and result=false:
 
@@ -613,7 +627,6 @@ For example, with a codeableConcept containing a LOINC coding (known) and a smar
 - Prod returns: system=http://loinc.org, code=72106-8, version=2.81, display="Total score [MMSE]", plus 2 issues (UNKNOWN_CODESYSTEM + invalid-display)
 - Dev returns: no system/code/version/display params, only 1 issue (UNKNOWN_CODESYSTEM)
 
-#####How widespread
 
 5 records in deltas. All are CodeSystem/$validate-code (both /r4 and /r5) with codeableConcept containing one unknown and one known coding. Both sides agree result=false.
 
@@ -623,17 +636,50 @@ The 5 records involve 2 unknown systems:
 - https://fhir.smartypower.app/CodeSystem/smartypower-cognitive-tests (2 records, LOINC known coding)
 - http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs (3 records, SNOMED known coding)
 
-#####What the tolerance covers
 
 Tolerance ID: cc-validate-code-missing-known-coding-params
 Matches: validate-code with codeableConcept, result=false on both sides, x-caused-by-unknown-system present, where prod has system/code params that dev lacks.
 Normalizes by adding prod's system/code/version/display params to dev and canonicalizing issues to prod's set.
 Eliminates: 5 records.
 
-#####Representative records
 
 - 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4 (LOINC + smartypower, /r5)
 - 6f70f14a-81e1-427e-9eed-1b2c53801296 (SNOMED + essilorluxottica, /r4)
+
+---
+
+### [ ] `2ed80bd` Dev  omits expansion.total when prod includes it
+
+Records-Impacted: 47
+Tolerance-ID: expand-dev-missing-total
+Record-ID: a1f653a2-a199-4228-a7f7-2522abde6953
+
+#####What differs
+
+In $expand responses (POST /r4/ValueSet/$expand), prod returns `expansion.total` (the total count of matching concepts) while dev omits it entirely. The `total` field is a 0..1 optional integer in FHIR R4's ValueSet.expansion, documented as "Total concept count; permits server pagination." Without it, clients cannot determine how many pages exist in a paged expansion.
+
+Examples:
+- Prod: `"total": 5099` with 1000 contains (paged)
+- Dev: no `total` field, same 1000 contains
+
+Both servers return identical `contains` arrays and `offset` values in all sampled records.
+
+#####How widespread
+
+47 records in deltas.ndjson show this pattern (prod has expansion.total, dev omits it). Breakdown:
+- 33 records with total=5099 (paged SNOMED expansions with count=1000)
+- 13 records with total=0 (empty expansions)
+- 1 record with total=249 (ISO 3166 codes, also has contains count mismatch)
+
+Search: All 47 are expand operations, all POST /r4/ValueSet/$expand, all with both statuses 200.
+
+Note: There is a separate existing tolerance (expand-unclosed-extension-and-total, bug f2b2cef) for the reverse case where prod omits total on unclosed expansions but dev includes it. That bug is about the valueset-unclosed extension. This bug is different — neither side has the unclosed extension; dev simply fails to include `total` in complete expansions.
+
+#####What the tolerance covers
+
+Tolerance ID: expand-dev-missing-total
+Matches: $expand responses (POST /r4/ValueSet/$expand) where both sides return 200, prod has expansion.total, and dev doesn't.
+Normalizes by removing expansion.total from prod (since dev lacks it) to prevent re-triaging.
 
 ---
 
