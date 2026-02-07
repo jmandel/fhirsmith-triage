@@ -83,17 +83,25 @@ function compareRecord(record) {
   try { prod = JSON.parse(record.prodBody); } catch { prod = null; }
   try { dev = JSON.parse(record.devBody); } catch { dev = null; }
 
-  // Apply tolerance pipeline
+  // Apply tolerance pipeline — track which kinds contributed
   const ctx = { record, prod, dev };
+  let normalizedBy = null; // 'equiv-autofix' or 'temp-tolerance'
   for (const t of tolerances) {
     const action = t.match(ctx);
     if (action === 'skip') {
-      return { category: 'SKIP', reason: t.id, op };
+      return { category: 'SKIP', reason: t.id, kind: t.kind || 'unknown', op };
     }
     if (action === 'normalize' && ctx.prod && ctx.dev) {
+      const before = JSON.stringify(ctx.prod) + JSON.stringify(ctx.dev);
       const result = t.normalize(ctx);
       ctx.prod = result.prod;
       ctx.dev = result.dev;
+      const after = JSON.stringify(ctx.prod) + JSON.stringify(ctx.dev);
+      if (before !== after) {
+        // Escalate: temp-tolerance trumps equiv-autofix
+        if (t.kind === 'temp-tolerance') normalizedBy = 'temp-tolerance';
+        else if (!normalizedBy) normalizedBy = t.kind || 'equiv-autofix';
+      }
     }
   }
   prod = ctx.prod;
@@ -130,7 +138,7 @@ function compareRecord(record) {
 
   // Deep compare normalized bodies
   if (deepEqual(prod, dev)) {
-    return { category: 'OK', reason: 'match-after-normalization', op };
+    return { category: 'OK', normalizedBy, op };
   }
 
   // Find specific differences
@@ -207,8 +215,10 @@ async function main() {
     timestamp: new Date().toISOString(),
     totalRecords: 0,
     skipped: 0,
+    skippedByKind: {},
     skippedReasons: {},
     categories: {},
+    okBreakdown: { strict: 0, 'equiv-autofix': 0, 'temp-tolerance': 0 },
     operationBreakdown: {},
   };
 
@@ -235,12 +245,18 @@ async function main() {
     // Handle skipped records
     if (category === 'SKIP') {
       summary.skipped++;
+      const kind = comparison.kind || 'unknown';
+      summary.skippedByKind[kind] = (summary.skippedByKind[kind] || 0) + 1;
       summary.skippedReasons[comparison.reason] = (summary.skippedReasons[comparison.reason] || 0) + 1;
       continue;
     }
 
     // Track stats
     summary.categories[category] = (summary.categories[category] || 0) + 1;
+    if (category === 'OK') {
+      const bucket = comparison.normalizedBy || 'strict';
+      summary.okBreakdown[bucket] = (summary.okBreakdown[bucket] || 0) + 1;
+    }
     const op = comparison.op || 'unknown';
     if (!summary.operationBreakdown[op]) summary.operationBreakdown[op] = {};
     summary.operationBreakdown[op][category] = (summary.operationBreakdown[op][category] || 0) + 1;

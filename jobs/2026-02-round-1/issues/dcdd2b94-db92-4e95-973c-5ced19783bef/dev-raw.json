@@ -1,0 +1,58 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/event-status"
+    },
+    {
+      "name": "code",
+      "valueCode": "completed"
+    },
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    },
+    {
+      "name": "display",
+      "valueString": "Completed"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "text": "Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ]
+            },
+            "location": [
+              ""
+            ],
+            "expression": [
+              ""
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

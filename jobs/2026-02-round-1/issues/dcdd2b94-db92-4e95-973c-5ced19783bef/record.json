@@ -1,0 +1,29 @@
+{
+  "id": "dcdd2b94-db92-4e95-973c-5ced19783bef",
+  "url": "/r4/CodeSystem/$validate-code",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 781,
+    "hash": "8561fe64ecfd5d52046437733b9d5d9e"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 735,
+    "hash": "9042cf45d8ef4dd6eb0621ffe2cfd284"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://hl7.org/fhir/event-status\"},{\"name\" : \"code\",\"valueCode\" : \"completed\"},{\"name\" : \"version\",\"valueString\" : \"4.0.1\"},{\"name\" : \"display\",\"valueString\" : \"Completed\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"MSG_DRAFT\"}],\"severity\" : \"information\",\"code\" : \"business-rule\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"status-check\"}],\"text\" : \"Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1 from hl7.fhir.r4.core#4.0.1\"}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://hl7.org/fhir/event-status\"},{\"name\":\"code\",\"valueCode\":\"completed\"},{\"name\":\"version\",\"valueString\":\"4.0.1\"},{\"name\":\"display\",\"valueString\":\"Completed\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"information\",\"code\":\"business-rule\",\"details\":{\"text\":\"Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"status-check\"}]},\"location\":[\"\"],\"expression\":[\"\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"MSG_DRAFT\"}]}]}}]}"
+}

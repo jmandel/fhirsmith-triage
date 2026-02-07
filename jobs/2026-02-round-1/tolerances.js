@@ -524,6 +524,66 @@ const tolerances = [
   },
 
   {
+    id: 'draft-codesystem-message-provenance-suffix',
+    description: 'Dev omits " from <package>#<version>" provenance suffix in OperationOutcome issue text for draft CodeSystem warnings (MSG_DRAFT). Prod includes it, e.g. "Reference to draft CodeSystem ...event-status|4.0.1 from hl7.fhir.r4.core#4.0.1". Normalizes both sides to prod text. Affects 4 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '241f1d8',
+    tags: ['normalize', 'message-text', 'draft-codesystem'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const prodText = prodIssues.issue[i]?.details?.text || '';
+        const devText = devIssues.issue[i]?.details?.text || '';
+        if (prodText !== devText) {
+          const m = prodText.match(/^(.+) from \S+#\S+$/);
+          if (m && m[1] === devText) return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!devIssues?.issue || !prodIssues?.issue) return { prod, dev };
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  const prodText = prodIss.details?.text || '';
+                  const devText = iss.details?.text || '';
+                  if (prodText !== devText) {
+                    const m = prodText.match(/^(.+) from \S+#\S+$/);
+                    if (m && m[1] === devText) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: prodText },
+                      };
+                    }
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
     id: 'expand-used-codesystem-version-skew',
     description: 'Dev $expand reports different used-codesystem versions than prod, reflecting different loaded code system editions. Normalizes used-codesystem to prod value. Affects 37 expand records across SNOMED, ICD-9-CM, LOINC, and others.',
     kind: 'temp-tolerance',

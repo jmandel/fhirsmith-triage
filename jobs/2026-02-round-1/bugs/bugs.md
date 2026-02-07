@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_13 bugs (13 open, 0 closed)_
+_14 bugs (14 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -512,6 +512,47 @@ for line in sys.stdin:
 " | wc -l
 ####Returns 37
 ```
+
+---
+
+### [ ] `9376cf0` Dev crashes (500) on $expand when CodeSystem content mode prevents expansion
+
+Records-Impacted: 186
+Tolerance-ID: expand-dev-crash-on-error
+Record-ID: f39ee3d3-8249-4e0c-a8a6-c2d5d1ffdcbd
+
+#####What differs
+
+When a $expand request fails because a CodeSystem's content mode (fragment, not-present) prevents expansion, prod returns HTTP 422 with a clear OperationOutcome. Dev returns HTTP 500 with an error message that leaks internal implementation details.
+
+Three distinct error sub-patterns in dev:
+
+1. **Source code leak in error text** (178 records): Dev interpolates a JavaScript function body into the error message. Instead of "is a fragment, so this expansion is not permitted", dev returns "is a contentMode() {\r\n    return this.codeSystem.content;\r\n  }, so this expansion is not permitted". The `.contentMode` property accessor is being `.toString()`'d instead of invoked.
+
+2. **exp.addParamUri is not a function** (4 records): Dev crashes with a JS TypeError when attempting to expand ValueSets referencing CodeSystem `https://codesystem.x12.org/005010/1365`.
+
+3. **TerminologyError is not a constructor** (4 records): Dev crashes with a JS TypeError when attempting to expand ValueSets referencing `http://terminology.hl7.org/CodeSystem/v2-0360|2.7`.
+
+Additional differences in all 186 records:
+- HTTP status: prod=422, dev=500
+- Issue code: prod uses `invalid`, dev uses `business-rule`
+- Dev includes `location: [null]` and `expression: [null]` (arrays containing null — invalid FHIR)
+- Dev omits the `text` narrative that prod includes
+
+#####How widespread
+
+All 186 records are POST /r4/ValueSet/$expand with prod=422, dev=500. This accounts for all `dev-crash-on-error` records in the current delta set.
+
+Code systems involved in sub-pattern 1:
+- http://hl7.org/fhir/sid/icd-9-cm (154 records)
+- https://fhir.progyny.com/CodeSystem/identifier-type-cs (24 records)
+
+Search: `grep -c 'contentMode()' results/deltas/deltas.ndjson` → 178
+Search: `grep '"dev-crash-on-error"' results/deltas/deltas.ndjson | wc -l` → 186
+
+#####What the tolerance covers
+
+Tolerance `expand-dev-crash-on-error` skips all records matching POST /r4/ValueSet/$expand with prod.status=422 and dev.status=500. Eliminates all 186 records.
 
 ---
 

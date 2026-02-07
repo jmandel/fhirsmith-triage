@@ -2,9 +2,10 @@
 """Generate a single-file HTML bug report from git-bug tx-compare issues.
 
 Parses Records-Impacted from bug body headers to show impact counts.
+Optionally reads job summary.json for pipeline overview stats.
 
 Usage:
-  python3 engine/dump-bugs-html.py <output-path>
+  python3 engine/dump-bugs-html.py <output-path> [--job <job-dir>]
 """
 
 import json
@@ -173,6 +174,32 @@ def markdown_to_html(text):
     return "\n".join(html_parts)
 
 
+def read_job_stats(job_dir):
+    """Read pipeline stats from a job's summary.json and delta line count."""
+    summary_path = os.path.join(job_dir, "results", "summary.json")
+    deltas_path = os.path.join(job_dir, "results", "deltas", "deltas.ndjson")
+
+    if not os.path.exists(summary_path):
+        return None
+
+    with open(summary_path) as f:
+        summary = json.load(f)
+
+    deltas_count = 0
+    if os.path.exists(deltas_path):
+        with open(deltas_path) as f:
+            deltas_count = sum(1 for line in f if line.strip())
+
+    categories = summary.get("categories", {})
+    return {
+        "totalRecords": summary.get("totalRecords", 0),
+        "strictMatch": categories.get("OK", 0),
+        "skipped": summary.get("skipped", 0),
+        "deltasRemaining": deltas_count,
+        "categories": {k: v for k, v in categories.items() if k != "OK"},
+    }
+
+
 def build_bug_data(bugs):
     """Build the data structure for the HTML page."""
     bug_data = []
@@ -226,7 +253,7 @@ def build_bug_data(bugs):
     return bug_data
 
 
-def generate_html(bugs):
+def generate_html(bugs, job_stats=None):
     """Generate the full HTML page."""
     total = len(bugs)
     open_count = sum(1 for b in bugs if b["status"] == "open")
@@ -248,6 +275,7 @@ def generate_html(bugs):
         "closed": closed_count,
         "labels": label_counts,
         "sortedLabels": sorted_labels,
+        "job": job_stats,
     }, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
