@@ -1970,5 +1970,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "093fde69b11d5024773127457043682e6441aa5542fd3d74b4d75f8e9a81ee53",
+        "human_id": "093fde6",
+        "create_time": {
+            "timestamp": 1770496718,
+            "time": "2026-02-07T14:38:38-06:00",
+            "lamport": 46
+        },
+        "edit_time": {
+            "timestamp": 1770496722,
+            "time": "2026-02-07T14:38:42-06:00",
+            "lamport": 223
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "validate-code message parameter only includes first issue text instead of all",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

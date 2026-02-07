@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_44 bugs (41 open, 3 closed)_
+_45 bugs (42 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2372,6 +2372,37 @@ Matches POST $validate-code records where both result=false and dev's message co
 - ab72ac62-6f86-41fe-89b8-fae8b0701db4
 
 Same root cause as bugs 19283df and 4cdcd85 — dev fails to extract values from POST request bodies, receiving JavaScript undefined.
+
+---
+
+### [ ] `093fde6` validate-code message parameter only includes first issue text instead of all
+
+Records-Impacted: 8
+Tolerance-ID: message-concat-missing-issues
+Record-ID: 69462376-1a61-4aa3-a8ea-3a140347fb3a
+
+#####What differs
+
+When a $validate-code response has multiple OperationOutcome issues, the `message` parameter should concatenate all issue texts (joined with `; `). Prod does this correctly. Dev only includes the text from the first issue in the `message` parameter, omitting subsequent issue texts.
+
+Example: for a relative system URI like "SI", both servers return two issues:
+1. "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+2. "Coding.system must be an absolute reference, not a local reference"
+
+Prod message: "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated; Coding.system must be an absolute reference, not a local reference"
+Dev message: "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+
+The OperationOutcome `issues` resource itself is identical between both servers — same issue codes, same details text, same severity. Only the top-level `message` summary parameter differs.
+
+#####How widespread
+
+8 records in comparison.ndjson match this pattern. 5 are CodeSystem/$validate-code with relative system URIs (like "SI", "prov"), 3 are ValueSet/$validate-code. All are validate-code operations where multiple issues exist.
+
+Search: Records where prod message equals '; '.join(all issue texts) and dev message equals only the first issue text, with 2+ issues.
+
+#####What the tolerance covers
+
+Tolerance `message-concat-missing-issues` normalizes the `message` parameter to prod's concatenated value when the pattern matches (dev message equals first issue text, prod message equals all issues joined with '; '). This eliminates the 5 delta records matching this pattern.
 
 ---
 

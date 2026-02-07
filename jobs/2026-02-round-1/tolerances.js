@@ -472,6 +472,37 @@ const tolerances = [
   },
 
   {
+    id: 'searchset-duplicate-entries',
+    description: 'Prod returns multiple entries (duplicates or different versions) for the same resource in searchset Bundle results, while dev returns one. Normalizes by keeping only the first entry from prod and setting total to match. Affects 3 records (ValueSet and CodeSystem searches where prod has multiple copies loaded).',
+    kind: 'temp-tolerance',
+    bugId: '91e49e8',
+    tags: ['normalize', 'searchset', 'duplicate-entries'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'Bundle' || prod?.type !== 'searchset') return null;
+      if (dev?.resourceType !== 'Bundle' || dev?.type !== 'searchset') return null;
+      const prodEntries = prod.entry || [];
+      const devEntries = dev.entry || [];
+      if (prodEntries.length > 1 && devEntries.length === 1) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      const dev = ctx.dev;
+      const prod = { ...ctx.prod };
+      // Keep only the first entry from prod to match dev's single entry
+      if (prod.entry && prod.entry.length > 1) {
+        prod.entry = [prod.entry[0]];
+      }
+      // Normalize totals to match
+      if (prod.total !== dev.total) {
+        const canonical = Math.min(prod.total || 0, dev.total || 0);
+        prod.total = canonical;
+        dev.total = canonical;
+      }
+      return { prod, dev: { ...dev } };
+    },
+  },
+
+  {
     id: 'snomed-version-skew',
     description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version and display parameters to prod values. Display text changes between editions as preferred terms are updated (e.g. "Rehabilitation - specialty" → "Rehabilitation specialty"). Affects ~279 validate-code records for http://snomed.info/sct.',
     kind: 'temp-tolerance',
