@@ -2058,5 +2058,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "98ae4ce49886a166177de2ab295dd1c796947bbf3aa7d59015f54792a56dac11",
+        "human_id": "98ae4ce",
+        "create_time": {
+            "timestamp": 1770497270,
+            "time": "2026-02-07T14:47:50-06:00",
+            "lamport": 48
+        },
+        "edit_time": {
+            "timestamp": 1770497275,
+            "time": "2026-02-07T14:47:55-06:00",
+            "lamport": 229
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

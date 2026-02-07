@@ -1,0 +1,41 @@
+{
+  "id": "e23bae38-016e-46ef-bd71-160ddb1ea35a",
+  "url": "/r4/ValueSet/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 2953,
+    "hash": "d27333425a3ab2cece3d6fd38d4e7f98"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 3983,
+    "hash": "8d08adc3e7643ba61a0fe05389313c22"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "display"
+      },
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      },
+      {
+        "type": "extra-in-dev",
+        "param": "x-unknown-system"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"version\",\"valueString\" : \"1.2\"},{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"urn:oid:2.16.840.1.113883.6.238\"},{\"name\" : \"code\",\"valueCode\" : \"2054-5\"},{\"name\" : \"version\",\"valueString\" : \"v1\"},{\"name\" : \"display\",\"valueString\" : \"Black or African American\"},{\"name\" : \"message\",\"valueString\" : \"The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"None_of_the_provided_codes_are_in_the_value_set_one\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-in-vs\"}],\"text\" : \"The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n47 47   : 0ms  : Analysing http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0 for validation purposes\\r\\n47 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n47 0    : 0ms  : Prepare include: \\\"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3)\\\"\\r\\n47 0    : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213 for validation purposes\\r\\n47 0    : 0ms    : Prepare include: \\\"(http://cts.nlm.nih.gov/fhir/cs/cdcrec)(1002-5,2028-9,2054-5,2076-8,2106-3)\\\"\\r\\n47 0    : 0ms    : CodeSystem version  not found: \\\"http://cts.nlm.nih.gov/fhir/cs/cdcrec\\\"\\r\\n47 0    : 0ms  : Prepare include: \\\"(^http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103)\\\"\\r\\n47 0    : 0ms    : Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113 for validation purposes\\r\\n47 0    : 0ms    : Prepare include: \\\"(http://terminology.hl7.org/CodeSystem/v3-NullFlavor)(ASKU,OTH,UNK)\\\"\\r\\n47 0    : 0ms    : CodeSystem found: \\\"http://terminology.hl7.org/CodeSystem/v3-NullFlavor|2.1.0\\\"\\r\\n47 0    : 0ms  : Validate \\\"[urn:oid:2.16.840.1.113883.6.238|v1#2054-5 (\\\"Black or African American\\\")]\\\"\\r\\n47 0    : 0ms  : Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\\r\\n47 0    : 0ms  : Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3\\r\\n47 0    : 0ms    : Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\\r\\n47 0    : 0ms  : Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103\\r\\n47 0    : 0ms    : Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"urn:oid:2.16.840.1.113883.6.238\"},{\"name\":\"x-unknown-system\",\"valueCanonical\":\"urn:oid:2.16.840.1.113883.6.238|v1\"},{\"name\":\"code\",\"valueCode\":\"2054-5\"},{\"name\":\"version\",\"valueString\":\"v1\"},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'urn:oid:2.16.840.1.113883.6.238' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2; The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'urn:oid:2.16.840.1.113883.6.238' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"location\":[\"Coding.system\"],\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]},{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"location\":[\"Coding.code\"],\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Analysing http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0 for validation purposes\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Prepare include[0]: \\\"()\\\"\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213 for validation purposes\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213: Prepare include[0]: \\\"()\\\"\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213: CodeSystem version undefined not found: \\\"http://cts.nlm.nih.gov/fhir/cs/cdcrec\\\"\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Prepare include[1]: \\\"()\\\"\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113: Analysing http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113 for validation purposes\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113: Prepare include[0]: \\\"()\\\"\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113: CodeSystem found: \\\"http://terminology.hl7.org/CodeSystem/v3-NullFlavor|2.1.0\\\"\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Validate \\\"[undefined|v1#2054-5 (\\\"Black or African American\\\")]\\\"\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3|20160213: Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\\n1ms http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0: Check included value set http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103\\n1ms http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103|20211113: Check \\\"urn:oid:2.16.840.1.113883.6.238|v1#2054-5\\\"\"}]}"
+}

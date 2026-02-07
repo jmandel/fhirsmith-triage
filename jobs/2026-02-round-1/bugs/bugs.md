@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_46 bugs (43 open, 3 closed)_
+_47 bugs (44 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2432,6 +2432,39 @@ The pattern is: `GET /r4/{ValueSet|CodeSystem}?url=...` where prod has loaded mu
 #####What the tolerance covers
 
 Tolerance `searchset-duplicate-entries` matches searchset Bundles where prod returns more entries than dev. It normalizes by keeping only the first entry from prod (matching dev's single entry) and setting both totals to the minimum. Affects 3 records.
+
+---
+
+### [ ] `98ae4ce` 500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text
+
+Records-Impacted: 4
+Tolerance-ID: error-operationoutcome-structure-diff
+Record-ID: 1bb4cd9f-c99d-4431-b974-f6b5423eb529
+
+When both prod and dev return HTTP 500 with OperationOutcome, the response structures
+differ in three ways:
+
+1. **issue.code field**: Dev includes `code: "exception"` on each issue, prod omits it
+ entirely. Per FHIR R4, `OperationOutcome.issue.code` is required (1..1), so prod is
+ technically non-conformant.
+
+2. **issue.diagnostics field**: Dev includes a `diagnostics` string (duplicating the
+ `details.text` content), prod omits it. The `diagnostics` field is optional (0..1)
+ per spec.
+
+3. **text narrative element**: Prod includes `text: {status: "generated", div: "..."}`,
+ dev omits the `text` element entirely. (The div is already stripped by the
+ `read-resource-text-div-diff` tolerance, leaving just `text.status` on prod.)
+
+All 4 affected records are POST /r4/ValueSet/$validate-code requests that result in
+500 errors due to unknown CodeSystems. The error messages are identical between prod
+and dev — both correctly identify the same failure. Only the OperationOutcome structure
+differs.
+
+Found with:
+grep through deltas.ndjson for records where both prod.status=500 and dev.status=500,
+then checked OperationOutcome issue field structure differences. All 4 records show
+the same pattern.
 
 ---
 

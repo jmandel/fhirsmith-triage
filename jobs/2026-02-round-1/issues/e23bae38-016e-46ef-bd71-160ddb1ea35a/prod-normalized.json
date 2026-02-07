@@ -1,0 +1,60 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "2054-5"
+    },
+    {
+      "name": "display",
+      "valueString": "Black or African American"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:oid:2.16.840.1.113883.6.238"
+    },
+    {
+      "name": "version",
+      "valueString": "1.2"
+    },
+    {
+      "name": "version",
+      "valueString": "v1"
+    }
+  ],
+  "resourceType": "Parameters"
+}

@@ -2016,6 +2016,73 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-x-unknown-system-extra',
+    description: 'Dev returns x-unknown-system parameter, extra UNKNOWN_CODESYSTEM_VERSION issue, and different message/display/version when a requested code system version is not found. Prod falls back to a known version and provides display/version details. Both agree result=false. Affects 5 validate-code content-differs records.',
+    kind: 'temp-tolerance',
+    bugId: '451c583',
+    tags: ['normalize', 'validate-code', 'unknown-system-version'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const devUnknown = getParamValue(dev, 'x-unknown-system');
+      const prodUnknown = getParamValue(prod, 'x-unknown-system');
+      if (devUnknown && !prodUnknown) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      // Strip x-unknown-system from dev
+      let devNorm = stripParams(dev, 'x-unknown-system');
+      // Canonicalize message to prod's value
+      const prodMsg = getParamValue(prod, 'message');
+      if (prodMsg) {
+        devNorm = {
+          ...devNorm,
+          parameter: devNorm.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        };
+      }
+      // Canonicalize issues to prod's value
+      const prodIssues = getParamValue(prod, 'issues');
+      if (prodIssues) {
+        devNorm = {
+          ...devNorm,
+          parameter: devNorm.parameter.map(p =>
+            p.name === 'issues' ? { ...p, resource: prodIssues } : p
+          ),
+        };
+      }
+      // Add display from prod if prod has it and dev doesn't
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (prodDisplay && !devDisplay) {
+        devNorm = {
+          ...devNorm,
+          parameter: [...devNorm.parameter, { name: 'display', valueString: prodDisplay }],
+        };
+      }
+      // Canonicalize version: prod may have extra version params (the actual known version)
+      const prodVersions = prod.parameter.filter(p => p.name === 'version');
+      const devVersions = devNorm.parameter.filter(p => p.name === 'version');
+      if (prodVersions.length !== devVersions.length) {
+        devNorm = {
+          ...devNorm,
+          parameter: [
+            ...devNorm.parameter.filter(p => p.name !== 'version'),
+            ...prodVersions,
+          ],
+        };
+      }
+      // Re-sort parameters since sort-parameters-by-name already ran
+      devNorm = {
+        ...devNorm,
+        parameter: devNorm.parameter.slice().sort((a, b) => a.name.localeCompare(b.name)),
+      };
+      return { prod, dev: devNorm };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

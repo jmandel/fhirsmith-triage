@@ -1,0 +1,75 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "2054-5"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'urn:oid:2.16.840.1.113883.6.238' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2"
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "location": [
+              "Coding.system"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'urn:oid:2.16.840.1.113883.6.238' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2; The provided code 'urn:oid:2.16.840.1.113883.6.238|v1#2054-5 ('Black or African American')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/omb-race-category|4.1.0'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:oid:2.16.840.1.113883.6.238"
+    },
+    {
+      "name": "version",
+      "valueString": "v1"
+    },
+    {
+      "name": "x-unknown-system",
+      "valueCanonical": "urn:oid:2.16.840.1.113883.6.238|v1"
+    }
+  ],
+  "resourceType": "Parameters"
+}
