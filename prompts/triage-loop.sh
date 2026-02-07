@@ -97,7 +97,7 @@ EOF
     BUG_COUNT=$(git-bug bug 2>/dev/null | wc -l || echo 0)
     if [[ "$BUG_COUNT" -gt 0 ]]; then
       bash "$TRIAGE_DIR/engine/dump-bugs.sh" "$BUGS_DIR/bugs.md" 2>/dev/null
-      python3 "$TRIAGE_DIR/engine/dump-bugs-html.py" "$BUGS_DIR/bugs.html" --job "$JOB_DIR" 2>/dev/null
+      python3 "$TRIAGE_DIR/engine/dump-bugs-html.py" "$BUGS_DIR/bugs.html" 2>/dev/null
       git-bug bug -l tx-compare -f json > "$BUGS_DIR/bugs.json" 2>/dev/null || true
     fi
   fi

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_10 bugs (10 open, 0 closed)_
+_13 bugs (13 open, 0 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -14,6 +14,10 @@ _10 bugs (10 open, 0 closed)_
 ## P3 -- Missing resources
 
 ### [ ] `51f23f5` DICOM CID 29 AcquisitionModality ValueSet missing from dev
+
+Records-Impacted: 10
+Tolerance-ID: dicom-cid29-missing
+Record-ID: 3e3359d1-7391-4620-8b72-552f197f21cf
 
 #####What differs
 
@@ -41,6 +45,10 @@ Search: `grep 'dicom-cid-29\|sect_CID_29' deltas.ndjson` finds all 10.
 ## P4 -- Status code mismatch
 
 ### [ ] `1c145d2` Dev returns 404 instead of 422 for  when referenced CodeSystem is not found
+
+Records-Impacted: 296
+Tolerance-ID: expand-422-vs-404-codesystem-not-found
+Record-ID: eee2c985-52e0-4520-b4e4-01766ede5a7d
 
 #####What differs
 
@@ -77,6 +85,10 @@ ID: eee2c985-52e0-4520-b4e4-01766ede5a7d
 ## P6 -- Content differences
 
 ### [ ] `d3b49ff` v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation
+
+Records-Impacted: 157
+Tolerance-ID: v2-0360-lookup-version-skew
+Record-ID: 80a780e6-8842-43a9-a260-889ce87f76ac
 
 #####What differs
 
@@ -121,6 +133,10 @@ URL: GET /r4/CodeSystem/$lookup?system=http://terminology.hl7.org/CodeSystem/v2-
 
 ### [ ] `e9c7e58` Dev returns empty-string expression/location in OperationOutcome issues
 
+Records-Impacted: 318
+Tolerance-ID: dev-empty-string-expression-location
+Record-ID: 7de52d92-3166-495e-ac5e-af262b1019e4
+
 Dev returns `"expression": [""]` and `"location": [""]` on certain OperationOutcome issue entries in $validate-code responses, where prod correctly omits these fields entirely.
 
 #####What differs
@@ -150,6 +166,10 @@ Tolerance ID: `dev-empty-string-expression-location`. Normalizes by removing `ex
 ---
 
 ### [ ] `cf90495` Wrong Display Name message format differs: different display option count, formatting, and language tags
+
+Records-Impacted: 44
+Tolerance-ID: invalid-display-message-format
+Record-ID: beb4276b-f937-46c3-81ab-7f63cb7798b7
 
 #####What differs
 
@@ -188,6 +208,10 @@ Expected elimination: ~44 records.
 
 ### [ ] `e09cff6` BCP-47 display text format: dev returns 'Region=...' instead of standard format
 
+Records-Impacted: 7
+Tolerance-ID: bcp47-display-format
+Record-ID: da702ab4-7ced-4b69-945c-0b5bbbc088c0
+
 #####What differs
 
 For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like "English (Region=United States)" while prod returns the standard format "English (United States)".
@@ -215,6 +239,10 @@ da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for e
 ---
 
 ### [ ] `4233647` Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs
+
+Records-Impacted: 491
+Tolerance-ID: searchset-bundle-format
+Record-ID: c97f36a4-973b-42c5-8b6d-58464195cfd5
 
 #####What differs
 
@@ -269,6 +297,10 @@ Search: grep -c 'vsacOpModifier' results/deltas/deltas.ndjson → 3
 
 ### [ ] `17ad254` UCUM -code: dev returns human-readable display instead of code-as-display
 
+Records-Impacted: 220
+Tolerance-ID: ucum-display-code-as-display
+Record-ID: 6ae99904-538b-4241-89db-b15eab6e637e
+
 #####What differs
 
 For UCUM ($validate-code) operations, prod returns the UCUM code itself as the `display` parameter (e.g., `[in_i]`, `[lb_av]`, `mg`, `%`), while dev returns a human-readable name (e.g., `(inch)`, `(pound)`, `(milligram)`, `(percent)`).
@@ -308,6 +340,10 @@ Normalizes both sides to prod's display value (the code itself, per FHIR convent
 
 ### [ ] `da50d17` SNOMED CT edition version skew: dev loads older editions than prod
 
+Records-Impacted: 181
+Tolerance-ID: snomed-version-skew
+Record-ID: e5716810-0ced-4937-85a5-5651fb884719
+
 Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.
 
 #####What differs
@@ -338,6 +374,144 @@ Normalizes the `version` parameter to prod's value on both sides when both conta
 
 - e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)
 - e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)
+
+---
+
+### [ ] `2abe02d` Dev $expand returns empty string id on ValueSet response
+
+Records-Impacted: 690
+Tolerance-ID: expand-dev-empty-id
+Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
+
+Dev $expand responses include `"id": ""` at the top level of the returned ValueSet resource. Prod does not include an `id` field at all.
+
+#####What differs
+
+In all 690 $expand delta records where dev returns a successful ValueSet expansion, the dev response includes `"id": ""` (an empty string). Prod omits the `id` field entirely, which is the correct behavior — per FHIR, string values must be non-empty if present. An empty string `""` is invalid FHIR.
+
+This affects all POST /r4/ValueSet/$expand records across all code systems (SNOMED, LOINC, ICD, etc.) — it's not specific to any particular ValueSet or code system.
+
+#####How to reproduce
+
+```bash
+grep '"op":"expand"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | python3 -c "
+import json, sys
+for line in sys.stdin:
+  rec = json.loads(line)
+  dev = json.loads(rec.get('devBody','{}'))
+  if dev.get('id') == '': print(rec['id'])
+" | wc -l
+####Returns 690
+```
+
+#####Example
+
+**Dev** (incorrect):
+```json
+{"resourceType":"ValueSet","status":"active","id":"","expansion":{...}}
+```
+
+**Prod** (correct):
+```json
+{"resourceType":"ValueSet","status":"active","expansion":{...}}
+```
+
+---
+
+### [ ] `d1b7d3b` Dev $expand echoes includeDefinition=false parameter in expansion
+
+Records-Impacted: 677
+Tolerance-ID: expand-dev-includeDefinition-param
+Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
+
+Dev $expand responses include an extra `includeDefinition` parameter (value: false) in the expansion.parameter array. Prod does not include this parameter.
+
+#####What differs
+
+In 677 of the 893 $expand delta records, dev includes `{"name":"includeDefinition","valueBoolean":false}` in the `expansion.parameter` array. Prod omits this parameter entirely.
+
+The `includeDefinition` parameter is an input parameter to the $expand operation. While it's valid to echo input parameters in the expansion.parameter array, prod doesn't do it for this parameter (presumably because false is the default). This is a behavioral difference — not a conformance violation per se, but a real difference in what the servers return.
+
+#####How to reproduce
+
+```bash
+grep '"op":"expand"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | python3 -c "
+import json, sys
+for line in sys.stdin:
+  rec = json.loads(line)
+  dev = json.loads(rec.get('devBody','{}'))
+  params = dev.get('expansion',{}).get('parameter',[])
+  if any(p.get('name')=='includeDefinition' for p in params): print(rec['id'])
+" | wc -l
+####Returns 677
+```
+
+#####Example
+
+**Dev** includes extra parameter:
+```json
+"parameter": [
+{"name":"excludeNested","valueBoolean":true},
+{"name":"includeDefinition","valueBoolean":false},  // <-- extra
+{"name":"offset","valueInteger":0},
+...
+]
+```
+
+**Prod** omits it:
+```json
+"parameter": [
+{"name":"excludeNested","valueBoolean":true},
+{"name":"offset","valueInteger":0},
+...
+]
+```
+
+---
+
+### [ ] `515117b` Dev $expand reports different used-codesystem versions than prod
+
+Records-Impacted: 37
+Tolerance-ID: expand-used-codesystem-version-skew
+Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
+
+Dev $expand responses report different code system versions in the `used-codesystem` expansion parameter compared to prod. This is the $expand counterpart of the existing SNOMED version skew bug (da50d17), but affects multiple code systems and is specific to expansion metadata rather than validate-code Parameters.
+
+#####What differs
+
+In 37 $expand delta records, the `used-codesystem` expansion parameter reports a different version in dev than prod. This affects multiple code systems:
+
+- (empty/missing): 14 records
+- http://hl7.org/fhir/sid/icd-9-cm: 11 records
+- http://snomed.info/sct: 6 records
+- http://terminology.hl7.org/CodeSystem/medicationrequest-category: 2 records
+- http://loinc.org: 2 records
+- http://terminology.hl7.org/CodeSystem/v3-NullFlavor: 1 record
+- http://hl7.org/fhir/sid/icd-10-cm: 1 record
+
+Examples:
+- SNOMED US: prod `20250901`, dev `20230301`
+- medicationrequest-category: prod `4.0.1`, dev `1.0.0`
+
+This indicates dev loads different (generally older) editions of these code systems.
+
+#####How to reproduce
+
+```bash
+grep '"op":"expand"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | python3 -c "
+import json, sys
+for line in sys.stdin:
+  rec = json.loads(line)
+  dev = json.loads(rec.get('devBody','{}'))
+  prod = json.loads(rec.get('prodBody','{}'))
+  d = {p.get('name'):p for p in dev.get('expansion',{}).get('parameter',[])}
+  p = {p.get('name'):p for p in prod.get('expansion',{}).get('parameter',[])}
+  du = d.get('used-codesystem',{}).get('valueUri','')
+  pu = p.get('used-codesystem',{}).get('valueUri','')
+  if du != pu: print(f'{rec[\"id\"]}: prod={pu} dev={du}')
+" | wc -l
+####Returns 37
+```
 
 ---
 

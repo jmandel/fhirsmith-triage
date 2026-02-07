@@ -1,0 +1,16 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>The code system definition for http://hl7.org/fhir/sid/icd-9-cm is a fragment, so this expansion is not permitted unless the expansion parameter \"incomplete-ok\" has a value of \"true\"</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "invalid",
+      "details": {
+        "text": "The code system definition for http://hl7.org/fhir/sid/icd-9-cm is a fragment, so this expansion is not permitted unless the expansion parameter \"incomplete-ok\" has a value of \"true\""
+      }
+    }
+  ]
+}

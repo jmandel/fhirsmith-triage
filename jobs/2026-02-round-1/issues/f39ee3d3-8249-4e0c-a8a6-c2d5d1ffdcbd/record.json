@@ -1,0 +1,25 @@
+{
+  "id": "f39ee3d3-8249-4e0c-a8a6-c2d5d1ffdcbd",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 591,
+    "hash": "f399c3f8e43f1bd36638f56d031497af"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 480,
+    "hash": "5f468ea04deeab5b9cf6078e646234f5"
+  },
+  "comparison": {
+    "category": "dev-crash-on-error",
+    "op": "expand",
+    "prodStatus": 422,
+    "devStatus": 500
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>The code system definition for http://hl7.org/fhir/sid/icd-9-cm is a fragment, so this expansion is not permitted unless the expansion parameter \\\"incomplete-ok\\\" has a value of \\\"true\\\"</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"invalid\",\"details\" : {\"text\" : \"The code system definition for http://hl7.org/fhir/sid/icd-9-cm is a fragment, so this expansion is not permitted unless the expansion parameter \\\"incomplete-ok\\\" has a value of \\\"true\\\"\"}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"business-rule\",\"details\":{\"text\":\"The code system definition for http://hl7.org/fhir/sid/icd-9-cm is a contentMode() {\\r\\n    return this.codeSystem.content;\\r\\n  }, so this expansion is not permitted unless the expansion parameter \\\"incomplete-ok\\\" has a value of \\\"true\\\"\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid\"}]},\"location\":[null],\"expression\":[null]}]}"
+}

@@ -8,9 +8,9 @@
             "lamport": 2
         },
         "edit_time": {
-            "timestamp": 1770480797,
-            "time": "2026-02-07T10:13:17-06:00",
-            "lamport": 4
+            "timestamp": 1770485463,
+            "time": "2026-02-07T11:31:03-06:00",
+            "lamport": 32
         },
         "status": "open",
         "labels": [
@@ -52,9 +52,9 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770481068,
-            "time": "2026-02-07T10:17:48-06:00",
-            "lamport": 7
+            "timestamp": 1770485477,
+            "time": "2026-02-07T11:31:17-06:00",
+            "lamport": 33
         },
         "status": "open",
         "labels": [
@@ -96,9 +96,9 @@
             "lamport": 4
         },
         "edit_time": {
-            "timestamp": 1770481346,
-            "time": "2026-02-07T10:22:26-06:00",
-            "lamport": 10
+            "timestamp": 1770485493,
+            "time": "2026-02-07T11:31:33-06:00",
+            "lamport": 34
         },
         "status": "open",
         "labels": [
@@ -140,9 +140,9 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770482726,
-            "time": "2026-02-07T10:45:26-06:00",
-            "lamport": 13
+            "timestamp": 1770485506,
+            "time": "2026-02-07T11:31:46-06:00",
+            "lamport": 35
         },
         "status": "open",
         "labels": [
@@ -184,9 +184,9 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770483011,
-            "time": "2026-02-07T10:50:11-06:00",
-            "lamport": 16
+            "timestamp": 1770485521,
+            "time": "2026-02-07T11:32:01-06:00",
+            "lamport": 38
         },
         "status": "open",
         "labels": [
@@ -228,9 +228,9 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770483296,
-            "time": "2026-02-07T10:54:56-06:00",
-            "lamport": 19
+            "timestamp": 1770485537,
+            "time": "2026-02-07T11:32:17-06:00",
+            "lamport": 46
         },
         "status": "open",
         "labels": [
@@ -272,9 +272,9 @@
             "lamport": 8
         },
         "edit_time": {
-            "timestamp": 1770483604,
-            "time": "2026-02-07T11:00:04-06:00",
-            "lamport": 22
+            "timestamp": 1770485550,
+            "time": "2026-02-07T11:32:30-06:00",
+            "lamport": 47
         },
         "status": "open",
         "labels": [
@@ -316,9 +316,9 @@
             "lamport": 9
         },
         "edit_time": {
-            "timestamp": 1770484790,
-            "time": "2026-02-07T11:19:50-06:00",
-            "lamport": 25
+            "timestamp": 1770485558,
+            "time": "2026-02-07T11:32:38-06:00",
+            "lamport": 48
         },
         "status": "open",
         "labels": [
@@ -360,9 +360,9 @@
             "lamport": 10
         },
         "edit_time": {
-            "timestamp": 1770485033,
-            "time": "2026-02-07T11:23:53-06:00",
-            "lamport": 28
+            "timestamp": 1770485570,
+            "time": "2026-02-07T11:32:50-06:00",
+            "lamport": 49
         },
         "status": "open",
         "labels": [
@@ -414,6 +414,138 @@
             "tx-compare"
         ],
         "title": "Dev fails to process VSAC ValueSets with vsacOpModifier extension",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2abe02d12c83d4082b9f0ed6f236648ffffcdf17b486688dbb4c757998d128fb",
+        "human_id": "2abe02d",
+        "create_time": {
+            "timestamp": 1770485509,
+            "time": "2026-02-07T11:31:49-06:00",
+            "lamport": 12
+        },
+        "edit_time": {
+            "timestamp": 1770485530,
+            "time": "2026-02-07T11:32:10-06:00",
+            "lamport": 41
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev $expand returns empty string id on ValueSet response",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d1b7d3b822b4e9363d98b9350519c352c61452ff62721c96c97bd97685a45c83",
+        "human_id": "d1b7d3b",
+        "create_time": {
+            "timestamp": 1770485516,
+            "time": "2026-02-07T11:31:56-06:00",
+            "lamport": 13
+        },
+        "edit_time": {
+            "timestamp": 1770485532,
+            "time": "2026-02-07T11:32:12-06:00",
+            "lamport": 43
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev $expand echoes includeDefinition=false parameter in expansion",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "515117b3229b3608281ec53970e0a57fd6810e24a516a362c19507aafb353b26",
+        "human_id": "515117b",
+        "create_time": {
+            "timestamp": 1770485525,
+            "time": "2026-02-07T11:32:05-06:00",
+            "lamport": 14
+        },
+        "edit_time": {
+            "timestamp": 1770485533,
+            "time": "2026-02-07T11:32:13-06:00",
+            "lamport": 45
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev $expand reports different used-codesystem versions than prod",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

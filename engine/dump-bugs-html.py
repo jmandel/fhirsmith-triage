@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Generate a single-file HTML bug report from git-bug tx-compare issues.
 
-Optionally correlates with a job directory to compute records-impacted counts
-by reading progress.ndjson and analysis.md files.
+Parses Records-Impacted from bug body headers to show impact counts.
 
 Usage:
-  python3 engine/dump-bugs-html.py <output-path> [--job <job-dir>]
+  python3 engine/dump-bugs-html.py <output-path>
 """
 
 import json
@@ -42,55 +41,6 @@ def run_git_bug():
         bugs.append(json.loads(detail.stdout))
 
     return bugs
-
-
-def compute_impact_counts(job_dir):
-    """Compute records-impacted per bugId by correlating progress.ndjson with analysis.md.
-
-    Returns dict of bugId -> eliminated count.
-    """
-    progress_path = os.path.join(job_dir, "progress.ndjson")
-    issues_dir = os.path.join(job_dir, "issues")
-
-    if not os.path.exists(progress_path):
-        return {}
-
-    # Read progress entries
-    entries = []
-    with open(progress_path) as f:
-        for line in f:
-            line = line.strip()
-            if line:
-                entries.append(json.loads(line))
-
-    if len(entries) < 2:
-        return {}
-
-    # For each consecutive pair, compute eliminated = entries[i].total - entries[i+1].total
-    # and attribute to the recordId of entries[i]
-    record_eliminated = {}
-    for i in range(len(entries) - 1):
-        record_id = entries[i].get("recordId")
-        eliminated = entries[i].get("total", 0) - entries[i + 1].get("total", 0)
-        if record_id and eliminated > 0:
-            record_eliminated[record_id] = eliminated
-
-    # Map recordId -> bugId by reading analysis.md files
-    bug_impact = {}
-    for record_id, eliminated in record_eliminated.items():
-        analysis_path = os.path.join(issues_dir, record_id, "analysis.md")
-        if not os.path.exists(analysis_path):
-            continue
-        with open(analysis_path) as f:
-            content = f.read()
-        # Parse **Bug**: <bugId> line
-        m = re.search(r'\*\*Bug\*\*:\s*(\S+)', content)
-        if m:
-            bug_id = m.group(1)
-            if bug_id != "none":
-                bug_impact[bug_id] = bug_impact.get(bug_id, 0) + eliminated
-
-    return bug_impact
 
 
 def markdown_to_html(text):
@@ -223,7 +173,7 @@ def markdown_to_html(text):
     return "\n".join(html_parts)
 
 
-def build_bug_data(bugs, impact_counts):
+def build_bug_data(bugs):
     """Build the data structure for the HTML page."""
     bug_data = []
 
@@ -251,15 +201,6 @@ def build_bug_data(bugs, impact_counts):
         impact_match = re.search(r'^Records-Impacted:\s*(\d+)', body_md, re.MULTILINE)
         if impact_match:
             impact = int(impact_match.group(1))
-
-        # Fall back to progress.ndjson correlation
-        if impact is None:
-            impact = impact_counts.get(hid, None)
-            if impact is None:
-                for key, val in impact_counts.items():
-                    if hid.startswith(key) or key.startswith(hid):
-                        impact = val
-                        break
 
         entry = {
             "id": hid,
@@ -985,20 +926,7 @@ def main():
 
     os.chdir(repo_root)
 
-    # Parse args
-    out_path = None
-    job_dir = None
-    args = sys.argv[1:]
-    i = 0
-    while i < len(args):
-        if args[i] == "--job" and i + 1 < len(args):
-            job_dir = args[i + 1]
-            i += 2
-        elif not args[i].startswith("-"):
-            out_path = args[i]
-            i += 1
-        else:
-            i += 1
+    out_path = sys.argv[1] if len(sys.argv) > 1 else None
 
     if not out_path:
         out_dir = os.path.join(repo_root, "scripts", "tx-compare", "results")
@@ -1011,14 +939,7 @@ def main():
     bugs = run_git_bug()
     print(f"Found {len(bugs)} bugs", file=sys.stderr)
 
-    # Compute impact counts if job dir provided
-    impact_counts = {}
-    if job_dir:
-        print(f"Computing impact counts from {job_dir}...", file=sys.stderr)
-        impact_counts = compute_impact_counts(job_dir)
-        print(f"Found impact data for {len(impact_counts)} bugs", file=sys.stderr)
-
-    bug_data = build_bug_data(bugs, impact_counts)
+    bug_data = build_bug_data(bugs)
     html = generate_html(bug_data)
 
     with open(out_path, "w", encoding="utf-8") as f:

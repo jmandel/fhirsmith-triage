@@ -511,6 +511,19 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-crash-on-error',
+    description: 'Dev crashes (500) on $expand when CodeSystem content mode prevents expansion. Prod returns 422 with clear error. Dev leaks JS source code in error message (contentMode() function body), or crashes with TypeError (addParamUri/TerminologyError). Affects 186 POST /r4/ValueSet/$expand records.',
+    kind: 'temp-tolerance',
+    bugId: '9376cf0',
+    tags: ['skip', 'dev-crash-on-error', 'expand'],
+    match({ record }) {
+      if (record.url !== '/r4/ValueSet/$expand') return null;
+      if (record.prod?.status !== 422 || record.dev?.status !== 500) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'expand-used-codesystem-version-skew',
     description: 'Dev $expand reports different used-codesystem versions than prod, reflecting different loaded code system editions. Normalizes used-codesystem to prod value. Affects 37 expand records across SNOMED, ICD-9-CM, LOINC, and others.',
     kind: 'temp-tolerance',

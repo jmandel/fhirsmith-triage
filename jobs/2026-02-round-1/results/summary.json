@@ -1,8 +1,8 @@
 {
   "jobDir": "jobs/2026-02-round-1",
-  "timestamp": "2026-02-07T17:34:15.622Z",
+  "timestamp": "2026-02-07T17:38:51.888Z",
   "totalRecords": 7245,
-  "skipped": 1944,
+  "skipped": 2130,
   "skippedReasons": {
     "missing-dicom-cid29-valueset": 10,
     "expand-422-vs-404-codesystem-not-found": 296,
@@ -10,12 +10,12 @@
     "skip-truncated-body": 318,
     "skip-prod-xml": 174,
     "vsac-modifier-extension-error": 3,
+    "expand-dev-crash-on-error": 186,
     "skip-static-assets": 4,
     "skip-root-page": 359
   },
   "categories": {
     "OK": 4205,
-    "dev-crash-on-error": 186,
     "content-differs": 633,
     "result-disagrees": 246,
     "dev-crash-on-valid": 16,
@@ -39,7 +39,6 @@
     },
     "expand": {
       "OK": 453,
-      "dev-crash-on-error": 186,
       "content-differs": 225,
       "dev-crash-on-valid": 15,
       "status-mismatch": 12,
