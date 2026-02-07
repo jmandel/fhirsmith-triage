@@ -1,0 +1,79 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://loinc.org#undefined' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'; Unknown code 'undefined' in the CodeSystem 'http://loinc.org' version '2.81'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code 'undefined' in the CodeSystem 'http://loinc.org' version '2.81'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://loinc.org#undefined' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: Analysing http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1 for validation purposes\n0ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: Prepare include[0]: \"()\"\n1ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: CodeSystem found: \"http://loinc.org|2.81\"\n1ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: Validate \"[undefined#undefined (\"undefined\")]\"\n2ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: Check \"http://loinc.org#undefined\"\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: CodeSystem found: http://loinc.org|2.81 for http://loinc.org\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1: check code in () at Coding"
+    }
+  ]
+}

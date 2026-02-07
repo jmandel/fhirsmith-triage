@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_42 bugs (39 open, 3 closed)_
+_43 bugs (40 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2300,6 +2300,41 @@ All 4 records are POST /r4/CodeSystem/$validate-code with case-insensitive code 
 
 Search: `grep 'normalized-code' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4
 Cross-check: `grep 'CODE_CASE_DIFFERENCE' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4 (same records)
+
+---
+
+### [ ] `79fe417` CPT validate-code: dev says 'Unknown code' while prod says 'Wrong Display Name' for same CPT codes
+
+Records-Impacted: 4
+Tolerance-ID: cpt-validate-code-unknown-vs-invalid-display
+Record-ID: d6a5e829-c5cc-44f3-b708-9615095c396b
+
+#####What differs
+
+On POST /r4/CodeSystem/$validate-code for CPT code 99235, both servers return result=false, but for entirely different reasons:
+
+- **Prod**: Finds the code in CPT 2023, returns version="2023", display (the correct display text), and error "Wrong Display Name" with issue code `invalid-display`. The code exists but the submitted display text is wrong.
+- **Dev**: Cannot find the code at all, returns "Unknown code '99235' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'" with issue code `invalid-code`. No version or display parameters returned.
+
+Additional parameter differences: prod returns `display` and `version` parameters that dev omits entirely.
+
+#####How widespread
+
+4 delta records match this pattern. All are POST /r4/CodeSystem/$validate-code for CPT code 99235 with system http://www.ama-assn.org/go/cpt.
+
+Search: all records where system=CPT, both result=false, prod has invalid-display issue, dev has invalid-code issue.
+
+Record IDs: d6a5e829-c5cc, cce32e6a-60b5, b305620e-f843, f6ec96ae-ab93.
+
+#####Root cause relationship
+
+Same root cause as bug f559b53 (dev fails to recognize valid CPT codes). The existing tolerance cpt-validate-code-result-disagrees only covers the case where prodResult=true and devResult=false. This bug covers a different manifestation where both return result=false but for different reasons — prod recognizes the code and rejects the display, dev doesn't find the code at all.
+
+#####What the tolerance covers
+
+Tolerance ID: cpt-validate-code-unknown-vs-invalid-display
+Matches: CPT validate-code where both result=false, prod has invalid-display issue, dev has invalid-code issue.
+Eliminates: 4 records.
 
 ---
 

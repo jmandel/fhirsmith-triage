@@ -1,0 +1,58 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://loinc.org#' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://loinc.org#' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'"
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1 for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en-US, default-to-latest\r\n0 0     : 0ms  : Prepare include: \"(http://loinc.org)(85353-1,9279-1,8867-4,2708-6,8310-5,8302-2,9843-4,29463-7,39156-5,85354-9,8480-6,8462-4,8478-0)\"\r\n16 16   : 16ms : CodeSystem found: \"http://loinc.org|2.81\"\r\n16 0    : 16ms : Validate \"[http://loinc.org# (\"\")]\"\r\n16 0    : 16ms : Check \"http://loinc.org#\"\r\n16 0    : 16ms : CodeSystem found: http://loinc.org|2.81 for http://loinc.org\r\n16 0    : 16ms : check code in (http://loinc.org)(85353-1,9279-1,8867-4,2708-6,8310-5,8302-2,9843-4,29463-7,39156-5,85354-9,8480-6,8462-4,8478-0) at Coding\r\n"
+    }
+  ]
+}

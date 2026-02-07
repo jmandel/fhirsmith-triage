@@ -1882,5 +1882,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "79fe41731769fc61fcb7f7d1ecb0d0b77ec6de9df2054cc34736c464f6110a85",
+        "human_id": "79fe417",
+        "create_time": {
+            "timestamp": 1770496186,
+            "time": "2026-02-07T14:29:46-06:00",
+            "lamport": 44
+        },
+        "edit_time": {
+            "timestamp": 1770496190,
+            "time": "2026-02-07T14:29:50-06:00",
+            "lamport": 217
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "CPT validate-code: dev says 'Unknown code' while prod says 'Wrong Display Name' for same CPT codes",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

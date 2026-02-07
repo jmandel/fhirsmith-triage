@@ -1814,6 +1814,26 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-undefined-code-message-diff',
+    description: 'POST ValueSet/$validate-code with empty code: dev stringifies absent code as literal "undefined" in error messages (JavaScript undefined-to-string coercion). Both agree result=false but messages differ ("http://loinc.org#" vs "http://loinc.org#undefined") and dev returns extra invalid-code issue. Same root cause as bugs 19283df and 4cdcd85. Affects 2 records.',
+    kind: 'temp-tolerance',
+    bugId: 'c9d8333',
+    tags: ['skip', 'validate-code', 'undefined-code', 'content-differs'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$validate-code')) return null;
+      if (record.method !== 'POST') return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      if (prodMsg.includes('#\'') && devMsg.includes('#undefined\'')) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'read-resource-text-div-diff',
     description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
     kind: 'temp-tolerance',

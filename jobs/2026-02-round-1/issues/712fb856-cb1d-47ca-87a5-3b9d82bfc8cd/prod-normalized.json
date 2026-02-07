@@ -1,0 +1,48 @@
+{
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://loinc.org#' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://loinc.org#' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult--0|4.0.1'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    }
+  ],
+  "resourceType": "Parameters"
+}
