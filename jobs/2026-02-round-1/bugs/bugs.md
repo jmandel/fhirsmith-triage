@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_17 bugs (15 open, 2 closed)_
+_18 bugs (16 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -18,6 +18,40 @@ _17 bugs (15 open, 2 closed)_
 Records-Impacted: 10
 Tolerance-ID: dicom-cid29-missing
 Record-ID: 3e3359d1-7391-4620-8b72-552f197f21cf
+
+#####Repro
+
+**Test 1: Direct read by ID** (prod=200, dev=404)
+
+```bash
+####Prod (expect 200 with full ValueSet, 51 DICOM modality codes)
+curl -s -H "Accept: application/fhir+json" \
+"https://tx.fhir.org/r4/ValueSet/dicom-cid-29-AcquisitionModality" \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print(f'Status: 200, resourceType: {d[\"resourceType\"]}, id: {d[\"id\"]}')"
+
+####Dev (expect 404 with OperationOutcome "not found")
+curl -s -o /dev/null -w "%{http_code}" -H "Accept: application/fhir+json" \
+"https://tx-dev.fhir.org/r4/ValueSet/dicom-cid-29-AcquisitionModality"
+####Returns: 404
+```
+
+**Test 2: URL search** (prod total=1, dev total=0)
+
+```bash
+####Prod (expect total: 1, one entry)
+curl -s -H "Accept: application/fhir+json" \
+"https://tx.fhir.org/r4/ValueSet?url=http%3A%2F%2Fdicom.nema.org%2Fmedical%2Fdicom%2Fcurrent%2Foutput%2Fchtml%2Fpart16%2Fsect_CID_29.html" \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print(f'total: {d[\"total\"]}, entries: {len(d.get(\"entry\",[]))}')"
+####Returns: total: 1, entries: 1
+
+####Dev (expect total: 0, no entries)
+curl -s -H "Accept: application/fhir+json" \
+"https://tx-dev.fhir.org/r4/ValueSet?url=http%3A%2F%2Fdicom.nema.org%2Fmedical%2Fdicom%2Fcurrent%2Foutput%2Fchtml%2Fpart16%2Fsect_CID_29.html" \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print(f'total: {d[\"total\"]}, entries: {len(d.get(\"entry\",[]))}')"
+####Returns: total: 0, entries: 0
+```
+
+Verified 2026-02-07: both tests confirm the DICOM CID 29 AcquisitionModality ValueSet exists on prod but is entirely missing from dev.
 
 #####What differs
 
@@ -280,6 +314,18 @@ Records-Impacted: 7
 Tolerance-ID: bcp47-display-format
 Record-ID: da702ab4-7ced-4b69-945c-0b5bbbc088c0
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=urn:ietf:bcp:47&code=en-US' -H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=urn:ietf:bcp:47&code=en-US' -H 'Accept: application/fhir+json'
+```
+
+As of 2026-02-07, both servers return `"display": "English (Region=United States)"` — the original difference (prod had "English (United States)") is no longer present. Prod appears to have been updated to match dev's format.
+
 #####What differs
 
 For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like "English (Region=United States)" while prod returns the standard format "English (United States)".
@@ -362,6 +408,21 @@ Search used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL whe
 ### [ ] `933fdcc` Dev fails to process VSAC ValueSets with vsacOpModifier extension
 
 Dev returns a generic error "Cannot process resource at \"exclude[0].filter\" due to the presence of the modifier extension vsacOpModifier" instead of processing VSAC ValueSets that use the vsacOpModifier extension in their exclude filters.
+
+#####Repro
+
+```bash
+####Prod — returns detailed validation (unknown codesystem version + not-in-valueset):
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.4.642.40.2.48.1|20250419&system=urn:oid:2.16.840.1.113883.6.238&code=2184-0&display=Dominican' -H 'Accept: application/fhir+json'
+
+####Dev — returns generic "vsacOpModifier" business-rule error:
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.4.642.40.2.48.1|20250419&system=urn:oid:2.16.840.1.113883.6.238&code=2184-0&display=Dominican' -H 'Accept: application/fhir+json'
+```
+
+**Expected (prod)**: `result: false` with specific errors — "CodeSystem version '1.3' could not be found" and "code not found in value set".
+**Actual (dev)**: `result: false` with generic error — "Cannot process resource at \"exclude[0].filter\" due to the presence of the modifier extension vsacOpModifier".
+
+Also reproducible with codes `2148-5` (Mexican) and `2151-9` (Chicano) against the same ValueSet.
 
 **What differs**: When validating codes against VSAC ValueSets that use vsacOpModifier, prod processes the ValueSet and returns proper validation results (e.g., unknown codesystem version, not-in-valueset issues), while dev bails out at ValueSet processing with a business-rule error about the modifier extension. Both return result=false, but for completely different reasons — prod gives specific, correct error details while dev gives a generic "cannot process" error.
 
@@ -743,6 +804,29 @@ Records-Impacted: 4
 Tolerance-ID: draft-codesystem-message-provenance-suffix
 Record-ID: dcdd2b94-db92-4e95-973c-5ced19783bef
 
+#####Repro
+
+Validate a code against a draft CodeSystem (e.g. `event-status`) on both servers and compare the `details.text` in the OperationOutcome issue:
+
+```bash
+####Prod (includes provenance suffix "from hl7.fhir.r4.core#4.0.1"):
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/event-status"},{"name":"code","valueCode":"completed"}]}'
+
+####Dev (missing provenance suffix):
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/event-status"},{"name":"code","valueCode":"completed"}]}'
+```
+
+**Expected** (prod): `details.text` = `Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1 from hl7.fhir.r4.core#4.0.1`
+**Actual** (dev): `details.text` = `Reference to draft CodeSystem http://hl7.org/fhir/event-status|4.0.1`
+
+Also reproduces with other draft CodeSystems: `narrative-status`, `medicationrequest-status`, `medicationrequest-intent`.
+
 #####What differs
 
 When validating codes against draft CodeSystems, both prod and dev return an informational OperationOutcome issue with code "status-check" and message ID "MSG_DRAFT". The details.text differs:
@@ -775,6 +859,34 @@ Tolerance ID: `draft-codesystem-message-provenance-suffix`. Matches validate-cod
 Records-Impacted: 16
 Tolerance-ID: ndc-validate-code-extra-inactive-params
 Record-ID: ac23726f-6ff2-4b72-b2c8-584922d04c92
+#####Repro
+
+Validate NDC code 0777-3105-02 against both servers:
+
+```bash
+####Prod (tx.fhir.org) -- returns result, system, code, display only
+curl -s -X POST "https://tx.fhir.org/r4/CodeSystem/\$validate-code?" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/ndc"},{"name":"code","valueCode":"0777-3105-02"}]}'
+
+####Dev (tx-dev.fhir.org) -- returns those plus version, inactive, message, issues
+curl -s -X POST "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code?" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/ndc"},{"name":"code","valueCode":"0777-3105-02"}]}'
+```
+
+**Prod response** (4 parameters):
+- `result: true`, `system`, `code: "0777-3105-02"`, `display: "Prozac, 100 CAPSULE in 1 BOTTLE (0777-3105-02) (package)"`
+
+**Dev response** (8 parameters) -- same 4 plus:
+- `version: "2021-11-01"`
+- `inactive: true`
+- `message: "The concept '0777-3105-02' has a status of null and its use should be reviewed"`
+- `issues`: OperationOutcome with INACTIVE_CONCEPT_FOUND warning
+
+Also reproducible with NDC codes `0002-8215-01` and `0169-4132-12`.
 
 #####What differs
 
@@ -811,6 +923,35 @@ Records-Impacted: 12
 Tolerance-ID: expand-dev-extra-contact-metadata
 Record-ID: 80d06a63-cebf-4a33-af1b-583b4f6a1c10
 
+#####Repro
+
+Dev includes the `contact` field in `$expand` responses; prod omits it. Reproduce with any of these ValueSets:
+
+**medicationrequest-category** (contact has URL only):
+```bash
+####Prod — no contact field in response
+curl -s -H 'Accept: application/fhir+json' \
+'https://tx.fhir.org/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/medicationrequest-category&count=0' \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print('contact' in d)"
+####=> False
+
+####Dev — contact field present
+curl -s -H 'Accept: application/fhir+json' \
+'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/medicationrequest-category&count=0' \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print('contact' in d, d.get('contact'))"
+####=> True [{"telecom": [{"system": "url", "value": "http://hl7.org/fhir"}]}]
+```
+
+**administrative-gender** (contact has URL + email):
+```bash
+curl -s -H 'Accept: application/fhir+json' \
+'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/administrative-gender&count=0' \
+| python3 -c "import sys,json; d=json.load(sys.stdin); print('contact' in d, d.get('contact'))"
+####=> True [{"telecom": [{"system": "url", "value": "http://hl7.org/fhir"}, {"system": "email", "value": "fhir@lists.hl7.org"}]}]
+```
+
+Other affected ValueSets include: `address-type`, `address-use`, `identifier-use`, `gender-identity`, `iso3166-1-2`, `languages`, `mimetypes`, `name-use`.
+
 #####What differs
 
 Dev $expand responses include the ValueSet `contact` field (publisher contact information) that prod omits from expansion results. The contact data comes from the source ValueSet definition and contains HL7 FHIR contact info such as:
@@ -837,6 +978,41 @@ Tolerance `expand-dev-extra-contact-metadata` matches ValueSet $expand responses
 #####Representative record
 
 `80d06a63-cebf-4a33-af1b-583b4f6a1c10` — POST /r4/ValueSet/$expand for medicationrequest-category ValueSet. Dev includes `contact: [{telecom: [{system: "url", value: "http://hl7.org/fhir"}]}]`, prod omits it.
+
+---
+
+### [ ] `9390fe4` Dev echoes display param on failed validate-code when CodeSystem unknown
+
+Records-Impacted: 74
+Tolerance-ID: validate-code-display-echo-on-unknown-system
+Record-ID: d9457f4d-39c0-445a-96d4-0721961e169d
+
+#####What differs
+
+When $validate-code returns result=false because the CodeSystem is unknown (x-caused-by-unknown-system), dev echoes back the input `display` parameter in the response while prod omits it.
+
+For example, validating code "U" against unknown system `https://codesystem.x12.org/005010/1338`:
+- Prod: returns result=false, system, code, message, x-caused-by-unknown-system, issues — no display parameter
+- Dev: returns all of the above PLUS `display: "Urgent"` (echoed from the request input)
+
+Per the FHIR spec, the output `display` parameter is "a valid display for the concept if the system wishes to present it to users." When the CodeSystem is unknown, the server has no basis to return a valid display — it is simply echoing back the unvalidated input.
+
+#####How widespread
+
+74 records in deltas.ndjson match this pattern. 73 have `x-caused-by-unknown-system` in prod response; 1 has no system at all. All are $validate-code with result=false. Across 38+ distinct code systems including x12.org, various OID-based systems, and others.
+
+Search: parsed all deltas.ndjson records where comparison.diffs includes {type: "extra-in-dev", param: "display"} and result=false.
+
+#####What the tolerance covers
+
+Tolerance ID: `validate-code-display-echo-on-unknown-system`
+Matches: $validate-code Parameters responses where result=false, prod has no display parameter, and dev has a display parameter.
+Normalizes: strips the display parameter from dev to match prod.
+Eliminates: 74 records (73 with only the display diff, 1 with additional message/issues diffs that will remain after normalization).
+
+#####Representative record
+
+d9457f4d-39c0-445a-96d4-0721961e169d — POST /r4/CodeSystem/$validate-code, code U in system https://codesystem.x12.org/005010/1338
 
 ---
 

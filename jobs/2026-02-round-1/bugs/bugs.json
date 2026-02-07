@@ -140,9 +140,9 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770485506,
-            "time": "2026-02-07T11:31:46-06:00",
-            "lamport": 35
+            "timestamp": 1770488358,
+            "time": "2026-02-07T12:19:18-06:00",
+            "lamport": 78
         },
         "status": "open",
         "labels": [
@@ -184,9 +184,9 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770485521,
-            "time": "2026-02-07T11:32:01-06:00",
-            "lamport": 38
+            "timestamp": 1770488323,
+            "time": "2026-02-07T12:18:43-06:00",
+            "lamport": 74
         },
         "status": "open",
         "labels": [
@@ -404,9 +404,9 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770485283,
-            "time": "2026-02-07T11:28:03-06:00",
-            "lamport": 31
+            "timestamp": 1770488377,
+            "time": "2026-02-07T12:19:37-06:00",
+            "lamport": 80
         },
         "status": "open",
         "labels": [
@@ -624,9 +624,9 @@
             "lamport": 16
         },
         "edit_time": {
-            "timestamp": 1770486193,
-            "time": "2026-02-07T11:43:13-06:00",
-            "lamport": 55
+            "timestamp": 1770488378,
+            "time": "2026-02-07T12:19:38-06:00",
+            "lamport": 81
         },
         "status": "open",
         "labels": [
@@ -668,9 +668,9 @@
             "lamport": 17
         },
         "edit_time": {
-            "timestamp": 1770486527,
-            "time": "2026-02-07T11:48:47-06:00",
-            "lamport": 58
+            "timestamp": 1770488416,
+            "time": "2026-02-07T12:20:16-06:00",
+            "lamport": 82
         },
         "status": "open",
         "labels": [
@@ -712,9 +712,9 @@
             "lamport": 18
         },
         "edit_time": {
-            "timestamp": 1770487407,
-            "time": "2026-02-07T12:03:27-06:00",
-            "lamport": 67
+            "timestamp": 1770488377,
+            "time": "2026-02-07T12:19:37-06:00",
+            "lamport": 79
         },
         "status": "open",
         "labels": [
@@ -722,6 +722,50 @@
             "tx-compare"
         ],
         "title": "Dev $expand includes extra ValueSet metadata (contact) that prod omits",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "9390fe4d4b0e3f3ef8331d5e69b3ad90c2df229ea2a042101bcc7637d1dc5bc2",
+        "human_id": "9390fe4",
+        "create_time": {
+            "timestamp": 1770488339,
+            "time": "2026-02-07T12:18:59-06:00",
+            "lamport": 19
+        },
+        "edit_time": {
+            "timestamp": 1770488343,
+            "time": "2026-02-07T12:19:03-06:00",
+            "lamport": 77
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev echoes display param on failed validate-code when CodeSystem unknown",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

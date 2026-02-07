@@ -1,0 +1,65 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+            "code": "G0154"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found, so the code cannot be validated"
+            },
+            "location": [
+              "CodeableConcept.coding[0].system"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].system"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n31 31   : 0ms  : Analysing http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot for validation purposes\r\n31 0    : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n31 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/731000124108\r\n31 0    : 0ms  : Prepare include: \"(http://terminology.hl7.org/CodeSystem/data-absent-reason)(not-applicable)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://terminology.hl7.org/CodeSystem/data-absent-reason|1.0.0\"\r\n31 0    : 0ms  : Prepare include: \"(https://codesystem.x12.org/005010/1365)\"\r\n31 0    : 0ms  : CodeSystem version  not found: \"https://codesystem.x12.org/005010/1365\"\r\n31 0    : 0ms  : Prepare include: \"(http://www.ama-assn.org/go/cpt)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://www.ama-assn.org/go/cpt|2023\"\r\n31 0    : 0ms  : Prepare include: \"(http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets)\"\r\n31 0    : 0ms  : CodeSystem version  not found: \"http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets\"\r\n31 0    : 0ms  : Prepare include: \"(http://terminology.hl7.org/CodeSystem/icd9cm)\"\r\n31 0    : 0ms  : CodeSystem version  not found: \"http://terminology.hl7.org/CodeSystem/icd9cm\"\r\n31 0    : 0ms  : Prepare include: \"(http://www.cms.gov/Medicare/Coding/ICD10)\"\r\n47 16   : 16ms : CodeSystem found: \"http://www.cms.gov/Medicare/Coding/ICD10|2.0.1 (from fhir.tx.support.r4#0.32.0)\"\r\n47 0    : 16ms : Prepare include: \"(http://hl7.org/fhir/sid/ndc)\"\r\n47 0    : 16ms : CodeSystem found: \"http://hl7.org/fhir/sid/ndc|\"\r\n47 0    : 16ms : Validate \"[http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets#G0154 (\"\")]\"\r\n47 0    : 16ms : Check \"http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets#G0154\"\r\n47 0    : 16ms : CodeSystem not found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets\r\n"
+    }
+  ]
+}

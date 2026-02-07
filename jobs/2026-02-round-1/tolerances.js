@@ -814,6 +814,20 @@ const tolerances = [
   },
 
   {
+    id: 'hcpcs-codesystem-availability',
+    description: 'HCPCS CodeSystem (http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets) is loaded in dev (version 2025-01) but unknown in prod. Prod returns result=false with x-caused-by-unknown-system, dev returns result=true with valid code details. Affects 110 validate-code result-disagrees records.',
+    kind: 'temp-tolerance',
+    bugId: 'ac95424',
+    tags: ['skip', 'codesystem-availability', 'hcpcs'],
+    match({ prod }) {
+      if (!isParameters(prod)) return null;
+      const unknownSys = getParamValue(prod, 'x-caused-by-unknown-system');
+      if (unknownSys === 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets') return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

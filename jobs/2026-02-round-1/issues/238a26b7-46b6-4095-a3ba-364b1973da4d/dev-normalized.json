@@ -1,0 +1,32 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "G0154"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "G0154",
+            "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+    },
+    {
+      "name": "version",
+      "valueString": "2025-01"
+    }
+  ],
+  "resourceType": "Parameters"
+}

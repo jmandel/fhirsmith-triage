@@ -1,0 +1,40 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets"
+    },
+    {
+      "name": "code",
+      "valueCode": "G0154"
+    },
+    {
+      "name": "version",
+      "valueString": "2025-01"
+    },
+    {
+      "name": "display",
+      "valueString": "health or hospice setting, each 15 minutes"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+            "code": "G0154"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Analysing http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot for validation purposes\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[0]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: \"http://terminology.hl7.org/CodeSystem/data-absent-reason|1.0.0\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[1]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem version undefined not found: \"https://codesystem.x12.org/005010/1365\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[2]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: \"http://www.ama-assn.org/go/cpt|2023\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[3]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: \"http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets|2025-01\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[4]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem version undefined not found: \"http://terminology.hl7.org/CodeSystem/icd9cm\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[5]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: \"http://www.cms.gov/Medicare/Coding/ICD10|2.0.1\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Prepare include[6]: \"()\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: \"http://hl7.org/fhir/sid/ndc|2021-11-01\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Validate \"[undefined#G0154 (\"undefined\")]\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Check \"http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets#G0154\"\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: CodeSystem found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets|2025-01 for http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: check code in () at CodeableConcept.coding[0]\n1ms http://hl7.org/fhir/us/davinci-pas/ValueSet/X12278RequestedServiceType|2.2.0-snapshot: Code \"G0154\" found in http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets|2025-01"
+    }
+  ]
+}
