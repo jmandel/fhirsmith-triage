@@ -1893,6 +1893,45 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'message-concat-missing-issues',
+    description: 'Dev message parameter only includes first issue text instead of concatenating all issue texts with "; ". Prod correctly joins all OperationOutcome issue details.text values. The issues resource itself is identical. Affects 8 validate-code records (CodeSystem and ValueSet) where multiple issues exist.',
+    kind: 'temp-tolerance',
+    bugId: '093fde6',
+    tags: ['normalize', 'message-format', 'validate-code'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg || prodMsg === devMsg) return null;
+      // Get issue texts from both sides
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      if (prodIssues.issue.length < 2) return null;
+      const prodTexts = prodIssues.issue.map(i => i.details?.text).filter(Boolean);
+      const devTexts = devIssues.issue.map(i => i.details?.text).filter(Boolean);
+      // Pattern: prod message = all issues joined with '; ', dev message = first issue only
+      if (prodMsg === prodTexts.join('; ') && devMsg === devTexts[0]) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodMsg = getParamValue(prod, 'message');
+      function setMessage(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        };
+      }
+      return { prod, dev: setMessage(dev) };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

@@ -1,0 +1,83 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "SI"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "SI"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated; Coding.system must be an absolute reference, not a local reference"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Terminology_TX_System_Relative"
+              }
+            ],
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-data"
+                }
+              ],
+              "text": "Coding.system must be an absolute reference, not a local reference"
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n15 15   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n15 0    : 0ms  : Parameters: disp-lang=en, en-US, default-to-latest\r\n15 0    : 0ms  : Prepare include: \"()\"\r\n15 0    : 0ms  : Validate \"[SI# (\"\")]\"\r\n15 0    : 0ms  : Check \"SI#\"\r\n15 0    : 0ms  : Didn't find CodeSystem \"SI\"\r\n"
+    }
+  ]
+}

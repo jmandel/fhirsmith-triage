@@ -1,0 +1,67 @@
+{
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "location": [
+              "Coding.system"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-data",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Coding.system must be an absolute reference, not a local reference"
+            },
+            "expression": [
+              "Coding.system"
+            ],
+            "location": [
+              "Coding.system"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "SI"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "SI"
+    }
+  ],
+  "resourceType": "Parameters"
+}

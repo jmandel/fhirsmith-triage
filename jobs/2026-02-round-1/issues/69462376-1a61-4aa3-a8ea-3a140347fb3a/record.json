@@ -1,0 +1,29 @@
+{
+  "id": "69462376-1a61-4aa3-a8ea-3a140347fb3a",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1756,
+    "hash": "97eb49df64f4e84110bafa5aa9d4df52"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1220,
+    "hash": "c689f7f5a9c9c4010e9bd3798a205cf9"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"SI\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"SI\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated; Coding.system must be an absolute reference, not a local reference\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]},{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Terminology_TX_System_Relative\"}],\"severity\" : \"error\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-data\"}],\"text\" : \"Coding.system must be an absolute reference, not a local reference\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n15 15   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n15 0    : 0ms  : Parameters: disp-lang=en, en-US, default-to-latest\\r\\n15 0    : 0ms  : Prepare include: \\\"()\\\"\\r\\n15 0    : 0ms  : Validate \\\"[SI# (\\\"\\\")]\\\"\\r\\n15 0    : 0ms  : Check \\\"SI#\\\"\\r\\n15 0    : 0ms  : Didn't find CodeSystem \\\"SI\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"location\":[\"Coding.system\"],\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM\"}]},{\"severity\":\"error\",\"code\":\"invalid\",\"details\":{\"text\":\"Coding.system must be an absolute reference, not a local reference\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-data\"}]},\"location\":[\"Coding.system\"],\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Terminology_TX_System_Relative\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'SI' could not be found, so the code cannot be validated\"},{\"name\":\"system\",\"valueUri\":\"SI\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"SI\"}]}"
+}

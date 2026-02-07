@@ -1926,5 +1926,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "c9d833362452dd88628086d025a8fa114c307baf1caa164d57049b85a4521803",
+        "human_id": "c9d8333",
+        "create_time": {
+            "timestamp": 1770496472,
+            "time": "2026-02-07T14:34:32-06:00",
+            "lamport": 45
+        },
+        "edit_time": {
+            "timestamp": 1770496477,
+            "time": "2026-02-07T14:34:37-06:00",
+            "lamport": 220
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev stringifies undefined code as literal 'undefined' in validate-code error messages",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

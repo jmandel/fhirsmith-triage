@@ -1,0 +1,79 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "text": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ]
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "invalid",
+            "details": {
+              "text": "Coding.system must be an absolute reference, not a local reference",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-data"
+                }
+              ]
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Terminology_TX_System_Relative"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'SI' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "system",
+      "valueUri": "SI"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "SI"
+    }
+  ]
+}

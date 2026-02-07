@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_43 bugs (40 open, 3 closed)_
+_44 bugs (41 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2335,6 +2335,43 @@ Same root cause as bug f559b53 (dev fails to recognize valid CPT codes). The exi
 Tolerance ID: cpt-validate-code-unknown-vs-invalid-display
 Matches: CPT validate-code where both result=false, prod has invalid-display issue, dev has invalid-code issue.
 Eliminates: 4 records.
+
+---
+
+### [ ] `c9d8333` Dev stringifies undefined code as literal 'undefined' in validate-code error messages
+
+Records-Impacted: 2
+Tolerance-ID: validate-code-undefined-code-message-diff
+Record-ID: 712fb856-cb1d-47ca-87a5-3b9d82bfc8cd
+
+#####What differs
+
+POST /r4/ValueSet/$validate-code: when the request contains a coding with no code value, dev treats the absent code as the literal string "undefined" (JavaScript undefined-to-string coercion). Both sides agree result=false, but:
+
+- Prod message: "The provided code 'http://loinc.org#' was not found in the value set..."
+- Dev message: "The provided code 'http://loinc.org#undefined' was not found in the value set..."
+
+Dev also returns an extra OperationOutcome issue (invalid-code: "Unknown code 'undefined' in the CodeSystem 'http://loinc.org' version '2.81'") that prod does not include, and uses issue type code "invalid-code" instead of "not-in-vs".
+
+The version parameter is also absent from dev's response (prod returns version: "2.81").
+
+#####How widespread
+
+2 records in deltas show this pattern (both POST /r4/ValueSet/$validate-code). 16 total records in comparison.ndjson have #undefined in devBody, but 14 are CodeSystem/$validate-code where result disagrees (prod=true, dev=false) — those are already handled by tolerance validate-code-undefined-system-result-disagrees (bug 19283df). The remaining 2 are ValueSet/$validate-code where both agree result=false but the error messages differ.
+
+Search: `grep '#undefined' results/deltas/deltas.ndjson` → 2 matches
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-undefined-code-message-diff
+Matches POST $validate-code records where both result=false and dev's message contains '#undefined' while prod's message contains '#' (empty code). Skips these records. Eliminates 2 delta records.
+
+#####Representative records
+
+- 712fb856-cb1d-47ca-87a5-3b9d82bfc8cd
+- ab72ac62-6f86-41fe-89b8-fae8b0701db4
+
+Same root cause as bugs 19283df and 4cdcd85 — dev fails to extract values from POST request bodies, receiving JavaScript undefined.
 
 ---
 
