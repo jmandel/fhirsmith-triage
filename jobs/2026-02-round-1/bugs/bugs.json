@@ -878,5 +878,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "f559b538ca10ffcffe00f8e81b14789644fbf1ce7e058cae39a2a7a8f2ddc1cf",
+        "human_id": "f559b53",
+        "create_time": {
+            "timestamp": 1770489140,
+            "time": "2026-02-07T12:32:20-06:00",
+            "lamport": 22
+        },
+        "edit_time": {
+            "timestamp": 1770489145,
+            "time": "2026-02-07T12:32:25-06:00",
+            "lamport": 92
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "CPT -code: dev fails to recognize valid CPT codes (result=false)",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

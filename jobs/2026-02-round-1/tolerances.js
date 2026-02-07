@@ -885,6 +885,67 @@ const tolerances = [
   },
 
   {
+    id: 'ndc-validate-code-unknown-code-version-diffs',
+    description: 'NDC $validate-code result=false: prod reports empty version in error messages, dev reports version 2021-11-01. Prod also includes an extra informational issue ("Code X not found in NDC") that dev omits. Both agree result=false. Root cause is NDC version skew (same as ndc-validate-code-extra-inactive-params). Normalizes version strings in message/issues text and strips extra informational issue from prod. Affects 15 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '7258b41',
+    tags: ['normalize', 'ndc', 'validate-code', 'version-skew'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
+      if (system !== 'http://hl7.org/fhir/sid/ndc') return null;
+      const result = getParamValue(prod, 'result');
+      if (result !== false) return null;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      // Match when both have "Unknown code" messages but differ in version string
+      if (prodMsg.includes("version ''") && devMsg.includes("version '2021-11-01'")) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Normalize version string in message to dev's value (more informative)
+      function normalizeVersionInMessage(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: p.valueString.replace("version ''", "version '2021-11-01'") };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue
+                    // Strip the extra informational "Code X not found in NDC" issue from prod
+                    .filter(iss => !(iss.severity === 'information' && iss.details?.text?.match(/^Code .+ not found in NDC$/)))
+                    .map(iss => {
+                      if (iss.details?.text?.includes("version ''")) {
+                        return {
+                          ...iss,
+                          details: {
+                            ...iss.details,
+                            text: iss.details.text.replace("version ''", "version '2021-11-01'"),
+                          },
+                        };
+                      }
+                      return iss;
+                    }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return both({ prod, dev }, normalizeVersionInMessage);
+    },
+  },
+
+  {
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',

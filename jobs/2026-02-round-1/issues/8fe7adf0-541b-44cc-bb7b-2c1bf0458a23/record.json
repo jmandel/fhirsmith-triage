@@ -1,0 +1,33 @@
+{
+  "id": "8fe7adf0-541b-44cc-bb7b-2c1bf0458a23",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1646,
+    "hash": "a8b77b9a58cd44ffeeaa3a521c9ab400"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1440,
+    "hash": "98eeed253637efccb481cd484e21e3fd"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://hl7.org/fhir/sid/ndc\"},{\"name\" : \"code\",\"valueCode\" : \"33333000901\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version ''\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version ''\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]},{\"severity\" : \"information\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Code \\\"33333000901\\\" not found in NDC\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://hl7.org/fhir/sid/ndc#33333000901 (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://hl7.org/fhir/sid/ndc#33333000901\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://hl7.org/fhir/sid/ndc|\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://hl7.org/fhir/sid/ndc\"},{\"name\":\"code\",\"valueCode\":\"33333000901\"},{\"name\":\"message\",\"valueString\":\"Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version '2021-11-01'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version '2021-11-01'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"location\":[\"Coding.code\"],\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Validate \\\"[undefined#33333000901 (\\\"undefined\\\")]\\\"\\n0ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Check \\\"http://hl7.org/fhir/sid/ndc#33333000901\\\"\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: CodeSystem found: http://hl7.org/fhir/sid/ndc|2021-11-01 for http://hl7.org/fhir/sid/ndc|2021-11-01\\n1ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: check code in () at Coding\\n4400ms http://hl7.org/fhir/sid/ndc/vs|2021-11-01: Code \\\"33333000901\\\" not found in http://hl7.org/fhir/sid/ndc|2021-11-01: undefined\"}]}"
+}

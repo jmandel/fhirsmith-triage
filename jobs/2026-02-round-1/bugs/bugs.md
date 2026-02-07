@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_20 bugs (18 open, 2 closed)_
+_21 bugs (19 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1127,6 +1127,39 @@ Matches: POST /r4/CodeSystem/$validate-code (without trailing ?), where dev mess
 #####Representative record
 
 9afb9fcf-df5f-4766-a56a-33379c66b90a
+
+---
+
+### [ ] `f559b53` CPT -code: dev fails to recognize valid CPT codes (result=false)
+
+Records-Impacted: 45
+Tolerance-ID: cpt-validate-code-result-disagrees
+Record-ID: d05e7906-16ee-4915-8c8a-92137b4e62c7
+
+#####What differs
+
+Dev returns `result: false` with "Unknown code '<code>' in the CodeSystem 'http://www.ama-assn.org/go/cpt' version '2023'" for CPT codes that prod successfully validates as `result: true`. Prod returns the code's display text and version; dev returns an error OperationOutcome with `code-invalid`.
+
+Example: CPT code 99214 (a standard E&M visit code). Prod validates it successfully with display text. Dev says it's unknown.
+
+This affects 17 distinct CPT codes: 33206, 44211, 44401, 45346, 58545, 70551, 73722, 74263, 77061, 77081, 81528, 82274, 83036, 87624, 88175, 93978, 99214.
+
+Both servers reference the same CodeSystem version (2023), suggesting dev has the CPT CodeSystem loaded but its concept list is incomplete or not being searched correctly.
+
+#####How widespread
+
+45 result-disagrees records total:
+- 41 on POST /r4/CodeSystem/$validate-code
+- 4 on POST /r4/ValueSet/$validate-code
+
+All are prod=true/dev=false (dev never finds these codes). Searched with:
+grep 'ama-assn.org/go/cpt' results/deltas/deltas.ndjson | grep result-disagrees
+
+There are also 71 content-differs and 8 status-mismatch records for CPT (124 total CPT delta records), likely related to the same underlying data issue, but those are separate patterns.
+
+#####What the tolerance covers
+
+Tolerance `cpt-validate-code-result-disagrees` skips all validate-code records where system is http://www.ama-assn.org/go/cpt and prod=true/dev=false (result-disagrees). Eliminates 45 records.
 
 ---
 

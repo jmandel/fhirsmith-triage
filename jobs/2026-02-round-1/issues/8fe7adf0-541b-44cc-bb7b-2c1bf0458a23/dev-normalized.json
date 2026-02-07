@@ -1,0 +1,48 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "33333000901"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version '2021-11-01'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "location": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code '33333000901' in the CodeSystem 'http://hl7.org/fhir/sid/ndc' version '2021-11-01'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://hl7.org/fhir/sid/ndc"
+    }
+  ],
+  "resourceType": "Parameters"
+}
