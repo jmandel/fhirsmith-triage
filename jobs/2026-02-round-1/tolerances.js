@@ -115,6 +115,54 @@ const tolerances = [
     },
   },
 
+  // Phase B: Structural — clean up structure before content transforms
+  {
+    id: 'dev-empty-string-expression-location',
+    description: 'Dev returns expression:[""] and location:[""] on OperationOutcome issues that have no specific location (e.g. TX_GENERAL_CC_ERROR_MESSAGE, MSG_DRAFT, MSG_DEPRECATED). Prod correctly omits these fields. Empty strings are invalid FHIR. Affects 318 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'e9c7e58',
+    match({ dev }) {
+      if (!isParameters(dev)) return null;
+      const issues = getParamValue(dev, 'issues');
+      if (!issues?.issue) return null;
+      for (const iss of issues.issue) {
+        if ((iss.expression && iss.expression.includes('')) ||
+            (iss.location && iss.location.includes(''))) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev, record }) {
+      function removeEmptyStrArrays(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map(iss => {
+                  const result = { ...iss };
+                  if (result.expression && result.expression.length === 1 && result.expression[0] === '') {
+                    delete result.expression;
+                  }
+                  if (result.location && result.location.length === 1 && result.location[0] === '') {
+                    delete result.location;
+                  }
+                  return result;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod: prod, dev: removeEmptyStrArrays(dev) };
+    },
+  },
+
   // Phase C: Content — temp-tolerances for known bugs
   {
     id: 'v2-0360-lookup-version-skew',

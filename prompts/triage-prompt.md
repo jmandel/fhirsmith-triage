@@ -167,7 +167,6 @@ Format:
 ```markdown
 # Analysis: <category-label>
 
-**MD5**: `<md5hash>`
 **Operation**: `<METHOD> <URL>`
 **Priority**: <priority>
 **Status**: prod=<status> dev=<status>

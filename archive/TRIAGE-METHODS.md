@@ -223,7 +223,6 @@ Each record's analysis lives in its issue directory (`<job-dir>/issues/<md5>/`):
   ```markdown
   # Analysis: <category-label>
 
-  **MD5**: `<md5hash>`
   **Operation**: `<METHOD> <URL>`
   **Priority**: <priority>
   **Bug**: <bug ID or "none">

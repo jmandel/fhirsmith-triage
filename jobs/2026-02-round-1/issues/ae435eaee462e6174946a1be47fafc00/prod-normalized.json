@@ -1,0 +1,81 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "109691-6",
+            "display": "Influenza virus A Ag [Measurement] in Nasopharynx",
+            "system": "http://loinc.org"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "this-code-not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://loinc.org#109691-6 ('Influenza virus A Ag [Measurement] in Nasopharynx')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "severity": "information"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    }
+  ],
+  "resourceType": "Parameters"
+}
