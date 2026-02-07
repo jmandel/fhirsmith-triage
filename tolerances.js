@@ -185,6 +185,25 @@ const tolerances = [
   },
 
   // ============================================================
+  // Phase A (cont.): Temp-tolerance skips
+  // ============================================================
+
+  {
+    id: 'temp-v2-0360-version-mismatch',
+    description: 'v2-0360 CodeSystem version mismatch: prod has 2.0.0, dev has 3.0.0. All 157 $lookup records for this CodeSystem differ only in version, extra definition, and extra designation.',
+    kind: 'temp-tolerance',
+    bugId: '52e1690',
+    match({ record, prod, dev }) {
+      if (!/\$lookup/.test(record.url)) return null;
+      if (!/v2-0360/.test(record.url)) return null;
+      const prodVersion = getParamValue(prod, 'version');
+      const devVersion = getParamValue(dev, 'version');
+      if (prodVersion === '2.0.0' && devVersion === '3.0.0') return 'skip';
+      return null;
+    },
+  },
+
+  // ============================================================
   // Phase B: Structural cleanup
   // ============================================================
 
