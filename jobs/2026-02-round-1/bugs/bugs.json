@@ -1669,16 +1669,61 @@
             "lamport": 39
         },
         "edit_time": {
-            "timestamp": 1770494746,
-            "time": "2026-02-07T14:05:46-06:00",
-            "lamport": 196
+            "timestamp": 1770495048,
+            "time": "2026-02-07T14:10:48-06:00",
+            "lamport": 199
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Resource read: prod omits text.div when text.status=generated, dev includes it",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1176a4a6d59854aebb4ae7be5cb77e2c6275d15232bd83671218cd09ff00073f",
+        "human_id": "1176a4a",
+        "create_time": {
+            "timestamp": 1770495044,
+            "time": "2026-02-07T14:10:44-06:00",
+            "lamport": 40
+        },
+        "edit_time": {
+            "timestamp": 1770495049,
+            "time": "2026-02-07T14:10:49-06:00",
+            "lamport": 201
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Resource read: prod omits text.div when text.status=generated, dev includes it",
+        "title": "CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes",
         "actors": [
             {
                 "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",

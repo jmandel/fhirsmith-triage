@@ -1653,6 +1653,26 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-missing-message-on-true',
+    description: 'Dev omits the message output parameter on $validate-code when result=true. FHIR spec says message "carries hints and warnings" when result is true. Prod returns it (e.g. fragment code system warnings). The same text appears in issues OperationOutcome. Normalizes by stripping message from prod when dev omits it and result=true. Affects 150 records (111 ValueSet, 39 CodeSystem validate-code).',
+    kind: 'temp-tolerance',
+    bugId: '8f148da',
+    tags: ['normalize', 'validate-code', 'missing-message'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      if (prodResult !== true) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (prodMsg !== undefined && devMsg === undefined) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      return { prod: stripParams(prod, 'message'), dev };
+    },
+  },
+
+  {
     id: 'read-resource-text-div-diff',
     description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
     kind: 'temp-tolerance',

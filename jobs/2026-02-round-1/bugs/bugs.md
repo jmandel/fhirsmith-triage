@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_38 bugs (35 open, 3 closed)_
+_39 bugs (36 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2099,6 +2099,20 @@ Records-Impacted: 4
 Tolerance-ID: read-resource-text-div-diff
 Record-ID: 31a631b5-8579-48d8-a95c-e40eadfd4714
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/us-core-laboratory-test-codes' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/us-core-laboratory-test-codes' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `"text": {"status": "generated"}` with no `div` element. Dev returns `"text": {"status": "generated", "div": "<div>...Generated Narrative...</div>"}` with a full generated narrative. Same behavior on both the direct read (`/r4/ValueSet/us-core-laboratory-test-codes`) and search (`/r4/ValueSet?url=...`) paths.
+
 #####What differs
 
 When reading ValueSet resources (both direct reads like `/r4/ValueSet/us-core-laboratory-test-codes` and search reads like `/r4/ValueSet?url=...`), prod returns `text: {"status": "generated"}` without the `div` element, while dev returns `text: {"status": "generated", "div": "<div>...</div>"}` with a full generated narrative.
@@ -2125,6 +2139,40 @@ Tolerance ID: `read-resource-text-div-diff`. Matches read operations (resource r
 #####Representative record
 
 `grep -n '31a631b5-8579-48d8-a95c-e40eadfd4714' comparison.ndjson`
+
+---
+
+### [ ] `1176a4a` CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes
+
+Records-Impacted: 45
+Tolerance-ID: cpt-expand-empty-results
+Record-ID: d03ce6c0-d498-4c96-9165-261fdecc484c
+
+#####What differs
+
+Dev returns `total: 0` with no `expansion.contains` array for $expand requests involving CPT codes (`http://www.ama-assn.org/go/cpt|2023`). Prod returns `total: 1` (or more) with the expected CPT codes in `expansion.contains`.
+
+Example (record d03ce6c0): POST /r4/ValueSet/$expand for a ValueSet containing CPT code 83036 ("Hemoglobin; glycosylated (A1C)"). Prod returns the code in the expansion; dev returns an empty expansion with total=0.
+
+Both servers use the same `used-codesystem` version (`http://www.ama-assn.org/go/cpt|2023`), indicating dev believes it has CPT loaded but fails to resolve any codes from it.
+
+#####How widespread
+
+45 out of 50 $expand delta records with CPT codes show this pattern. Found via:
+```bash
+####Count CPT expand records where dev returns total=0 and prod returns total>0
+python3 -c "..." # -> 45 of 46 CPT expand deltas
+```
+
+All 45 records are POST /r4/ValueSet/$expand with `used-codesystem` of `http://www.ama-assn.org/go/cpt|2023`.
+
+#####Related
+
+Same root cause as bug f559b53 (CPT validate-code returns "Unknown code"). Dev's CPT data appears non-functional — codes are unknown for validation and absent from expansions.
+
+#####What the tolerance covers
+
+Tolerance `cpt-expand-empty-results` matches POST /r4/ValueSet/$expand where dev returns total=0 and prod returns total>0, and the expansion uses CPT as a code system. Skips these records entirely since comparison is meaningless when dev has no CPT data.
 
 ---
 
