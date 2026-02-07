@@ -538,6 +538,75 @@ const tolerances = [
   },
 
   {
+    id: 'inactive-display-message-extra-synonyms',
+    description: 'SNOMED validate-code with INACTIVE_DISPLAY_FOUND: dev lists multiple synonyms/designations in "The correct display is one of" message, prod lists only the preferred term. Both identify the same code as having an inactive display. Affects 3 validate-code records for display-comment issues.',
+    kind: 'temp-tolerance',
+    bugId: '645fdcf',
+    tags: ['normalize', 'message-text', 'snomed', 'display-comment'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const prodText = prodIssues.issue[i]?.details?.text || '';
+        const devText = devIssues.issue[i]?.details?.text || '';
+        if (prodText === devText) continue;
+        const prodHasDisplayComment = prodIssues.issue[i]?.details?.coding?.some(c => c.code === 'display-comment');
+        const devHasDisplayComment = devIssues.issue[i]?.details?.coding?.some(c => c.code === 'display-comment');
+        if (!prodHasDisplayComment || !devHasDisplayComment) continue;
+        const marker = 'The correct display is one of';
+        if (prodText.includes(marker) && devText.includes(marker)) {
+          const prodPrefix = prodText.split(marker)[0];
+          const devPrefix = devText.split(marker)[0];
+          if (prodPrefix === devPrefix) return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return { prod, dev };
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  const prodText = prodIss.details?.text || '';
+                  const devText = iss.details?.text || '';
+                  if (prodText === devText) return iss;
+                  const marker = 'The correct display is one of';
+                  if (prodText.includes(marker) && devText.includes(marker)) {
+                    const prodPrefix = prodText.split(marker)[0];
+                    const devPrefix = devText.split(marker)[0];
+                    if (prodPrefix === devPrefix) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: prodText },
+                      };
+                    }
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
     id: 'vsac-modifier-extension-error',
     description: 'Dev fails to process VSAC ValueSets with vsacOpModifier extension in exclude filters. Returns generic "Cannot process resource" business-rule error instead of proper validation. Both servers return result=false but for different reasons. Affects 3 POST /r4/ValueSet/$validate-code records.',
     kind: 'temp-tolerance',

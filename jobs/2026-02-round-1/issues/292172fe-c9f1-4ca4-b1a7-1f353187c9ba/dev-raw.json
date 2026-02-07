@@ -1,0 +1,74 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "6736007"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Moderate"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "6736007",
+            "display": "Moderate"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "text": "'Moderate' is no longer considered a correct display for code '6736007' (status = inactive). The correct display is one of Midgrade,Moderate (severity modifier) (qualifier value),Moderate (severity modifier),Moderate severity",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ]
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "INACTIVE_DISPLAY_FOUND"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n5ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Analysing http://hl7.org/fhir/ValueSet/condition-severity|4.0.1 for validation purposes\n5ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Prepare include[0]: \"()\"\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Validate \"[undefined#6736007 (\"Moderate\")]\"\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Check \"http://snomed.info/sct#6736007\"\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: check code in () at CodeableConcept.coding[0]\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Code \"6736007\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ]
+}

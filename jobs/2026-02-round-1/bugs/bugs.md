@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_31 bugs (28 open, 3 closed)_
+_32 bugs (29 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1732,6 +1732,43 @@ Tolerance `validate-code-undefined-system-result-disagrees` matches POST $valida
 #####Representative record
 
 `a27be88a-8e1e-4ce8-8167-af0515f294d3` — POST /r4/ValueSet/$validate-code, SNOMED 48546005 in IPS medication ValueSet. Prod: result=true, display="Product containing diazepam (medicinal product)". Dev: result=false, "No valid coding was found for the value set".
+
+---
+
+### [ ] `40c3ecc` Dev prepends filter-miss details to validate-code message when result=false
+
+Records-Impacted: 32
+Tolerance-ID: validate-code-filter-miss-message-prefix
+Record-ID: 6d44fc66-34dd-4ebe-889e-02cf345990f3
+
+#####What differs
+
+On $validate-code requests against ValueSets with include filters, when the code is not found (result=false on both sides), dev prepends "Code X is not in the specified filter; " to its `message` parameter. Prod returns only the standard error message (e.g. "No valid coding was found for the value set '...'").
+
+Example (record 6d44fc66):
+- Prod message: "No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"
+- Dev message: "Code 385049006 is not in the specified filter; No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"
+
+Dev repeats the filter-miss prefix once per include filter in the ValueSet. Some records have 17+ repetitions (e.g. IPS results-coded-values-laboratory-pathology with 17 include filters).
+
+Both sides agree on result=false. The only difference is dev's message has extraneous filter-checking details prepended. This is the result=false variant of bug eaeccdd (which covers result=true, where prod omits message entirely).
+
+#####How widespread
+
+32 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=false on both sides. Found via:
+```
+grep 'is not in the specified filter' results/deltas/deltas.ndjson | wc -l  → 32
+```
+
+All are validate-code / content-differs. 30 have message as the only diff; 2 also have a version diff (SNOMED version skew, separate issue).
+
+ValueSets affected include medication-form-codes, problems-uv-ips, vaccines-uv-ips, results-coded-values-laboratory-pathology-uv-ips, and others with SNOMED include filters.
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-filter-miss-message-prefix
+Matches: validate-code where result=false on both sides, dev's message ends with prod's message, and the extra prefix contains "is not in the specified filter".
+Normalizes: sets dev's message to prod's message value.
 
 ---
 

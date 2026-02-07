@@ -1,0 +1,29 @@
+{
+  "id": "292172fe-c9f1-4ca4-b1a7-1f353187c9ba",
+  "url": "/r4/ValueSet/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 2100,
+    "hash": "6b1b3bb96162b2512f7ac302540c95a6"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 2259,
+    "hash": "a5c6855c0b17630e438376cb87b42325"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"6736007\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Midgrade\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"6736007\",\"display\" : \"Moderate\"}]}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"INACTIVE_DISPLAY_FOUND\"}],\"severity\" : \"warning\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"display-comment\"}],\"text\" : \"'Moderate' is no longer considered a correct display for code '6736007' (status = inactive). The correct display is one of Midgrade\"},\"location\" : [\"CodeableConcept.coding[0].display\"],\"expression\" : [\"CodeableConcept.coding[0].display\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/condition-severity|4.0.1 for validation purposes\\r\\n16 0    : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n16 0    : 0ms  : Prepare include: \\\"(http://snomed.info/sct)(24484000,6736007,255604002)\\\"\\r\\n16 0    : 0ms  : CodeSystem found: \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\"\\r\\n16 0    : 0ms  : Validate \\\"[http://snomed.info/sct#6736007 (\\\"Moderate\\\")]\\\"\\r\\n16 0    : 0ms  : Check \\\"http://snomed.info/sct#6736007\\\"\\r\\n16 0    : 0ms  : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\\r\\n16 0    : 0ms  : check code in (http://snomed.info/sct)(24484000,6736007,255604002) at CodeableConcept.coding[0]\\r\\n16 0    : 0ms  : Code \\\"6736007\\\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"6736007\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Moderate\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"6736007\",\"display\":\"Moderate\"}]}},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"warning\",\"code\":\"invalid\",\"details\":{\"text\":\"'Moderate' is no longer considered a correct display for code '6736007' (status = inactive). The correct display is one of Midgrade,Moderate (severity modifier) (qualifier value),Moderate (severity modifier),Moderate severity\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"display-comment\"}]},\"location\":[\"CodeableConcept.coding[0].display\"],\"expression\":[\"CodeableConcept.coding[0].display\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"INACTIVE_DISPLAY_FOUND\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n5ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Analysing http://hl7.org/fhir/ValueSet/condition-severity|4.0.1 for validation purposes\\n5ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Prepare include[0]: \\\"()\\\"\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: CodeSystem found: \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\"\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Validate \\\"[undefined#6736007 (\\\"Moderate\\\")]\\\"\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Check \\\"http://snomed.info/sct#6736007\\\"\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: check code in () at CodeableConcept.coding[0]\\n6ms http://hl7.org/fhir/ValueSet/condition-severity|4.0.1: Code \\\"6736007\\\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"}]}"
+}

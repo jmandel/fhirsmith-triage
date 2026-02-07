@@ -1389,5 +1389,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "40c3ecc4093816c1dc719bd11ea945ac2b21cb971e65be6c8525a05d7e7bb01c",
+        "human_id": "40c3ecc",
+        "create_time": {
+            "timestamp": 1770492863,
+            "time": "2026-02-07T13:34:23-06:00",
+            "lamport": 33
+        },
+        "edit_time": {
+            "timestamp": 1770492868,
+            "time": "2026-02-07T13:34:28-06:00",
+            "lamport": 166
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev prepends filter-miss details to validate-code message when result=false",
+        "actors": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+                "human_id": "7eecc78",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "7eecc78e753b1870e823ee68848c7e677b7f046ed4b09570748ddd16dcf6d9de",
+            "human_id": "7eecc78",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
