@@ -1,0 +1,5 @@
+expand-metadata-identifier-timestamp: normalize
+expand-dev-includeDefinition-param: normalize
+expand-used-codesystem-version-skew: normalize
+expand-display-text-differs: normalize
+expand-unclosed-extension-and-total: normalize

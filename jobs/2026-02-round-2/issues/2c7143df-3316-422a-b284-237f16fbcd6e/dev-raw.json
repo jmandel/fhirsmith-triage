@@ -1,0 +1,1069 @@
+{
+  "resourceType": "ValueSet",
+  "status": "active",
+  "expansion": {
+    "timestamp": "2026-02-07T08:41:08.849Z",
+    "identifier": "urn:uuid:cdf2dbe2-663e-46eb-a89a-45a29f6547a5",
+    "parameter": [
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "includeDefinition",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201"
+      }
+    ],
+    "offset": 0,
+    "total": 207,
+    "contains": [
+      {
+        "system": "http://snomed.info/sct",
+        "code": "3067005",
+        "display": "Blood group antigen C^u^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "6800004",
+        "display": "Blood group antigen E^u^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "16345006",
+        "display": "Blood group antigen G^u^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "24403008",
+        "display": "Blood group antigen p"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "25132006",
+        "display": "Blood group antigen N>2<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "25384006",
+        "display": "Blood group antigen S>2<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "34850003",
+        "display": "Blood group antigen Fy^x^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "38194003",
+        "display": "Blood group antigen e^i^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "45597001",
+        "display": "Blood group antigen A>3<B"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "57652005",
+        "display": "Blood group antigen V^u^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "58460004",
+        "display": "Blood group antigen O (ABO blood group)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "64553001",
+        "display": "Secretor gene absent (se)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "65087006",
+        "display": "Blood group antigen M>2<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "74836001",
+        "display": "Secretor gene present (Se)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "79248008",
+        "display": "Blood group antigen A>1<B"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "81835007",
+        "display": "Blood group antigen c^v^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "88942003",
+        "display": "Blood group antigen A>2<B"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "89109006",
+        "display": "Blood group antigen D^u^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "103225004",
+        "display": "Blood group antigen P>2<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "112143006",
+        "display": "ABO group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "112144000",
+        "display": "Blood group A (ABO blood group)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "112149005",
+        "display": "Blood group B (ABO blood group)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115730009",
+        "display": "Hh blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115731008",
+        "display": "Blood group O>h< Bombay"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115732001",
+        "display": "Blood group O>h< Bombay Indian type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115734000",
+        "display": "Blood group O>h< Bombay Reunion type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115735004",
+        "display": "Blood group Para-Bombay"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115736003",
+        "display": "Blood group A>h<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115737007",
+        "display": "Blood group B>h<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115748000",
+        "display": "Lewis blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115749008",
+        "display": "Le(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115750008",
+        "display": "I blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115751007",
+        "display": "i>cord< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115752000",
+        "display": "i>adult< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115753005",
+        "display": "i>1< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115754004",
+        "display": "i>2< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115755003",
+        "display": "I phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115756002",
+        "display": "I>int< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115758001",
+        "display": "Rh blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115759009",
+        "display": "Rh>null< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115760004",
+        "display": "X^o^rX^o^r blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115761000",
+        "display": "Rr^-^ blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115762007",
+        "display": "Rh>mod< blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115763002",
+        "display": "Trans weak D phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115764008",
+        "display": "Inherited weak D phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115794002",
+        "display": "P blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115795001",
+        "display": "P>1< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115796000",
+        "display": "P>1<^k^ phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115797009",
+        "display": "P>2<^k^ phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115798004",
+        "display": "Landsteiner-Wiener phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115799007",
+        "display": "LW(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115800006",
+        "display": "MNS blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115801005",
+        "display": "M^k^M^k^ phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115802003",
+        "display": "U- phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115803008",
+        "display": "En(a-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115804002",
+        "display": "En(a-)(Fin) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115805001",
+        "display": "En(a-)(UK) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115821006",
+        "display": "Lutheran blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115822004",
+        "display": "Lutheran negative phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115823009",
+        "display": "LuLu phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115824003",
+        "display": "dominant Lu(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115825002",
+        "display": "XS2 phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115826001",
+        "display": "Acquired Lu(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115827005",
+        "display": "Lutheran weak phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115830003",
+        "display": "Kidd blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115831004",
+        "display": "Jk(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115832006",
+        "display": "JkJk phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115833001",
+        "display": "In(Jk) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115834007",
+        "display": "Duffy blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115835008",
+        "display": "Fy(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115837000",
+        "display": "Kell blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115838005",
+        "display": "Kell>null< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115839002",
+        "display": "Kell>mod< phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115844009",
+        "display": "Kx blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115845005",
+        "display": "McLeod phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115851000",
+        "display": "Colton blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115852007",
+        "display": "Co(a-b-) phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115853002",
+        "display": "Gerbich blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115854008",
+        "display": "Gerbich positive phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115855009",
+        "display": "Gerbich negative phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115860008",
+        "display": "Cromer blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115861007",
+        "display": "Inab phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115866002",
+        "display": "Chido-Rodgers blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115867006",
+        "display": "Ch-Rg- phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "115940004",
+        "display": "Blood group phenotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131149001",
+        "display": "Blood group A>1<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131150001",
+        "display": "Blood group A>2<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131151002",
+        "display": "Blood group A>3<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131152009",
+        "display": "Blood group A>x<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131153004",
+        "display": "Blood group A>m<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131154005",
+        "display": "Blood group A>y<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131155006",
+        "display": "Blood group A>end<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131156007",
+        "display": "Blood group A>el<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131157003",
+        "display": "Blood group antigen A variant"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131158008",
+        "display": "B subgroup"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131159000",
+        "display": "Blood group B>3<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131160005",
+        "display": "Blood group B>m<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131161009",
+        "display": "Blood group B>el<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131162002",
+        "display": "Blood group B>w<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131163007",
+        "display": "Blood group B>x<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131164001",
+        "display": "Blood group A>m<^h^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131165000",
+        "display": "Blood group B>m<^h^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131166004",
+        "display": "Blood group O>m<^h^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131167008",
+        "display": "Blood group O>Hm<"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131168003",
+        "display": "Blood group O>Hm<^A^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131169006",
+        "display": "Blood group O>Hm<^B^"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131178000",
+        "display": "Gerbich type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131179008",
+        "display": "Yus type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131180006",
+        "display": "Melasian type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "131181005",
+        "display": "Leach type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "165743006",
+        "display": "Group AB"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "165746003",
+        "display": "Rh negative"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "165747007",
+        "display": "Rhesus positive"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "165751009",
+        "display": "Duffy blood group"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250376006",
+        "display": "Rh negative Du positive"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250389000",
+        "display": "Kell antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250390009",
+        "display": "Duffy antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250391008",
+        "display": "Kidd antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250392001",
+        "display": "MNS antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250394000",
+        "display": "Landsteiner-Weiner antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250395004",
+        "display": "Cartwright antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250396003",
+        "display": "Diego antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250397007",
+        "display": "Chido-Rogers antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250398002",
+        "display": "H antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250399005",
+        "display": "Kx antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "250400003",
+        "display": "Low incidence antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278147001",
+        "display": "Blood group O Rh(D) positive"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278148006",
+        "display": "Group O neg"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278149003",
+        "display": "Blood group A Rh(D) positive"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278150003",
+        "display": "Group B pos"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278151004",
+        "display": "Blood group AB Rh(D) positive"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278152006",
+        "display": "Group A neg"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278153001",
+        "display": "Blood group B Rh(D) negative"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "278154007",
+        "display": "Group AB neg"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365637002",
+        "display": "ABO blood group"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365638007",
+        "display": "Rh blood group - finding"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365640002",
+        "display": "Common composite blood groups - finding"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365641003",
+        "display": "Minor blood groups"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365642005",
+        "display": "Blood group antigen type - finding"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365643000",
+        "display": "Rh antigen type"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "365645007",
+        "display": "Rh genotype"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405847005",
+        "display": "Fy(a+b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405848000",
+        "display": "Fy(a-b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405849008",
+        "display": "Fy(a+b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405850008",
+        "display": "Fy(a-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405851007",
+        "display": "Fy(a+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405852000",
+        "display": "Fy(b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405853005",
+        "display": "Fy(b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405854004",
+        "display": "Jk(a+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405855003",
+        "display": "Jk(a+b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405856002",
+        "display": "Jk(a+b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405857006",
+        "display": "Jk(a-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405858001",
+        "display": "Jk(a-b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405859009",
+        "display": "Jk(b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405860004",
+        "display": "Jk(b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405861000",
+        "display": "Le(a+b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405862007",
+        "display": "Le(a-b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405863002",
+        "display": "Le(a-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405864008",
+        "display": "Le(a+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405865009",
+        "display": "Le(b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405866005",
+        "display": "Le(b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405868006",
+        "display": "Lu(a-b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405869003",
+        "display": "Lu(a+b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405870002",
+        "display": "Lu(a+b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405871003",
+        "display": "Lu(a-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405872005",
+        "display": "Lu(a+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405873000",
+        "display": "Lu(b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405874006",
+        "display": "Lu(b-) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405875007",
+        "display": "M+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405876008",
+        "display": "M- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405877004",
+        "display": "Le(a+b+) phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405878009",
+        "display": "N+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405879001",
+        "display": "N- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405880003",
+        "display": "M-N- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405881004",
+        "display": "M+N- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405882006",
+        "display": "M+N+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405883001",
+        "display": "M-N+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405884007",
+        "display": "S- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405885008",
+        "display": "S+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405886009",
+        "display": "s- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405887000",
+        "display": "s+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405888005",
+        "display": "S+s+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405889002",
+        "display": "S-s+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405890006",
+        "display": "S-s- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405891005",
+        "display": "S+s- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405892003",
+        "display": "K+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405893008",
+        "display": "K- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405894002",
+        "display": "k- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405895001",
+        "display": "k+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405896000",
+        "display": "K+k+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405897009",
+        "display": "K+k- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405898004",
+        "display": "K-k- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405899007",
+        "display": "K-k+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405900002",
+        "display": "P1+ phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "405901003",
+        "display": "P1- phenotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406002002",
+        "display": "cde haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406003007",
+        "display": "Cde haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406004001",
+        "display": "cdE haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406005000",
+        "display": "CDe haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406006004",
+        "display": "cDE haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406007008",
+        "display": "cDe haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406008003",
+        "display": "CdE haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "406009006",
+        "display": "CDE haplotype (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "733119003",
+        "display": "Rhc negative (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "733120009",
+        "display": "Rhc positive (finding)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1162254004",
+        "display": "Fetal blood group Rhesus negative"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "1162255003",
+        "display": "Fetal blood group Rhesus positive (finding)"
+      }
+    ]
+  }
+}

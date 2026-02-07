@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_17 bugs (16 open, 1 closed)_
+_18 bugs (17 open, 1 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -929,6 +929,44 @@ Tolerance `message-concat-selective-issues` matches validate-code records where:
 - Dev's message is a proper substring of prod's message (prod includes more issue texts)
 
 Canonicalizes dev's message to prod's value. Eliminates 10 records.
+
+---
+
+### [ ] `b36a12b` validate-code: unknown version message says 'no versions known' when valid versions exist
+
+Records-Impacted: 50
+Tolerance-ID: unknown-version-no-versions-known
+Record-ID: f8badb02-7ec3-4624-a906-eec8ec9f5656
+
+#####What differs
+
+When validating a code against a CodeSystem with a version that doesn't exist, but other versions of the CodeSystem are known:
+
+- **Prod** returns: "A definition for CodeSystem '...' version 'X' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+- **Dev** returns: "A definition for CodeSystem '...' version 'X' could not be found, so the code cannot be validated. No versions of this code system are known"
+
+Additionally, the `x-caused-by-unknown-system` parameter differs:
+- **Prod**: includes the version suffix (e.g., `...England-GenomicTestDirectory|9`)
+- **Dev**: omits the version suffix (e.g., `...England-GenomicTestDirectory`)
+
+The OperationOutcome message-id also differs:
+- **Prod**: `UNKNOWN_CODESYSTEM_VERSION`
+- **Dev**: `UNKNOWN_CODESYSTEM_VERSION_NONE`
+
+Dev's message is factually incorrect — it claims "No versions of this code system are known" but it does know version 0.1.0 (proven by 40 other records for the same code system that validate successfully against version 0.1.0).
+
+#####How widespread
+
+All 50 impacted records are $validate-code operations against `https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory` with requested versions 7 (40 records) or 9 (10 records). Neither version exists — only 0.1.0 is valid.
+
+Search: `grep 'No versions of this code system are known' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 50
+All 50 are for England-GenomicTestDirectory. All 50 also have "Valid versions:" in prod.
+
+The pattern may apply more broadly to any CodeSystem where a nonexistent version is requested but other versions are loaded.
+
+#####What the tolerance covers
+
+Tolerance `unknown-version-no-versions-known` normalizes the message text, OperationOutcome details, x-caused-by-unknown-system, and message-id for records matching this pattern: both result=false, prod message contains "Valid versions:", dev message contains "No versions of this code system are known". Eliminates 50 records.
 
 ---
 

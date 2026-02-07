@@ -762,5 +762,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "b36a12bc75c59b8085c368ac74ce291727c09a17c340cb2619297a39ac0f2d86",
+        "human_id": "b36a12b",
+        "create_time": {
+            "timestamp": 1770506156,
+            "time": "2026-02-07T17:15:56-06:00",
+            "lamport": 19
+        },
+        "edit_time": {
+            "timestamp": 1770506161,
+            "time": "2026-02-07T17:16:01-06:00",
+            "lamport": 96
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "validate-code: unknown version message says 'no versions known' when valid versions exist",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

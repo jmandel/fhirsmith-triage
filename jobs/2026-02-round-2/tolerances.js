@@ -2580,6 +2580,84 @@ const tolerances = [
   },
 
   {
+    id: 'expand-snomed-version-skew-content',
+    description: 'Dev loads SNOMED CT edition 20240201 while prod loads 20250201, causing $expand to return different code sets. Codes added/removed between editions appear as extra/missing in the expansion. Normalizes both sides to the intersection of codes and adjusts total. Affects 40 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '9fd2328',
+    tags: ['normalize', 'expand', 'version-skew', 'snomed'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+
+      // Check that at least one used-codesystem is SNOMED (in normalized bodies)
+      const allParams = [
+        ...(prod.expansion.parameter || []),
+        ...(dev.expansion.parameter || []),
+      ];
+      const hasSnomedCs = allParams.some(p =>
+        p.name === 'used-codesystem' &&
+        (p.valueUri || '').includes('snomed.info/sct')
+      );
+      if (!hasSnomedCs) return null;
+
+      // Check SNOMED version skew from raw bodies (before earlier normalizations)
+      try {
+        const rawProd = JSON.parse(record.prodBody);
+        const rawDev = JSON.parse(record.devBody);
+        const rawProdSnomed = (rawProd.expansion?.parameter || [])
+          .filter(p => p.name === 'used-codesystem' && (p.valueUri || '').includes('snomed.info/sct'))
+          .map(p => p.valueUri);
+        const rawDevSnomed = (rawDev.expansion?.parameter || [])
+          .filter(p => p.name === 'used-codesystem' && (p.valueUri || '').includes('snomed.info/sct'))
+          .map(p => p.valueUri);
+        if (rawProdSnomed.length === 0 || rawDevSnomed.length === 0) return null;
+        if (JSON.stringify(rawProdSnomed.sort()) === JSON.stringify(rawDevSnomed.sort())) return null;
+      } catch {
+        return null;
+      }
+
+      // Check code membership actually differs
+      const prodCodes = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devCodes = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      let hasExtra = false;
+      for (const k of devCodes) { if (!prodCodes.has(k)) { hasExtra = true; break; } }
+      if (!hasExtra) {
+        for (const k of prodCodes) { if (!devCodes.has(k)) { hasExtra = true; break; } }
+      }
+      if (!hasExtra) return null;
+
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodKeys = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devKeys = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      const commonKeys = new Set([...prodKeys].filter(k => devKeys.has(k)));
+
+      const filterContains = (contains) =>
+        contains.filter(c => commonKeys.has(c.system + '|' + c.code));
+
+      const newProd = {
+        ...prod,
+        expansion: {
+          ...prod.expansion,
+          contains: filterContains(prod.expansion.contains),
+          total: commonKeys.size,
+        },
+      };
+      const newDev = {
+        ...dev,
+        expansion: {
+          ...dev.expansion,
+          contains: filterContains(dev.expansion.contains),
+          total: commonKeys.size,
+        },
+      };
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
     id: 'expand-v3-hierarchical-incomplete',
     description: 'Dev $expand returns only the root abstract concept for v3 hierarchical ValueSets (v3-ActEncounterCode, v3-ServiceDeliveryLocationRoleType, v3-PurposeOfUse, v3-ActPharmacySupplyType), missing all descendant codes. Prod returns the full hierarchy. 246 records across 4 ValueSets.',
     kind: 'temp-tolerance',
