@@ -331,6 +331,27 @@ const tolerances = [
   },
 
   {
+    id: 'temp-snomed-version-mismatch',
+    description: 'SNOMED CT version mismatch: dev loads older editions than prod. International: 20250201 vs 20240201 (239 records), US: 20250901 vs 20230301 (39 records). Affects 281 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '4abd03a',
+    match({ record, prod, dev }) {
+      if (!/\$validate-code/.test(record.url)) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodVersion = getParamValue(prod, 'version');
+      const devVersion = getParamValue(dev, 'version');
+      if (!prodVersion || !devVersion || prodVersion === devVersion) return null;
+      // Match SNOMED version URIs: http://snomed.info/sct/<module>/version/<date>
+      const snomedVersionRe = /^http:\/\/snomed\.info\/sct\/\d+\/version\/\d+$/;
+      if (snomedVersionRe.test(prodVersion) && snomedVersionRe.test(devVersion)) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      return both(ctx, body => stripParams(body, 'version'));
+    },
+  },
+
+  {
     id: 'temp-validate-code-display-differs',
     description: 'validate-code display parameter differs between prod and dev across UCUM (prod echoes code, dev returns name), SNOMED (different preferred terms), and BCP47 (format). 286 display-only P6 records.',
     kind: 'temp-tolerance',
