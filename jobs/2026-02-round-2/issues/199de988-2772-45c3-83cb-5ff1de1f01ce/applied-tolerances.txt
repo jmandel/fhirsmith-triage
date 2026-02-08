@@ -1,0 +1,4 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+strip-oo-message-id-extension: normalize
+hl7-terminology-cs-version-skew: normalize

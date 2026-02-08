@@ -2674,6 +2674,56 @@ const tolerances = [
   },
 
   {
+    id: 'oo-missing-location-post-version-skew',
+    description: 'Catches OperationOutcome location field differences that oo-missing-location-field (line 186) misses due to pipeline ordering. When records have extra status-check issues in prod that hl7-terminology-cs-version-skew strips, the issue arrays are misaligned at the time oo-missing-location-field runs, so it cannot match. After version-skew normalization aligns the arrays, this tolerance strips location from prod issues where location equals expression and dev lacks it. Same root cause as bug a9cf20c. Affects ~247 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: 'a9cf20c',
+    tags: ['normalize', 'operationoutcome', 'missing-location'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const pi = prodIssues.issue[i];
+        const di = devIssues.issue[i];
+        if (!di) continue;
+        if (pi.location && !di.location &&
+            JSON.stringify(pi.location) === JSON.stringify(pi.expression)) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function stripLocation(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map(iss => {
+                  if (!iss.location) return iss;
+                  if (JSON.stringify(iss.location) === JSON.stringify(iss.expression)) {
+                    const { location, ...rest } = iss;
+                    return rest;
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod: stripLocation(prod), dev };
+    },
+  },
+
+  {
     id: 'expand-hl7-terminology-version-skew-content',
     description: 'Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) than prod, causing $expand to return different sets of codes. The common codes between prod and dev are identical — only extra/missing codes differ. Normalizes both sides to the intersection of codes and adjusts total. Affects 163 expand records across consent-policy (7), observation-category (130), patient-contactrelationship (5), TribalEntityUS (3), security-labels (18).',
     kind: 'temp-tolerance',

@@ -1,0 +1,53 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "encounter-diagnosis"
+    },
+    {
+      "name": "display",
+      "valueString": "Encounter Diagnosis"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|4.0.1'"
+            },
+            "expression": [
+              "code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|4.0.1'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/condition-category"
+    },
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    }
+  ],
+  "resourceType": "Parameters"
+}

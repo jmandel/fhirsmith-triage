@@ -1,0 +1,29 @@
+{
+  "id": "199de988-2772-45c3-83cb-5ff1de1f01ce",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-problem-or-health-concern&code=encounter-diagnosis&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fcondition-category",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1701,
+    "hash": "1beed434322dd56eb913e30d10081131"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1194,
+    "hash": "e35acac5fea011b5f72eb3c8737f981c"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"version\",\"valueString\" : \"4.0.1\"},{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/condition-category\"},{\"name\" : \"code\",\"valueCode\" : \"encounter-diagnosis\"},{\"name\" : \"display\",\"valueString\" : \"Encounter Diagnosis\"},{\"name\" : \"message\",\"valueString\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"MSG_DRAFT\"}],\"severity\" : \"information\",\"code\" : \"business-rule\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"status-check\"}],\"text\" : \"Reference to draft CodeSystem http://terminology.hl7.org/CodeSystem/condition-category|4.0.1 from hl7.fhir.r4.core#4.0.1\"}},{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"None_of_the_provided_codes_are_in_the_value_set_one\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-in-vs\"}],\"text\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"version\",\"valueString\":\"2.0.0\"},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/condition-category\"},{\"name\":\"code\",\"valueCode\":\"encounter-diagnosis\"},{\"name\":\"display\",\"valueString\":\"Encounter Diagnosis\"},{\"name\":\"message\",\"valueString\":\"The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}}]}"
+}

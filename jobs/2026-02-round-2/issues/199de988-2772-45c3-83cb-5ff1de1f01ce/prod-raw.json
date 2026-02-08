@@ -1,0 +1,81 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/condition-category"
+    },
+    {
+      "name": "code",
+      "valueCode": "encounter-diagnosis"
+    },
+    {
+      "name": "display",
+      "valueString": "Encounter Diagnosis"
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem http://terminology.hl7.org/CodeSystem/condition-category|4.0.1 from hl7.fhir.r4.core#4.0.1"
+            }
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://terminology.hl7.org/CodeSystem/condition-category#encounter-diagnosis' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-problem-or-health-concern|9.0.0-ballot'"
+            },
+            "location": [
+              "code"
+            ],
+            "expression": [
+              "code"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}
