@@ -2674,6 +2674,55 @@ const tolerances = [
   },
 
   {
+    id: 'missing-retired-status-check-issue',
+    description: 'Prod emits informational status-check issues about retired resources referenced in ValueSet compositions (e.g., "Reference to retired ValueSet ..."). Dev omits these entirely. Strips retired status-check issues from prod when dev does not have them. Affects ~13 validate-code records on security-labels ValueSet.',
+    kind: 'temp-tolerance',
+    bugId: 'd05a4a6',
+    tags: ['normalize', 'validate-code', 'status-check', 'retired'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      // Check if prod has retired status-check issues that dev doesn't
+      const prodHasRetiredStatusCheck = prodIssues.issue.some(iss => {
+        const coding = iss.details?.coding || [];
+        const isStatusCheck = coding.some(c => c.code === 'status-check');
+        const isRetired = (iss.details?.text || '').includes('retired');
+        return isStatusCheck && isRetired;
+      });
+      const devHasRetiredStatusCheck = devIssues.issue.some(iss => {
+        const coding = iss.details?.coding || [];
+        const isStatusCheck = coding.some(c => c.code === 'status-check');
+        const isRetired = (iss.details?.text || '').includes('retired');
+        return isStatusCheck && isRetired;
+      });
+      if (prodHasRetiredStatusCheck && !devHasRetiredStatusCheck) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev, record }) {
+      function stripRetiredStatusCheck(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter(iss => {
+              const coding = iss.details?.coding || [];
+              const isStatusCheck = coding.some(c => c.code === 'status-check');
+              const isRetired = (iss.details?.text || '').includes('retired');
+              return !(isStatusCheck && isRetired);
+            });
+            if (filtered.length === 0) return null;
+            return { ...p, resource: { ...p.resource, issue: filtered } };
+          }).filter(Boolean),
+        };
+      }
+      return { prod: stripRetiredStatusCheck(prod), dev };
+    },
+  },
+
+  {
     id: 'oo-missing-location-post-version-skew',
     description: 'Catches OperationOutcome location field differences that oo-missing-location-field (line 186) misses due to pipeline ordering. When records have extra status-check issues in prod that hl7-terminology-cs-version-skew strips, the issue arrays are misaligned at the time oo-missing-location-field runs, so it cannot match. After version-skew normalization aligns the arrays, this tolerance strips location from prod issues where location equals expression and dev lacks it. Same root cause as bug a9cf20c. Affects ~247 validate-code records.',
     kind: 'temp-tolerance',

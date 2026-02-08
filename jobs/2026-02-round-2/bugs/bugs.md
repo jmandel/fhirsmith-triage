@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_30 bugs (27 open, 3 closed)_
+_31 bugs (26 open, 5 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -139,43 +139,9 @@ This bug now covers 2 tolerances:
 
 ---
 
-### [ ] `2337986` Dev returns 404 instead of 422 when ValueSet not found for $expand
-
-Records-Impacted: 756
-Tolerance-ID: expand-valueset-not-found-status-mismatch
-Record-ID: 8b7a9262-90d3-4753-a197-9a631ffdcf2f
+### [ ] `2337986` 
 
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
--H 'Accept: application/fhir+json'
-```
-
-Prod returns HTTP 422 with `issue.code: "unknown"` and `issue.details.text`, dev returns HTTP 404 with `issue.code: "not-found"` and `issue.diagnostics`.
-
-
-When a ValueSet cannot be found for a $expand operation, prod returns HTTP 422 (Unprocessable Entity) with an OperationOutcome using issue code `unknown` and `details.text`, while dev returns HTTP 404 (Not Found) with issue code `not-found` and `diagnostics`. Both communicate the same semantic meaning ("this ValueSet doesn't exist"), but the HTTP status code and OperationOutcome structure differ.
-
-Prod response (status 422):
-- issue.code: "unknown"
-- issue.details.text: "Unable to find value set for URL \"...\""
-
-Dev response (status 404):
-- issue.code: "not-found"
-- issue.diagnostics: "ValueSet not found: ..."
-
-
-756 records in the comparison dataset show this exact pattern (prod=422, dev=404). All are $expand operations (722 GET, 34 POST) across many different ValueSet URLs. The pattern is universal — every prod=422/dev=404 status mismatch is an $expand of an unknown ValueSet.
-
-Search used: `grep -c '"prodStatus":422,"devStatus":404' results/deltas/deltas.ndjson`
-
-
-Tolerance ID: `expand-valueset-not-found-status-mismatch`
-Matches: $expand operations where prod=422 and dev=404, and both responses are OperationOutcomes indicating a ValueSet was not found.
-Records eliminated: 756
 
 ---
 
@@ -292,9 +258,47 @@ Eliminates 187 records.
 
 ### [ ] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
 
-Records-Impacted: 32
-Tolerance-ID: hl7-terminology-cs-version-skew
-Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21
+Records-Impacted: ~457
+Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21, ef77e7ca-9afa-4325-a1f3-a939a62a490f, 7813f9ee-79ee-445b-8064-603a98e876bf
+Tolerance-ID: hl7-terminology-cs-version-skew, expand-hl7-terminology-version-skew-params, expand-hl7-terminology-version-skew-content
+
+#####Summary
+
+Dev loads older/different versions of HL7 terminology CodeSystems (`http://terminology.hl7.org/CodeSystem/*`) than prod. For example, prod loads `consentcategorycodes` at version `4.0.1` while dev loads `1.0.1`; prod loads `observation-category` at `4.0.1` while dev loads `2.0.0`. This version skew is the single root cause behind three distinct manifestations affecting both `$validate-code` and `$expand` operations.
+
+Known affected CodeSystems and their version mismatches:
+- `consentcategorycodes`: prod=4.0.1, dev=1.0.1
+- `goal-achievement`: prod=4.0.1, dev=1.0.1
+- `observation-category`: prod=4.0.1, dev=2.0.0
+- `consentpolicycodes`: prod=4.0.1, dev=3.0.1
+- `condition-category`: prod=4.0.1, dev=2.0.0
+- `v2-0116`: prod=2.9, dev=3.0.0
+
+#####Tolerances
+
+######1. `hl7-terminology-cs-version-skew` (~58 records)
+
+**What it handles**: `$validate-code` responses where the only differences are version strings in the `version` parameter, `message` text, and `issues` OperationOutcome `details.text`. Also strips draft `status-check` informational issues that prod includes but dev omits (because dev loads a version that lacks the draft status metadata). Both servers agree on validation results for all affected codes.
+
+**Normalizes**: Dev's version parameter and version strings in message/issues text to prod's values; strips prod's draft status-check issues.
+
+**Representative record**: `04364a8a-acce-491a-8018-9ac010d47d21` — validate-code for `consentcategorycodes` where prod says "version '4.0.1'", dev says "version '1.0.1'".
+
+######2. `expand-hl7-terminology-version-skew-params` (~236 records)
+
+**What it handles**: `$expand` responses where the `expansion.parameter` entries differ due to version skew. The `used-codesystem` version strings differ (e.g., `observation-category|4.0.1` vs `|2.0.0`) and prod includes `warning-draft` parameters that dev omits.
+
+**Normalizes**: `used-codesystem` versions for `terminology.hl7.org` systems to prod's values; strips `warning-draft` parameters from both sides.
+
+**Representative record**: `ef77e7ca-9afa-4325-a1f3-a939a62a490f` — expand of `us-core-simple-observation-category` where used-codesystem version and warning-draft differ.
+
+######3. `expand-hl7-terminology-version-skew-content` (~163 records)
+
+**What it handles**: `$expand` responses where prod and dev return slightly different sets of codes (1-5 extra/missing) because different CodeSystem versions include different codes. For example, dev's older `consentpolicycodes` includes `ch-epr` (removed in 4.0.1), and dev's older `observation-category` includes an extra `symptom` code. The common codes between prod and dev are identical.
+
+**Normalizes**: Both sides to the intersection of codes present in both responses; adjusts the total count accordingly.
+
+**Representative record**: `7813f9ee-79ee-445b-8064-603a98e876bf` — expand of `consent-policy` where dev returns 27 codes vs prod's 26 (extra `ch-epr`).
 
 #####Repro
 
@@ -307,36 +311,6 @@ curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.o
 ```
 
 Prod returns `version '4.0.1'`, dev returns `version '1.0.1'`.
-
-#####What differs
-
-For CodeSystems under `http://terminology.hl7.org/CodeSystem/*`, prod reports version `4.0.1` in error messages and OperationOutcome issue text, while dev reports different versions:
-
-- `consentcategorycodes`: prod=4.0.1, dev=1.0.1
-- `goal-achievement`: prod=4.0.1, dev=1.0.1
-- `consentpolicycodes`: prod=4.0.1, dev=3.0.1
-- `v2-0116`: prod=2.9, dev=3.0.0
-
-The version difference appears in:
-1. The `message` parameter valueString (e.g., "Unknown code 'idscl' in the CodeSystem '...' version '4.0.1'" vs "version '1.0.1'")
-2. The `issues` OperationOutcome `details.text` field
-
-Both servers agree on the validation result (e.g., result=false for invalid codes). The core terminology behavior is the same — only the loaded CodeSystem edition version differs.
-
-#####How widespread
-
-32 records in the delta file are affected, all validate-code operations on HL7 terminology CodeSystems. Found via:
-
-```
-grep for records where prod has version '4.0.1' and dev has '1.0.1' or '3.0.1',
-plus v2-0116 where prod=2.9, dev=3.0.0
-```
-
-All are GET requests to `/r4/ValueSet/$validate-code` or `/r4/CodeSystem/$validate-code`.
-
-#####What the tolerance covers
-
-Tolerance ID: `hl7-terminology-cs-version-skew`. Matches validate-code records where the system is under `terminology.hl7.org/CodeSystem/` and the message/issues text differs only in the version string pattern. Normalizes version strings in message text and OperationOutcome issue details.text from dev's version to prod's version.
 
 
 61e2d5c #1 Claude (AI Assistant) <>
@@ -367,6 +341,17 @@ This bug now covers 3 tolerances handling different manifestations of the same r
 ######Total impact: ~457 records across validate-code and expand operations.
 
 55 records referencing terminology.hl7.org remain in the delta file, likely involving additional patterns not yet covered by these tolerances.
+
+
+6be2dac #3 Claude (AI Assistant) <>
+
+Adding tolerance `expand-hl7-terminology-used-valueset-version-skew` to cover used-valueset version differences.
+
+The existing `expand-hl7-terminology-version-skew-params` tolerance handles used-codesystem and warning-draft parameter differences, but not used-valueset version strings. Prod reports newer HL7 terminology ValueSet versions (e.g., `|3.0.0`, `|3.1.0`) while dev reports older versions (e.g., `|2014-03-26`, `|2018-08-12`) for the same ValueSets. Same root cause — different loaded HL7 terminology editions.
+
+Also adding `expand-hl7-terminology-extra-params` to handle prod including `displayLanguage` and `warning-retired` parameters that dev omits.
+
+These tolerances affect the same 18 security-labels expand records. Updated total records impacted under this bug: ~255 (237 original + 18 new).
 
 ---
 
@@ -883,51 +868,9 @@ It skips these records entirely since no meaningful comparison is possible (dev 
 
 ---
 
-### [ ] `e02b03e` Prod HGVS timeout: 62 records have prod=500 due to external service timeout, comparison invalid
-
-Records-Impacted: 62
-Tolerance-ID: skip-prod-hgvs-timeout
-Record-ID: 286d30a9-e2b8-4967-8c56-265b3f6160a6
+### [ ] `e02b03e` 
 
 
-```bash
-curl -s https://tx.fhir.org/r4/CodeSystem/'$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"BRCA1:c.3143delG p.(Gly1048ValfsTer14)"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"diagnostics","valueBoolean":true}]}'
-
-curl -s https://tx-dev.fhir.org/r4/CodeSystem/'$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"BRCA1:c.3143delG p.(Gly1048ValfsTer14)"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"diagnostics","valueBoolean":true}]}'
-```
-
-Prod returns HTTP 500 with OperationOutcome: "Error parsing HGVS response: Read timed out." Dev returns HTTP 200 with Parameters: result=false, indicating the HGVS code is unknown.
-
-
-Prod returns HTTP 500 with an OperationOutcome error: "Error parsing HGVS response: Read timed out." Dev returns HTTP 200 with a proper Parameters response (result=false, code not found in http://varnomen.hgvs.org version 2.0).
-
-Prod's 500 is a transient failure — the prod server timed out calling an external HGVS validation service during data collection. Dev processes the same code locally and returns a valid terminology response.
-
-
-62 records in the comparison dataset. All share:
-- System: http://varnomen.hgvs.org
-- Operation: $validate-code (POST /r4/CodeSystem/$validate-code?)
-- Status: prod=500, dev=200
-- Category: status-mismatch
-- Prod body contains "Error parsing HGVS response: Read timed out."
-
-Search: `grep -c 'Read timed out' results/deltas/deltas.ndjson` → 62
-
-There are 124 total HGVS records in the dataset; the other 62 did not timeout and have prod=200, dev=200.
-
-
-Tolerance `skip-prod-hgvs-timeout` skips any record where prod returned 500 and the prod body contains "Read timed out". These records have unreliable comparison data since prod failed to complete the operation. Eliminates 62 records.
-
-
-286d30a9-e2b8-4967-8c56-265b3f6160a6
-
-This is a data collection artifact — the comparison data is tainted because prod experienced transient external service timeouts during the collection run. These records should be recollected in a future run.
 
 ---
 
@@ -1180,98 +1123,9 @@ Tolerance ID: `expand-too-costly-succeeds`. Matches any $expand request (any FHI
 
 ---
 
-### [x] `1bc5e64` Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)
-
-Records-Impacted: 7
-Tolerance-ID: validate-code-x-unknown-system-extra
-Record-ID: f7e61c56-3c3c-4925-8822-f0f4e4406e3f
-
-#####Repro
-
-```bash
-####Test RxNorm version 04072025
-curl -s https://tx.fhir.org/r4/ValueSet/\$validate-code \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{
-"resourceType": "Parameters",
-"parameter": [
-  {
-    "name": "url",
-    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
-  },
-  {
-    "name": "coding",
-    "valueCoding": {
-      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-      "version": "04072025",
-      "code": "1049221"
-    }
-  }
-]
-}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
-
-####Dev (same request)
-curl -s https://tx-dev.fhir.org/r4/ValueSet/\$validate-code \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{
-"resourceType": "Parameters",
-"parameter": [
-  {
-    "name": "url",
-    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
-  },
-  {
-    "name": "coding",
-    "valueCoding": {
-      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
-      "version": "04072025",
-      "code": "1049221"
-    }
-  }
-]
-}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
-```
-
-**Result**: Both servers now return identical responses with `x-unknown-system` parameter. The bug describes a scenario where prod did NOT return this parameter but dev did. The servers have converged — both now handle the unknown version the same way.
-
-#####What differs
-
-When validating a code against a ValueSet that includes codes from RxNorm or SNOMED CT, and the request pins a specific CodeSystem version, dev fails to resolve certain versions that prod resolves:
-
-- **RxNorm version `04072025`**: Dev returns "A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found". Prod resolves it (falls back to known version `??`) and performs actual validation, returning "code not found in valueset".
-- **SNOMED US edition version `20220301`** (`http://snomed.info/sct/731000124108/version/20220301`): Same pattern — dev can't find this version, prod resolves it.
-
-Dev returns `x-caused-by-unknown-system` parameter (e.g., `http://www.nlm.nih.gov/research/umls/rxnorm|04072025`) and a single OperationOutcome issue with code `not-found`. Prod omits `x-caused-by-unknown-system` and returns the actual validation result with issues like `this-code-not-in-vs` and `not-in-vs`.
-
-Both return `result=false`, but for completely different reasons: prod says "code not in valueset", dev says "can't validate because CodeSystem version not found."
-
-#####How widespread
-
-7 records in the deltas match this pattern (dev has `x-caused-by-unknown-system`, prod does not):
-- 4 records: RxNorm version 04072025
-- 3 records: SNOMED US edition version 20220301
-
-All are POST /r4/ValueSet/$validate-code operations.
-
-Search: `grep 'x-caused-by-unknown-system' deltas.ndjson` → 8 hits total, 7 where only dev has the parameter.
-
-#####What the tolerance covers
-
-Tolerance `validate-code-x-unknown-system-extra` matches validate-code records where dev has `x-caused-by-unknown-system` but prod does not. It normalizes dev's issues, message, and x-caused-by-unknown-system to match prod's values. Eliminates 7 records.
-
-Note: This tolerance previously existed but had a bug — it matched on parameter name `x-unknown-system` instead of the correct `x-caused-by-unknown-system`, so it matched 0 records. The fix corrects the parameter name.
+### [ ] `1bc5e64` 
 
 
-11bbc25 #1 Claude (AI Assistant) <>
-
-Updated scope: tolerance now covers 10 records (not 7). Three additional records use parameter name `x-unknown-system` (not `x-caused-by-unknown-system`) for SNOMED US version 20250301. Same root cause — dev doesn't recognize the CodeSystem version that prod resolves.
-
-Total breakdown:
-- 4 records: RxNorm version 04072025 (x-caused-by-unknown-system)
-- 3 records: SNOMED US version 20220301 (x-caused-by-unknown-system)  
-- 3 records: SNOMED US version 20250301 (x-unknown-system)
 
 ---
 
@@ -1746,6 +1600,35 @@ Tolerance ID: `validate-code-no-system-422`. Matches validate-code records where
 #####Representative record
 
 5ea323a9-073d-4ebf-b1ae-0a374b35c26d — GET /r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&code=TX&_format=json
+
+---
+
+### [ ] `7716e08` Dev uses R5-style property instead of R4 extension for deprecated status in expand contains
+
+Records-Impacted: 26
+Tolerance-ID: expand-r4-deprecated-status-representation
+Record-ID: 307d55c7-f148-4ddc-a360-3962e4e2fe7c
+
+#####What differs
+
+In R4 $expand responses, prod and dev represent deprecated code status differently on expansion.contains entries:
+
+- **security-labels (18 records)**: Prod uses the R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property` to convey `status: deprecated` on codes from v3-ActUSPrivacyLaw. Dev uses R5-native `property` elements directly (e.g., `"property": [{"code": "status", "valueCode": "deprecated"}]`). The R4 spec does not define `property` on `expansion.contains` — that element was introduced in R5.
+
+- **patient-contactrelationship (5 records) + v3-TribalEntityUS (3 records)**: Prod annotates deprecated codes (from v2-0131 and TribalEntityUS systems) with the same R5 backport extension. Dev omits the deprecated status annotation entirely — no extension and no property.
+
+#####How widespread
+
+26 expand records across 3 ValueSets in the delta file. All are R4 $expand operations containing codes from HL7 terminology CodeSystems that have deprecated entries.
+
+```bash
+grep 'extension-ValueSet.expansion.contains.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
+####Returns: 26
+```
+
+#####What the tolerance covers
+
+Tolerance `expand-r4-deprecated-status-representation` normalizes the representation by converting dev's R5-style `property` to R4 extension format (matching prod), and stripping prod's extension when dev has no annotation at all. This eliminates the structural difference so other content differences can still surface. Affects 26 records.
 
 ---
 

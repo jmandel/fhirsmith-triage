@@ -1,0 +1,77 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ihe:xds:scheme8"
+    },
+    {
+      "name": "x-unknown-system",
+      "valueCanonical": "urn:ihe:xds:scheme8"
+    },
+    {
+      "name": "code",
+      "valueCode": "code8"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'urn:ihe:xds:scheme8' could not be found, so the code cannot be validated; The provided code 'urn:ihe:xds:scheme8#code8' was not found in the value set 'http://hl7.org/fhir/ValueSet/security-labels|4.0.1'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "text": "A definition for CodeSystem 'urn:ihe:xds:scheme8' could not be found, so the code cannot be validated",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ]
+            },
+            "expression": [
+              "system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ]
+          },
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'urn:ihe:xds:scheme8#code8' was not found in the value set 'http://hl7.org/fhir/ValueSet/security-labels|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

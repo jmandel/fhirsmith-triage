@@ -82,13 +82,13 @@ done
 For each bug needing repro, launch a Claude Code agent (these can run in parallel):
 
 ```bash
-claude -p --dangerously-skip-permissions --model sonnet \
+claude -p --dangerously-skip-permissions --model opus \
   "$(cat prompts/repro-request.md)
 
 Bug ID: <BUG_ID>. Job directory: jobs/<job-name>."
 ```
 
-Or from a coordinating Claude Code session, use the Task tool with `subagent_type: Bash` and `run_in_background: true` to launch multiple repro agents in parallel.
+Or from a coordinating Claude Code session, use the Task tool with `subagent_type: "general-purpose"`, `model: "opus"`, and `run_in_background: true` to launch multiple repro agents in parallel.
 
 ## Step 3: Label completed repros
 

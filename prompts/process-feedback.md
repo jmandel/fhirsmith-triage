@@ -211,3 +211,41 @@ Whether the tolerance uses `skip` (drops the record entirely) or `normalize` (tr
 ### 6. Round N+1 may have new tolerances the agent added
 
 The feedback only covers Round N bugs. Round N+1's `tolerances.js` may have additional tolerances added during its own triage. Don't touch those — only modify tolerances that correspond to Round N feedback items.
+
+## Step 5: Check Round N+1 Bugs for Adjudication Overlap
+
+After applying all tolerance reclassifications, scan the Round N+1 bug list for any **new** bugs that might be covered by the same adjudication verdicts. A "won't fix" / "don't care" / "dev is correct" verdict on a Round N bug sometimes applies to a related Round N+1 bug filed independently by the triage agent.
+
+### How to check
+
+For each adjudicated pattern, search Round N+1's `bugs/bugs.md` for bugs that:
+- Involve the same code system, operation, or FHIR resource type
+- Describe the same category of difference (missing params, display text, message format, etc.)
+- Share the same test data or system URIs (e.g., same el-observation-code-cs CodeSystem)
+
+Search broadly — the Round N+1 agent may have described the same underlying issue with different wording or discovered it through a different record.
+
+### Evaluate overlap strength
+
+For each candidate match, compare carefully:
+
+| Factor | Same pattern | Related but different |
+|--------|-------------|----------------------|
+| Root cause | Identical server behavior | Same area, different failure mode |
+| Failure shape | Same params differ/missing | Different params or different direction |
+| Result agreement | Both agree (result=true/false) | One disagrees, other doesn't |
+| Severity | Same level of "who cares" | New bug is more/less substantive |
+
+### Decision rule
+
+**Only apply the adjudication to Round N+1 bugs that are clearly the same pattern.** If the overlap is partial or the Round N+1 bug has a different failure mode (e.g., Round N was "servers pick different coding" but Round N+1 is "dev omits coding entirely"), leave the Round N+1 bug as-is and flag it for the expert in the next feedback round.
+
+Present borderline cases to the user with your analysis so they can decide. Include:
+- The Round N bug ID, title, and GG verdict
+- The Round N+1 bug ID, title, and tolerance ID
+- What's the same vs. what's different
+- Your recommendation (apply adjudication or leave for next review)
+
+### Why this matters
+
+Triage agents independently analyze each record. They may file a new bug in Round N+1 for a pattern that the expert already dismissed in Round N feedback. Without this cross-check, the bug stays open and gets re-reported to the expert, wasting review time. But applying adjudications too broadly can mask real bugs — hence the conservative decision rule.
