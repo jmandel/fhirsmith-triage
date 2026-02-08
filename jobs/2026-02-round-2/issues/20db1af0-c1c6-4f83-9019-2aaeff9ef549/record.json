@@ -1,0 +1,33 @@
+{
+  "id": "20db1af0-c1c6-4f83-9019-2aaeff9ef549",
+  "url": "/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 917,
+    "hash": "8539b19beb0ce172e520586e2e3ec481"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 865,
+    "hash": "6a749a1797984ff496f3049d0f704aeb"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://www.nlm.nih.gov/research/umls/rxnorm\"},{\"name\" : \"code\",\"valueCode\" : \"70618\"},{\"name\" : \"version\",\"valueString\" : \"??\"},{\"name\" : \"display\",\"valueString\" : \"Penicillin\"},{\"name\" : \"inactive\",\"valueBoolean\" : true},{\"name\" : \"message\",\"valueString\" : \"The concept '70618' has a status of  and its use should be reviewed\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"INACTIVE_CONCEPT_FOUND\"}],\"severity\" : \"warning\",\"code\" : \"business-rule\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"code-comment\"}],\"text\" : \"The concept '70618' has a status of  and its use should be reviewed\"}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://www.nlm.nih.gov/research/umls/rxnorm\"},{\"name\":\"code\",\"valueCode\":\"70618\"},{\"name\":\"version\",\"valueString\":\"??\"},{\"name\":\"display\",\"valueString\":\"Penicillin\"},{\"name\":\"inactive\",\"valueBoolean\":true},{\"name\":\"message\",\"valueString\":\"The concept '70618' has a status of null and its use should be reviewed\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"warning\",\"code\":\"business-rule\",\"details\":{\"text\":\"The concept '70618' has a status of null and its use should be reviewed\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"code-comment\"}]},\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"INACTIVE_CONCEPT_FOUND\"}]}]}}]}"
+}

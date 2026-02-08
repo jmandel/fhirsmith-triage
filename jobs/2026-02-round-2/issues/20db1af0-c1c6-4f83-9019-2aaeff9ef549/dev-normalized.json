@@ -1,0 +1,54 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "70618"
+    },
+    {
+      "name": "display",
+      "valueString": "Penicillin"
+    },
+    {
+      "name": "inactive",
+      "valueBoolean": true
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "code-comment",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The concept '70618' has a status of null and its use should be reviewed"
+            },
+            "severity": "warning"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The concept '70618' has a status of null and its use should be reviewed"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://www.nlm.nih.gov/research/umls/rxnorm"
+    },
+    {
+      "name": "version",
+      "valueString": "??"
+    }
+  ],
+  "resourceType": "Parameters"
+}

@@ -792,9 +792,9 @@ const tolerances = [
 
   {
     id: 'inactive-display-message-extra-synonyms',
-    description: 'SNOMED validate-code with INACTIVE_DISPLAY_FOUND: dev lists multiple synonyms/designations in "The correct display is one of" message, prod lists only the preferred term. Both identify the same code as having an inactive display. Affects 3 validate-code records for display-comment issues.',
-    kind: 'temp-tolerance',
-    bugId: '645fdcf',
+    description: 'SNOMED validate-code with INACTIVE_DISPLAY_FOUND: dev lists multiple synonyms/designations in "The correct display is one of" message, prod lists only the preferred term. Dev is correct (GG adjudicated). Both identify the same code as having an inactive display.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'message-text', 'snomed', 'display-comment'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1753,9 +1753,9 @@ const tolerances = [
 
   {
     id: 'validate-code-undefined-system-result-disagrees',
-    description: 'POST $validate-code: dev returns result=false because it fails to extract the system URI from the request body — system appears as JavaScript "undefined" in dev diagnostics. Prod correctly validates result=true. Affects 89 records (74 ValueSet, 15 CodeSystem) across LOINC, SNOMED, and RxNorm. Related to bug 4cdcd85 (crash variant).',
-    kind: 'temp-tolerance',
-    bugId: '19283df',
+    description: 'POST $validate-code: dev returns result=false with "undefined" system in diagnostics. Expected test artifact — dev server cache not warm at start of comparison run (GG adjudicated). Not a real server bug.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['skip', 'result-disagrees', 'validate-code', 'undefined-system'],
     match({ record, prod, dev }) {
       if (!record.url.includes('$validate-code')) return null;
@@ -1873,9 +1873,9 @@ const tolerances = [
 
   {
     id: 'multi-coding-cc-system-code-version-disagree',
-    description: 'POST CodeSystem/$validate-code with multi-coding CodeableConcept: prod reports SNOMED coding in system/code/version output params, dev reports the custom CodeSystem coding. Both agree result=true and return identical codeableConcept. Normalizes system/code/version to prod values. Affects 3 records (all el-observation-code-cs + SNOMED pairs).',
-    kind: 'temp-tolerance',
-    bugId: '43d6cfa',
+    description: 'POST CodeSystem/$validate-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params. Both agree result=true and return identical codeableConcept. Which coding to report is arbitrary (GG adjudicated: "not sure I care"). Normalizes to prod values.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'validate-code', 'multi-coding', 'system-code-disagree'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1912,9 +1912,9 @@ const tolerances = [
 
   {
     id: 'validate-code-undefined-system-missing-params',
-    description: 'POST $validate-code result=false: dev missing code/system/display params and has extra issues due to undefined system extraction. Both agree result=false (display text is wrong) but dev response shape differs because it failed to extract the system from the POST body. Dev diagnostics show "undefined" system. Same root cause as bug 19283df (result-disagrees variant). Affects 3 records.',
-    kind: 'temp-tolerance',
-    bugId: '530eeb3',
+    description: 'POST $validate-code result=false: dev missing code/system/display params due to undefined system extraction. Expected test artifact — dev server cache not warm at start of comparison run (GG adjudicated). Same root cause as validate-code-undefined-system-result-disagrees.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['skip', 'validate-code', 'undefined-system', 'content-differs'],
     match({ record, prod, dev }) {
       if (!record.url.includes('$validate-code')) return null;
@@ -2139,9 +2139,9 @@ const tolerances = [
 
   {
     id: 'read-resource-text-div-diff',
-    description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Prod is technically non-conformant (div is required when text is present in FHIR R4). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides. Affects 4 read records (us-core-laboratory-test-codes via direct and search reads).',
-    kind: 'temp-tolerance',
-    bugId: 'bd0f7f4',
+    description: 'Resource read: prod omits text.div when text.status=generated, dev includes the generated narrative HTML. Dev is correct — div is required when text is present in FHIR R4 (GG adjudicated). Narrative is auto-generated, no terminology significance. Normalizes by stripping text.div from both sides.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'read', 'text-div', 'narrative'],
     match({ prod, dev }) {
       // Match resources where text.status exists on at least one side
@@ -3428,6 +3428,54 @@ const tolerances = [
       const text = dev.issue?.[0]?.details?.text || '';
       if (/SQLITE_MISUSE/.test(text)) return 'skip';
       return null;
+    },
+  },
+
+  {
+    id: 'validate-code-null-status-in-message',
+    description: 'validate-code for inactive concepts: dev renders a null/missing status as literal "null" in the INACTIVE_CONCEPT_FOUND message text, while prod renders it as empty string. Both agree on result, inactive, display, system, version. Affects 24 RxNorm validate-code records (all code 70618). The same null-vs-empty pattern also exists for NDC but is handled by ndc-validate-code-extra-inactive-params.',
+    kind: 'temp-tolerance',
+    bugId: 'af1ce69',
+    tags: ['normalize', 'validate-code', 'message-format', 'rxnorm'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      // Prod has "status of " (empty), dev has "status of null"
+      if (/status of {2}/.test(prodMsg) && /status of null/.test(devMsg)) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Normalize dev's "status of null" to prod's "status of " (empty) in both message and issues text
+      function fixBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: p.valueString.replace(/status of null/g, 'status of ') };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => ({
+                    ...iss,
+                    details: iss.details ? {
+                      ...iss.details,
+                      text: iss.details.text?.replace(/status of null/g, 'status of '),
+                    } : iss.details,
+                  })),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod, dev: fixBody(dev) };
     },
   },
 
