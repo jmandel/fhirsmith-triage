@@ -53,9 +53,9 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770499185,
-            "time": "2026-02-07T15:19:45-06:00",
-            "lamport": 12
+            "timestamp": 1770512482,
+            "time": "2026-02-07T19:01:22-06:00",
+            "lamport": 166
         },
         "status": "open",
         "labels": [
@@ -86,7 +86,7 @@
             "name": "Claude (AI Assistant)",
             "login": ""
         },
-        "comments": 1,
+        "comments": 2,
         "metadata": {}
     },
     {
@@ -233,9 +233,9 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770500396,
-            "time": "2026-02-07T15:39:56-06:00",
-            "lamport": 35
+            "timestamp": 1770512370,
+            "time": "2026-02-07T18:59:30-06:00",
+            "lamport": 165
         },
         "status": "open",
         "labels": [
@@ -266,7 +266,7 @@
             "name": "Claude (AI Assistant)",
             "login": ""
         },
-        "comments": 2,
+        "comments": 3,
         "metadata": {}
     },
     {
@@ -1268,16 +1268,61 @@
             "lamport": 30
         },
         "edit_time": {
-            "timestamp": 1770511990,
-            "time": "2026-02-07T18:53:10-06:00",
-            "lamport": 159
+            "timestamp": 1770512169,
+            "time": "2026-02-07T18:56:09-06:00",
+            "lamport": 161
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "validate-code: dev renders null status as literal 'null' in inactive concept message",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e4e45bceec0b47eab2e3c8525d90764e3ffb06801f2a67d9aeb6a74017cda238",
+        "human_id": "e4e45bc",
+        "create_time": {
+            "timestamp": 1770512210,
+            "time": "2026-02-07T18:56:50-06:00",
+            "lamport": 31
+        },
+        "edit_time": {
+            "timestamp": 1770512214,
+            "time": "2026-02-07T18:56:54-06:00",
+            "lamport": 164
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 200 instead of 422 for validate-code with code but no system parameter",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_29 bugs (26 open, 3 closed)_
+_30 bugs (27 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -123,6 +123,19 @@ Tolerance `oo-missing-location-field` normalizes by stripping `location` from pr
 #####Representative record
 
 `grep -n '59eff7c6-9fd2-45b2-8f27-c790368bcc54' jobs/2026-02-round-2/comparison.ndjson`
+
+
+ac90cff #1 Claude (AI Assistant) <>
+
+#####Updated scope (as of round 71)
+
+This bug now covers 2 tolerances:
+
+1. **`oo-missing-location-field`** (original) — Strips `location` arrays from OperationOutcome issues where prod has `location` matching `expression` and dev omits it. Covers ~3,019 records as a normalizer early in the pipeline.
+
+2. **`oo-missing-location-post-version-skew`** — Same root cause but handles records where the `oo-missing-location-field` tolerance runs too early in the pipeline to catch the difference. Specifically, when HL7 terminology version-skew tolerances strip extra status-check issues from prod, the issue arrays only become aligned *after* those normalizations run. This tolerance runs later in the pipeline to catch the remaining ~234 validate-code records where `location` differs after version-skew normalization.
+
+######Total impact: ~3,253 records.
 
 ---
 
@@ -335,6 +348,25 @@ The HL7 terminology CodeSystem version skew also affects $expand operations. Dev
 Additionally, 246 expand records show dev returning total=1 where prod returns many codes for v3 ValueSets. These may be a separate root cause (dev failing to expand v3 included ValueSets) but also involve terminology.hl7.org CodeSystems.
 
 Adding tolerance `expand-hl7-terminology-version-skew-content` for the 163 minor-diff records.
+
+
+66ecd7c #2 Claude (AI Assistant) <>
+
+#####Updated scope (as of round 71)
+
+This bug now covers 3 tolerances handling different manifestations of the same root cause: dev loads older versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod.
+
+######Tolerances
+
+1. **`hl7-terminology-cs-version-skew`** (original) — Normalizes version strings in $validate-code message text and OperationOutcome issue details. Covers ~58 validate-code records where the only difference is the version string in error messages (e.g., prod says "version '4.0.1'", dev says "version '1.0.1'").
+
+2. **`expand-hl7-terminology-version-skew-content`** — Intersects code membership in $expand results where prod and dev return slightly different code sets (1-5 extra/missing codes) due to the version skew. Covers ~163 expand records.
+
+3. **`expand-hl7-terminology-version-skew-params`** — Normalizes `used-codesystem` version strings in expansion parameters (e.g., `observation-category|4.0.1` vs `|2.0.0`) and strips `warning-draft` parameters that only prod includes. Covers ~236 expand records.
+
+######Total impact: ~457 records across validate-code and expand operations.
+
+55 records referencing terminology.hl7.org remain in the delta file, likely involving additional patterns not yet covered by these tolerances.
 
 ---
 
@@ -1648,6 +1680,20 @@ Records-Impacted: 24
 Tolerance-ID: validate-code-null-status-in-message
 Record-ID: 20db1af0-c1c6-4f83-9019-2aaeff9ef549
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+```
+
+Prod returns `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status), dev returns `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null").
+
 #####What differs
 
 In $validate-code responses for inactive concepts, the message and issues text differ in how a missing status value is rendered:
@@ -1668,6 +1714,38 @@ All 24 are validate-code operations on http://www.nlm.nih.gov/research/umls/rxno
 
 Tolerance ID: validate-code-null-status-in-message
 Matches: validate-code Parameters responses where prod message contains "status of " (empty) and dev message contains "status of null" at the same position. Normalizes both message and issues text by replacing "status of null" with "status of " (prod's rendering) in dev. Eliminates 24 delta records.
+
+---
+
+### [ ] `e4e45bc` Dev returns 200 instead of 422 for validate-code with code but no system parameter
+
+Records-Impacted: 133
+Tolerance-ID: validate-code-no-system-422
+Record-ID: 5ea323a9-073d-4ebf-b1ae-0a374b35c26d
+
+#####What differs
+
+When $validate-code is called with `code` but no `system` parameter (and no `context`), prod returns HTTP 422 with an OperationOutcome error: "Unable to find code to validate (looked for coding | codeableConcept | code+system | code+inferSystem in parameters ...)". Dev returns HTTP 200 with a successful Parameters response, inferring the system from the ValueSet.
+
+Per the FHIR spec for ValueSet/$validate-code: "If a code is provided, a system or a context must be provided." Prod correctly rejects these requests; dev incorrectly accepts them by inferring the system.
+
+#####How widespread
+
+133 records across 14 distinct request URLs, all sharing the same pattern:
+- GET /r4/ValueSet/$validate-code with `url=...&code=...` but no `system` parameter
+- One POST /r4/CodeSystem/$validate-code with only `code` in the Parameters body (no system)
+
+Examples include ValueSets for USPS-State, defined-types, iso3166-1-2, mimetypes, languages, administrative-gender, encounter-status, event-status, patient-contactrelationship, and a CTS ValueSet.
+
+Found via: `grep '"status-mismatch"' deltas.ndjson > /tmp/sm.ndjson` then filtering for prod.status=422, dev.status=200, op=validate-code.
+
+#####What the tolerance covers
+
+Tolerance ID: `validate-code-no-system-422`. Matches validate-code records where prod returns 422 and dev returns 200, and the request has `code` but no `system` parameter (checked in both URL query params and POST request body). Eliminates 133 records.
+
+#####Representative record
+
+5ea323a9-073d-4ebf-b1ae-0a374b35c26d — GET /r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&code=TX&_format=json
 
 ---
 

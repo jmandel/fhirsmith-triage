@@ -99,7 +99,14 @@ git-bug bug label new <BUG_ID> "content-differs"
 
 **Checking for existing bugs**: Before filing a new bug, check whether an existing bug already covers this pattern: `git-bug bug -l tx-compare 2>/dev/null | grep -i '<keyword>'`. If a matching bug exists, add your tolerance with its `bugId` instead of filing a duplicate.
 
-**Updating existing bugs**: When you add a tolerance under an existing bug's `bugId`, add a comment to the bug summarizing the new tolerance and the updated total records impacted. The bug report should always reflect the full picture of all tolerances filed under it.
+**Updating existing bugs**: When you add a tolerance under an existing bug's `bugId`, rewrite the bug's first comment to consolidate everything into one self-contained report. Read the current report with `git-bug bug show <BUG_ID>`, then edit comment 0 with `git-bug bug comment edit <COMMENT_ID> -m "..."` (the comment ID is shown in `git-bug bug show` output, e.g., `66eeddc #0`). The rewritten report should tell the unified story:
+- The metadata header (`Records-Impacted` updated to the total across all tolerances)
+- What differs (unified description of the root cause)
+- All tolerance IDs filed under this bug, with what each one handles
+- All representative record IDs (from each tolerance's triage session)
+- Total records impacted
+
+Don't append comments — rewrite the first comment so a reader gets the full picture in one place.
 
 ## Step 5: Always write a tolerance
 

@@ -2927,6 +2927,188 @@ const tolerances = [
   },
 
   {
+    id: 'expand-contains-sort-order',
+    description: 'Expansion.contains code ordering differs between prod and dev. Both return the same set of codes but in different order. Code ordering in ValueSet expansion has no semantic meaning in FHIR — the expansion is a set, not a sequence. Sorts contains by system+code to normalize. Applies to all $expand operations with identical code membership but different ordering.',
+    kind: 'equiv-autofix',
+    tags: ['normalize', 'expand', 'ordering'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (prod.expansion.contains.length !== dev.expansion.contains.length) return null;
+
+      // Check same code membership
+      const prodCodes = new Set(prod.expansion.contains.map(c => (c.system || '') + '|' + (c.code || '')));
+      const devCodes = new Set(dev.expansion.contains.map(c => (c.system || '') + '|' + (c.code || '')));
+      if (prodCodes.size !== devCodes.size) return null;
+      for (const k of prodCodes) { if (!devCodes.has(k)) return null; }
+
+      // Check if ordering actually differs
+      for (let i = 0; i < prod.expansion.contains.length; i++) {
+        const pc = prod.expansion.contains[i];
+        const dc = dev.expansion.contains[i];
+        if ((pc.system || '') + '|' + (pc.code || '') !== (dc.system || '') + '|' + (dc.code || '')) {
+          return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const sortKey = (c) => (c.system || '') + '|' + (c.code || '');
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            contains: [...prod.expansion.contains].sort((a, b) => sortKey(a).localeCompare(sortKey(b))),
+          },
+        },
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            contains: [...dev.expansion.contains].sort((a, b) => sortKey(a).localeCompare(sortKey(b))),
+          },
+        },
+      };
+    },
+  },
+
+  {
+    id: 'expand-r4-deprecated-status-representation',
+    description: 'In R4 $expand responses, prod and dev represent deprecated code status differently on expansion.contains entries. For security-labels, prod uses R4-compatible extension (http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property) while dev uses R5-native property elements. For patient-contactrelationship and TribalEntityUS, prod has the extension but dev omits the annotation entirely. Normalizes by stripping both extension and property from contains entries that carry this R5 backport extension. Affects 26 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '7716e08',
+    tags: ['normalize', 'expand', 'r5-backport', 'deprecated-status'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+
+      const r5PropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+
+      // Check if prod has the R5 backport extension on any contains entry
+      const prodHasExt = prod.expansion.contains.some(c =>
+        (c.extension || []).some(e => e.url === r5PropUrl)
+      );
+      // Check if dev has R5-native property on any contains entry
+      const devHasProp = dev.expansion.contains.some(c => c.property);
+
+      if (prodHasExt || devHasProp) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const r5PropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+
+      function stripDeprecatedAnnotation(contains) {
+        return contains.map(c => {
+          const result = { ...c };
+          // Remove R5 backport extension from prod
+          if (result.extension) {
+            result.extension = result.extension.filter(e => e.url !== r5PropUrl);
+            if (result.extension.length === 0) delete result.extension;
+          }
+          // Remove R5-native property from dev
+          if (result.property) delete result.property;
+          return result;
+        });
+      }
+
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            contains: stripDeprecatedAnnotation(prod.expansion.contains),
+          },
+        },
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            contains: stripDeprecatedAnnotation(dev.expansion.contains),
+          },
+        },
+      };
+    },
+  },
+
+  {
+    id: 'expand-hl7-terminology-used-valueset-version-skew',
+    description: 'Dev loads different versions of HL7 terminology ValueSets than prod, causing used-valueset parameter version strings to differ (e.g., prod reports |3.0.0, dev reports |2014-03-26). Also handles prod including displayLanguage and warning-retired parameters that dev omits. Same root cause as used-codesystem version skew (bug 6edc96c). Normalizes used-valueset versions for terminology.hl7.org ValueSets to prod values and strips displayLanguage/warning-retired from both sides. Affects ~18 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'expand', 'version-skew', 'hl7-terminology', 'parameters'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.parameter || !dev?.expansion?.parameter) return null;
+
+      // Check for displayLanguage or warning-retired in prod that dev doesn't have
+      const prodParamNames = new Set((prod.expansion.parameter || []).map(p => p.name));
+      const devParamNames = new Set((dev.expansion.parameter || []).map(p => p.name));
+      const hasExtraParams = (prodParamNames.has('displayLanguage') && !devParamNames.has('displayLanguage')) ||
+                             (prodParamNames.has('warning-retired') && !devParamNames.has('warning-retired'));
+
+      // Check for used-valueset version mismatch on terminology.hl7.org ValueSets
+      const prodHl7Uvs = (prod.expansion.parameter || [])
+        .filter(p => p.name === 'used-valueset' && (p.valueUri || '').includes('terminology.hl7.org/ValueSet/'))
+        .map(p => p.valueUri).sort();
+      const devHl7Uvs = (dev.expansion.parameter || [])
+        .filter(p => p.name === 'used-valueset' && (p.valueUri || '').includes('terminology.hl7.org/ValueSet/'))
+        .map(p => p.valueUri).sort();
+      const hasVersionMismatch = JSON.stringify(prodHl7Uvs) !== JSON.stringify(devHl7Uvs);
+
+      if (hasExtraParams || hasVersionMismatch) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Build a map from VS base URI -> prod version for terminology.hl7.org ValueSets
+      const prodVersionMap = new Map();
+      for (const p of (prod.expansion.parameter || [])) {
+        if (p.name === 'used-valueset' && (p.valueUri || '').includes('terminology.hl7.org/ValueSet/')) {
+          const base = p.valueUri.split('|')[0];
+          prodVersionMap.set(base, p.valueUri);
+        }
+      }
+
+      function normalizeParams(params) {
+        if (!params) return params;
+        return params
+          // Strip displayLanguage and warning-retired parameters
+          .filter(p => p.name !== 'displayLanguage' && p.name !== 'warning-retired')
+          // Normalize used-valueset versions for HL7 terminology to prod value
+          .map(p => {
+            if (p.name !== 'used-valueset') return p;
+            const uri = p.valueUri || '';
+            if (!uri.includes('terminology.hl7.org/ValueSet/')) return p;
+            const base = uri.split('|')[0];
+            const prodUri = prodVersionMap.get(base);
+            if (prodUri && prodUri !== uri) {
+              return { ...p, valueUri: prodUri };
+            }
+            return p;
+          });
+      }
+
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            parameter: normalizeParams(prod.expansion.parameter),
+          },
+        },
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: normalizeParams(dev.expansion.parameter),
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-v3-hierarchical-incomplete',
     description: 'Dev $expand returns only the root abstract concept for v3 hierarchical ValueSets (v3-ActEncounterCode, v3-ServiceDeliveryLocationRoleType, v3-PurposeOfUse, v3-ActPharmacySupplyType), missing all descendant codes. Prod returns the full hierarchy. 246 records across 4 ValueSets.',
     kind: 'temp-tolerance',

@@ -455,6 +455,10 @@ h1 {{
   transform: translateY(-1px);
 }}
 
+.filter-pill.active {{
+  box-shadow: 0 0 0 2px var(--text);
+}}
+
 .filter-pill.dimmed {{
   opacity: 0.35;
 }}
@@ -954,31 +958,31 @@ document.getElementById("search").addEventListener("input", function() {{
   applyFilters();
 }});
 
-// Label filter pills
+// Label filter pills — derive all visuals from activeLabels set
+function updatePillVisuals() {{
+  document.querySelectorAll(".filter-pill[data-label]").forEach(pill => {{
+    const label = pill.dataset.label;
+    if (activeLabels.size === 0) {{
+      pill.classList.remove("dimmed", "active");
+    }} else if (activeLabels.has(label)) {{
+      pill.classList.remove("dimmed");
+      pill.classList.add("active");
+    }} else {{
+      pill.classList.add("dimmed");
+      pill.classList.remove("active");
+    }}
+  }});
+}}
+
 document.querySelectorAll(".filter-pill[data-label]").forEach(pill => {{
   pill.addEventListener("click", function() {{
     const label = this.dataset.label;
     if (activeLabels.has(label)) {{
       activeLabels.delete(label);
-      this.classList.remove("dimmed");
     }} else {{
-      if (activeLabels.size === 0) {{
-        document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {{
-          if (pp.dataset.label !== label) pp.classList.add("dimmed");
-        }});
-        activeLabels.add(label);
-      }} else {{
-        activeLabels.add(label);
-        this.classList.remove("dimmed");
-      }}
+      activeLabels.add(label);
     }}
-
-    if (activeLabels.size === 0) {{
-      document.querySelectorAll(".filter-pill[data-label]").forEach(pp => {{
-        pp.classList.remove("dimmed");
-      }});
-    }}
-
+    updatePillVisuals();
     applyFilters();
   }});
 }});
