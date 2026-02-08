@@ -657,6 +657,39 @@ h1 {{
   font-family: var(--font-mono);
 }}
 
+.copy-btn {{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}}
+
+.copy-btn:hover {{
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}}
+
+.copy-btn.copied {{
+  color: var(--status-open-fg);
+  border-color: var(--status-open-border);
+  background: var(--status-open-bg);
+  animation: copy-flash 0.3s ease-out;
+}}
+
+@keyframes copy-flash {{
+  0% {{ transform: scale(1.3); }}
+  100% {{ transform: scale(1); }}
+}}
+
 .bug-date {{
   font-size: 11px;
   color: var(--text-muted);
@@ -923,6 +956,9 @@ function renderBugList() {{
         <div class="bug-info">
           <div class="bug-title">${{bug.title}}</div>
           <div class="bug-meta">
+            <button class="copy-btn" title="Copy title and ID" onclick="event.stopPropagation(); copyBug(this, '${{bug.id}}')">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
+            </button>
             <span class="pill ${{statusClass}}">${{bug.status}}</span>
             ${{labels}}
             ${{impactPill}}
@@ -941,6 +977,16 @@ function renderBugList() {{
 
 function toggleBug(header) {{
   header.parentElement.classList.toggle("expanded");
+}}
+
+function copyBug(btn, bugId) {{
+  const bug = BUGS.find(b => b.id === bugId);
+  if (!bug) return;
+  const text = bug.title + " (" + bugId + ")";
+  navigator.clipboard.writeText(text).then(() => {{
+    btn.classList.add("copied");
+    setTimeout(() => btn.classList.remove("copied"), 1500);
+  }});
 }}
 
 let allExpanded = false;

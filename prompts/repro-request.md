@@ -27,7 +27,9 @@ From the record data, reconstruct the HTTP request:
 - **Request body**: from `record.requestBody` (for POST requests)
 - **Headers**: `Accept: application/fhir+json` and `Content-Type: application/fhir+json` for POST
 
-Build a `curl` command that targets both servers. For example:
+Build a `curl` command that targets both servers. The repro must be **fully self-contained** — anyone should be able to copy-paste the commands and reproduce the bug without needing any external files. Inline the request body directly in the `-d` argument. If the request body is too large to inline (>10KB), write a short script (bash or python) that constructs and sends the request, with the payload embedded in the script itself.
+
+For example:
 ```bash
 # Prod
 curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
