@@ -1,0 +1,25 @@
+{
+  "id": "065c2fa7-d80e-416a-b50d-ed4f78a48fd7",
+  "url": "/r5/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=40127002&codeB=159033005",
+  "method": "GET",
+  "prod": {
+    "status": 400,
+    "contentType": "application/fhir+json",
+    "size": 412,
+    "hash": "abfe756c03ffd2cdb40ad764c128cc0d"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 88,
+    "hash": "3bcbcadb1f22aecfe3decebfc2979238"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "subsumes",
+    "prodStatus": 400,
+    "devStatus": 200
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"invalid\",\"diagnostics\" : \"No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"outcome\",\"valueCode\":\"subsumed-by\"}]}"
+}

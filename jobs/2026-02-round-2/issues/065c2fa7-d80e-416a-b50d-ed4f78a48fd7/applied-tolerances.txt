@@ -1,0 +1,3 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+read-resource-text-div-diff: normalize

@@ -1,0 +1,13 @@
+{
+  "issue": [
+    {
+      "code": "invalid",
+      "diagnostics": "No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "invalid",
+      "diagnostics": "No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource"
+    }
+  ]
+}

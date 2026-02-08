@@ -4182,6 +4182,20 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'r5-get-subsumes-status-mismatch',
+    description: 'GET /r5/CodeSystem/$subsumes returns 400 from prod ("No CodeSystem Identified") despite system param being present; dev returns 200 with valid subsumption result. POST requests to same endpoint work fine on both.',
+    kind: 'temp-tolerance',
+    bugId: '15f5ce0',
+    tags: ['skip', 'status-mismatch', 'subsumes'],
+    match({ record }) {
+      if (record.method !== 'GET') return null;
+      if (record.prod.status !== 400 || record.dev.status !== 200) return null;
+      if (!record.url.includes('/r5/CodeSystem/$subsumes')) return null;
+      return 'skip';
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
