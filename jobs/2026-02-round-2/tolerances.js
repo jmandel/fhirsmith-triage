@@ -2691,6 +2691,63 @@ const tolerances = [
   },
 
   {
+    id: 'expand-contains-version-skew',
+    description: 'Dev loads older SNOMED CT and CPT editions than prod, causing expansion.contains[].version to differ even when code membership is identical. Prod has SNOMED US 20250901 / CPT 2026, dev has SNOMED US 20250301 / CPT 2025. Normalizes contains[].version to prod values. Affects 198 expand records (all ValueSet 2.16.840.1.113762.1.4.1267.23).',
+    kind: 'temp-tolerance',
+    bugId: '4f12dda',
+    tags: ['normalize', 'expand', 'version-skew'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+
+      // Check same code membership
+      const prodCodes = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devCodes = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      if (prodCodes.size !== devCodes.size) return null;
+      for (const k of prodCodes) { if (!devCodes.has(k)) return null; }
+
+      // Check that at least one contains[].version differs
+      const prodVersions = {};
+      for (const c of prod.expansion.contains) {
+        prodVersions[c.system + '|' + c.code] = c.version;
+      }
+      let hasDiff = false;
+      for (const c of dev.expansion.contains) {
+        const key = c.system + '|' + c.code;
+        if (prodVersions[key] !== c.version) { hasDiff = true; break; }
+      }
+      if (!hasDiff) return null;
+
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Build prod version map
+      const prodVersions = {};
+      for (const c of prod.expansion.contains) {
+        prodVersions[c.system + '|' + c.code] = c.version;
+      }
+      return {
+        prod,
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            contains: dev.expansion.contains.map(c => {
+              const key = c.system + '|' + c.code;
+              const prodVersion = prodVersions[key];
+              if (prodVersion !== undefined && c.version !== prodVersion) {
+                return { ...c, version: prodVersion };
+              }
+              return c;
+            }),
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-v3-hierarchical-incomplete',
     description: 'Dev $expand returns only the root abstract concept for v3 hierarchical ValueSets (v3-ActEncounterCode, v3-ServiceDeliveryLocationRoleType, v3-PurposeOfUse, v3-ActPharmacySupplyType), missing all descendant codes. Prod returns the full hierarchy. 246 records across 4 ValueSets.',
     kind: 'temp-tolerance',

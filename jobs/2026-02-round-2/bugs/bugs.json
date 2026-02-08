@@ -1123,5 +1123,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "1932f81bf024f8a4fae75ffe12fd0968536f416021e700242305088eb734cf19",
+        "human_id": "1932f81",
+        "create_time": {
+            "timestamp": 1770509471,
+            "time": "2026-02-07T18:11:11-06:00",
+            "lamport": 27
+        },
+        "edit_time": {
+            "timestamp": 1770509476,
+            "time": "2026-02-07T18:11:16-06:00",
+            "lamport": 144
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
