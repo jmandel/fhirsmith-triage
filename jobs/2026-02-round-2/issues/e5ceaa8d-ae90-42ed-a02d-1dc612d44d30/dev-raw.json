@@ -1,0 +1,788 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "name",
+      "valueString": "LOINC"
+    },
+    {
+      "name": "code",
+      "valueCode": "4548-4"
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "display",
+      "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+    },
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+            "code": "preferredForLanguage"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "ar-JO"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "de-DE"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hämoglobin A1c/Hämoglobin.gesamt in Blut"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "es-MX"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobina A1c / Hemoglobina total: Sangre : Punto temporal: Fracción de masa: Cuantitativo:"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "fr-FR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hémoglobine A1c/hémoglobine totale [Fraction massique] Sang ; Numérique"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "nl-NL"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobine A1c/hemoglobine.totaal [massafractie] in bloed"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Гемоглобін A1c/Гемоглобін загальний в крові"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "SHORTNAME",
+            "display": "SHORTNAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c MFr Bld"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "es-AR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "SHORTNAME",
+            "display": "SHORTNAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "hemoglobina A1c/hemoglobina.total:fracción de masa:punto en el tiempo:sangre:cuantitativo:"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "pt-BR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "SHORTNAME",
+            "display": "SHORTNAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hgb A1c SFr Sg"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "SHORTNAME",
+            "display": "SHORTNAME"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c МасФракц Крв"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "ConsumerName",
+            "display": "ConsumerName"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c/Total Hgb, Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "ar-JO"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "نسبة سكر الدم التراكمي - بدون صيام"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "de-AT"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hämoglobin A1c"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://loinc.org",
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c (Крв) [Масова фракція]"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "CLASS"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7786-9"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "COMPONENT"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP286151-8"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "PROPERTY"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP6831-4"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "TIME_ASPCT"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP6960-1"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "SYSTEM"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7057-5"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "SCALE_TYP"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7753-9"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "parent"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP248770-2"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "CLASSTYPE"
+        },
+        {
+          "name": "value",
+          "valueString": "1"
+        },
+        {
+          "name": "description",
+          "valueString": "Laboratory class"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "ORDER_OBS"
+        },
+        {
+          "name": "value",
+          "valueString": "Both"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "EXAMPLE_UNITS"
+        },
+        {
+          "name": "value",
+          "valueString": "%"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "EXAMPLE_UCUM_UNITS"
+        },
+        {
+          "name": "value",
+          "valueString": "%"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "UNITSREQUIRED"
+        },
+        {
+          "name": "value",
+          "valueString": "Y"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "STATUS"
+        },
+        {
+          "name": "value",
+          "valueString": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Blood; Chemistry; Endocrine; Endocrinology; GHb; Glycated hemoglobin; Glycohaemogolobin; Glycohemogolobin; Glycosylated hemoglobin; HA1c; Haemoglobin; Hb; HbA1c; Hgb; Hgb A1c; Mass fraction; Percent; Point in time; QNT; Quan; Quant; Quantitative; Random; Tot; Totl; WB; Whole blood"
+        },
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "سكري الدم التراكمي المرتبط بالهيموغلوبين"
+        },
+        {
+          "name": "language",
+          "valueCode": "ar-JO"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Hämoglobin A1c"
+        },
+        {
+          "name": "language",
+          "valueCode": "de-AT"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c"
+        },
+        {
+          "name": "language",
+          "valueCode": "de-DE"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "CHEM MFr Pt Qn Αίμα Αιμοσφαιρίνη Αιμοσφαιρίνη A1c Αιμοσφαιρίνη.ολική"
+        },
+        {
+          "name": "language",
+          "valueCode": "el-GR"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Cuantitativo"
+        },
+        {
+          "name": "language",
+          "valueCode": "es-ES"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Glükohemoglobiin Juhuslik Kvantitatiivne Veri"
+        },
+        {
+          "name": "language",
+          "valueCode": "et-EE"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Hb Hb.totale HbA1c"
+        },
+        {
+          "name": "language",
+          "valueCode": "fr-BE"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Chimica Emoglobina A1c (HgB glicata ) Frazione di massa Punto nel tempo (episodio) Sangue"
+        },
+        {
+          "name": "language",
+          "valueCode": "it-IT"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobina A1c/Hemoglobina całkowita"
+        },
+        {
+          "name": "language",
+          "valueCode": "pl-PL"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "; Hgb A1c; Glycohemogolobin; Glycohaemogolobin; GHb; HA1c; HBA1c; Glycated hemoglobin; Glycosylated hemoglobin; Hb; Haemoglobin; Substance fraction; Percent; Point in time; Random; Blood; WB; Whole blood; Quantitative; QNT; Quant; Quan; Tot; Totl; HEMATOLOGY/CELL COUNTS; HEMATOLOGY/CELL COUNTS"
+        },
+        {
+          "name": "language",
+          "valueCode": "pt-BR"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Количественный Кровь Массовая доля Точка во времени;Момент"
+        },
+        {
+          "name": "language",
+          "valueCode": "ru-RU"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "Blood; Chemistry; Endocrine; Endocrinology; GHb; Glycated hemoglobin; Glycohaemogolobin; Glycohemogolobin; Glycosylated hemoglobin; HA1c; Haemoglobin; Hb; HbA1c; Hgb; Hgb A1c; Mass fraction; Percent; Point in time; QNT; Quan; Quant; Quantitative; Random; Tot; Totl; WB; Whole blood"
+        },
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "RELATEDNAMES2"
+        },
+        {
+          "name": "value",
+          "valueString": "GHb;HA1c;HBA1c;Hgb A1c;糖化血红蛋白;糖基化血红蛋白;血红蛋白 A1c （糖化血红蛋白） MFr 全体数量 全部 共计 化学;化学检验项目;化学检验项目类;化学类;化学试验;非刺激耐受型化学检验项目;非刺激耐受型化学检验项目类;非刺激耐受型化学试验;非刺激耐受型化学试验类 可用数量表示的;定量性;数值型;数量型;连续数值型标尺 总 总和 总数 总血红蛋白 总量 总额 时刻;随机;随意;瞬间 氧血红蛋白;血红朊;血红素;血色素 汇总 血;血液"
+        },
+        {
+          "name": "language",
+          "valueCode": "zh-CN"
+        }
+      ]
+    }
+  ]
+}

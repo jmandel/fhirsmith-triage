@@ -1,0 +1,547 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "4548-4"
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "SHORTNAME",
+            "display": "SHORTNAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c MFr Bld"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en-US"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "ConsumerName",
+            "display": "ConsumerName",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c/Total Hgb, Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "es-AR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "SHORTNAME",
+            "display": "SHORTNAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "hemoglobina A1c/hemoglobina.total:fracción de masa:punto en el tiempo:sangre:cuantitativo:"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "pt-BR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "SHORTNAME",
+            "display": "SHORTNAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hgb A1c SFr Sg"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "de-DE"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hämoglobin A1c/Hämoglobin.gesamt in Blut"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "fr-FR"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hémoglobine A1c/hémoglobine totale [Fraction massique] Sang ; Numérique"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "nl-NL"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobine A1c/hemoglobine.totaal [massafractie] in bloed"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "de-AT"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hämoglobin A1c"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "es-MX"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobina A1c / Hemoglobina total: Sangre : Punto temporal: Fracción de masa: Cuantitativo:"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Гемоглобін A1c/Гемоглобін загальний в крові"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "SHORTNAME",
+            "display": "SHORTNAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c МасФракц Крв"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "uk-UA"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "HbA1c (Крв) [Масова фракція]"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "ar-JO"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LONG_COMMON_NAME",
+            "display": "LONG_COMMON_NAME",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "ar-JO"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "LinguisticVariantDisplayName",
+            "display": "LinguisticVariantDisplayName",
+            "system": "http://loinc.org"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "نسبة سكر الدم التراكمي - بدون صيام"
+        }
+      ]
+    },
+    {
+      "name": "display",
+      "valueString": "Hemoglobin A1c/Hemoglobin.total in Blood"
+    },
+    {
+      "name": "name",
+      "valueString": "LOINC"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "CLASS"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7786-9"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "COMPONENT"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP286151-8"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "PROPERTY"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP6831-4"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "TIME_ASPCT"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP6960-1"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "SYSTEM"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7057-5"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "SCALE_TYP"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP7753-9"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "parent"
+        },
+        {
+          "name": "value",
+          "valueCode": "LP248770-2"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "CLASSTYPE"
+        },
+        {
+          "name": "value",
+          "valueString": "Laboratory class"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "ORDER_OBS"
+        },
+        {
+          "name": "value",
+          "valueString": "Both"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "EXAMPLE_UNITS"
+        },
+        {
+          "name": "value",
+          "valueString": "%"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "EXAMPLE_UCUM_UNITS"
+        },
+        {
+          "name": "value",
+          "valueString": "%"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "UNITSREQUIRED"
+        },
+        {
+          "name": "value",
+          "valueString": "Y"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "STATUS"
+        },
+        {
+          "name": "value",
+          "valueString": "ACTIVE"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    }
+  ],
+  "resourceType": "Parameters"
+}

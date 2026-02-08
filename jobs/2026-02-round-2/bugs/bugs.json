@@ -53,12 +53,13 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770512877,
-            "time": "2026-02-07T19:07:57-06:00",
-            "lamport": 174
+            "timestamp": 1770517481,
+            "time": "2026-02-07T20:24:41-06:00",
+            "lamport": 233
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -98,12 +99,13 @@
             "lamport": 4
         },
         "edit_time": {
-            "timestamp": 1770499213,
-            "time": "2026-02-07T15:20:13-06:00",
-            "lamport": 15
+            "timestamp": 1770517492,
+            "time": "2026-02-07T20:24:52-06:00",
+            "lamport": 235
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "reproduced",
             "status-mismatch",
             "tx-compare"
@@ -233,9 +235,9 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770516842,
-            "time": "2026-02-07T20:14:02-06:00",
-            "lamport": 218
+            "timestamp": 1770517709,
+            "time": "2026-02-07T20:28:29-06:00",
+            "lamport": 236
         },
         "status": "open",
         "labels": [

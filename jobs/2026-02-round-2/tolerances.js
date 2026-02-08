@@ -4354,6 +4354,109 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'loinc-lookup-extra-designations-properties',
+    description: 'LOINC $lookup: dev returns extra preferredForLanguage designation, RELATEDNAMES2 properties, and different CLASSTYPE format (value "1" + description vs value "Laboratory class"). Prod has duplicate LONG_COMMON_NAME designations. Normalize all to match.',
+    kind: 'temp-tolerance',
+    bugId: '5f3b796',
+    tags: ['normalize', 'lookup', 'loinc'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$lookup')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      // Check for LOINC system
+      const prodSystem = getParamValue(prod, 'system');
+      const devSystem = getParamValue(dev, 'system');
+      if (prodSystem !== 'http://loinc.org' && devSystem !== 'http://loinc.org') return null;
+
+      // Check if any of the three known differences are present
+      const hasPreferredForLang = dev?.parameter?.some(p =>
+        p.name === 'designation' && p.part?.some(pp =>
+          pp.name === 'use' && pp.valueCoding?.code === 'preferredForLanguage'));
+      const hasRelatedNames = dev?.parameter?.some(p =>
+        p.name === 'property' && p.part?.some(pp =>
+          pp.name === 'code' && pp.valueCode === 'RELATEDNAMES2'));
+      const hasClasstypeDiff = dev?.parameter?.some(p =>
+        p.name === 'property' && p.part?.some(pp =>
+          pp.name === 'code' && pp.valueCode === 'CLASSTYPE') &&
+        p.part?.some(pp => pp.name === 'description'));
+
+      if (hasPreferredForLang || hasRelatedNames || hasClasstypeDiff) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function normDesignations(body, isDev) {
+        if (!body?.parameter) return body;
+        let params = body.parameter;
+        if (isDev) {
+          // Remove preferredForLanguage designation from dev
+          params = params.filter(p => !(
+            p.name === 'designation' && p.part?.some(pp =>
+              pp.name === 'use' && pp.valueCoding?.code === 'preferredForLanguage')
+          ));
+        } else {
+          // Remove duplicate LONG_COMMON_NAME designations from prod
+          // Keep track of seen designation signatures to dedupe
+          const seen = new Set();
+          params = params.filter(p => {
+            if (p.name !== 'designation') return true;
+            const sig = JSON.stringify(p.part);
+            if (seen.has(sig)) return false;
+            seen.add(sig);
+            return true;
+          });
+        }
+        return { ...body, parameter: params };
+      }
+
+      function normProperties(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter
+            // Remove RELATEDNAMES2 properties
+            .filter(p => !(
+              p.name === 'property' && p.part?.some(pp =>
+                pp.name === 'code' && pp.valueCode === 'RELATEDNAMES2')
+            ))
+            // Normalize CLASSTYPE: use prod format (value only, strip description)
+            .map(p => {
+              if (p.name !== 'property') return p;
+              const codeParam = p.part?.find(pp => pp.name === 'code');
+              if (codeParam?.valueCode !== 'CLASSTYPE') return p;
+              const descPart = p.part?.find(pp => pp.name === 'description');
+              if (!descPart) return p;
+              // Use description value as the canonical value, strip description part
+              return {
+                ...p,
+                part: p.part
+                  .filter(pp => pp.name !== 'description')
+                  .map(pp => pp.name === 'value' ? { ...pp, valueString: descPart.valueString } : pp),
+              };
+            }),
+        };
+      }
+
+      // After filtering, sort same-named parameter groups by content
+      // so designation/property ordering differences don't cause mismatches
+      function sortSameNameGroups(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: [...body.parameter].sort((a, b) => {
+            const nameCmp = (a.name || '').localeCompare(b.name || '');
+            if (nameCmp !== 0) return nameCmp;
+            return JSON.stringify(a).localeCompare(JSON.stringify(b));
+          }),
+        };
+      }
+
+      return {
+        prod: sortSameNameGroups(normProperties(normDesignations(prod, false))),
+        dev: sortSameNameGroups(normProperties(normDesignations(dev, true))),
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
