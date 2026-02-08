@@ -4541,6 +4541,22 @@ const tolerances = [
     },
   },
 
+  // --- Expand: dev returns 404 for unknown ISO 3166 version that prod resolves ---
+  {
+    id: 'expand-iso3166-unknown-version-fallback',
+    description: 'Dev returns 404 for $expand on iso3166-1-2 with system-version urn:iso:std:iso:3166|2020. Prod falls back to version 2018 and returns 200 with full expansion. Dev says version 2020 not found.',
+    kind: 'temp-tolerance',
+    bugId: '2f5929e',
+    tags: ['skip', 'missing-resource', 'expand', 'iso3166'],
+    match({ record }) {
+      if (record.prod?.status !== 200 || record.dev?.status !== 404) return null;
+      if (!/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!/iso3166-1-2/.test(record.url) && !/iso:3166/.test(record.url)) return null;
+      if (!/system-version=.*iso.*3166/.test(record.url)) return null;
+      return 'skip';
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

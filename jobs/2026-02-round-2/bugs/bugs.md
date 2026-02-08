@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_40 bugs (37 open, 3 closed)_
+_41 bugs (38 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2314,6 +2314,24 @@ Records-Impacted: 1
 Tolerance-ID: unknown-system-vs-unknown-version
 Record-ID: 06cfc4c9-c3c4-42a6-abb8-3068cd06190f
 
+#####Repro
+
+```bash
+####Prod
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://snomed.info/sct","code":"29857009","display":"Chest pain"}},{"name":"default-to-latest-version","valueBoolean":true},{"name":"system-version","valueString":"http://snomed.info/sct|http://snomed.info/sct/20611000087101"}]}'
+
+####Dev
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://snomed.info/sct","code":"29857009","display":"Chest pain"}},{"name":"default-to-latest-version","valueBoolean":true},{"name":"system-version","valueString":"http://snomed.info/sct|http://snomed.info/sct/20611000087101"}]}'
+```
+
+Prod returns message-id `UNKNOWN_CODESYSTEM` ("A definition for CodeSystem 'http://snomed.info/sct' could not be found"), dev returns message-id `UNKNOWN_CODESYSTEM_VERSION` ("...version 'http://snomed.info/sct/20611000087101' could not be found...Valid versions: ..."). Dev also includes `display: "Chest pain"` and version-qualified `x-caused-by-unknown-system`.
+
 #####What differs
 
 When `$validate-code` on `CodeSystem` is called with `system-version` pinning an unavailable SNOMED CT edition (Canadian edition `http://snomed.info/sct/20611000087101`), prod and dev disagree on the error classification:
@@ -2334,6 +2352,41 @@ Search: `grep 'UNKNOWN_CODESYSTEM' deltas.ndjson` → 2 hits, but only 1 has thi
 #####What the tolerance covers
 
 Tolerance `unknown-system-vs-unknown-version` matches validate-code records where prod has message-id `UNKNOWN_CODESYSTEM` and dev has `UNKNOWN_CODESYSTEM_VERSION`. Normalizes dev's messages, issues, x-caused-by-unknown-system, and display to match prod's values. Eliminates 1 record.
+
+---
+
+### [ ] `e107342` SNOMED $lookup: prod returns 400 where dev returns 404 for unknown code
+
+Records-Impacted: 1
+Tolerance-ID: lookup-unknown-code-status-400-vs-404
+Record-ID: 442928d4-a15c-4934-b21f-0713857f1c04
+
+#####What differs
+
+For a SNOMED CT $lookup on an unknown code (`GET /r5/CodeSystem/$lookup?system=http://snomed.info/sct&code=710136005`):
+
+- **Prod** returns HTTP 400 with OperationOutcome issue code `invalid` and error message in `diagnostics`
+- **Dev** returns HTTP 404 with OperationOutcome issue code `not-found` and error message in `details.text`
+
+Both servers agree the code doesn't exist in SNOMED CT (same version `http://snomed.info/sct/900000000000207008/version/20250201`), but differ on:
+1. HTTP status code: 400 (Bad Request) vs 404 (Not Found)
+2. OperationOutcome issue code: `invalid` vs `not-found`
+3. Error message field: `diagnostics` vs `details.text`
+
+Note: The FHIR R4 spec example for $lookup error responses uses `not-found` with `details.text` (matching dev's behavior), though the spec doesn't mandate a specific HTTP status code.
+
+#####How widespread
+
+Only 1 record in the current dataset shows this pattern. Out of 2991 total $lookup operations, this is the only one with a status mismatch. The specific SNOMED code 710136005 only appears once.
+
+```bash
+grep '"prodStatus":400.*"devStatus":404' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
+####=> 1
+```
+
+#####Tolerance
+
+Tolerance `lookup-unknown-code-status-400-vs-404` matches $lookup operations where prod returns 400 and dev returns 404, both returning OperationOutcome with "Unable to find code" messages. It skips the record since the content difference (status code and issue structure) is entirely covered by the status mismatch pattern.
 
 ---
 

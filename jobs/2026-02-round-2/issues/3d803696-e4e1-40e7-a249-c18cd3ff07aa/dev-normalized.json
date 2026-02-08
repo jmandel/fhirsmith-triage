@@ -1,0 +1,24 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "details": {
+        "coding": [
+          {
+            "code": "not-found",
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+          }
+        ],
+        "text": "A definition for CodeSystem 'urn:iso:std:iso:3166' version '2020' could not be found, so the value set cannot be expanded. Valid versions: 2018 or 20210120"
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueString": "UNKNOWN_CODESYSTEM_VERSION_EXP"
+        }
+      ],
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

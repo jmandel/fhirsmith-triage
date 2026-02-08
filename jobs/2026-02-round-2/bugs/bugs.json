@@ -1775,16 +1775,61 @@
             "lamport": 41
         },
         "edit_time": {
-            "timestamp": 1770518320,
-            "time": "2026-02-07T20:38:40-06:00",
-            "lamport": 254
+            "timestamp": 1770525135,
+            "time": "2026-02-07T22:32:15-06:00",
+            "lamport": 257
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "validate-code: prod reports UNKNOWN_CODESYSTEM, dev reports UNKNOWN_CODESYSTEM_VERSION when system-version pins unavailable SNOMED edition",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e1073429f3e586c824351d9378c78e537e6f4ad19466f59a390ec54de3457ee9",
+        "human_id": "e107342",
+        "create_time": {
+            "timestamp": 1770525193,
+            "time": "2026-02-07T22:33:13-06:00",
+            "lamport": 42
+        },
+        "edit_time": {
+            "timestamp": 1770525198,
+            "time": "2026-02-07T22:33:18-06:00",
+            "lamport": 260
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "SNOMED $lookup: prod returns 400 where dev returns 404 for unknown code",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
