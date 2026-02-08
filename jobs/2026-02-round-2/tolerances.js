@@ -3601,7 +3601,7 @@ const tolerances = [
 
   {
     id: 'dev-extra-display-lang-not-found-message',
-    description: 'Dev $validate-code returns extra message and issues parameters with "no valid display names found" informational feedback when displayLanguage is specified and the code system lacks a display in that language. Prod omits these entirely. Both agree result=true. Affects 19 validate-code records (mostly urn:iso:std:iso:3166 with displayLanguage=fr/fr-FR).',
+    description: 'Dev $validate-code returns extra message and issues parameters with "no valid display names found" informational feedback when displayLanguage is specified and the code system lacks a display in that language. Prod sometimes omits these entirely, sometimes returns its own issues with display-comment code about the same topic. Both agree result=true. Affects ~21 validate-code records.',
     kind: 'temp-tolerance',
     bugId: 'bd89513',
     tags: ['normalize', 'validate-code', 'display-language', 'extra-message'],
@@ -3616,7 +3616,21 @@ const tolerances = [
       return 'normalize';
     },
     normalize({ prod, dev }) {
-      return { prod, dev: stripParams(dev, 'message', 'issues') };
+      // Strip dev's extra message and issues
+      let normalizedDev = stripParams(dev, 'message', 'issues');
+      // Also strip prod's display-comment issues about display language (same root cause)
+      let normalizedProd = prod;
+      const prodIssues = getParamValue(prod, 'issues');
+      if (prodIssues?.resourceType === 'OperationOutcome' && prodIssues.issue?.length) {
+        const allDisplayComment = prodIssues.issue.every(i =>
+          i.details?.coding?.some(c => c.code === 'display-comment') &&
+          /default display|no Display Names for the language/i.test(i.details?.text || '')
+        );
+        if (allDisplayComment) {
+          normalizedProd = stripParams(prod, 'issues');
+        }
+      }
+      return { prod: normalizedProd, dev: normalizedDev };
     },
   },
 

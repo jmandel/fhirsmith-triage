@@ -1,0 +1,76 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "108252007"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Laboratory procedure"
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://snomed.info/sct#108252007 for language(s) 'es-AR'. The display is 'Laboratory procedure' which is the default language display"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "108252007",
+            "display": "Laboratory procedure"
+          }
+        ],
+        "text": "Procedimiento de Laboratorio"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "text": "There are no valid display names found for the code http://snomed.info/sct#108252007 for language(s) 'es-AR'. The display is 'Laboratory procedure' which is the default language display",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Validate \"[undefined#108252007 (\"Laboratory procedure\")]\"\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \"http://snomed.info/sct#108252007\"\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: check code in () at CodeableConcept.coding[0]\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Code \"108252007\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ]
+}

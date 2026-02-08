@@ -1,0 +1,30 @@
+{
+  "id": "c9f3b468-dc3d-47f5-a305-0346bf5b4cab",
+  "url": "/r5/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1755,
+    "hash": "2dea60653d5f5113642e014b1de7d966"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 2311,
+    "hash": "f47cf0cbf9327cbdd437729090fe7f20"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"108252007\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Laboratory procedure\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"108252007\",\"display\" : \"Laboratory procedure\"}],\"text\" : \"Procedimiento de Laboratorio\"}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"NO_VALID_DISPLAY_FOUND_LANG_NONE\"}],\"severity\" : \"information\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"display-comment\"}],\"text\" : \"'Laboratory procedure' is the default display; the code system http://snomed.info/sct has no Display Names for the language es-AR\"},\"location\" : [\"CodeableConcept.coding[0].display\"],\"expression\" : [\"CodeableConcept.coding[0].display\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n15 15   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n15 0    : 0ms  : Parameters: disp-lang=es-AR, default-to-latest\\r\\n15 0    : 0ms  : Prepare include: \\\"()\\\"\\r\\n15 0    : 0ms  : Validate \\\"[http://snomed.info/sct#108252007 (\\\"Laboratory procedure\\\")]\\\"\\r\\n15 0    : 0ms  : Check \\\"http://snomed.info/sct#108252007\\\"\\r\\n15 0    : 0ms  : Using CodeSystem \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"108252007\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Laboratory procedure\"},{\"name\":\"message\",\"valueString\":\"There are no valid display names found for the code http://snomed.info/sct#108252007 for language(s) 'es-AR'. The display is 'Laboratory procedure' which is the default language display\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"108252007\",\"display\":\"Laboratory procedure\"}],\"text\":\"Procedimiento de Laboratorio\"}},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"information\",\"code\":\"invalid\",\"details\":{\"text\":\"There are no valid display names found for the code http://snomed.info/sct#108252007 for language(s) 'es-AR'. The display is 'Laboratory procedure' which is the default language display\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-display\"}]},\"expression\":[\"CodeableConcept.coding[0].display\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Validate \\\"[undefined#108252007 (\\\"Laboratory procedure\\\")]\\\"\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \\\"http://snomed.info/sct#108252007\\\"\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: check code in () at CodeableConcept.coding[0]\\n0ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Code \\\"108252007\\\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"108252007\",\"display\":\"Laboratory procedure\"}],\"text\":\"Procedimiento de Laboratorio\"}},{\"name\":\"displayLanguage\",\"valueString\":\"es-AR\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"6965e9a5-719b-4aa7-b6f0-5774aa0274ff\"},{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}
