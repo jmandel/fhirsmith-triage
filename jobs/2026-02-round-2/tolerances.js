@@ -1172,6 +1172,81 @@ const tolerances = [
   },
 
   {
+    id: 'expand-hl7-terminology-version-skew-params',
+    description: 'Normalizes expansion.parameter entries for HL7 terminology version skew. Prod and dev load different versions of terminology.hl7.org CodeSystems, causing (1) used-codesystem version strings to differ (e.g., observation-category|4.0.1 vs |2.0.0) and (2) prod to include warning-draft parameters that dev omits. Normalizes used-codesystem versions for terminology.hl7.org systems to prod values and strips warning-draft parameters from both sides. Must run before expand-used-codesystem-version-skew to prevent that tolerance from corrupting multi-parameter records. Affects ~237 expand records.',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'expand', 'version-skew', 'hl7-terminology', 'parameters'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.parameter || !dev?.expansion?.parameter) return null;
+
+      // Check for warning-draft in either side
+      const hasWarningDraft = [...(prod.expansion.parameter || []), ...(dev.expansion.parameter || [])]
+        .some(p => p.name === 'warning-draft');
+
+      // Check for used-codesystem version mismatch on terminology.hl7.org systems
+      const prodHl7Ucs = (prod.expansion.parameter || [])
+        .filter(p => p.name === 'used-codesystem' && (p.valueUri || '').includes('terminology.hl7.org/CodeSystem/'))
+        .map(p => p.valueUri).sort();
+      const devHl7Ucs = (dev.expansion.parameter || [])
+        .filter(p => p.name === 'used-codesystem' && (p.valueUri || '').includes('terminology.hl7.org/CodeSystem/'))
+        .map(p => p.valueUri).sort();
+      const hasVersionMismatch = JSON.stringify(prodHl7Ucs) !== JSON.stringify(devHl7Ucs);
+
+      if (hasWarningDraft || hasVersionMismatch) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Build a map from CS base URI -> prod version for terminology.hl7.org systems
+      const prodVersionMap = new Map();
+      for (const p of (prod.expansion.parameter || [])) {
+        if (p.name === 'used-codesystem' && (p.valueUri || '').includes('terminology.hl7.org/CodeSystem/')) {
+          const base = p.valueUri.split('|')[0];
+          prodVersionMap.set(base, p.valueUri);
+        }
+      }
+
+      function normalizeParams(params) {
+        if (!params) return params;
+        return params
+          // Strip warning-draft parameters
+          .filter(p => p.name !== 'warning-draft')
+          // Normalize used-codesystem versions for HL7 terminology to prod value
+          .map(p => {
+            if (p.name !== 'used-codesystem') return p;
+            const uri = p.valueUri || '';
+            if (!uri.includes('terminology.hl7.org/CodeSystem/')) return p;
+            const base = uri.split('|')[0];
+            const prodUri = prodVersionMap.get(base);
+            if (prodUri && prodUri !== uri) {
+              return { ...p, valueUri: prodUri };
+            }
+            return p;
+          });
+      }
+
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            parameter: normalizeParams(prod.expansion.parameter),
+          },
+        },
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            parameter: normalizeParams(dev.expansion.parameter),
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-used-codesystem-version-skew',
     description: 'Dev $expand reports different used-codesystem versions than prod, reflecting different loaded code system editions. Normalizes used-codesystem to prod value. Affects 37 expand records across SNOMED, ICD-9-CM, LOINC, and others.',
     kind: 'temp-tolerance',

@@ -1211,5 +1211,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "f73e4880fcfc88d500108e68ce6584d8c50d539e3ce87e8bd1df3286319090b9",
+        "human_id": "f73e488",
+        "create_time": {
+            "timestamp": 1770510345,
+            "time": "2026-02-07T18:25:45-06:00",
+            "lamport": 29
+        },
+        "edit_time": {
+            "timestamp": 1770510350,
+            "time": "2026-02-07T18:25:50-06:00",
+            "lamport": 150
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-error",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on GET  when CodeSystem content mode prevents expansion",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

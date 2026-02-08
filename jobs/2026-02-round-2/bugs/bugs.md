@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_27 bugs (24 open, 3 closed)_
+_28 bugs (25 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1471,6 +1471,50 @@ Found via:
 #####What the tolerance covers
 
 Tolerance `expand-contains-version-skew` matches expand records where both sides return 200, the code membership is identical, but `contains[].version` strings differ for common codes. It normalizes all `contains[].version` values to prod's values. This only triggers when code sets are the same (no extra/missing codes) — the existing `expand-snomed-version-skew-content` tolerance handles cases with code membership differences.
+
+---
+
+### [ ] `f73e488` Dev crashes (500) on GET  when CodeSystem content mode prevents expansion
+
+Records-Impacted: 258
+Tolerance-ID: expand-dev-crash-on-error
+Record-ID: 6b9d3a10-654f-4823-aadb-0fabc0d915bb
+
+#####What differs
+
+When expanding ValueSets that include code systems with restrictive content modes (e.g., HCPCS, ICD-9-CM), prod returns HTTP 422 with a clear OperationOutcome (issue code "too-costly", message like "The code System X has a grammar, and cannot be enumerated directly"). Dev returns HTTP 500 with multiple issues:
+
+1. **JS source code leak in error message**: Dev's error text contains interpolated JavaScript function body: `contentMode() {\r\n    return this.codeSystem.content;\r\n  }` instead of the actual content mode value. The message reads: "The code system definition for <URL> is a contentMode() { return this.codeSystem.content; }, so this expansion is not permitted..."
+
+2. **Different issue code**: Dev uses "business-rule" instead of prod's "too-costly"
+
+3. **Different HTTP status**: Dev returns 500 (server error) instead of 422 (semantic error)
+
+4. **Different code system referenced**: For us-core-procedure-code, prod references CPT (http://www.ama-assn.org/go/cpt) while dev references HCPCS (http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets). Both are included in the ValueSet but the servers stop at different code systems.
+
+Additionally, 4 records within this category show different dev crashes:
+- 2 records: "searchText.toLowerCase is not a function" (medication-codes expand with filter)
+- 1 record: "Unable to understand default system version" (iso3166 expand)
+- 1 record: "Cannot read properties of null (reading 'coding')" (CodeSystem validate-code)
+
+#####How widespread
+
+258 total dev-crash-on-error records in the delta file:
+- 257 are GET /r4/ValueSet/$expand (query params in URL)
+- 1 is POST /r4/CodeSystem/$validate-code
+- All share prod=422, dev=500
+
+The contentMode JS leak specifically affects 254 records across 2 ValueSets:
+- us-core-procedure-code (200 records, code system: HCPCS)
+- us-core-condition-code (54 records, code system: ICD-9-CM)
+
+#####What the tolerance covers
+
+The existing tolerance `expand-dev-crash-on-error` only matched POST requests (exact URL match `/r4/ValueSet/$expand`). Updated to match URL starting with `/r4/ValueSet/$expand` (covering GET requests with query params) and also the CodeSystem/$validate-code crash. This brings coverage from ~0 to 258 records eliminated.
+
+#####Representative record
+
+6b9d3a10-654f-4823-aadb-0fabc0d915bb — GET /r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-procedure-code
 
 ---
 

@@ -22,9 +22,11 @@ The issue directory has been pre-prepared with these files:
 - `prod-normalized.json` / `dev-normalized.json` — After tolerance pipeline (canonical key ordering)
 - `applied-tolerances.txt` — Which tolerances were applied during normalization
 
-**Start by comparing `prod-normalized.json` vs `dev-normalized.json`.** These show the differences that remain after existing tolerances. If they're identical, the existing pipeline already handles this record and you should note that in your analysis.
+**Start with `ls -la` on the issue directory** to see file sizes. Files over 200KB are too large to read directly — use `jq` or `python3` via bash to extract the fields you need (e.g., `jq '.resourceType, .issue[0]' file.json`). The normalized files are usually small enough to read; the raw files and record.json can be multi-MB for large expansions.
 
-Then read the raw files to understand the full picture and confirm the normalization is correct.
+**Then compare `prod-normalized.json` vs `dev-normalized.json`.** These show the differences that remain after existing tolerances. If they're identical, the existing pipeline already handles this record and you should note that in your analysis.
+
+Only read the raw files if the normalized files don't tell the full story (e.g., you need to see what was normalized away, or the normalized files are truncated/empty). Often the normalized files plus `record.json` metadata are sufficient.
 
 ## Step 2: Deeply inspect the record
 
@@ -38,6 +40,7 @@ Then read the raw files to understand the full picture and confirm the normaliza
 Before categorizing this as a one-off, search the full dataset for the same pattern:
 
 1. **Search the full dataset**: `grep '<distinctive-string>' <job-dir>/results/deltas/deltas.ndjson | wc -l`
+   - **Shell tip**: Piping grep output to `python3 -c "..."` often produces no output due to buffering. Instead, write to a temp file first: `grep ... > /tmp/matches.ndjson && python3 -c "..." /tmp/matches.ndjson`
 2. **Identify request properties that predict this difference**:
    - System URI (e.g., all UCUM codes, all SNOMED codes)
    - Operation type ($validate-code, $expand, $lookup)
@@ -94,6 +97,8 @@ git-bug bug label new <BUG_ID> "tx-compare"
 git-bug bug label new <BUG_ID> "content-differs"
 ```
 
+**Checking for existing bugs**: Before filing a new bug, check whether an existing bug already covers this pattern: `git-bug bug -l tx-compare 2>/dev/null | grep -i '<keyword>'`. If a matching bug exists, add your tolerance with its `bugId` instead of filing a duplicate.
+
 ## Step 5: Always write a tolerance
 
 **Every record gets a tolerance.** A tolerance is a record of judgment — "I looked at this and decided X." Without a tolerance, the record will surface again in the next triage pass.
@@ -148,9 +153,11 @@ normalize(ctx) {
 
 See "Tolerance Pipeline" in AGENTS.md for the full tolerance object shape and ctx documentation.
 
-a. Read the job's `tolerances.js` to understand the existing pipeline.
+a. Read the job's `tolerances.js` to understand the existing pipeline. The file may be very large — use `grep -n '<keyword>' tolerances.js` to find relevant sections rather than reading the entire file. Focus on tolerances that match the same operation/system you're working on.
 
 b. Add a new tolerance object in an appropriate position (skips first, then normalizations).
+
+   **Match on the normalized files**: `ctx.prod` and `ctx.dev` in your tolerance reflect the data *after* all earlier tolerances have run — i.e., they look like `prod-normalized.json` and `dev-normalized.json` from the issue directory. Base your `match()` on what's actually still different in those normalized files, not on differences you see in the raw files (which earlier tolerances may have already resolved).
 
 c. Archive the current delta file:
    ```

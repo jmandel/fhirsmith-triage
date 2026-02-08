@@ -1,0 +1,132 @@
+{
+  "resourceType": "ValueSet",
+  "url": "http://hl7.org/fhir/us/core/ValueSet/us-core-simple-observation-category",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.40.2.48.13"
+    }
+  ],
+  "version": "9.0.0-ballot",
+  "name": "USCoreSimpleObservationCategory",
+  "title": "US Core Simple Observation Category",
+  "status": "active",
+  "experimental": false,
+  "date": "2024-11-16",
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "US"
+        }
+      ]
+    }
+  ],
+  "expansion": {
+    "identifier": "urn:uuid:f415cfa3-45a8-4876-84ad-b1fbf8118fad",
+    "timestamp": "2026-02-07T11:13:06.960Z",
+    "total": 17,
+    "parameter": [
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category|9.0.0-ballot"
+      },
+      {
+        "name": "warning-draft",
+        "valueUri": "http://terminology.hl7.org/CodeSystem/observation-category|4.0.1"
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://terminology.hl7.org/CodeSystem/observation-category|4.0.1"
+      }
+    ],
+    "contains": [
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "sdoh",
+        "display": "SDOH"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "functional-status",
+        "display": "Functional Status"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "disability-status",
+        "display": "Disability Status"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "cognitive-status",
+        "display": "Cognitive Status"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "treatment-intervention-preference",
+        "display": "Treatment Intervention Preference"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "care-experience-preference",
+        "display": "Care Experience Preference"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "observation-adi-documentation",
+        "display": "Observation ADI Documentation"
+      },
+      {
+        "system": "http://hl7.org/fhir/us/core/CodeSystem/us-core-category",
+        "code": "PMO",
+        "display": "Portable Medical Order (PMO)"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "social-history",
+        "display": "Social History"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "vital-signs",
+        "display": "Vital Signs"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "imaging",
+        "display": "Imaging"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "laboratory",
+        "display": "Laboratory"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "procedure",
+        "display": "Procedure"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "survey",
+        "display": "Survey"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "exam",
+        "display": "Exam"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "therapy",
+        "display": "Therapy"
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+        "code": "activity",
+        "display": "Activity"
+      }
+    ]
+  }
+}
