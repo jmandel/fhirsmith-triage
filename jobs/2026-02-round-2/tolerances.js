@@ -184,9 +184,9 @@ const tolerances = [
 
   {
     id: 'oo-missing-location-field',
-    description: 'Dev omits deprecated `location` field on OperationOutcome issues that prod includes. In FHIR R4, `location` is deprecated in favor of `expression`, but prod still populates both. In all observed cases, `location` exactly equals `expression`. Normalizes by stripping `location` from prod when dev lacks it. Handles both flat validate-code and nested batch-validate-code structures. Affects ~3069 records.',
-    kind: 'temp-tolerance',
-    bugId: 'a9cf20c',
+    description: 'Dev omits deprecated `location` field on OperationOutcome issues. The `location` field is deprecated in FHIR R4 and prod has been populating it incorrectly, so stopping altogether is correct (GG adjudicated: "won\'t fix. location is deprecated and I\'ve been populating it wrong"). Normalizes by stripping `location` from prod when dev lacks it. Handles both flat validate-code and nested batch-validate-code structures.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'operationoutcome', 'missing-location'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -504,9 +504,9 @@ const tolerances = [
 
   {
     id: 'bcp47-display-format',
-    description: 'BCP-47 display text format differs: prod returns "English (United States)", dev returns "English (Region=United States)". Dev uses explicit subtag labels ("Region=") which is non-standard. Affects 7 validate-code records for urn:ietf:bcp:47.',
-    kind: 'temp-tolerance',
-    bugId: 'round-1-bug-id:e09cff6',
+    description: 'BCP-47 display text format differs between prod and dev. Which format to use is arbitrary (GG adjudicated: "won\'t fix; it\'s arbitrary anyway"). Normalizes display text differences for urn:ietf:bcp:47 validate-code records.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'display-text', 'bcp47'],
     match({ record, prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1425,9 +1425,9 @@ const tolerances = [
 
   {
     id: 'expand-dev-extra-contact-metadata',
-    description: 'Dev $expand includes ValueSet contact field (publisher contact info) that prod omits. The contact data is source ValueSet metadata passed through by dev but stripped by prod. Affects 12 expand records in deltas (59 in full comparison).',
-    kind: 'temp-tolerance',
-    bugId: 'round-1-bug-id:3967e97',
+    description: 'Dev $expand includes ValueSet contact field (publisher contact info) that prod omits (GG adjudicated: "won\'t fix"). Normalizes by stripping contact from dev.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'expand', 'extra-metadata'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1702,9 +1702,9 @@ const tolerances = [
 
   {
     id: 'ndc-validate-code-extra-inactive-params',
-    description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
-    kind: 'temp-tolerance',
-    bugId: 'round-1-bug-id:7258b41',
+    description: 'NDC $validate-code: dev returns extra inactive/version/message/issues params that prod omits. Dev is correct in returning these (GG adjudicated: "dev is right so far as I can tell"). Normalizes the extra params.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'ndc', 'validate-code', 'extra-params'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2149,9 +2149,9 @@ const tolerances = [
 
   {
     id: 'cpt-validate-code-missing-info-issue',
-    description: 'CPT $validate-code result=false: dev omits informational "Code X not found in CPT" OperationOutcome issue that prod includes. For ValueSet validate-code, prod also prefixes message with this text. Both agree on result=false and the primary error issue. Normalizes by stripping the extra informational issue from prod and removing the message prefix. Affects 10 records (8 CodeSystem, 2 ValueSet).',
-    kind: 'temp-tolerance',
-    bugId: 'round-1-bug-id:9d6a37e',
+    description: 'CPT $validate-code result=false: dev omits informational "Code X not found in CPT" issue that prod includes. The second message is useless so it was intentionally eliminated (GG adjudicated: "won\'t fix - second message is useless so I eliminated it"). Normalizes by stripping the extra informational issue from prod.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'validate-code', 'cpt', 'missing-info-issue'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2869,9 +2869,9 @@ const tolerances = [
 
   {
     id: 'oo-missing-location-post-version-skew',
-    description: 'Catches OperationOutcome location field differences that oo-missing-location-field (line 186) misses due to pipeline ordering. When records have extra status-check issues in prod that hl7-terminology-cs-version-skew strips, the issue arrays are misaligned at the time oo-missing-location-field runs, so it cannot match. After version-skew normalization aligns the arrays, this tolerance strips location from prod issues where location equals expression and dev lacks it. Same root cause as bug a9cf20c. Affects ~247 validate-code records.',
-    kind: 'temp-tolerance',
-    bugId: 'a9cf20c',
+    description: 'Catches OperationOutcome location field differences missed by oo-missing-location-field due to pipeline ordering. Same root cause: deprecated `location` field intentionally removed from dev (GG adjudicated: "won\'t fix. location is deprecated and I\'ve been populating it wrong"). Runs later in pipeline to catch records where version-skew normalization must align issue arrays first.',
+    kind: 'equiv-autofix',
+    adjudication: ['gg'],
     tags: ['normalize', 'operationoutcome', 'missing-location'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -4516,6 +4516,28 @@ const tolerances = [
       }
 
       return both({ prod, dev }, normalizeBody);
+    },
+  },
+
+  // --- Lookup: unknown code status mismatch (prod=400, dev=404) ---
+  {
+    id: 'lookup-unknown-code-status-400-vs-404',
+    description: 'SNOMED $lookup for unknown code: prod returns 400/invalid, dev returns 404/not-found. Both agree code does not exist.',
+    kind: 'temp-tolerance',
+    bugId: 'e107342',
+    tags: ['skip', 'status-mismatch', 'lookup'],
+    match({ record, prod, dev }) {
+      if (record.prod.status !== 400 || record.dev.status !== 404) return null;
+      if (!/CodeSystem\/\$lookup/.test(record.url)) return null;
+      // Both must be OperationOutcome with "Unable to find code" messages
+      if (prod?.resourceType !== 'OperationOutcome') return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      const prodMsg = prod.issue?.[0]?.diagnostics || prod.issue?.[0]?.details?.text || '';
+      const devMsg = dev.issue?.[0]?.diagnostics || dev.issue?.[0]?.details?.text || '';
+      if (/Unable to find code/.test(prodMsg) && /Unable to find code/.test(devMsg)) {
+        return 'skip';
+      }
+      return null;
     },
   },
 

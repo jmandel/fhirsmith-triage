@@ -1,10 +1,10 @@
 {
   "jobDir": "jobs/2026-02-round-2",
-  "timestamp": "2026-02-08T02:39:36.596Z",
+  "timestamp": "2026-02-08T04:34:07.914Z",
   "totalRecords": 32233,
-  "skipped": 4902,
+  "skipped": 4903,
   "skippedByKind": {
-    "temp-tolerance": 4608,
+    "temp-tolerance": 4609,
     "equiv-autofix": 294
   },
   "skippedReasons": {
@@ -28,6 +28,7 @@
     "expand-toocostly-dev-returns-codes": 1,
     "r5-get-subsumes-status-mismatch": 2,
     "validate-code-undefined-code-message-diff": 1,
+    "lookup-unknown-code-status-400-vs-404": 1,
     "vsac-modifier-extension-error": 1,
     "hcpcs-codesystem-availability": 90,
     "bcp47-case-sensitive-validation": 1,
@@ -36,15 +37,14 @@
   },
   "categories": {
     "OK": 27325,
-    "status-mismatch": 1,
     "missing-resource": 1,
     "result-disagrees": 3,
     "content-differs": 1
   },
   "okBreakdown": {
     "strict": 0,
-    "equiv-autofix": 10198,
-    "temp-tolerance": 17127
+    "equiv-autofix": 12091,
+    "temp-tolerance": 15234
   },
   "operationBreakdown": {
     "validate-code": {
@@ -57,8 +57,7 @@
       "missing-resource": 1
     },
     "lookup": {
-      "OK": 2990,
-      "status-mismatch": 1
+      "OK": 2990
     },
     "batch-validate-code": {
       "OK": 111
