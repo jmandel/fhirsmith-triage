@@ -1,0 +1,41 @@
+{
+  "date": "2026-02-07T13:45:17+00:00",
+  "expansion": {
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "limitedExpansion",
+        "valueBoolean": true
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      }
+    ]
+  },
+  "experimental": false,
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "code": "BR",
+          "system": "urn:iso:std:iso:3166"
+        }
+      ]
+    }
+  ],
+  "name": "ExameImagemLaudoConclusionCode",
+  "resourceType": "ValueSet",
+  "status": "active",
+  "title": "Conclusão do exame com imagem e/ou laudo",
+  "url": "https://fhir.saude.go.gov.br/r4/exame/ValueSet/exame-imagem-laudo-conclusion-code",
+  "version": "1.0.1"
+}

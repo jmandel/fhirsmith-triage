@@ -1,0 +1,50 @@
+{
+  "resourceType": "ValueSet",
+  "url": "https://fhir.saude.go.gov.br/r4/exame/ValueSet/exame-imagem-laudo-conclusion-code",
+  "version": "1.0.1",
+  "name": "ExameImagemLaudoConclusionCode",
+  "title": "Conclusão do exame com imagem e/ou laudo",
+  "status": "active",
+  "experimental": false,
+  "date": "2026-02-07T13:45:17+00:00",
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "BR"
+        }
+      ]
+    }
+  ],
+  "expansion": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/valueset-toocostly",
+        "valueBoolean": true
+      }
+    ],
+    "identifier": "urn:uuid:1fee6058-d8fd-4aef-bacd-98f6bb219bc0",
+    "timestamp": "2026-02-07T13:50:37.536Z",
+    "total": 0,
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "limitedExpansion",
+        "valueBoolean": true
+      },
+      {
+        "name": "excludeNested",
+        "valueBoolean": false
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      }
+    ]
+  }
+}

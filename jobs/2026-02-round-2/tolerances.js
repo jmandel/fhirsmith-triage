@@ -3669,6 +3669,32 @@ const tolerances = [
   },
 
   {
+    id: 'expand-toocostly-dev-returns-codes',
+    description: 'Dev $expand returns codes in expansion.contains for ValueSets that prod marks as too-costly. Both return 200, prod has empty expansion with valueset-toocostly extension, dev returns up to 1000 codes. Dev does not enforce the expansion size guard. Affects 1 record (Brazilian cid10-ciap2 ValueSet).',
+    kind: 'temp-tolerance',
+    bugId: '44136eb',
+    tags: ['skip', 'expand', 'toocostly', 'content-differs'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+
+      // Prod has limitedExpansion: true parameter (signals too-costly/partial expansion)
+      const prodHasLimited = (prod.expansion.parameter || []).some(
+        p => p.name === 'limitedExpansion' && p.valueBoolean === true
+      );
+      if (!prodHasLimited) return null;
+
+      // Prod has no contains (or empty), dev has contains
+      const prodContains = prod.expansion.contains || [];
+      const devContains = dev.expansion.contains || [];
+      if (prodContains.length === 0 && devContains.length > 0) return 'skip';
+
+      return null;
+    },
+  },
+
+  {
     id: 'hgvs-extra-syntax-issue',
     description: 'Dev returns extra informational OperationOutcome issue for HGVS (varnomen.hgvs.org) $validate-code operations. Dev includes an additional informational-level issue with HGVS syntax validation feedback ("Missing one of \'c\', \'g\', \'m\', \'n\', \'p\', \'r\' followed by \'.\'") that prod does not return. Both agree on result=false and the error-level issue. Affects 62 records.',
     kind: 'temp-tolerance',

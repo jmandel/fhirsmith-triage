@@ -1493,16 +1493,61 @@
             "lamport": 35
         },
         "edit_time": {
-            "timestamp": 1770514840,
-            "time": "2026-02-07T19:40:40-06:00",
-            "lamport": 197
+            "timestamp": 1770515176,
+            "time": "2026-02-07T19:46:16-06:00",
+            "lamport": 200
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "SNOMED $lookup: dev returns Synonym designation use type where prod returns Inactive",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "6b3169444ff41015dc289c55c7c282bf4cc45f3c67dbbfcac4cce8ab08e569da",
+        "human_id": "6b31694",
+        "create_time": {
+            "timestamp": 1770515185,
+            "time": "2026-02-07T19:46:25-06:00",
+            "lamport": 36
+        },
+        "edit_time": {
+            "timestamp": 1770515332,
+            "time": "2026-02-07T19:48:52-06:00",
+            "lamport": 204
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on GET  with filter parameter: searchText.toLowerCase is not a function",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

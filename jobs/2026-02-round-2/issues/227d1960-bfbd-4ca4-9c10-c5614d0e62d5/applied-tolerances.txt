@@ -1,0 +1,5 @@
+expand-metadata-identifier-timestamp: normalize
+expand-hl7-terminology-version-skew-params: normalize
+expand-dev-extra-contact-metadata: normalize
+expand-dev-missing-total: normalize
+expand-toocostly-extension-and-used-codesystem: normalize

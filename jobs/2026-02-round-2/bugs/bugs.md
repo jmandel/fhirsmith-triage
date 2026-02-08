@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_34 bugs (29 open, 5 closed)_
+_35 bugs (30 open, 5 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1402,52 +1402,9 @@ Same root cause as bug 9fd2328 (Dev loads older SNOMED CT edition), which covers
 
 ---
 
-### [ ] `1433eb6` Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)
-
-Records-Impacted: 10
-Tolerance-ID: validate-code-valueset-not-found-dev-400
-Record-ID: 064711fa-e287-430e-a6f4-7ff723952ff1
-
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
-```
-
-Prod returns HTTP 200 with `{"resourceType":"Parameters","parameter":[{"name":"result","valueBoolean":true},...]}` indicating successful validation. Dev returns HTTP 400 with `{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"not-found","details":{"text":"A definition for the value Set 'http://hl7.org/fhir/ValueSet/@all' could not be found"}}]}`.
-
-For $validate-code requests against certain ValueSets, prod returns HTTP 200 with a valid Parameters response (result=true or result=false), while dev returns HTTP 400 with an OperationOutcome saying "A definition for the value Set '...' could not be found."
-
-Prod successfully resolves these ValueSets and performs code validation. Dev fails at the ValueSet resolution step and returns an error instead of a validation result.
+### [ ] `1433eb6` 
 
 
-10 records show this pattern (prod=200, dev=400 with "could not be found"):
-
-- 3 records: `nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use*` (Indian NDHM ValueSets)
-- 5 records: `ontariohealth.ca/fhir/ValueSet/*` (Ontario Health ValueSets)
-- 2 records: `hl7.org/fhir/ValueSet/@all` (special @all ValueSet)
-
-Search: `grep 'could not be found' results/deltas/deltas.ndjson` filtered to prod=200 dev=400
-
-All are POST /r4/ValueSet/$validate-code requests. The ValueSets come from different IG packages (NDHM India, Ontario Health, and core FHIR @all), so the root cause may be that dev is missing certain IG-provided ValueSet definitions or doesn't support the @all pseudo-ValueSet.
-
-
-Tolerance `validate-code-valueset-not-found-dev-400` matches: POST validate-code, prod=200, dev=400, where dev body contains OperationOutcome with "could not be found" text. Eliminates all 10 records.
-
-
-- 064711fa-e287-430e-a6f4-7ff723952ff1 (nrces.in ndhm-diagnosis-use--0)
-- 5beceead-a754-4f88-8dec-1a7a931166b9 (ontariohealth.ca symptoms-of-clinical-concern)
-- 38f6e665-4c34-4589-8d29-77c522b97845 (hl7.org/fhir/ValueSet/@all)
 
 ---
 
@@ -1683,9 +1640,46 @@ The existing tolerance `expand-dev-crash-on-error` only matched POST requests (e
 
 ---
 
-### [ ] `af1ce69` 
+### [ ] `af1ce69` validate-code: dev renders null status as literal 'null' in inactive concept message
 
+Records-Impacted: 24
+Tolerance-ID: validate-code-null-status-in-message
+Record-ID: 20db1af0-c1c6-4f83-9019-2aaeff9ef549
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+```
+
+Prod returns `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status), dev returns `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null").
+
+#####What differs
+
+In $validate-code responses for inactive concepts, the message and issues text differ in how a missing status value is rendered:
+
+- Prod: `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status)
+- Dev: `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null")
+
+Both servers agree on result=true, inactive=true, display, system, and version. The only difference is this string interpolation of a null/missing status value in the INACTIVE_CONCEPT_FOUND message.
+
+#####How widespread
+
+24 records in the current delta file, all identical: GET /r4/CodeSystem/$validate-code for RxNorm code 70618. The same underlying pattern (empty vs "null" in status message) also affects 20 NDC records already covered by a separate tolerance (ndc-validate-code-extra-inactive-params, bug 7258b41).
+
+Search: `grep 'has a status of  and' results/deltas/deltas.ndjson | wc -l` → 24
+All 24 are validate-code operations on http://www.nlm.nih.gov/research/umls/rxnorm, code 70618.
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-null-status-in-message
+Matches: validate-code Parameters responses where prod message contains "status of " (empty) and dev message contains "status of null" at the same position. Normalizes both message and issues text by replacing "status of null" with "status of " (prod's rendering) in dev. Eliminates 24 delta records.
 
 ---
 
@@ -1728,42 +1722,63 @@ Tolerance ID: `validate-code-no-system-422`. Matches validate-code records where
 
 ---
 
-### [ ] `7716e08` Dev uses R5-style property instead of R4 extension for deprecated status in expand contains
+### [ ] `7716e08` 
 
-Records-Impacted: 26
-Tolerance-ID: expand-r4-deprecated-status-representation
-Record-ID: 307d55c7-f148-4ddc-a360-3962e4e2fe7c, 131242e8-b7fb-4c3a-a45b-680355b8a70f
 
-In R4 $expand responses, prod and dev represent deprecated code status differently in two ways:
-
-**1. Per-code deprecated annotations on expansion.contains entries**
-
-- **security-labels (18 records)**: Prod uses R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property` to convey `status: deprecated`. Dev uses R5-native `property` elements directly (e.g., `"property": [{"code": "status", "valueCode": "deprecated"}]`). The R4 spec does not define `property` on `expansion.contains` — that was introduced in R5.
-
-- **patient-contactrelationship (5 records) + v3-TribalEntityUS (3 records)**: Prod annotates deprecated codes with the same R5 backport extension. Dev omits the deprecated status annotation entirely — no extension and no property.
-
-**2. Expansion-level property declaration extension**
-
-Prod includes an expansion-level extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property` that declares the "status" property used in per-code annotations. Dev either omits this entirely (patient-contactrelationship) or includes it with different key ordering (TribalEntityUS). This is the R5 backport mechanism for declaring expansion properties in R4.
-
-**How widespread**
-
-26 expand records across 3 ValueSets. All are R4 $expand operations containing codes from HL7 terminology CodeSystems with deprecated entries.
-
-```bash
-grep 'extension-ValueSet.expansion.contains.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
-grep 'extension-ValueSet.expansion.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
-```
-
-**Tolerance**
-
-Tolerance `expand-r4-deprecated-status-representation` normalizes by stripping both per-code annotations (R5 backport extension and R5-native property) and the expansion-level property declaration extension from both sides. This eliminates the structural difference so other content differences can still surface.
 
 ---
 
-### [ ] `d05a4a6` 
+### [ ] `d05a4a6` Dev omits retired status-check informational issues in validate-code OperationOutcome
 
+Records-Impacted: 13
+Tolerance-ID: missing-retired-status-check-issue
+Record-ID: dc21c18a-fd57-429c-a51b-54bbfd23753f
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns 3 OperationOutcome issues: an informational `status-check` issue ("Reference to retired ValueSet http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0") plus two error-level issues (UNKNOWN_CODESYSTEM and not-in-vs). Dev returns only the 2 error-level issues, omitting the retired status-check informational issue entirely.
+
+#####What differs
+
+When validating a code against a ValueSet that includes a retired sub-ValueSet, prod returns an informational status-check issue in the OperationOutcome reporting the retired reference. Dev omits this issue entirely.
+
+Specifically, for validate-code on `http://hl7.org/fhir/ValueSet/security-labels|4.0.1` (which composes `http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0`, a retired ValueSet), prod includes:
+
+```json
+{
+"severity": "information",
+"code": "business-rule",
+"details": {
+  "coding": [{"system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type", "code": "status-check"}],
+  "text": "Reference to retired ValueSet http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0"
+}
+}
+```
+
+Dev's OperationOutcome has no such issue. All other parameters (result, system, code, message, and the two error-level issues) match between prod and dev.
+
+#####How widespread
+
+13 records in deltas.ndjson. All are GET validate-code requests on `http://hl7.org/fhir/ValueSet/security-labels|4.0.1` with system `urn:ihe:xds:scheme8`. Found via:
+```
+grep 'status-check' results/deltas/deltas.ndjson | wc -l
+```
+
+Note: the existing `hl7-terminology-cs-version-skew` tolerance already strips *draft* status-check issues for `terminology.hl7.org/CodeSystem/*` systems (bug 6edc96c). This is a separate pattern — *retired* status-check issues for ValueSet composition references.
+
+#####What the tolerance covers
+
+Tolerance `missing-retired-status-check-issue` strips informational status-check issues containing "retired" from prod's OperationOutcome, matching any validate-code operation where prod has a retired status-check issue and dev does not. Eliminates 13 records.
 
 ---
 
@@ -1822,6 +1837,20 @@ Records-Impacted: 4
 Tolerance-ID: snomed-lookup-inactive-designation-use
 Record-ID: eebd3d87-2015-48c3-84ac-c46d76ac23e1
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=303071001' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=303071001' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns designation "People in the family" with `use.code: "73425007"` (display: "Inactive"), dev returns the same designation with `use.code: "900000000000013009"` (display: "Synonym (core metadata concept)"). Also reproducible with code 116101001 where prod marks 7 of 9 designations as Inactive while dev marks none.
+
 #####What differs
 
 For SNOMED CT CodeSystem/$lookup responses containing inactive descriptions, prod marks those designations with `use.code: "73425007"` (display: "Inactive") while dev marks the same designations with `use.code: "900000000000013009"` (display: "Synonym (core metadata concept)").
@@ -1854,6 +1883,39 @@ Eliminates 4 records.
 
 - eebd3d87-2015-48c3-84ac-c46d76ac23e1 — GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=303071001
 - fcb6b89e-a38f-444f-8bcb-41eefd5509b0 — GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=116101001
+
+---
+
+### [ ] `6b31694` Dev crashes (500) on GET  with filter parameter: searchText.toLowerCase is not a function
+
+Records-Impacted: 58
+Tolerance-ID: expand-filter-crash
+Record-ID: dabcdc4f-feed-4ac8-adea-8999b06187a5
+
+#####What differs
+
+Dev returns HTTP 500 with OperationOutcome error `searchText.toLowerCase is not a function` on all GET `$expand` requests (R4 and R5) that include a `filter` parameter. Prod returns 200 with a valid ValueSet expansion.
+
+The error is a JavaScript TypeError indicating that `searchText` is null/undefined when `.toLowerCase()` is called during filter processing.
+
+#####How widespread
+
+All 58 records matching this error in the comparison dataset. Every one is a GET `/r4/ValueSet/$expand` or `/r5/ValueSet/$expand` request with a `filter=` query parameter. They span 3 distinct ValueSets:
+- `http://hl7.org/fhir/ValueSet/participant-role` (R4 and R5)
+- `http://hl7.org/fhir/ValueSet/condition-code` (R4)
+- `http://hl7.org/fhir/ValueSet/medication-codes` (R4)
+
+Search: `grep -c 'searchText.toLowerCase is not a function' jobs/2026-02-round-2/results/deltas/deltas.ndjson` → 58
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-filter-crash`
+Matches: GET requests to `/r[345]/ValueSet/$expand` where `filter=` is in the URL, `prod.status=200`, `dev.status=500`, and the dev response contains `searchText.toLowerCase is not a function`.
+Eliminates: 58 records.
+
+#####Representative records
+
+- `dabcdc4f-feed-4ac8-adea-8999b06187a5` — `GET /r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/participant-role&filter=referr&count=50`
 
 ---
 
