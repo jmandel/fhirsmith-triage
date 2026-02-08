@@ -1,0 +1,24 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "not-found",
+      "details": {
+        "text": "A definition for CodeSystem 'http://hl7.org/fhir/ValueSet/allergyintolerance-clinical' could not be found, so the value set cannot be expanded",
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+            "code": "not-found"
+          }
+        ]
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueString": "UNKNOWN_CODESYSTEM_EXP"
+        }
+      ]
+    }
+  ]
+}

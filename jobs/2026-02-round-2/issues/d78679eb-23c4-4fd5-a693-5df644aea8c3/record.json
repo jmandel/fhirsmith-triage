@@ -1,0 +1,26 @@
+{
+  "id": "d78679eb-23c4-4fd5-a693-5df644aea8c3",
+  "url": "/r4/ValueSet/$expand?_limit=1000&_incomplete=true",
+  "method": "POST",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 742,
+    "hash": "a287794e2618e3905caccef7c848f557"
+  },
+  "dev": {
+    "status": 404,
+    "contentType": "application/json; charset=utf-8",
+    "size": 474,
+    "hash": "7a7813c531a5137250a9f519f55c6f37"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "expand",
+    "prodStatus": 422,
+    "devStatus": 404
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>A definition for CodeSystem 'http://hl7.org/fhir/ValueSet/allergyintolerance-clinical' could not be found, so the value set cannot be expanded</p></div>\"},\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM_EXP\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'http://hl7.org/fhir/ValueSet/allergyintolerance-clinical' could not be found, so the value set cannot be expanded\"}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://hl7.org/fhir/ValueSet/allergyintolerance-clinical' could not be found, so the value set cannot be expanded\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_EXP\"}]}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"includeDefinition\",\"valueBoolean\":false},{\"name\":\"excludeNested\",\"valueBoolean\":false},{\"name\":\"valueSet\",\"resource\":{\"resourceType\":\"ValueSet\",\"status\":\"active\",\"compose\":{\"inactive\":true,\"include\":[{\"system\":\"http://hl7.org/fhir/ValueSet/allergyintolerance-clinical\"}]}}},{\"name\":\"_limit\",\"valueString\":\"1000\"},{\"name\":\"_incomplete\",\"valueString\":\"true\"}]}"
+}

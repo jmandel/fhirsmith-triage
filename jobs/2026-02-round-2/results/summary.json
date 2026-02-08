@@ -1,20 +1,19 @@
 {
   "jobDir": "jobs/2026-02-round-2",
-  "timestamp": "2026-02-08T00:03:25.097Z",
+  "timestamp": "2026-02-08T00:07:27.902Z",
   "totalRecords": 32233,
-  "skipped": 4392,
+  "skipped": 4434,
   "skippedByKind": {
-    "temp-tolerance": 4356,
+    "temp-tolerance": 4398,
     "equiv-autofix": 36
   },
   "skippedReasons": {
-    "expand-valueset-not-found-status-mismatch": 714,
+    "expand-422-vs-404-codesystem-not-found": 1401,
     "error-status-422-vs-400": 1897,
     "v3-valueset-validate-code-result-disagrees": 187,
     "expand-v3-hierarchical-incomplete": 246,
     "skip-prod-xml": 36,
     "cpt-validate-code-result-disagrees": 17,
-    "expand-422-vs-404-codesystem-not-found": 653,
     "expand-too-costly-succeeds": 90,
     "expand-dev-crash-on-error": 78,
     "snomed-implicit-valueset-expand-404": 36,
@@ -23,6 +22,7 @@
     "expand-toocostly-grammar-400": 12,
     "snomed-version-skew-validate-code-result-disagrees": 1,
     "validate-code-valueset-not-found-dev-400": 10,
+    "expand-valueset-not-found-status-mismatch": 8,
     "validate-code-undefined-code-message-diff": 1,
     "vsac-modifier-extension-error": 1,
     "hcpcs-codesystem-availability": 90,
@@ -32,9 +32,9 @@
   },
   "categories": {
     "OK": 24327,
-    "status-mismatch": 178,
     "content-differs": 3008,
     "dev-crash-on-error": 266,
+    "status-mismatch": 136,
     "dev-crash-on-valid": 58,
     "missing-resource": 1,
     "result-disagrees": 3
@@ -54,7 +54,6 @@
     },
     "expand": {
       "OK": 1394,
-      "status-mismatch": 42,
       "content-differs": 479,
       "dev-crash-on-error": 265,
       "dev-crash-on-valid": 58,

@@ -1043,16 +1043,61 @@
             "lamport": 25
         },
         "edit_time": {
-            "timestamp": 1770508642,
-            "time": "2026-02-07T17:57:22-06:00",
-            "lamport": 134
+            "timestamp": 1770508929,
+            "time": "2026-02-07T18:02:09-06:00",
+            "lamport": 136
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
         "title": "Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1433eb601c3ab5b9f62e43c914575143af521ca5166c92e38dc92116a0da2cc9",
+        "human_id": "1433eb6",
+        "create_time": {
+            "timestamp": 1770508974,
+            "time": "2026-02-07T18:02:54-06:00",
+            "lamport": 26
+        },
+        "edit_time": {
+            "timestamp": 1770508978,
+            "time": "2026-02-07T18:02:58-06:00",
+            "lamport": 139
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

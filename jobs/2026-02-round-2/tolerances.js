@@ -568,12 +568,12 @@ const tolerances = [
 
   {
     id: 'expand-422-vs-404-codesystem-not-found',
-    description: 'Dev returns 404 instead of 422 for $expand when a referenced CodeSystem is not found. Both servers return identical OperationOutcome with issue code "not-found" and message "could not be found, so the value set cannot be expanded". Affects 296 POST /r4/ValueSet/$expand records.',
+    description: 'Dev returns 404 instead of 422 for $expand when a referenced CodeSystem is not found. Both servers return identical OperationOutcome with issue code "not-found" and message "could not be found, so the value set cannot be expanded". Affects POST and GET /r4/ValueSet/$expand records (with or without query params).',
     kind: 'temp-tolerance',
     bugId: '1c145d2',
     tags: ['skip', 'status-mismatch', 'expand'],
     match({ record }) {
-      if (record.url !== '/r4/ValueSet/$expand') return null;
+      if (!record.url.startsWith('/r4/ValueSet/$expand')) return null;
       if (record.prod?.status !== 422 || record.dev?.status !== 404) return null;
       return 'skip';
     },
