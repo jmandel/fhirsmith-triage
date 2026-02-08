@@ -1,0 +1,12 @@
+{
+  "issue": [
+    {
+      "code": "exception",
+      "details": {
+        "text": "fdb_sqlite3_objects error: no such column: cui1"
+      },
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

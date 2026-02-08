@@ -3180,6 +3180,22 @@ const tolerances = [
   },
 
   {
+    id: 'dev-sqlite-misuse-expand-rxnorm',
+    description: 'Dev returns 500 "SQLITE_MISUSE: not an error" on RxNorm-related $expand requests. 8 records where prod also returns 500 (different SQLite error), 8 records where prod returns proper 422. Dev crashes instead of handling the request properly. 16 records total.',
+    kind: 'temp-tolerance',
+    bugId: '1932f81',
+    tags: ['skip', 'dev-crash', 'sqlite', 'rxnorm'],
+    match({ record, dev }) {
+      if (!/expand/.test(record.url)) return null;
+      if (record.dev.status !== 500) return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      const text = dev.issue?.[0]?.details?.text || '';
+      if (/SQLITE_MISUSE/.test(text)) return 'skip';
+      return null;
+    },
+  },
+
+  {
     id: 'validate-code-valueset-not-found-dev-400',
     description: 'Dev returns 400 "ValueSet could not be found" for $validate-code requests that prod handles successfully (200). Affected ValueSets include nrces.in/ndhm, ontariohealth.ca, and hl7.org/fhir/ValueSet/@all. Dev is missing certain ValueSet definitions that prod resolves. 10 records.',
     kind: 'temp-tolerance',

@@ -1,0 +1,25 @@
+{
+  "id": "e108a92a-a962-45b4-ad35-e0aa4fe4cf32",
+  "url": "/r4/ValueSet/$expand?_limit=1000&_incomplete=true",
+  "method": "POST",
+  "prod": {
+    "status": 500,
+    "contentType": "application/fhir+json",
+    "size": 294,
+    "hash": "feb267741b4796bafaeb0fd895937f32"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 178,
+    "hash": "0802e893a4298580b5745aa26f5818d9"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "expand",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>fdb_sqlite3_objects error: no such column: cui1</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"details\" : {\"text\" : \"fdb_sqlite3_objects error: no such column: cui1\"}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"exception\",\"details\":{\"text\":\"SQLITE_MISUSE: not an error\"},\"diagnostics\":\"SQLITE_MISUSE: not an error\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"includeDefinition\",\"valueBoolean\":false},{\"name\":\"excludeNested\",\"valueBoolean\":false},{\"name\":\"valueSet\",\"resource\":{\"resourceType\":\"ValueSet\",\"status\":\"active\",\"compose\":{\"inactive\":true,\"include\":[{\"system\":\"http://www.nlm.nih.gov/research/umls/rxnorm\"}]}}},{\"name\":\"_limit\",\"valueString\":\"1000\"},{\"name\":\"_incomplete\",\"valueString\":\"true\"}]}"
+}

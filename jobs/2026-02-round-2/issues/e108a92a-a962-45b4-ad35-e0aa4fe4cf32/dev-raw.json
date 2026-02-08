@@ -1,0 +1,13 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "exception",
+      "details": {
+        "text": "SQLITE_MISUSE: not an error"
+      },
+      "diagnostics": "SQLITE_MISUSE: not an error"
+    }
+  ]
+}

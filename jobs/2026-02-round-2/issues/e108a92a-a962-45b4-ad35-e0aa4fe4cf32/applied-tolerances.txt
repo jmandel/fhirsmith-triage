@@ -1,0 +1,2 @@
+read-resource-text-div-diff: normalize
+error-operationoutcome-structure-diff: normalize

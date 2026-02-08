@@ -1,0 +1,15 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>fdb_sqlite3_objects error: no such column: cui1</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "details": {
+        "text": "fdb_sqlite3_objects error: no such column: cui1"
+      }
+    }
+  ]
+}
