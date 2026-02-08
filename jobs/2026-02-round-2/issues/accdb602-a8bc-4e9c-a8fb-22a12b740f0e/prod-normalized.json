@@ -1,0 +1,63 @@
+{
+  "date": "2023-06-28T01:00:46-04:00",
+  "expansion": {
+    "contains": [
+      {
+        "code": "248152002",
+        "display": "Female (finding)",
+        "system": "http://snomed.info/sct",
+        "version": "http://snomed.info/sct/731000124108/version/20250901"
+      },
+      {
+        "code": "248153007",
+        "display": "Male (finding)",
+        "system": "http://snomed.info/sct",
+        "version": "http://snomed.info/sct/731000124108/version/20250901"
+      },
+      {
+        "code": "33791000087105",
+        "display": "Identifies as nonbinary gender (finding)",
+        "system": "http://snomed.info/sct",
+        "version": "http://snomed.info/sct/731000124108/version/20250901"
+      },
+      {
+        "code": "asked-declined",
+        "display": "Asked But Declined",
+        "system": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
+        "version": "0.1.0"
+      }
+    ],
+    "total": 4
+  },
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113762.1.4.1240.3"
+    }
+  ],
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "code": "US",
+          "system": "urn:iso:std:iso:3166"
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "lastUpdated": "2024-04-26T15:45:20.000-04:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset",
+      "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/computable-valueset-cqfm",
+      "http://hl7.org/fhir/us/cqfmeasures/StructureDefinition/publishable-valueset-cqfm"
+    ],
+    "versionId": "10"
+  },
+  "name": "Sex",
+  "resourceType": "ValueSet",
+  "status": "active",
+  "title": "Sex",
+  "url": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1240.3",
+  "version": "20230628"
+}

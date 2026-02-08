@@ -2993,6 +2993,93 @@ const tolerances = [
   },
 
   {
+    id: 'expand-snomed-version-skew-content-no-used-cs',
+    description: 'VSAC ValueSet $expand where SNOMED version skew is visible only in contains[].version (no used-codesystem expansion parameter). Dev has SNOMED US 20250301 vs prod 20250901, causing different code membership (e.g., dev includes 184115007 "Patient sex unknown" not in prod). Same root cause as expand-snomed-version-skew-content. Affects 7 records, all ValueSet 2.16.840.1.113762.1.4.1240.3.',
+    kind: 'temp-tolerance',
+    bugId: '9fd2328',
+    tags: ['normalize', 'expand', 'version-skew', 'snomed'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+
+      // This tolerance handles cases without used-codesystem params
+      // Detect SNOMED version skew from contains[].version directly
+      const prodSnomedVers = new Set(
+        prod.expansion.contains
+          .filter(c => (c.system || '').includes('snomed.info/sct'))
+          .map(c => c.version)
+          .filter(Boolean)
+      );
+      const devSnomedVers = new Set(
+        dev.expansion.contains
+          .filter(c => (c.system || '').includes('snomed.info/sct'))
+          .map(c => c.version)
+          .filter(Boolean)
+      );
+      if (prodSnomedVers.size === 0 || devSnomedVers.size === 0) return null;
+
+      // Check versions actually differ
+      const prodArr = [...prodSnomedVers].sort();
+      const devArr = [...devSnomedVers].sort();
+      if (JSON.stringify(prodArr) === JSON.stringify(devArr)) return null;
+
+      // Check code membership differs
+      const prodCodes = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devCodes = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      let hasExtra = false;
+      for (const k of devCodes) { if (!prodCodes.has(k)) { hasExtra = true; break; } }
+      if (!hasExtra) {
+        for (const k of prodCodes) { if (!devCodes.has(k)) { hasExtra = true; break; } }
+      }
+      if (!hasExtra) return null;
+
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodKeys = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devKeys = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      const commonKeys = new Set([...prodKeys].filter(k => devKeys.has(k)));
+
+      const filterContains = (contains) =>
+        contains.filter(c => commonKeys.has(c.system + '|' + c.code));
+
+      // Also normalize SNOMED versions to prod's values for common codes
+      const prodVersionMap = {};
+      for (const c of prod.expansion.contains) {
+        prodVersionMap[c.system + '|' + c.code] = c.version;
+      }
+
+      const normalizeContains = (contains) =>
+        filterContains(contains).map(c => {
+          const key = c.system + '|' + c.code;
+          return prodVersionMap[key] && prodVersionMap[key] !== c.version
+            ? { ...c, version: prodVersionMap[key] }
+            : c;
+        });
+
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            contains: filterContains(prod.expansion.contains),
+            total: commonKeys.size,
+          },
+        },
+        dev: {
+          ...dev,
+          expansion: {
+            ...dev.expansion,
+            contains: normalizeContains(dev.expansion.contains),
+            total: commonKeys.size,
+          },
+        },
+      };
+    },
+  },
+
+  {
     id: 'expand-contains-version-skew',
     description: 'Dev loads older SNOMED CT and CPT editions than prod, causing expansion.contains[].version to differ even when code membership is identical. Prod has SNOMED US 20250901 / CPT 2026, dev has SNOMED US 20250301 / CPT 2025. Normalizes contains[].version to prod values. Affects 198 expand records (all ValueSet 2.16.840.1.113762.1.4.1267.23).',
     kind: 'temp-tolerance',
