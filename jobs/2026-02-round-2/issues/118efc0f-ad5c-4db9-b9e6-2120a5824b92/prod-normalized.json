@@ -1,0 +1,89 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "active"
+    },
+    {
+      "name": "display",
+      "valueString": "Active"
+    },
+    {
+      "name": "name",
+      "valueString": "ConditionClinicalStatusCodes"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "definition"
+        },
+        {
+          "name": "value",
+          "valueString": "The subject is currently experiencing the symptoms of the condition or there is evidence of the condition."
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "recurrence"
+        },
+        {
+          "name": "description",
+          "valueString": "Recurrence"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "relapse"
+        },
+        {
+          "name": "description",
+          "valueString": "Relapse"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+    },
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    }
+  ],
+  "resourceType": "Parameters"
+}

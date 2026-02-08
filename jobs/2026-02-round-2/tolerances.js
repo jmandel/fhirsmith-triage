@@ -973,6 +973,39 @@ const tolerances = [
   },
 
   {
+    id: 'hl7-terminology-lookup-definition-designation-skew',
+    description: 'HL7 terminology CodeSystem $lookup: dev returns extra top-level definition and designation parameters reflecting newer CodeSystem edition, while prod returns definition only as a property entry. Strips definition and designation top-level params and definition property from both sides. Same root cause as hl7-terminology version skew (bug 6edc96c). Affects condition-clinical and potentially other terminology.hl7.org CodeSystems.',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'lookup', 'version-skew', 'hl7-terminology', 'definition', 'designation'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$lookup')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system') || getParamValue(dev, 'system') || '';
+      if (!system.startsWith('http://terminology.hl7.org/CodeSystem/')) return null;
+      // Check if dev has extra definition or designation top-level params that prod doesn't
+      const devNames = new Set((dev.parameter || []).map(p => p.name));
+      const prodNames = new Set((prod.parameter || []).map(p => p.name));
+      const devHasExtraDef = devNames.has('definition') && !prodNames.has('definition');
+      const devHasExtraDesig = devNames.has('designation') && !prodNames.has('designation');
+      if (devHasExtraDef || devHasExtraDesig) return 'normalize';
+      return null;
+    },
+    normalize(ctx) {
+      function clean(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter
+            .filter(p => !['definition', 'designation'].includes(p.name))
+            .filter(p => !(p.name === 'property' && p.part?.some(pp => pp.name === 'code' && pp.valueCode === 'definition'))),
+        };
+      }
+      return both(ctx, clean);
+    },
+  },
+
+  {
     id: 'expand-metadata-identifier-timestamp',
     description: 'Expansion identifier (server-generated UUID) and timestamp differ between implementations. These are transient metadata with no terminology significance. Affects all $expand responses.',
     kind: 'equiv-autofix',

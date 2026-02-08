@@ -79,16 +79,7 @@ done
 
 ### Launching repro agents
 
-For each bug needing repro, launch a Claude Code agent (these can run in parallel):
-
-```bash
-claude -p --dangerously-skip-permissions --model opus \
-  "$(cat prompts/repro-request.md)
-
-Bug ID: <BUG_ID>. Job directory: jobs/<job-name>."
-```
-
-Or from a coordinating Claude Code session, use the Task tool with `subagent_type: "general-purpose"`, `model: "opus"`, and `run_in_background: true` to launch multiple repro agents in parallel.
+For each bug needing repro, use the Task tool with `subagent_type: "general-purpose"`, `model: "opus"`, and `run_in_background: true`. Include the full repro-request.md contents and the bug ID/job directory in the prompt. Launch one agent per bug — do NOT launch duplicate agents for the same bug via different methods.
 
 ## Step 3: Label completed repros
 

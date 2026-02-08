@@ -1,0 +1,96 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "active"
+    },
+    {
+      "name": "definition",
+      "valueString": "The subject is currently experiencing the condition or situation, there is evidence of the condition or situation, or considered to be a significant risk."
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "preferredForLanguage",
+            "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Active"
+        }
+      ]
+    },
+    {
+      "name": "display",
+      "valueString": "Active"
+    },
+    {
+      "name": "name",
+      "valueString": "ConditionClinicalStatusCodes"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "recurrence"
+        },
+        {
+          "name": "description",
+          "valueString": "Recurrence"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "relapse"
+        },
+        {
+          "name": "description",
+          "valueString": "Relapse"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+    },
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    }
+  ],
+  "resourceType": "Parameters"
+}

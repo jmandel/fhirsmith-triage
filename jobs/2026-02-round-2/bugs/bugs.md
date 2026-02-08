@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_38 bugs (35 open, 3 closed)_
+_38 bugs (34 open, 4 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1080,29 +1080,34 @@ Tolerance `unknown-version-no-versions-known` normalizes the message text, Opera
 
 ### [ ] `9fd2328` Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets
 
-Records-Impacted: 47
-Tolerance-ID: expand-snomed-version-skew-content, expand-snomed-version-skew-content-no-used-cs
-Record-ID: 2c7143df-3316-422a-b284-237f16fbcd6e, accdb602-a8bc-4e9c-a8fb-22a12b740f0e
+Records-Impacted: 82
+Tolerance-ID: expand-snomed-version-skew-content, expand-snomed-version-skew-content-no-used-cs, snomed-version-skew-message-text
+Record-ID: 2c7143df-3316-422a-b284-237f16fbcd6e, accdb602-a8bc-4e9c-a8fb-22a12b740f0e, 3534e5f0-39e3-4375-9b37-4dc59848cb70
 
 #####What differs
 
-Prod and dev load different SNOMED CT editions, causing $expand to return different code sets. Two variants observed:
+Prod and dev load different SNOMED CT editions, causing multiple types of differences across $expand and $validate-code operations. Three variants observed:
 
-1. **With `used-codesystem` parameter** (POST requests with inline ValueSets): Prod uses SNOMED International edition 20250201, dev uses 20240201. The `used-codesystem` expansion parameter confirms the version difference. Example: expanding descendants of 365636006 "Finding of blood group" — prod returns 208 codes, dev returns 207 (code 1351894008 "Mixed field RhD" only in prod).
+1. **$expand with `used-codesystem` parameter** (POST requests with inline ValueSets): Prod uses SNOMED International edition 20250201, dev uses 20240201. The `used-codesystem` expansion parameter confirms the version difference. Example: expanding descendants of 365636006 "Finding of blood group" — prod returns 208 codes, dev returns 207 (code 1351894008 "Mixed field RhD" only in prod).
 
-2. **Without `used-codesystem` parameter** (GET requests for VSAC ValueSets): Prod uses SNOMED US edition 20250901, dev uses 20250301. Version difference is only visible in `contains[].version` strings. Example: ValueSet 2.16.840.1.113762.1.4.1240.3 ("Sex") — dev returns 5 codes including 184115007 "Patient sex unknown (finding)" which is absent from prod's 4-code expansion.
+2. **$expand without `used-codesystem` parameter** (GET requests for VSAC ValueSets): Prod uses SNOMED US edition 20250901, dev uses 20250301. Version difference is only visible in `contains[].version` strings. Example: ValueSet 2.16.840.1.113762.1.4.1240.3 ("Sex") — dev returns 5 codes including 184115007 "Patient sex unknown (finding)" which is absent from prod's 4-code expansion.
+
+3. **$validate-code message/issues text version skew**: Both sides agree on result=false, but the error message text and OperationOutcome issue text contain different SNOMED edition version strings (e.g., "version 'http://snomed.info/sct/900000000000207008/version/20250201'" in prod vs "version/20240201" in dev). The message structure and content are otherwise identical — only the embedded version URI differs. All are POST /r4/ValueSet/$validate-code with SNOMED codes that are not found in the specified ValueSet.
 
 #####How widespread
 
-47 expand content-differs records total:
-- 40 records with `used-codesystem` parameter (POST /r4/ValueSet/$expand with SNOMED filters)
-- 7 records without `used-codesystem` parameter (GET /r4/ValueSet/$expand for VSAC ValueSet 2.16.840.1.113762.1.4.1240.3)
+82 records total:
+- 40 expand records with `used-codesystem` parameter (POST /r4/ValueSet/$expand with SNOMED filters)
+- 7 expand records without `used-codesystem` parameter (GET /r4/ValueSet/$expand for VSAC ValueSet 2.16.840.1.113762.1.4.1240.3)
+- 35 validate-code content-differs records where message/issues text contain SNOMED version strings that differ only due to edition version skew
 
 #####What the tolerances cover
 
 - **`expand-snomed-version-skew-content`** (40 records): Matches expand records where both sides return 200, SNOMED `used-codesystem` versions differ, and code membership differs. Normalizes both sides to the intersection of codes and adjusts total.
 
 - **`expand-snomed-version-skew-content-no-used-cs`** (7 records): Matches expand records where SNOMED version skew is detectable only from `contains[].version` strings (no `used-codesystem` expansion parameter). Same normalization approach — intersects code membership, adjusts total, and normalizes version strings to prod's values.
+
+- **`snomed-version-skew-message-text`** (35 records): Matches validate-code Parameters responses where SNOMED version strings in the `message` valueString and `issues` OperationOutcome issue text differ, but the text is otherwise identical after version normalization. Replaces dev's SNOMED version URIs with prod's values in both the message parameter and issue detail text fields.
 
 ---
 
@@ -2098,40 +2103,9 @@ Tolerance ID `r5-get-subsumes-status-mismatch` skips GET requests to `/r5/CodeSy
 
 ---
 
-### [ ] `f9f6206` validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent
+### [ ] `f9f6206` 
 
-Records-Impacted: 1
-Tolerance-ID: validate-code-undefined-null-in-unknown-code-message
-Record-ID: 7f0c6cf8-a250-4935-8ab6-32f499d65302
 
-#####What differs
-
-In a POST /r5/CodeSystem/$validate-code request for system `urn:ietf:bcp:47` with a coding that has no `code` or `version`, the message and issues text differ:
-
-- Prod: `"Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"`
-- Dev: `"Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'"`
-
-Dev renders JavaScript's `undefined` and `null` as literal strings instead of empty strings when code and version are absent from the request.
-
-Additionally, dev includes an extra informational OperationOutcome issue (`"Empty code"`, severity=information) that prod does not return.
-
-Both servers agree on result=false and system=urn:ietf:bcp:47.
-
-#####How widespread
-
-1 record in the current delta file. Searched for broader patterns:
-- `grep "'undefined'" deltas.ndjson` → 37 hits total, but only 2 have 'undefined' in non-diagnostics params (this record and 06cfc4c9 which has "and undefined" in a version list — a different pattern)
-- `grep "version 'null'" deltas.ndjson` → 1 hit (this record only)
-- `grep "Empty code" deltas.ndjson` → 1 hit (this record only)
-
-#####What the tolerance covers
-
-Tolerance ID: validate-code-undefined-null-in-unknown-code-message
-Matches: validate-code Parameters responses where dev message contains `'undefined'` or `version 'null'` and prod has the same message but with empty strings. Normalizes the message and issues text to prod's rendering, and removes the extra "Empty code" informational issue from dev. Eliminates 1 delta record.
-
-#####Representative record
-
-`grep -n '7f0c6cf8-a250-4935-8ab6-32f499d65302' comparison.ndjson`
 
 ---
 

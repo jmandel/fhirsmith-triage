@@ -1,0 +1,96 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "name",
+      "valueString": "ConditionClinicalStatusCodes"
+    },
+    {
+      "name": "code",
+      "valueCode": "active"
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/condition-clinical"
+    },
+    {
+      "name": "version",
+      "valueString": "3.0.0"
+    },
+    {
+      "name": "display",
+      "valueString": "Active"
+    },
+    {
+      "name": "definition",
+      "valueString": "The subject is currently experiencing the condition or situation, there is evidence of the condition or situation, or considered to be a significant risk."
+    },
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "use",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/hl7TermMaintInfra",
+            "code": "preferredForLanguage"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Active"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "recurrence"
+        },
+        {
+          "name": "description",
+          "valueString": "Recurrence"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "child"
+        },
+        {
+          "name": "value",
+          "valueCode": "relapse"
+        },
+        {
+          "name": "description",
+          "valueString": "Relapse"
+        }
+      ]
+    }
+  ]
+}

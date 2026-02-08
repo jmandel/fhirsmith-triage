@@ -1,0 +1,3 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+hl7-terminology-cs-version-skew: normalize

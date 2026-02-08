@@ -820,9 +820,9 @@
             "lamport": 20
         },
         "edit_time": {
-            "timestamp": 1770516842,
-            "time": "2026-02-07T20:14:02-06:00",
-            "lamport": 219
+            "timestamp": 1770517388,
+            "time": "2026-02-07T20:23:08-06:00",
+            "lamport": 231
         },
         "status": "open",
         "labels": [
@@ -1678,13 +1678,14 @@
             "lamport": 39
         },
         "edit_time": {
-            "timestamp": 1770517054,
-            "time": "2026-02-07T20:17:34-06:00",
-            "lamport": 228
+            "timestamp": 1770517308,
+            "time": "2026-02-07T20:21:48-06:00",
+            "lamport": 230
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
