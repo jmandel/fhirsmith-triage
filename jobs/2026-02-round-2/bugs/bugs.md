@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_37 bugs (34 open, 3 closed)_
+_38 bugs (35 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2067,13 +2067,22 @@ Records-Impacted: 2
 Tolerance-ID: r5-get-subsumes-status-mismatch
 Record-ID: 065c2fa7-d80e-416a-b50d-ed4f78a48fd7
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r5/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=40127002&codeB=159033005' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r5/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=40127002&codeB=159033005' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 400 with OperationOutcome: "No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource)". Dev returns HTTP 200 with Parameters containing `{"name":"outcome","valueCode":"subsumed-by"}`.
+
 
 GET requests to `/r5/CodeSystem/$subsumes` with `system`, `codeA`, and `codeB` query parameters return HTTP 400 from prod with an OperationOutcome error: "No CodeSystem Identified (need a system parameter, or execute the operation on a CodeSystem resource)". Dev returns HTTP 200 with a valid Parameters response containing the subsumption outcome.
 
 The `system` parameter is clearly present in the URL (e.g., `system=http://snomed.info/sct`), so prod appears to fail to recognize it. POST requests to the same R5 $subsumes endpoint succeed on both prod and dev.
 
-#####How widespread
 
 2 records in the current comparison dataset, both GET requests to `/r5/CodeSystem/$subsumes` with SNOMED system:
 
@@ -2084,17 +2093,45 @@ Found via: `grep '/r5/CodeSystem/\$subsumes' comparison.ndjson` — 3 total reco
 
 No R4 $subsumes records exist in the dataset for comparison.
 
-#####Tolerance
 
 Tolerance ID `r5-get-subsumes-status-mismatch` skips GET requests to `/r5/CodeSystem/$subsumes` where prod=400 and dev=200. Eliminates 2 records.
 
-#####Repro
+---
 
-```
-GET /r5/CodeSystem/$subsumes?system=http://snomed.info/sct&codeA=40127002&codeB=159033005
-```
-Prod: HTTP 400, OperationOutcome "No CodeSystem Identified"
-Dev: HTTP 200, Parameters {outcome: "subsumed-by"}
+### [ ] `f9f6206` validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent
+
+Records-Impacted: 1
+Tolerance-ID: validate-code-undefined-null-in-unknown-code-message
+Record-ID: 7f0c6cf8-a250-4935-8ab6-32f499d65302
+
+#####What differs
+
+In a POST /r5/CodeSystem/$validate-code request for system `urn:ietf:bcp:47` with a coding that has no `code` or `version`, the message and issues text differ:
+
+- Prod: `"Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"`
+- Dev: `"Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'"`
+
+Dev renders JavaScript's `undefined` and `null` as literal strings instead of empty strings when code and version are absent from the request.
+
+Additionally, dev includes an extra informational OperationOutcome issue (`"Empty code"`, severity=information) that prod does not return.
+
+Both servers agree on result=false and system=urn:ietf:bcp:47.
+
+#####How widespread
+
+1 record in the current delta file. Searched for broader patterns:
+- `grep "'undefined'" deltas.ndjson` → 37 hits total, but only 2 have 'undefined' in non-diagnostics params (this record and 06cfc4c9 which has "and undefined" in a version list — a different pattern)
+- `grep "version 'null'" deltas.ndjson` → 1 hit (this record only)
+- `grep "Empty code" deltas.ndjson` → 1 hit (this record only)
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-undefined-null-in-unknown-code-message
+Matches: validate-code Parameters responses where dev message contains `'undefined'` or `version 'null'` and prod has the same message but with empty strings. Normalizes the message and issues text to prod's rendering, and removes the extra "Empty code" informational issue from dev. Eliminates 1 delta record.
+
+#####Representative record
+
+`grep -n '7f0c6cf8-a250-4935-8ab6-32f499d65302' comparison.ndjson`
 
 ---
 

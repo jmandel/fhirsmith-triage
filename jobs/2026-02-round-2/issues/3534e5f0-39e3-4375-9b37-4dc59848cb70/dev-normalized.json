@@ -1,0 +1,78 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "467771000124109",
+            "display": "Assistance with application for food pantry program",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "this-code-not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#467771000124109 ('Assistance with application for food pantry program')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "severity": "information"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code '467771000124109' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20240201' (International Edition)"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'"
+            },
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'; Unknown code '467771000124109' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20240201' (International Edition)"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    }
+  ],
+  "resourceType": "Parameters"
+}

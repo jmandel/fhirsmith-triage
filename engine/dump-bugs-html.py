@@ -211,9 +211,12 @@ def build_bug_data(bugs):
         body_html = markdown_to_html(body_md)
 
         create_time = bug.get("create_time", {}).get("time", "")
-        date_display = create_time
+        edit_time = bug.get("edit_time", {}).get("time", "")
+        # Prefer edit_time (last update) for display and sorting
+        display_time = edit_time or create_time
+        date_display = display_time
         try:
-            dt = datetime.fromisoformat(create_time)
+            dt = datetime.fromisoformat(display_time)
             date_display = dt.strftime("%Y-%m-%d %H:%M")
         except (ValueError, TypeError):
             pass
@@ -234,7 +237,7 @@ def build_bug_data(bugs):
             "labels": labels,
             "author": bug.get("author", {}).get("name", "Unknown"),
             "date": date_display,
-            "date_iso": create_time,
+            "date_iso": display_time,
             "body_md": body_md,
             "body_html": body_html,
             "impact": impact,  # null if unknown
@@ -890,7 +893,7 @@ function renderBugList() {{
             ${{labels}}
             ${{impactPill}}
             <span class="bug-id">${{bug.id}}</span>
-            <span class="bug-date">${{bug.date}}</span>
+            <span class="bug-date">updated ${{bug.date}}</span>
           </div>
         </div>
       </div>

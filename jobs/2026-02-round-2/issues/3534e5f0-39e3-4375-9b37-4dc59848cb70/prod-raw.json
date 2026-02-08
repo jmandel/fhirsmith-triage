@@ -1,0 +1,106 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "No valid coding was found for the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'; Unknown code '467771000124109' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20250201' (International Edition)"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "467771000124109",
+            "display": "Assistance with application for food pantry program"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#467771000124109 ('Assistance with application for food pantry program')' was not found in the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'"
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown code '467771000124109' in the CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/900000000000207008/version/20250201' (International Edition)"
+            },
+            "location": [
+              "CodeableConcept.coding[0].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "TX_GENERAL_CC_ERROR_MESSAGE"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-in-vs"
+                }
+              ],
+              "text": "No valid coding was found for the value set 'http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0'"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/us/core/ValueSet/us-core-procedure-code|8.0.0 for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n16 0    : 0ms  : Prepare include: \"(http://www.ama-assn.org/go/cpt)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://www.ama-assn.org/go/cpt|2023\"\r\n16 0    : 0ms  : Prepare include: \"(http://snomed.info/sct)(concept<<71388002)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"\r\n16 0    : 0ms  : Prepare include: \"(https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets)\"\r\n16 0    : 0ms  : CodeSystem version  not found: \"https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets\"\r\n16 0    : 0ms  : Prepare include: \"(http://www.cms.gov/Medicare/Coding/ICD10)\"\r\n47 31   : 31ms : CodeSystem found: \"http://www.cms.gov/Medicare/Coding/ICD10|2.0.1 (from fhir.tx.support.r4#0.32.0)\"\r\n47 0    : 31ms : Prepare include: \"(http://www.ada.org/cdt)\"\r\n47 0    : 31ms : CodeSystem version  not found: \"http://www.ada.org/cdt\"\r\n47 0    : 31ms : Prepare include: \"(http://loinc.org)\"\r\n47 0    : 31ms : CodeSystem found: \"http://loinc.org|2.81\"\r\n47 0    : 31ms : Validate \"[http://snomed.info/sct#467771000124109 (\"Assistance with application for food pantry program\")]\"\r\n47 0    : 31ms : Check \"http://snomed.info/sct#467771000124109\"\r\n47 0    : 31ms : CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008\r\n47 0    : 31ms : check code in (http://snomed.info/sct)(concept<<71388002) at CodeableConcept.coding[0]\r\n47 0    : 31ms : Filter \"concept<<71388002\": Code \"467771000124109\" not found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\r\n"
+    }
+  ]
+}

@@ -233,12 +233,13 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770516268,
-            "time": "2026-02-07T20:04:28-06:00",
-            "lamport": 213
+            "timestamp": 1770516842,
+            "time": "2026-02-07T20:14:02-06:00",
+            "lamport": 218
         },
         "status": "open",
         "labels": [
+            "config-issue",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -683,12 +684,13 @@
             "lamport": 17
         },
         "edit_time": {
-            "timestamp": 1770504796,
-            "time": "2026-02-07T16:53:16-06:00",
-            "lamport": 90
+            "timestamp": 1770516842,
+            "time": "2026-02-07T20:14:02-06:00",
+            "lamport": 222
         },
         "status": "open",
         "labels": [
+            "config-issue",
             "reproduced",
             "status-mismatch",
             "tx-compare"
@@ -818,12 +820,13 @@
             "lamport": 20
         },
         "edit_time": {
-            "timestamp": 1770514057,
-            "time": "2026-02-07T19:27:37-06:00",
-            "lamport": 187
+            "timestamp": 1770516842,
+            "time": "2026-02-07T20:14:02-06:00",
+            "lamport": 219
         },
         "status": "open",
         "labels": [
+            "config-issue",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -1043,12 +1046,13 @@
             "lamport": 25
         },
         "edit_time": {
-            "timestamp": 1770508929,
-            "time": "2026-02-07T18:02:09-06:00",
-            "lamport": 136
+            "timestamp": 1770516842,
+            "time": "2026-02-07T20:14:02-06:00",
+            "lamport": 220
         },
         "status": "open",
         "labels": [
+            "config-issue",
             "reproduced",
             "result-disagrees",
             "tx-compare"
@@ -1178,12 +1182,13 @@
             "lamport": 28
         },
         "edit_time": {
-            "timestamp": 1770510540,
-            "time": "2026-02-07T18:29:00-06:00",
-            "lamport": 155
+            "timestamp": 1770516842,
+            "time": "2026-02-07T20:14:02-06:00",
+            "lamport": 221
         },
         "status": "open",
         "labels": [
+            "config-issue",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -1628,16 +1633,61 @@
             "lamport": 38
         },
         "edit_time": {
-            "timestamp": 1770516734,
-            "time": "2026-02-07T20:12:14-06:00",
-            "lamport": 217
+            "timestamp": 1770516910,
+            "time": "2026-02-07T20:15:10-06:00",
+            "lamport": 225
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
         "title": "GET /r5/CodeSystem/$subsumes returns 400 despite valid system parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f9f6206eadba17f5e1865d4ae54eb648bf29c6f71b80bfc08dddd6eda6f8a5f0",
+        "human_id": "f9f6206",
+        "create_time": {
+            "timestamp": 1770517049,
+            "time": "2026-02-07T20:17:29-06:00",
+            "lamport": 39
+        },
+        "edit_time": {
+            "timestamp": 1770517054,
+            "time": "2026-02-07T20:17:34-06:00",
+            "lamport": 228
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

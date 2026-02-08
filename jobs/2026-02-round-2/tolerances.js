@@ -702,6 +702,80 @@ const tolerances = [
   },
 
   {
+    id: 'snomed-version-skew-message-text',
+    description: 'SNOMED CT version skew in message/issues text: validate-code responses where both sides agree on result=false, but the error message and OperationOutcome issue text contain different SNOMED edition version strings (e.g., 20250201 vs 20240201). Same root cause as snomed-version-skew (different SNOMED editions loaded). Normalizes version strings in message valueString and issues text to prod values. Affects ~36 validate-code content-differs records.',
+    kind: 'temp-tolerance',
+    bugId: '9fd2328',
+    tags: ['normalize', 'version-skew', 'snomed', 'message-text'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg || prodMsg === devMsg) return null;
+      // Check if the only difference is SNOMED version strings
+      const snomedVersionRe = /snomed\.info\/sct\/\d+\/version\/\d+/g;
+      const prodVersions = prodMsg.match(snomedVersionRe);
+      const devVersions = devMsg.match(snomedVersionRe);
+      if (!prodVersions || !devVersions) return null;
+      // Replace all SNOMED version URIs in both messages with a placeholder and compare
+      const normalize = s => s.replace(snomedVersionRe, 'SNOMED_VERSION');
+      if (normalize(prodMsg) !== normalize(devMsg)) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Build a map of dev SNOMED version URIs -> prod SNOMED version URIs
+      const snomedVersionRe = /snomed\.info\/sct\/\d+\/version\/\d+/g;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      const prodVersions = prodMsg.match(snomedVersionRe) || [];
+      const devVersions = devMsg.match(snomedVersionRe) || [];
+      const replacements = {};
+      for (let i = 0; i < devVersions.length; i++) {
+        if (prodVersions[i] && devVersions[i] !== prodVersions[i]) {
+          replacements[devVersions[i]] = prodVersions[i];
+        }
+      }
+      function replaceVersionsInString(s) {
+        let result = s;
+        for (const [devV, prodV] of Object.entries(replacements)) {
+          result = result.split(devV).join(prodV);
+        }
+        return result;
+      }
+      function fixBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: replaceVersionsInString(p.valueString) };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => {
+                    if (iss.details?.text) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: replaceVersionsInString(iss.details.text) },
+                      };
+                    }
+                    return iss;
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod: fixBody(prod), dev: fixBody(dev) };
+    },
+  },
+
+  {
     id: 'snomed-same-version-display-differs',
     description: 'SNOMED $validate-code: dev returns different display text (preferred term) than prod for the same SNOMED CT edition version. Examples: prod="Hearing loss" vs dev="Deafness", prod="Counselling" vs dev="Counseling (regime/therapy)". Both agree on result, system, code, and version. Normalizes display to prod value. Affects 59 validate-code records.',
     kind: 'temp-tolerance',
