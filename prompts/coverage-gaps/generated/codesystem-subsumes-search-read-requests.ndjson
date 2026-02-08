@@ -1,0 +1,66 @@
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=404684003&codeB=71620000&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: A subsumes B (Clinical finding > Fracture of femur)"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=404684003&codeB=404684003&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: equivalent codes (same SNOMED code)"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=71620000&codeB=404684003&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: subsumed-by (B subsumes A)"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=71620000&codeB=22298006&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: not-subsumed (Fracture vs MI, unrelated)"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=64572001&codeB=73211009&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: Disease subsumes Diabetes mellitus"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=404684003&codeB=71620000&system=http://snomed.info/sct&version=http://snomed.info/sct/900000000000207008/version/20240201", "description": "Type-level $subsumes GET with explicit SNOMED version parameter"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=8480-6&codeB=85354-9&system=http://loinc.org", "description": "Type-level $subsumes GET with LOINC codes (Systolic BP vs BP panel)"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=404684003&codeB=71620000", "description": "Type-level $subsumes GET: error - missing system parameter"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=INVALID&codeB=71620000&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: error - invalid codeA"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=404684003&codeB=INVALID&system=http://snomed.info/sct", "description": "Type-level $subsumes GET: error - invalid codeB"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes", "description": "Type-level $subsumes GET: error - no parameters at all"}
+{"method": "GET", "url": "/r4/CodeSystem/$subsumes?codeA=A&codeB=B&system=http://nonexistent.example.com", "description": "Type-level $subsumes GET: error - unknown code system"}
+{"method": "POST", "url": "/r4/CodeSystem/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codingA\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"404684003\"}},{\"name\":\"codingB\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"71620000\"}}]}", "description": "Type-level $subsumes POST: codingA/codingB with same system (subsumes)"}
+{"method": "POST", "url": "/r4/CodeSystem/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codingA\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"404684003\"}},{\"name\":\"codingB\",\"valueCoding\":{\"system\":\"http://loinc.org\",\"code\":\"8480-6\"}}]}", "description": "Type-level $subsumes POST: codingA/codingB with different systems (should error)"}
+{"method": "POST", "url": "/r4/CodeSystem/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeA\",\"valueCode\":\"404684003\"},{\"name\":\"codeB\",\"valueCode\":\"71620000\"},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"}]}", "description": "Type-level $subsumes POST: codeA/codeB/system as Parameters resource"}
+{"method": "POST", "url": "/r4/CodeSystem/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeA\",\"valueCode\":\"404684003\"},{\"name\":\"codeB\",\"valueCode\":\"71620000\"}]}", "description": "Type-level $subsumes POST: codeA/codeB missing system (should error)"}
+{"method": "GET", "url": "/r4/CodeSystem/contact-point-system/$subsumes?codeA=phone&codeB=email", "description": "Instance-level $subsumes GET: complete CodeSystem (contact-point-system)"}
+{"method": "GET", "url": "/r4/CodeSystem/nonexistent/$subsumes?codeA=phone&codeB=email", "description": "Instance-level $subsumes GET: nonexistent CodeSystem ID (should 404)"}
+{"method": "POST", "url": "/r4/CodeSystem/contact-point-system/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codingA\",\"valueCoding\":{\"system\":\"http://hl7.org/fhir/contact-point-system\",\"code\":\"phone\"}},{\"name\":\"codingB\",\"valueCoding\":{\"system\":\"http://hl7.org/fhir/contact-point-system\",\"code\":\"email\"}}]}", "description": "Instance-level $subsumes POST: codingA/codingB on complete CodeSystem"}
+{"method": "POST", "url": "/r4/CodeSystem/contact-point-system/$subsumes", "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeA\",\"valueCode\":\"phone\"},{\"name\":\"codeB\",\"valueCode\":\"email\"}]}", "description": "Instance-level $subsumes POST: codeA/codeB on complete CodeSystem (no system param needed)"}
+{"method": "GET", "url": "/r4/CodeSystem?_count=2", "description": "CodeSystem search: no filter params, pagination default"}
+{"method": "GET", "url": "/r4/CodeSystem?url=http://snomed.info/sct", "description": "CodeSystem search: by canonical URL (SNOMED)"}
+{"method": "GET", "url": "/r4/CodeSystem?name=SNOMED&_count=3", "description": "CodeSystem search: by name partial match"}
+{"method": "GET", "url": "/r4/CodeSystem?status=active&_count=2", "description": "CodeSystem search: by status"}
+{"method": "GET", "url": "/r4/CodeSystem?content-mode=complete&_count=2", "description": "CodeSystem search: by content-mode (maps to content property)"}
+{"method": "GET", "url": "/r4/CodeSystem?text=blood&_count=3", "description": "CodeSystem search: by text (searches title+description)"}
+{"method": "GET", "url": "/r4/CodeSystem?publisher=HL7&_count=2", "description": "CodeSystem search: by publisher"}
+{"method": "GET", "url": "/r4/CodeSystem?description=medication&_count=2", "description": "CodeSystem search: by description"}
+{"method": "GET", "url": "/r4/CodeSystem?title=observation&_count=2", "description": "CodeSystem search: by title"}
+{"method": "GET", "url": "/r4/CodeSystem?jurisdiction=US&_count=2", "description": "CodeSystem search: by jurisdiction code"}
+{"method": "GET", "url": "/r4/CodeSystem?version=4.0.1&_count=3", "description": "CodeSystem search: by version string"}
+{"method": "GET", "url": "/r4/CodeSystem?name=observation&status=active&_count=3", "description": "CodeSystem search: combined params (name + status)"}
+{"method": "GET", "url": "/r4/CodeSystem?system=http://snomed.info/sct&_count=2", "description": "CodeSystem search: system param (should be ignored for CS search)"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=name&_count=3", "description": "CodeSystem search: sorted by name"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=url&_count=3", "description": "CodeSystem search: sorted by url"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=version&_count=3", "description": "CodeSystem search: sorted by version"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=date&_count=3", "description": "CodeSystem search: sorted by date"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=vurl&_count=3", "description": "CodeSystem search: sorted by vurl (url+version composite)"}
+{"method": "GET", "url": "/r4/CodeSystem?_sort=invalid&_count=2", "description": "CodeSystem search: invalid sort field (should fall through to default)"}
+{"method": "GET", "url": "/r4/CodeSystem?_count=3&_offset=5", "description": "CodeSystem search: pagination with offset"}
+{"method": "GET", "url": "/r4/CodeSystem?_offset=99999&_count=5", "description": "CodeSystem search: offset beyond total results"}
+{"method": "GET", "url": "/r4/CodeSystem?url=http://hl7.org/fhir/contact-point-system&_elements=url,name,version", "description": "CodeSystem search: _elements filter (should return only specified fields + id + resourceType)"}
+{"method": "GET", "url": "/r4/CodeSystem?_count=5000&_elements=url", "description": "CodeSystem search: large _count with _elements (cap should be 2000)"}
+{"method": "GET", "url": "/r4/CodeSystem?_count=500&name=act", "description": "CodeSystem search: large _count without _elements (cap should be 200)"}
+{"method": "GET", "url": "/r4/ValueSet?_count=2", "description": "ValueSet search: no filter params"}
+{"method": "GET", "url": "/r4/ValueSet?url=http://hl7.org/fhir/ValueSet/administrative-gender", "description": "ValueSet search: by canonical URL"}
+{"method": "GET", "url": "/r4/ValueSet?name=gender&_count=3", "description": "ValueSet search: by name partial match"}
+{"method": "GET", "url": "/r4/ValueSet?name=gender&_elements=url,name&_count=2", "description": "ValueSet search: with _elements filter"}
+{"method": "GET", "url": "/r4/ConceptMap?_count=2", "description": "ConceptMap search: should return empty in dev (not implemented)"}
+{"method": "GET", "url": "/r4/CodeSystem/snomedct", "description": "CodeSystem read: SNOMED CT by ID"}
+{"method": "GET", "url": "/r4/CodeSystem/contact-point-system", "description": "CodeSystem read: complete CodeSystem by ID"}
+{"method": "GET", "url": "/r4/CodeSystem/v3-ActRelationshipType", "description": "CodeSystem read: large CodeSystem by ID"}
+{"method": "GET", "url": "/r4/CodeSystem/nonexistent", "description": "CodeSystem read: nonexistent ID (should 404)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-us-states", "description": "CodeSystem read: factory CodeSystem with iteratable=true (x- prefix, US states)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-currencies", "description": "CodeSystem read: factory CodeSystem with iteratable=false (x- prefix, currencies)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-countries", "description": "CodeSystem read: factory CodeSystem (x- prefix, countries)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-mimetypes", "description": "CodeSystem read: factory CodeSystem (x- prefix, MIME types)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-languages", "description": "CodeSystem read: factory CodeSystem (x- prefix, BCP-47 languages)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-ucum", "description": "CodeSystem read: factory CodeSystem (x- prefix, UCUM units)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-hgvs", "description": "CodeSystem read: factory CodeSystem (x- prefix, HGVS)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-unii", "description": "CodeSystem read: factory CodeSystem (x- prefix, UNII)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-loinc2.81", "description": "CodeSystem read: factory CodeSystem (x- prefix, LOINC)"}
+{"method": "GET", "url": "/r4/CodeSystem/x-RxNorm", "description": "CodeSystem read: factory CodeSystem (x- prefix, RxNorm)"}
+{"method": "GET", "url": "/r4/ValueSet/administrative-gender", "description": "ValueSet read: by ID"}
+{"method": "GET", "url": "/r4/ValueSet/nonexistent", "description": "ValueSet read: nonexistent ID (should 404)"}
+{"method": "GET", "url": "/r4/ConceptMap/some-id", "description": "ConceptMap read: should return 501 in dev (not implemented)"}

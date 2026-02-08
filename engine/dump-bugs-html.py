@@ -6,6 +6,10 @@ Optionally reads job summary.json for pipeline overview stats.
 
 Usage:
   python3 engine/dump-bugs-html.py <output-path> [--job <job-dir>]
+  python3 engine/dump-bugs-html.py <output-path> --all
+
+When --job is used, the report pre-filters to that round's bugs.
+When --all is used (or no --job), the report shows all bugs across all rounds.
 """
 
 import json
@@ -288,7 +292,7 @@ def build_bug_data(bugs):
     return bug_data
 
 
-def generate_html(bugs, job_stats=None):
+def generate_html(bugs, job_stats=None, default_round_label=None):
     """Generate the full HTML page."""
     total = len(bugs)
     open_count = sum(1 for b in bugs if b["status"] == "open")
@@ -311,6 +315,7 @@ def generate_html(bugs, job_stats=None):
         "labels": label_counts,
         "sortedLabels": sorted_labels,
         "job": job_stats,
+        "defaultRoundLabel": default_round_label,
     }, ensure_ascii=False)
 
     html = f"""<!DOCTYPE html>
@@ -337,6 +342,7 @@ def generate_html(bugs, job_stats=None):
   --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
 
   --pill-tx-bg: #ccfbf1; --pill-tx-fg: #115e59; --pill-tx-border: #5eead4;
+  --pill-round-bg: #ede9fe; --pill-round-fg: #5b21b6; --pill-round-border: #c4b5fd;
   --pill-default-bg: #f3f4f6; --pill-default-fg: #4b5563; --pill-default-border: #d1d5db;
 
   --status-open-bg: #dcfce7; --status-open-fg: #166534; --status-open-border: #86efac;
@@ -357,6 +363,7 @@ def generate_html(bugs, job_stats=None):
     --shadow-hover: 0 4px 12px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
 
     --pill-tx-bg: #042f2e; --pill-tx-fg: #5eead4; --pill-tx-border: #134e4a;
+    --pill-round-bg: #2e1065; --pill-round-fg: #c4b5fd; --pill-round-border: #4c1d95;
     --pill-default-bg: #1f2937; --pill-default-fg: #9ca3af; --pill-default-border: #374151;
 
     --status-open-bg: #052e16; --status-open-fg: #86efac; --status-open-border: #14532d;
@@ -486,6 +493,12 @@ h1 {{
   background: var(--pill-tx-bg);
   color: var(--pill-tx-fg);
   border-color: var(--pill-tx-border);
+}}
+
+.filter-pill[data-label^="round:"] {{
+  background: var(--pill-round-bg);
+  color: var(--pill-round-fg);
+  border-color: var(--pill-round-border);
 }}
 
 .filter-pill:hover {{
@@ -633,6 +646,12 @@ h1 {{
   background: var(--pill-tx-bg);
   color: var(--pill-tx-fg);
   border-color: var(--pill-tx-border);
+}}
+
+.pill-label[data-label^="round:"] {{
+  background: var(--pill-round-bg);
+  color: var(--pill-round-fg);
+  border-color: var(--pill-round-border);
 }}
 
 .pill-impact {{
@@ -859,8 +878,8 @@ h1 {{
     <div class="controls">
       <button class="ctrl-btn" id="expand-all-btn" onclick="toggleExpandAll()">Expand all</button>
       <span class="stat-divider"></span>
-      <button class="ctrl-btn active" data-status="all">All</button>
-      <button class="ctrl-btn" data-status="open">Open</button>
+      <button class="ctrl-btn" data-status="all">All</button>
+      <button class="ctrl-btn active" data-status="open">Open</button>
       <button class="ctrl-btn" data-status="closed">Closed</button>
       <span class="stat-divider"></span>
       <button class="ctrl-btn sort-btn active" data-sort="impact">Impact</button>
@@ -924,9 +943,12 @@ document.getElementById("gen-time").textContent = new Date().toLocaleString();
   container.innerHTML = html;
 }})();
 
-// State
+// State — default round label filter if present
 let activeLabels = new Set();
-let activeStatus = "all";
+if (STATS.defaultRoundLabel && STATS.labels[STATS.defaultRoundLabel]) {{
+  activeLabels.add(STATS.defaultRoundLabel);
+}}
+let activeStatus = "open";
 let searchQuery = "";
 let currentSort = "impact";
 
@@ -1010,9 +1032,14 @@ function applyFilters() {{
 
     let show = true;
 
-    // Label filter: card must have at least one of the active labels
+    // Label filter: card must have at least one of the active labels.
+    // Special case: if a round: label is active, also show bugs with no round: label
+    // (those are current-round bugs not yet labeled).
     if (activeLabels.size > 0) {{
-      if (!cardLabels.some(l => activeLabels.has(l))) {{
+      const hasMatchingLabel = cardLabels.some(l => activeLabels.has(l));
+      const activeRoundLabels = [...activeLabels].filter(l => l.startsWith("round:"));
+      const hasNoRoundLabel = !cardLabels.some(l => l.startsWith("round:"));
+      if (!hasMatchingLabel && !(activeRoundLabels.length > 0 && hasNoRoundLabel)) {{
         show = false;
       }}
     }}
@@ -1092,6 +1119,7 @@ document.querySelectorAll(".sort-btn").forEach(btn => {{
 
 // Initial render
 renderBugList();
+updatePillVisuals();
 </script>
 </body>
 </html>"""
@@ -1113,12 +1141,16 @@ def main():
     # Parse args
     out_path = None
     job_dir = None
+    show_all = False
     args = sys.argv[1:]
     i = 0
     while i < len(args):
         if args[i] == "--job" and i + 1 < len(args):
             job_dir = args[i + 1]
             i += 2
+        elif args[i] == "--all":
+            show_all = True
+            i += 1
         elif not args[i].startswith("-"):
             out_path = args[i]
             i += 1
@@ -1137,11 +1169,33 @@ def main():
     print(f"Found {len(bugs)} bugs", file=sys.stderr)
 
     job_stats = None
-    if job_dir:
+    default_round_label = None
+    if job_dir and not show_all:
         job_stats = read_job_stats(job_dir)
+        job_name = os.path.basename(os.path.normpath(job_dir))
+        default_round_label = f"round:{job_name}"
+    elif show_all:
+        # Collect pipeline stats from all job directories
+        jobs_dir = os.path.join(repo_root, "jobs")
+        if os.path.isdir(jobs_dir):
+            all_stats = []
+            for name in sorted(os.listdir(jobs_dir)):
+                jd = os.path.join(jobs_dir, name)
+                s = read_job_stats(jd)
+                if s:
+                    all_stats.append({"name": name, **s})
+            if all_stats:
+                job_stats = {
+                    "total": sum(s["total"] for s in all_stats),
+                    "matchedPerfectly": sum(s["matchedPerfectly"] for s in all_stats),
+                    "matchedEquiv": sum(s["matchedEquiv"] for s in all_stats),
+                    "knownIssues": sum(s["knownIssues"] for s in all_stats),
+                    "untriaged": sum(s["untriaged"] for s in all_stats),
+                }
+        # No default round filter — show all bugs
 
     bug_data = build_bug_data(bugs)
-    html = generate_html(bug_data, job_stats)
+    html = generate_html(bug_data, job_stats, default_round_label)
 
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)

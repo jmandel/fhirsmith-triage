@@ -8,6 +8,12 @@ jobs/*/results/deltas/*.2*.ndjson
 jobs/*/triage-logs/
 jobs/*/triage-errors.log
 
+# Coverage reports (regenerable via engine/run-coverage.sh)
+jobs/*/coverage/
+
+# Python bytecode
+__pycache__/
+
 # Lock file
 .triage.lock
 

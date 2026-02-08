@@ -24,13 +24,21 @@ jobs:
         run: |
           mkdir -p _site
 
-          # Copy bug reports and tolerances for each round
+          # Copy bug reports, tolerances, and coverage for each round
           for job in jobs/*/; do
             round=$(basename "$job")
             mkdir -p "_site/$round"
             [ -f "$job/bugs/bugs.html" ] && cp "$job/bugs/bugs.html" "_site/$round/bugs.html"
             [ -f "$job/tolerances.js" ] && cp "$job/tolerances.js" "_site/$round/tolerances.js"
+            if [ -d "$job/coverage" ] && [ -f "$job/coverage/index.html" ]; then
+              mkdir -p "_site/$round/coverage"
+              # Copy HTML reports and assets, skip raw V8 data
+              rsync -a --exclude='v8-raw' "$job/coverage/" "_site/$round/coverage/"
+            fi
           done
+
+          # Copy all-rounds bug report if present
+          [ -f "jobs/bugs-all.html" ] && cp "jobs/bugs-all.html" "_site/bugs-all.html"
 
           # Generate index
           cat > _site/index.html << 'HTMLEOF'
@@ -77,19 +85,30 @@ jobs:
             round=$(basename "$job")
             has_bugs="false"
             has_tol="false"
+            has_coverage="false"
             [ -f "$job/bugs/bugs.html" ] && has_bugs="true"
             [ -f "$job/tolerances.js" ] && has_tol="true"
-            echo "  { name: '$round', bugs: $has_bugs, tolerances: $has_tol }," >> _site/index.html
+            [ -f "$job/coverage/index.html" ] && has_coverage="true"
+            echo "  { name: '$round', bugs: $has_bugs, tolerances: $has_tol, coverage: $has_coverage }," >> _site/index.html
           done
+          HAS_ALL_BUGS="false"
+          [ -f "jobs/bugs-all.html" ] && HAS_ALL_BUGS="true"
+          echo "]; const hasAllBugs = $HAS_ALL_BUGS;" >> _site/index.html
           cat >> _site/index.html << 'HTMLEOF'
-          ];
           const container = document.getElementById('rounds');
+          if (hasAllBugs) {
+            const allDiv = document.createElement('div');
+            allDiv.className = 'round';
+            allDiv.innerHTML = '<h2>All Rounds</h2><a href="bugs-all.html">All Bugs</a>';
+            container.appendChild(allDiv);
+          }
           rounds.forEach(r => {
             const div = document.createElement('div');
             div.className = 'round';
             let links = '';
             if (r.bugs) links += `<a href="${r.name}/bugs.html">Bug Report</a>`;
             if (r.tolerances) links += `<a href="${r.name}/tolerances.js">Tolerances</a>`;
+            if (r.coverage) links += `<a href="${r.name}/coverage/index.html">Coverage Report</a>`;
             div.innerHTML = `<h2>${r.name}</h2>${links || '<em>No artifacts</em>'}`;
             container.appendChild(div);
           });

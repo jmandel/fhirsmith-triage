@@ -91,6 +91,17 @@ EOF
 )"
     echo "$(date -Is) round $ROUND committed" >> "$ERROR_LOG"
 
+    # Label any new bugs (without a round: label) with current round
+    JOB_NAME=$(basename "$JOB_DIR")
+    ROUND_LABEL="round:$JOB_NAME"
+    while IFS= read -r line; do
+      BUG_HID=$(echo "$line" | python3 -c "import json,sys; print(json.load(sys.stdin)['human_id'])")
+      BUG_LABELS=$(echo "$line" | python3 -c "import json,sys; print(' '.join(json.load(sys.stdin).get('labels',[])))")
+      if ! echo "$BUG_LABELS" | grep -q "round:"; then
+        git-bug bug label new "$BUG_HID" "$ROUND_LABEL" 2>/dev/null || true
+      fi
+    done < <(git-bug bug -f json 2>/dev/null | python3 -c "import json,sys; [print(json.dumps(b)) for b in json.load(sys.stdin)]")
+
     # Dump bugs snapshot after each round
     BUGS_DIR="$JOB_DIR/bugs"
     mkdir -p "$BUGS_DIR"

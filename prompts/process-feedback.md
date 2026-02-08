@@ -66,12 +66,17 @@ Each verdict falls into one of these categories:
 
 The expert confirms the difference was a real bug and has been fixed on the server.
 
-**Action on Round N+1 tolerance**: Leave as `temp-tolerance`. If the fix is deployed:
-- The records may no longer appear in Round N+1 data (fix eliminates the difference)
-- Or the records may now agree (tolerance won't match, goes to OK naturally)
-- Either way the tolerance becomes inert — no harm in keeping it
+**Action on Round N+1 tolerance**: **Remove the tolerance entirely** from `tolerances.js`. Do not leave it in place.
 
-**Why not remove it?** Safer to let it prove itself inert. If the fix isn't fully deployed, the tolerance still catches the pattern. You can clean up confirmed-inert tolerances in a later pass.
+**Why remove?** The purpose of "fixed" is to verify the fix actually worked. If the tolerance stays, it silently suppresses the pattern and we never confirm the fix landed. By removing it, any records still exhibiting the difference will surface as loud failures in Round N+1, prompting investigation. If the fix is truly deployed, those records simply won't appear (or will match perfectly) — no tolerance needed.
+
+**What about the bug?** Close the bug in git-bug and add a comment noting the fix:
+```bash
+git-bug bug status close <BUG_ID>
+git-bug bug comment new <BUG_ID> -m "Closed: GG confirmed fixed. Tolerance removed from round N+1 to verify fix landed."
+```
+
+If the fix didn't actually land, the triage agent will rediscover the pattern in Round N+1 and re-file or reopen the bug. It's better to close proactively and reopen if needed than to leave stale bugs open indefinitely.
 
 ### "Dev is correct" / "Don't care" / "Won't fix" — Not a dev bug
 
@@ -94,8 +99,15 @@ Find each tolerance by ID in `jobs/<round-N+1>/tolerances.js` and apply the appr
 Change three things on the tolerance object:
 
 1. **`kind`**: `'temp-tolerance'` → `'equiv-autofix'`
-2. **Remove `bugId`**: No longer tracking as a bug
+2. **`bugId`**: Keep the existing bugId for historical reference
 3. **Add `adjudication`**: Array of adjudicator tags, e.g. `['gg']`
+4. **Add `adjudicationText`**: The expert's actual verdict text (concise)
+
+Then **close the bug** in git-bug with a comment noting the adjudication:
+```bash
+git-bug bug status close <BUG_ID>
+git-bug bug comment new <BUG_ID> -m "Adjudicated by GG: <verdict text>"
+```
 
 #### Before:
 ```js
@@ -116,7 +128,9 @@ Change three things on the tolerance object:
   id: 'some-tolerance-id',
   description: 'Updated description noting the adjudication verdict and reasoning...',
   kind: 'equiv-autofix',
+  bugId: 'abc1234',
   adjudication: ['gg'],
+  adjudicationText: 'dev is correct',
   tags: [...],
   match(...) { ... },
   normalize(...) { ... },
@@ -133,9 +147,7 @@ Update the description to reflect the verdict. Keep it concise. Patterns:
 
 ### For "fixed" verdicts
 
-Leave the tolerance unchanged in Round N+1. It will either:
-- Match nothing (fix eliminated the pattern) → harmless inert tolerance
-- Still match (fix not deployed to comparison endpoint) → still needed
+**Remove the tolerance from Round N+1's `tolerances.js`.** Delete the entire tolerance object. This ensures that if the fix didn't actually land, the difference will surface as a new failure rather than being silently suppressed.
 
 ### Don't touch `match()` or `normalize()` logic
 
@@ -150,8 +162,13 @@ After making edits, spot-check:
 grep -A1 "adjudication.*'gg'" jobs/<round-N+1>/tolerances.js
 # Should show kind: 'equiv-autofix' on the line before each match
 
-# Confirm no adjudicated tolerance still has a bugId
+# Confirm adjudicated tolerances still have their bugId
 grep -B5 "adjudication.*'gg'" jobs/<round-N+1>/tolerances.js | grep bugId
+# Should show bugId for each adjudicated tolerance
+
+# Confirm "fixed" tolerances were actually removed
+# Search for tolerance IDs that should have been deleted
+grep 'id-of-removed-tolerance' jobs/<round-N+1>/tolerances.js
 # Should return nothing
 ```
 
@@ -160,7 +177,7 @@ Optionally, rerun comparison to confirm the tolerances still function:
 node engine/compare.js --job jobs/<round-N+1>
 ```
 
-The `summary.json` stats will shift: records previously counted under `temp-tolerance` in `skippedByKind` or `okBreakdown` will now appear under `equiv-autofix`. Total counts should be unchanged.
+The stats will shift: adjudicated records move from `temp-tolerance` to `equiv-autofix` counts. Removed tolerances (fixed bugs) will cause their records to appear as new deltas if the fix hasn't landed — this is expected and desired.
 
 ## The `adjudication` Field
 
@@ -195,13 +212,13 @@ Only a human-initiated feedback incorporation process sets `adjudication`. Triag
 
 One bug report may describe a root cause with multiple tolerance manifestations. A verdict on one usually applies to all siblings. The bug report body and tolerance descriptions often cross-reference each other — look for "same root cause as bug X" or "related to tolerance Y."
 
-### 3. "Fixed" doesn't mean "remove"
+### 3. "Fixed" means remove tolerance AND close bug
 
-Resist the urge to delete tolerances for fixed bugs. Leave them as `temp-tolerance`. They'll be inert if the fix is deployed, and still protective if it isn't. Clean up later once confirmed.
+Remove tolerances for fixed bugs so the next round can verify the fix landed, and close the bug proactively. If the fix is real, the records won't appear as deltas. If the fix didn't land, the triage agent will rediscover the pattern and re-file or reopen the bug. Don't leave bugs open waiting for verification — close them now and reopen if needed.
 
 ### 4. Skip vs normalize tolerances both get reclassified the same way
 
-Whether the tolerance uses `skip` (drops the record entirely) or `normalize` (transforms both sides to match), the reclassification process is identical: change `kind`, swap `bugId` for `adjudication`, update description.
+Whether the tolerance uses `skip` (drops the record entirely) or `normalize` (transforms both sides to match), the reclassification process is identical: change `kind`, add `adjudication` and `adjudicationText`, retain `bugId`, close the bug, update description.
 
 ### 5. The engine handles `equiv-autofix` for both skip and normalize
 
