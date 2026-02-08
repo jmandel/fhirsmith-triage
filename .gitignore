@@ -1,6 +1,10 @@
-# Per-job large/transient files
+# Large data files (not suitable for git)
+comparison*.ndjson
 jobs/*/comparison.ndjson
+jobs/*/results/deltas/deltas.ndjson
 jobs/*/results/deltas/*.2*.ndjson
+
+# Per-job transient files
 jobs/*/triage-logs/
 jobs/*/triage-errors.log
 
