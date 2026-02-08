@@ -1820,12 +1820,13 @@
             "lamport": 42
         },
         "edit_time": {
-            "timestamp": 1770525198,
-            "time": "2026-02-07T22:33:18-06:00",
-            "lamport": 260
+            "timestamp": 1770525791,
+            "time": "2026-02-07T22:43:11-06:00",
+            "lamport": 272
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
@@ -1864,13 +1865,14 @@
             "lamport": 43
         },
         "edit_time": {
-            "timestamp": 1770525429,
-            "time": "2026-02-07T22:37:09-06:00",
-            "lamport": 263
+            "timestamp": 1770525799,
+            "time": "2026-02-07T22:43:19-06:00",
+            "lamport": 274
         },
         "status": "open",
         "labels": [
             "missing-resource",
+            "reproduced",
             "tx-compare"
         ],
         "title": "expand: dev returns 404 for unknown ISO 3166 version that prod resolves by fallback",
@@ -1908,16 +1910,62 @@
             "lamport": 44
         },
         "edit_time": {
-            "timestamp": 1770525639,
-            "time": "2026-02-07T22:40:39-06:00",
-            "lamport": 268
+            "timestamp": 1770525782,
+            "time": "2026-02-07T22:43:02-06:00",
+            "lamport": 270
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "result-disagrees",
             "tx-compare"
         ],
         "title": "validate-code: dev returns result=false for ISO 3166 user-assigned code AA that prod considers valid",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1e5268a34ebe6ff97c58bacaad2761555920dc39d6a646b8b1ec45137578dcd5",
+        "human_id": "1e5268a",
+        "create_time": {
+            "timestamp": 1770525935,
+            "time": "2026-02-07T22:45:35-06:00",
+            "lamport": 45
+        },
+        "edit_time": {
+            "timestamp": 1770526186,
+            "time": "2026-02-07T22:49:46-06:00",
+            "lamport": 279
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders empty status in INACTIVE_DISPLAY_FOUND message where prod shows 'inactive'",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

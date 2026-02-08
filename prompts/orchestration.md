@@ -66,7 +66,7 @@ When the watcher reports bugs needing repro, launch one Bash agent per bug. Use 
 
 The prompt for each agent should include:
 - The bug ID and job directory
-- The full contents of `prompts/repro-request.md` (the step-by-step repro workflow)
+- An instruction to read `prompts/repro-request.md` and follow its step-by-step workflow
 
 The repro agents handle everything end-to-end: reading the bug, constructing curl commands, testing against live servers, editing the bug with a `## Repro` section, and labeling the outcome (`reproduced`, `not-reproduced`, or `repro-inconclusive`).
 

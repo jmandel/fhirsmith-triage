@@ -1120,6 +1120,7 @@ const tolerances = [
     id: 'expand-extension-child-order',
     description: 'Extension child element ordering within ValueSet.expansion.extension differs between implementations. Prod orders sub-extensions as [uri, code], dev orders as [code, uri]. Extension child order has no semantic meaning in FHIR. Affects 15 $expand records with R5 backport expansion.property extensions.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     tags: ['normalize', 'expand', 'extension-ordering'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -3392,6 +3393,7 @@ const tolerances = [
     id: 'expand-contains-sort-order',
     description: 'Expansion.contains code ordering differs between prod and dev. Both return the same set of codes but in different order. Code ordering in ValueSet expansion has no semantic meaning in FHIR — the expansion is a set, not a sequence. Sorts contains by system+code to normalize. Applies to all $expand operations with identical code membership but different ordering.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     tags: ['normalize', 'expand', 'ordering'],
     match({ record, prod, dev }) {
       if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
