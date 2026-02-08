@@ -1,0 +1,46 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "exam"
+    },
+    {
+      "name": "display",
+      "valueString": "Exam"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "status-check",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Reference to draft CodeSystem http://terminology.hl7.org/CodeSystem/observation-category|4.0.1 from hl7.fhir.r4.core#4.0.1"
+            },
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/observation-category"
+    },
+    {
+      "name": "version",
+      "valueString": "4.0.1"
+    }
+  ],
+  "resourceType": "Parameters"
+}

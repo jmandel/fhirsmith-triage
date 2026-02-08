@@ -2548,52 +2548,89 @@ const tolerances = [
 
   {
     id: 'hl7-terminology-cs-version-skew',
-    description: 'HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) are loaded with different versions in prod vs dev. Prod uses version 4.0.1 for consentcategorycodes/goal-achievement (dev=1.0.1), 4.0.1 for consentpolicycodes (dev=3.0.1), and 2.9 for v2-0116 (dev=3.0.0). Both agree on validation result. Version strings differ only in message and issues text. Normalizes version strings in message and OperationOutcome issue details.text from dev to prod values. Affects 32 validate-code records.',
+    description: 'HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) are loaded with different versions in prod vs dev. Prod returns version 4.0.1 while dev returns the actual THO version (e.g. 2.0.0, 2.0.1, 3.0.0). Differences manifest in: (1) the version parameter itself, (2) version strings in message text, (3) version strings in issues text, (4) prod includes a draft status-check informational issue that dev omits. Normalizes dev version param to prod value, normalizes version strings in message/issues text, and strips draft status-check issues from prod. Affects ~261 validate-code records.',
     kind: 'temp-tolerance',
     bugId: '6edc96c',
     tags: ['normalize', 'validate-code', 'version-skew', 'hl7-terminology'],
     match({ record, prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
-      const prodMsg = getParamValue(prod, 'message') || '';
-      const devMsg = getParamValue(dev, 'message') || '';
-      if (prodMsg === devMsg) return null;
       // Check system is a terminology.hl7.org CodeSystem
       const system = getParamValue(prod, 'system') || getParamValue(dev, 'system') || '';
       if (!system.startsWith('http://terminology.hl7.org/CodeSystem/')) return null;
-      // Check that messages differ only in version string
-      const versionPattern = /version '[^']*'/g;
-      const prodNorm = prodMsg.replace(versionPattern, "version 'X'");
-      const devNorm = devMsg.replace(versionPattern, "version 'X'");
-      if (prodNorm !== devNorm) return null;
-      return 'normalize';
+      // Check that version param differs
+      const prodVer = getParamValue(prod, 'version');
+      const devVer = getParamValue(dev, 'version');
+      if (prodVer && devVer && prodVer !== devVer) return 'normalize';
+      // Also match if messages differ only in version strings
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      if (prodMsg !== devMsg) {
+        const versionPattern = /version '[^']*'/g;
+        const prodNorm = prodMsg.replace(versionPattern, "version 'X'");
+        const devNorm = devMsg.replace(versionPattern, "version 'X'");
+        if (prodNorm === devNorm) return 'normalize';
+      }
+      return null;
     },
     normalize({ prod, dev }) {
-      // Extract prod's version strings from message
-      const prodMsg = getParamValue(prod, 'message') || '';
-      const versionPattern = /version '([^']*)'/g;
-      const prodVersions = [];
-      let m;
-      while ((m = versionPattern.exec(prodMsg)) !== null) {
-        prodVersions.push(m[1]);
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      const prodVer = getParamValue(prod, 'version');
+
+      // 1. Normalize version parameter: set dev's version to prod's
+      function normalizeVersionParam(body, targetVersion) {
+        if (!body?.parameter || !targetVersion) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'version' ? { ...p, valueString: targetVersion } : p
+          ),
+        };
       }
-      if (prodVersions.length === 0) return { prod, dev };
-      // Build a replacement: replace dev's version strings with prod's (positionally)
-      function replaceVersions(text) {
-        let idx = 0;
-        return text.replace(/version '[^']*'/g, (match) => {
-          if (idx < prodVersions.length) {
-            return "version '" + prodVersions[idx++] + "'";
-          }
-          return match;
+
+      // 2. Strip draft status-check issues from prod (dev doesn't generate these)
+      function stripDraftStatusCheckIssues(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter(iss => {
+              const coding = iss.details?.coding || [];
+              const isStatusCheck = coding.some(c => c.code === 'status-check');
+              const isDraft = (iss.details?.text || '').includes('draft');
+              return !(isStatusCheck && isDraft);
+            });
+            if (filtered.length === 0) {
+              // Remove the entire issues parameter if no issues remain
+              return null;
+            }
+            return {
+              ...p,
+              resource: { ...p.resource, issue: filtered },
+            };
+          }).filter(Boolean),
+        };
+      }
+
+      // 4. Normalize version strings in message text and issues text on dev side
+      function normalizeVersionInText(text, targetVersion) {
+        if (!text) return text;
+        // Replace version 'X.Y.Z' patterns
+        text = text.replace(/version '[^']*'/g, "version '" + targetVersion + "'");
+        // Replace pipe-delimited system|version for terminology.hl7.org CodeSystems
+        text = text.replace(/terminology\.hl7\.org\/CodeSystem\/[^|]*\|[^\s"']*/g, (m) => {
+          const parts = m.split('|');
+          return parts[0] + '|' + targetVersion;
         });
+        return text;
       }
-      function fixBody(body) {
+      function normalizeMessageAndIssuesText(body, targetVersion) {
         if (!body?.parameter) return body;
         return {
           ...body,
           parameter: body.parameter.map(p => {
             if (p.name === 'message' && p.valueString) {
-              return { ...p, valueString: replaceVersions(p.valueString) };
+              return { ...p, valueString: normalizeVersionInText(p.valueString, targetVersion) };
             }
             if (p.name === 'issues' && p.resource?.issue) {
               return {
@@ -2604,7 +2641,7 @@ const tolerances = [
                     if (iss.details?.text) {
                       return {
                         ...iss,
-                        details: { ...iss.details, text: replaceVersions(iss.details.text) },
+                        details: { ...iss.details, text: normalizeVersionInText(iss.details.text, targetVersion) },
                       };
                     }
                     return iss;
@@ -2616,7 +2653,23 @@ const tolerances = [
           }),
         };
       }
-      return { prod, dev: fixBody(dev) };
+
+      // Determine the target version: from version param or from message text
+      let targetVer = prodVer;
+      if (!targetVer) {
+        const prodMsg = getParamValue(prod, 'message') || '';
+        const verMatch = prodMsg.match(/version '([^']*)'/);
+        if (verMatch) targetVer = verMatch[1];
+      }
+
+      let newProd = stripDraftStatusCheckIssues(prod);
+      let newDev = normalizeVersionParam(dev, targetVer);
+      if (targetVer) {
+        newDev = normalizeMessageAndIssuesText(newDev, targetVer);
+        newProd = normalizeMessageAndIssuesText(newProd, targetVer);
+      }
+
+      return { prod: newProd, dev: newDev };
     },
   },
 

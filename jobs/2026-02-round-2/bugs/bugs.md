@@ -1416,6 +1416,102 @@ Records-Impacted: 16
 Tolerance-ID: dev-sqlite-misuse-expand-rxnorm
 Record-ID: e108a92a-a962-45b4-ad35-e0aa4fe4cf32
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?_limit=1000&_incomplete=true' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "x-system-cache-id",
+    "valueString": "dc8fd4bc-091a-424a-8a3b-6198ef146891"
+  },
+  {
+    "name": "includeDefinition",
+    "valueBoolean": false
+  },
+  {
+    "name": "excludeNested",
+    "valueBoolean": false
+  },
+  {
+    "name": "valueSet",
+    "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "inactive": true,
+        "include": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "_limit",
+    "valueString": "1000"
+  },
+  {
+    "name": "_incomplete",
+    "valueString": "true"
+  }
+]
+}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?_limit=1000&_incomplete=true' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "x-system-cache-id",
+    "valueString": "dc8fd4bc-091a-424a-8a3b-6198ef146891"
+  },
+  {
+    "name": "includeDefinition",
+    "valueBoolean": false
+  },
+  {
+    "name": "excludeNested",
+    "valueBoolean": false
+  },
+  {
+    "name": "valueSet",
+    "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "inactive": true,
+        "include": [
+          {
+            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "name": "_limit",
+    "valueString": "1000"
+  },
+  {
+    "name": "_incomplete",
+    "valueString": "true"
+  }
+]
+}'
+```
+
+Prod returns 500 with `"fdb_sqlite3_objects error: no such column: cui1"` (specific database schema error). Dev returns 500 with `"SQLITE_MISUSE: not an error"` (generic SQLite misuse error).
+
 #####What differs
 
 Dev returns 500 with error message "SQLITE_MISUSE: not an error" on POST /r4/ValueSet/$expand requests involving RxNorm-related code systems. This affects two sub-patterns:
@@ -1446,6 +1542,20 @@ Eliminates 16 records.
 Records-Impacted: 198
 Tolerance-ID: expand-contains-version-skew
 Record-ID: 6f9cf4c7-e6f4-445c-bc86-323b2b6d7165
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+```
+
+Prod returns SNOMED version `http://snomed.info/sct/731000124108/version/20250901` and CPT version `2026`, dev returns SNOMED version `http://snomed.info/sct/731000124108/version/20250301` and CPT version `2025`.
 
 #####What differs
 
@@ -1479,6 +1589,20 @@ Tolerance `expand-contains-version-skew` matches expand records where both sides
 Records-Impacted: 258
 Tolerance-ID: expand-dev-crash-on-error
 Record-ID: 6b9d3a10-654f-4823-aadb-0fabc0d915bb
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-procedure-code&_format=json' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-procedure-code&_format=json' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 422 with issue code "too-costly" and clean error message: "The code System 'http://www.ama-assn.org/go/cpt' has a grammar, and cannot be enumerated directly". Dev returns HTTP 500 with issue code "business-rule" and a JavaScript source code leak in the error message: `contentMode() {\r\n    return this.codeSystem.content;\r\n  }` instead of the actual content mode value.
 
 #####What differs
 

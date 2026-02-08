@@ -1133,13 +1133,14 @@
             "lamport": 27
         },
         "edit_time": {
-            "timestamp": 1770509476,
-            "time": "2026-02-07T18:11:16-06:00",
-            "lamport": 144
+            "timestamp": 1770510541,
+            "time": "2026-02-07T18:29:01-06:00",
+            "lamport": 156
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests",
@@ -1177,13 +1178,14 @@
             "lamport": 28
         },
         "edit_time": {
-            "timestamp": 1770509885,
-            "time": "2026-02-07T18:18:05-06:00",
-            "lamport": 147
+            "timestamp": 1770510540,
+            "time": "2026-02-07T18:29:00-06:00",
+            "lamport": 155
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ",
@@ -1221,13 +1223,14 @@
             "lamport": 29
         },
         "edit_time": {
-            "timestamp": 1770510350,
-            "time": "2026-02-07T18:25:50-06:00",
-            "lamport": 150
+            "timestamp": 1770510530,
+            "time": "2026-02-07T18:28:50-06:00",
+            "lamport": 152
         },
         "status": "open",
         "labels": [
             "dev-crash-on-error",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on GET  when CodeSystem content mode prevents expansion",

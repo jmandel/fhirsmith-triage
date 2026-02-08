@@ -1,0 +1,25 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "exam"
+    },
+    {
+      "name": "display",
+      "valueString": "Exam"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/observation-category"
+    },
+    {
+      "name": "version",
+      "valueString": "2.0.0"
+    }
+  ],
+  "resourceType": "Parameters"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "7df41c98-0b24-4415-8a7f-7c355b6722dd",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-simple-observation-category&code=exam&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fobservation-category",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 823,
+    "hash": "6096537924e98b788e8b00e026f38973"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 287,
+    "hash": "dcf5ee1177fb2e8316bfc91375274344"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "version"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/observation-category\"},{\"name\" : \"code\",\"valueCode\" : \"exam\"},{\"name\" : \"version\",\"valueString\" : \"4.0.1\"},{\"name\" : \"display\",\"valueString\" : \"Exam\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"MSG_DRAFT\"}],\"severity\" : \"information\",\"code\" : \"business-rule\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"status-check\"}],\"text\" : \"Reference to draft CodeSystem http://terminology.hl7.org/CodeSystem/observation-category|4.0.1 from hl7.fhir.r4.core#4.0.1\"}}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/observation-category\"},{\"name\":\"code\",\"valueCode\":\"exam\"},{\"name\":\"version\",\"valueString\":\"2.0.0\"},{\"name\":\"display\",\"valueString\":\"Exam\"}]}"
+}
