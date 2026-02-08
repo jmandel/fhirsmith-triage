@@ -3495,6 +3495,35 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-no-system-422',
+    description: 'Dev returns 200 instead of 422 for $validate-code with code but no system parameter. Prod correctly rejects per FHIR spec.',
+    kind: 'temp-tolerance',
+    bugId: 'e4e45bc',
+    tags: ['skip', 'status-mismatch', 'validate-code'],
+    match({ record }) {
+      if (record.prod.status !== 422 || record.dev.status !== 200) return null;
+      if (!record.url.split('?')[0].includes('$validate-code')) return null;
+      // Check that request has code but no system
+      const url = record.url || '';
+      const method = record.method || '';
+      if (method === 'GET') {
+        const hasCode = /[?&]code=/.test(url) || /[?&]coding=/.test(url);
+        const hasSystem = /[?&]system=/.test(url);
+        if (hasCode && !hasSystem) return 'skip';
+      } else if (method === 'POST' && record.requestBody) {
+        try {
+          const body = JSON.parse(record.requestBody);
+          const params = body.parameter || [];
+          const hasCode = params.some(p => p.name === 'code' || p.name === 'coding');
+          const hasSystem = params.some(p => p.name === 'system');
+          if (hasCode && !hasSystem) return 'skip';
+        } catch (e) {}
+      }
+      return null;
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

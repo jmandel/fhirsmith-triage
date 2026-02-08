@@ -1,0 +1,16 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Unable to find code to validate (looked for coding | codeableConcept | code+system | code+inferSystem in parameters =url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&amp;code=TX&amp;_format=json)</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "not-found",
+      "details": {
+        "text": "Unable to find code to validate (looked for coding | codeableConcept | code+system | code+inferSystem in parameters =url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&code=TX&_format=json)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "TX"
+    },
+    {
+      "name": "display",
+      "valueString": "Texas"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "https://www.usps.com/"
+    }
+  ],
+  "resourceType": "Parameters"
+}

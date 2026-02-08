@@ -220,6 +220,7 @@ Issue directories are keyed by the record's `id` field (a UUID assigned during d
 - `prompts/triage-prompt.md` - Triage agent prompt
 - `prompts/triage-loop.sh` - Automated triage control loop
 - `prompts/start-triage.sh` - Initialize a new triage round (reset to baseline)
+- `prompts/process-feedback.md` - Guide for incorporating expert feedback across rounds
 
 ### Reset checkpoint (`baseline/`)
 - `baseline/tolerances.js` - Minimal starter tolerances (skips + diagnostics only). Use `start-triage.sh` to create a new job from this baseline.

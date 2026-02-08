@@ -1,0 +1,25 @@
+{
+  "id": "5ea323a9-073d-4ebf-b1ae-0a374b35c26d",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&code=TX&_format=json",
+  "method": "GET",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 623,
+    "hash": "8e1b1dc4b34ecf1f9ea1b80494dd3df0"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 208,
+    "hash": "460a15882ca18f892fd7b922ffba53f1"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "validate-code",
+    "prodStatus": 422,
+    "devStatus": 200
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>Unable to find code to validate (looked for coding | codeableConcept | code+system | code+inferSystem in parameters =url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&amp;code=TX&amp;_format=json)</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"text\" : \"Unable to find code to validate (looked for coding | codeableConcept | code+system | code+inferSystem in parameters =url=http:%2F%2Fterminology.hl7.org%2FValueSet%2FUSPS-State&code=TX&_format=json)\"}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"https://www.usps.com/\"},{\"name\":\"code\",\"valueCode\":\"TX\"},{\"name\":\"display\",\"valueString\":\"Texas\"}]}"
+}

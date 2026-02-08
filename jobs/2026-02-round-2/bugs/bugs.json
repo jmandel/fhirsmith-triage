@@ -1258,5 +1258,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "af1ce697e80a707942d0d072a37d444ebc53a32fd2fdf10d8da464a2f84c596c",
+        "human_id": "af1ce69",
+        "create_time": {
+            "timestamp": 1770511986,
+            "time": "2026-02-07T18:53:06-06:00",
+            "lamport": 30
+        },
+        "edit_time": {
+            "timestamp": 1770511990,
+            "time": "2026-02-07T18:53:10-06:00",
+            "lamport": 159
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders null status as literal 'null' in inactive concept message",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
