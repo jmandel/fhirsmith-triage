@@ -1710,10 +1710,11 @@ const tolerances = [
       if (!isParameters(prod) || !isParameters(dev)) return null;
       const system = getParamValue(prod, 'system') || getParamValue(dev, 'system');
       if (system !== 'http://hl7.org/fhir/sid/ndc') return null;
-      // Check if dev has inactive param that prod lacks
-      const devInactive = getParamValue(dev, 'inactive');
-      const prodInactive = getParamValue(prod, 'inactive');
-      if (devInactive !== undefined && prodInactive === undefined) return 'normalize';
+      // Only match when dev has ALL four extra params and prod lacks ALL of them
+      const extras = ['inactive', 'version', 'message', 'issues'];
+      const devHasAll = extras.every(n => getParamValue(dev, n) !== undefined);
+      const prodLacksAll = extras.every(n => getParamValue(prod, n) === undefined);
+      if (devHasAll && prodLacksAll) return 'normalize';
       return null;
     },
     normalize({ prod, dev }) {
@@ -4537,6 +4538,24 @@ const tolerances = [
       if (/Unable to find code/.test(prodMsg) && /Unable to find code/.test(devMsg)) {
         return 'skip';
       }
+      return null;
+    },
+  },
+
+  // --- validate-code: dev returns result=false for ISO 3166 user-assigned code AA ---
+  {
+    id: 'validate-code-iso3166-AA-result-disagrees',
+    description: 'Dev returns result=false for ISO 3166 code AA (user-assigned), while prod returns result=true with display "User-assigned". Dev does not recognize user-assignable codes in ISO 3166.',
+    kind: 'temp-tolerance',
+    bugId: 'fdc587a',
+    tags: ['skip', 'result-disagrees', 'validate-code', 'iso3166'],
+    match({ record, prod, dev }) {
+      if (!/CodeSystem\/\$validate-code/.test(record.url)) return null;
+      if (!/url=urn[:%].*iso.*3166/.test(record.url)) return null;
+      if (!/code=AA/.test(record.url)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult === true && devResult === false) return 'skip';
       return null;
     },
   },

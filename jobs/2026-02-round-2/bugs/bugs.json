@@ -1854,5 +1854,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "2f5929eb60493155d2a48970ecffbb13074728dc6278003710dba7aaa22b92bb",
+        "human_id": "2f5929e",
+        "create_time": {
+            "timestamp": 1770525423,
+            "time": "2026-02-07T22:37:03-06:00",
+            "lamport": 43
+        },
+        "edit_time": {
+            "timestamp": 1770525429,
+            "time": "2026-02-07T22:37:09-06:00",
+            "lamport": 263
+        },
+        "status": "open",
+        "labels": [
+            "missing-resource",
+            "tx-compare"
+        ],
+        "title": "expand: dev returns 404 for unknown ISO 3166 version that prod resolves by fallback",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

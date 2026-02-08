@@ -1,0 +1,25 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:3166"
+    },
+    {
+      "name": "code",
+      "valueCode": "AA"
+    },
+    {
+      "name": "version",
+      "valueString": "2018"
+    },
+    {
+      "name": "display",
+      "valueString": "User-assigned"
+    }
+  ]
+}

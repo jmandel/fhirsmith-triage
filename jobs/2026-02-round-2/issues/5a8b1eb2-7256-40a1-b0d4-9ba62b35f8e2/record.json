@@ -1,0 +1,27 @@
+{
+  "id": "5a8b1eb2-7256-40a1-b0d4-9ba62b35f8e2",
+  "url": "/r4/CodeSystem/$validate-code?url=urn:iso:std:iso:3166&code=AA",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 279,
+    "hash": "e3480483a775c3be3fb43df856835a41"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 740,
+    "hash": "d490cdb194b693a25ea19ca77aab7982"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": true,
+    "devResult": false,
+    "system": "urn:iso:std:iso:3166",
+    "code": "AA"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"urn:iso:std:iso:3166\"},{\"name\" : \"code\",\"valueCode\" : \"AA\"},{\"name\" : \"version\",\"valueString\" : \"2018\"},{\"name\" : \"display\",\"valueString\" : \"User-assigned\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"urn:iso:std:iso:3166\"},{\"name\":\"code\",\"valueCode\":\"AA\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'AA' in the CodeSystem 'urn:iso:std:iso:3166' version '2018'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'AA' in the CodeSystem 'urn:iso:std:iso:3166' version '2018'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]}]}}]}"
+}

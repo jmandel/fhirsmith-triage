@@ -1,0 +1,51 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:3166"
+    },
+    {
+      "name": "code",
+      "valueCode": "AA"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'AA' in the CodeSystem 'urn:iso:std:iso:3166' version '2018'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code 'AA' in the CodeSystem 'urn:iso:std:iso:3166' version '2018'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

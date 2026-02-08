@@ -97,3 +97,4 @@
 {"pickedAt":"2026-02-08T02:41:46.988Z","recordId":"442928d4-a15c-4934-b21f-0713857f1c04","total":6,"analyzed":0,"remaining":6,"category":"status-mismatch"}
 {"pickedAt":"2026-02-08T04:30:58.349Z","recordId":"442928d4-a15c-4934-b21f-0713857f1c04","total":6,"analyzed":0,"remaining":6,"category":"status-mismatch"}
 {"pickedAt":"2026-02-08T04:35:06.714Z","recordId":"3d803696-e4e1-40e7-a249-c18cd3ff07aa","total":5,"analyzed":0,"remaining":5,"category":"missing-resource"}
+{"pickedAt":"2026-02-08T04:38:36.657Z","recordId":"5a8b1eb2-7256-40a1-b0d4-9ba62b35f8e2","total":4,"analyzed":0,"remaining":4,"category":"result-disagrees"}

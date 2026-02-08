@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_41 bugs (38 open, 3 closed)_
+_42 bugs (39 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2387,6 +2387,41 @@ grep '"prodStatus":400.*"devStatus":404' jobs/2026-02-round-2/results/deltas/del
 #####Tolerance
 
 Tolerance `lookup-unknown-code-status-400-vs-404` matches $lookup operations where prod returns 400 and dev returns 404, both returning OperationOutcome with "Unable to find code" messages. It skips the record since the content difference (status code and issue structure) is entirely covered by the status mismatch pattern.
+
+---
+
+### [ ] `2f5929e` expand: dev returns 404 for unknown ISO 3166 version that prod resolves by fallback
+
+Records-Impacted: 1
+Tolerance-ID: expand-iso3166-unknown-version-fallback
+Record-ID: 3d803696-e4e1-40e7-a249-c18cd3ff07aa
+
+#####What differs
+
+When $expand is called on ValueSet/iso3166-1-2 with `system-version=urn:iso:std:iso:3166|2020`:
+
+- **Prod (200)**: Successfully expands the ValueSet with 249 country codes. Falls back to version 2018 (shown in `used-codesystem` parameter as `urn:iso:std:iso:3166|2018`), while also echoing the requested `system-version` as `urn:iso:std:iso:3166|2020`.
+- **Dev (404)**: Returns an OperationOutcome with error: "A definition for CodeSystem 'urn:iso:std:iso:3166' version '2020' could not be found, so the value set cannot be expanded. Valid versions: 2018 or 20210120"
+
+Prod gracefully handles the unknown version by falling back to a known edition and succeeding. Dev rejects the request outright with a 404.
+
+#####How widespread
+
+Only 1 record in the deltas matches this exact pattern (prod=200, dev=404 for ISO 3166 $expand with unknown version). This is the only missing-resource record in the entire delta set.
+
+Search: `grep 'missing-resource' deltas.ndjson | wc -l` → 1
+
+The pattern is conceptually related to bug 1bc5e64 (dev not resolving code system versions prod resolves), but that bug covers validate-code operations where both return result=false. This is an $expand where the outcome diverges completely (200 with data vs 404 with error).
+
+#####What the tolerance covers
+
+Tolerance `expand-iso3166-unknown-version-fallback` matches $expand records where prod=200 and dev=404, the URL targets `iso3166-1-2`, and `system-version` contains `iso:3166`. Skips the record. Eliminates 1 record.
+
+#####Repro
+
+```
+GET /r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fiso3166-1-2&system-version=urn:iso:std:iso:3166|2020&count=1000
+```
 
 ---
 
