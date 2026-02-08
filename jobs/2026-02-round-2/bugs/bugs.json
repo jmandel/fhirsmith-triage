@@ -1167,5 +1167,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "4f12ddae78815daead142b83f3ee04312d6378067788187d3d94471bcd48c221",
+        "human_id": "4f12dda",
+        "create_time": {
+            "timestamp": 1770509880,
+            "time": "2026-02-07T18:18:00-06:00",
+            "lamport": 28
+        },
+        "edit_time": {
+            "timestamp": 1770509885,
+            "time": "2026-02-07T18:18:05-06:00",
+            "lamport": 147
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

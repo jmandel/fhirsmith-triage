@@ -1,0 +1,25 @@
+{
+  "id": "6b9d3a10-654f-4823-aadb-0fabc0d915bb",
+  "url": "/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fcore%2FValueSet%2Fus-core-procedure-code&_format=json",
+  "method": "GET",
+  "prod": {
+    "status": 422,
+    "contentType": "application/fhir+json",
+    "size": 539,
+    "hash": "067a0f31289a25df7e3a9818d6492148"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 465,
+    "hash": "155fae79882b39407f3a79d63b9bdcad"
+  },
+  "comparison": {
+    "category": "dev-crash-on-error",
+    "op": "expand",
+    "prodStatus": 422,
+    "devStatus": 500
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>The code System \\\"http://www.ama-assn.org/go/cpt\\\" has a grammar, and cannot be enumerated directly</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"too-costly\",\"details\" : {\"text\" : \"The code System \\\"http://www.ama-assn.org/go/cpt\\\" has a grammar, and cannot be enumerated directly\"},\"diagnostics\" : \"0 0 : start\\r\\n0 0     : not in cache\\r\\n0 0     : 0ms start working\\r\\n0 0     : 0ms compose #1\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"business-rule\",\"details\":{\"text\":\"The code system definition for http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets is a contentMode() {\\r\\n    return this.codeSystem.content;\\r\\n  }, so this expansion is not permitted unless the expansion parameter \\\"incomplete-ok\\\" has a value of \\\"true\\\"\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid\"}]}}]}"
+}

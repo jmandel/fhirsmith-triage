@@ -1,0 +1,18 @@
+{
+  "resourceType": "OperationOutcome",
+  "issue": [
+    {
+      "severity": "error",
+      "code": "business-rule",
+      "details": {
+        "text": "The code system definition for http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets is a contentMode() {\r\n    return this.codeSystem.content;\r\n  }, so this expansion is not permitted unless the expansion parameter \"incomplete-ok\" has a value of \"true\"",
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+            "code": "invalid"
+          }
+        ]
+      }
+    }
+  ]
+}

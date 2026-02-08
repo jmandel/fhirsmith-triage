@@ -1086,13 +1086,14 @@ const tolerances = [
 
   {
     id: 'expand-dev-crash-on-error',
-    description: 'Dev crashes (500) on $expand when CodeSystem content mode prevents expansion. Prod returns 422 with clear error. Dev leaks JS source code in error message (contentMode() function body), or crashes with TypeError (addParamUri/TerminologyError). Affects 186 POST /r4/ValueSet/$expand records.',
+    description: 'Dev crashes (500) on requests where prod returns 4xx error. Covers $expand (GET and POST) where content mode prevents expansion (dev leaks JS contentMode() source in error), and CodeSystem/$validate-code crash. Affects 258 records.',
     kind: 'temp-tolerance',
-    bugId: '9376cf0',
-    tags: ['skip', 'dev-crash-on-error', 'expand'],
+    bugId: 'f73e488',
+    tags: ['skip', 'dev-crash-on-error'],
     match({ record }) {
-      if (record.url !== '/r4/ValueSet/$expand') return null;
-      if (record.prod?.status !== 422 || record.dev?.status !== 500) return null;
+      const urlBase = record.url.split('?')[0];
+      if (urlBase !== '/r4/ValueSet/$expand' && urlBase !== '/r4/CodeSystem/$validate-code') return null;
+      if (record.prod?.status < 400 || record.dev?.status !== 500) return null;
       return 'skip';
     },
   },

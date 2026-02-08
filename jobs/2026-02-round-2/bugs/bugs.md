@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_24 bugs (20 open, 4 closed)_
+_27 bugs (24 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -126,9 +126,43 @@ Tolerance `oo-missing-location-field` normalizes by stripping `location` from pr
 
 ---
 
-### [ ] `2337986` 
+### [ ] `2337986` Dev returns 404 instead of 422 when ValueSet not found for $expand
+
+Records-Impacted: 756
+Tolerance-ID: expand-valueset-not-found-status-mismatch
+Record-ID: 8b7a9262-90d3-4753-a197-9a631ffdcf2f
 
 
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2Fus%2Fdavinci-pdex-plan-net%2FValueSet%2FPractitionerRoleVS&_format=json' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 422 with `issue.code: "unknown"` and `issue.details.text`, dev returns HTTP 404 with `issue.code: "not-found"` and `issue.diagnostics`.
+
+
+When a ValueSet cannot be found for a $expand operation, prod returns HTTP 422 (Unprocessable Entity) with an OperationOutcome using issue code `unknown` and `details.text`, while dev returns HTTP 404 (Not Found) with issue code `not-found` and `diagnostics`. Both communicate the same semantic meaning ("this ValueSet doesn't exist"), but the HTTP status code and OperationOutcome structure differ.
+
+Prod response (status 422):
+- issue.code: "unknown"
+- issue.details.text: "Unable to find value set for URL \"...\""
+
+Dev response (status 404):
+- issue.code: "not-found"
+- issue.diagnostics: "ValueSet not found: ..."
+
+
+756 records in the comparison dataset show this exact pattern (prod=422, dev=404). All are $expand operations (722 GET, 34 POST) across many different ValueSet URLs. The pattern is universal — every prod=422/dev=404 status mismatch is an $expand of an unknown ValueSet.
+
+Search used: `grep -c '"prodStatus":422,"devStatus":404' results/deltas/deltas.ndjson`
+
+
+Tolerance ID: `expand-valueset-not-found-status-mismatch`
+Matches: $expand operations where prod=422 and dev=404, and both responses are OperationOutcomes indicating a ValueSet was not found.
+Records eliminated: 756
 
 ---
 
@@ -185,9 +219,61 @@ e5639442-a91b-4de0-b1d9-9b901023b6c1 — GET /r4/ValueSet/$validate-code for Pra
 
 ---
 
-### [ ] `167be81` 
+### [ ] `167be81` Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code
 
+Records-Impacted: 187
+Tolerance-ID: v3-valueset-validate-code-result-disagrees
+Record-ID: 92d4fd1a-70fc-4497-adb5-309a3f564716
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=INFA&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=INFA&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `result: true` (code is valid in the ValueSet), dev returns `result: false` with error message "The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#INFA' was not found in the value set 'http://hl7.org/fhir/ValueSet/consent-category|4.0.1'".
+
+The bug reproduces across multiple ValueSets:
+- encounter-participant-type with code CON from v3-ParticipationType
+- v3-ActEncounterCode with code AMB from v3-ActCode
+
+#####What differs
+
+Prod returns `result: true` for $validate-code of HL7 v3 terminology codes against their corresponding ValueSets. Dev returns `result: false` with message "The provided code was not found in the value set."
+
+Both servers agree on the CodeSystem version, code, and display text — dev can look up the code successfully in the CodeSystem. But dev fails to determine that the code is a member of the ValueSet.
+
+Example (this record): GET /r4/ValueSet/$validate-code with system=v3-ActCode, code=INFA, url=consent-category.
+- Prod: result=true, version=9.0.0, display="information access"
+- Dev: result=false, version=9.0.0, display="information access", message="code not found in value set consent-category|4.0.1"
+
+#####How widespread
+
+187 records across 5 ValueSets, all GET requests, all r4, all using terminology.hl7.org/CodeSystem/v3-* systems:
+
+- 103 records: v3-ActEncounterCode ValueSet (codes AMB, IMP, HH, EMER from v3-ActCode)
+- 69 records: encounter-participant-type ValueSet (codes CON, ADM, ATND from v3-ParticipationType)
+- 9 records: consent-category ValueSet (code INFA from v3-ActCode)
+- 4 records: v3-ServiceDeliveryLocationRoleType ValueSet (codes ER, CARD, SLEEP from v3-RoleCode)
+- 2 records: v3-PurposeOfUse ValueSet (code HMARKT from v3-ActReason)
+
+Search used: grep 'result-disagrees' deltas.ndjson, filtered to terminology.hl7.org/CodeSystem/v3-* systems.
+
+#####What the tolerance covers
+
+Tolerance `v3-valueset-validate-code-result-disagrees` skips records where:
+- Operation is ValueSet/$validate-code
+- System is terminology.hl7.org/CodeSystem/v3-*
+- prodResult=true, devResult=false
+- Both sides report the same CodeSystem version
+
+Eliminates 187 records.
 
 ---
 
@@ -1157,6 +1243,75 @@ Total breakdown:
 
 ---
 
+### [x] `44d6f07` Dev truncates BCP-47 language tag region in expand displayLanguage parameter
+
+Records-Impacted: 2
+Tolerance-ID: expand-displayLanguage-region-truncated
+Record-ID: 4bd05003-c9ae-4886-9009-3f794f2690a1
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+  "resourceType": "Parameters",
+  "parameter": [
+    {"name": "displayLanguage", "valueCode": "fr-FR"},
+    {"name": "excludeNested", "valueBoolean": true},
+    {"name": "count", "valueInteger": 10},
+    {"name": "valueSet", "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
+      }
+    }}
+  ]
+}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+  "resourceType": "Parameters",
+  "parameter": [
+    {"name": "displayLanguage", "valueCode": "fr-FR"},
+    {"name": "excludeNested", "valueBoolean": true},
+    {"name": "count", "valueInteger": 10},
+    {"name": "valueSet", "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
+      }
+    }}
+  ]
+}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
+```
+
+**Result**: Both servers now return `{"name": "displayLanguage", "valueCode": "fr-FR"}`. The bug has been fixed - dev no longer truncates the region subtag.
+
+
+In $expand responses, the `displayLanguage` expansion parameter echoed back by dev truncates the BCP-47 language tag to just the language code, dropping the region subtag. When the request specifies `displayLanguage=fr-FR`, prod echoes back `fr-FR` in the expansion parameters, but dev echoes back `fr`.
+
+The actual expansion content (codes, display text) is identical between prod and dev — the difference is only in the echoed `displayLanguage` parameter value.
+
+
+2 records in the current comparison show this pattern. Both are POST /r4/ValueSet/$expand requests with `displayLanguage=fr-FR` in the request body.
+
+Search: grep for records where both prod and dev have a `displayLanguage` expansion parameter but with different values — found only these 2 records (IDs: 4bd05003-c9ae-4886-9009-3f794f2690a1, 57537a3f-f65b-4f96-b9d7-3354772c3973).
+
+There are an additional 62 records with a different displayLanguage mismatch pattern (prod has displayLanguage=en or en-US but dev omits it entirely), which is a separate issue.
+
+
+Tolerance `expand-displayLanguage-region-truncated` normalizes the displayLanguage expansion parameter to the prod value when both sides have a displayLanguage parameter but the values differ only by region subtag truncation (e.g., fr-FR vs fr). This eliminates 2 records.
+
+
+`grep -n '4bd05003-c9ae-4886-9009-3f794f2690a1' jobs/2026-02-round-2/comparison.ndjson`
+
+---
+
 ### [ ] `4aebc14` Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition
 
 Records-Impacted: 57
@@ -1208,6 +1363,53 @@ Same root cause as bug 9fd2328 (Dev loads older SNOMED CT edition), which covers
 
 ---
 
+### [ ] `1433eb6` Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)
+
+Records-Impacted: 10
+Tolerance-ID: validate-code-valueset-not-found-dev-400
+Record-ID: 064711fa-e287-430e-a6f4-7ff723952ff1
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+Prod returns HTTP 200 with `{"resourceType":"Parameters","parameter":[{"name":"result","valueBoolean":true},...]}` indicating successful validation. Dev returns HTTP 400 with `{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"not-found","details":{"text":"A definition for the value Set 'http://hl7.org/fhir/ValueSet/@all' could not be found"}}]}`.
+
+
+For $validate-code requests against certain ValueSets, prod returns HTTP 200 with a valid Parameters response (result=true or result=false), while dev returns HTTP 400 with an OperationOutcome saying "A definition for the value Set '...' could not be found."
+
+Prod successfully resolves these ValueSets and performs code validation. Dev fails at the ValueSet resolution step and returns an error instead of a validation result.
+
+
+10 records show this pattern (prod=200, dev=400 with "could not be found"):
+
+- 3 records: `nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use*` (Indian NDHM ValueSets)
+- 5 records: `ontariohealth.ca/fhir/ValueSet/*` (Ontario Health ValueSets)
+- 2 records: `hl7.org/fhir/ValueSet/@all` (special @all ValueSet)
+
+Search: `grep 'could not be found' results/deltas/deltas.ndjson` filtered to prod=200 dev=400
+
+All are POST /r4/ValueSet/$validate-code requests. The ValueSets come from different IG packages (NDHM India, Ontario Health, and core FHIR @all), so the root cause may be that dev is missing certain IG-provided ValueSet definitions or doesn't support the @all pseudo-ValueSet.
+
+
+Tolerance `validate-code-valueset-not-found-dev-400` matches: POST validate-code, prod=200, dev=400, where dev body contains OperationOutcome with "could not be found" text. Eliminates all 10 records.
+
+
+- 064711fa-e287-430e-a6f4-7ff723952ff1 (nrces.in ndhm-diagnosis-use--0)
+- 5beceead-a754-4f88-8dec-1a7a931166b9 (ontariohealth.ca symptoms-of-clinical-concern)
+- 38f6e665-4c34-4589-8d29-77c522b97845 (hl7.org/fhir/ValueSet/@all)
+
+---
+
 ### [ ] `1932f81` Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests
 
 Records-Impacted: 16
@@ -1236,6 +1438,39 @@ All have the same dev error text "SQLITE_MISUSE: not an error". The prod respons
 Tolerance ID: dev-sqlite-misuse-expand-rxnorm
 Matches records where the dev response is an OperationOutcome containing "SQLITE_MISUSE" in the error details, on $expand operations. Skips the entire record since dev's crash prevents meaningful content comparison.
 Eliminates 16 records.
+
+---
+
+### [ ] `4f12dda` Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ
+
+Records-Impacted: 198
+Tolerance-ID: expand-contains-version-skew
+Record-ID: 6f9cf4c7-e6f4-445c-bc86-323b2b6d7165
+
+#####What differs
+
+In $expand responses, prod and dev return the same set of codes (same system + code pairs) but with different `version` strings on `expansion.contains[]` entries:
+
+- **SNOMED CT US edition**: prod returns `http://snomed.info/sct/731000124108/version/20250901`, dev returns `http://snomed.info/sct/731000124108/version/20250301`
+- **CPT (AMA)**: prod returns `2026`, dev returns `2025`
+
+Both sides return 200 with identical code membership (280 codes in the representative record), but each code's version field reflects the loaded edition.
+
+This differs from bug 9fd2328, which covers the case where SNOMED version skew causes *different* code sets to appear. Here, the codes are the same — only the version annotations differ.
+
+#####How widespread
+
+198 expand delta records exhibit this pattern. All are the same ValueSet URL (`http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1267.23`) requested with different parameters. Each contains 280 codes with both SNOMED and CPT codes, where all codes match but version strings differ.
+
+Found via:
+```python
+####For each expand delta with same code membership,
+####check if contains[].version differs for common codes
+```
+
+#####What the tolerance covers
+
+Tolerance `expand-contains-version-skew` matches expand records where both sides return 200, the code membership is identical, but `contains[].version` strings differ for common codes. It normalizes all `contains[].version` values to prod's values. This only triggers when code sets are the same (no extra/missing codes) — the existing `expand-snomed-version-skew-content` tolerance handles cases with code membership differences.
 
 ---
 

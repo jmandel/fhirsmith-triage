@@ -1,10 +1,10 @@
 {
   "jobDir": "jobs/2026-02-round-2",
-  "timestamp": "2026-02-08T00:18:40.668Z",
+  "timestamp": "2026-02-08T00:26:10.006Z",
   "totalRecords": 32233,
-  "skipped": 4450,
+  "skipped": 4708,
   "skippedByKind": {
-    "temp-tolerance": 4414,
+    "temp-tolerance": 4672,
     "equiv-autofix": 36
   },
   "skippedReasons": {
@@ -15,14 +15,13 @@
     "skip-prod-xml": 36,
     "cpt-validate-code-result-disagrees": 17,
     "expand-too-costly-succeeds": 90,
-    "expand-dev-crash-on-error": 78,
+    "expand-dev-crash-on-error": 352,
     "snomed-implicit-valueset-expand-404": 36,
     "skip-prod-hgvs-timeout": 62,
     "validate-code-undefined-system-result-disagrees": 258,
     "expand-toocostly-grammar-400": 12,
     "snomed-version-skew-validate-code-result-disagrees": 1,
     "validate-code-valueset-not-found-dev-400": 10,
-    "dev-sqlite-misuse-expand-rxnorm": 16,
     "expand-valueset-not-found-status-mismatch": 8,
     "validate-code-undefined-code-message-diff": 1,
     "vsac-modifier-extension-error": 1,
@@ -33,7 +32,6 @@
   },
   "categories": {
     "OK": 24525,
-    "dev-crash-on-error": 258,
     "content-differs": 2802,
     "status-mismatch": 136,
     "dev-crash-on-valid": 58,
@@ -50,12 +48,10 @@
       "OK": 22019,
       "content-differs": 341,
       "status-mismatch": 133,
-      "result-disagrees": 3,
-      "dev-crash-on-error": 1
+      "result-disagrees": 3
     },
     "expand": {
       "OK": 1592,
-      "dev-crash-on-error": 257,
       "content-differs": 273,
       "dev-crash-on-valid": 58,
       "missing-resource": 1
