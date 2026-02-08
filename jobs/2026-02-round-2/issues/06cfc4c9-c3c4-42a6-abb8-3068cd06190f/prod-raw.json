@@ -1,0 +1,58 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "29857009"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://snomed.info/sct' could not be found, so the code cannot be validated"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'http://snomed.info/sct' could not be found, so the code cannot be validated"
+            },
+            "location": [
+              "Coding.system"
+            ],
+            "expression": [
+              "Coding.system"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

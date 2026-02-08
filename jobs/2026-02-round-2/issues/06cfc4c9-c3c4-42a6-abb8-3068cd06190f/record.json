@@ -1,0 +1,38 @@
+{
+  "id": "06cfc4c9-c3c4-42a6-abb8-3068cd06190f",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 973,
+    "hash": "24d3230a66ab8f2cd45ad1340838e7ef"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 2594,
+    "hash": "4a6ca6bc64a121a124eb022f71667db2"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      },
+      {
+        "type": "value-differs",
+        "param": "x-caused-by-unknown-system"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"29857009\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'http://snomed.info/sct' could not be found, so the code cannot be validated\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'http://snomed.info/sct' could not be found, so the code cannot be validated\"},\"location\" : [\"Coding.system\"],\"expression\" : [\"Coding.system\"]}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/20611000087101' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930, http://snomed.info/sct/11000172109/version/20231115, http://snomed.info/sct/2011000195101/version/20230607, http://snomed.info/sct/32506021000036107/version/20230731, http://snomed.info/sct/45991000052106/version/20231130, http://snomed.info/sct/554471000005108/version/20250930, http://snomed.info/sct/731000124108/version/20230301, http://snomed.info/sct/731000124108/version/20250901, http://snomed.info/sct/827022005/version/20241216, http://snomed.info/sct/83821000000107/version/20230412, http://snomed.info/sct/900000000000207008/version/20240201, http://snomed.info/sct/900000000000207008/version/20250201, http://snomed.info/xsct/900000000000207008/version/20250814 and undefined\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"Coding.system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/20611000087101' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930, http://snomed.info/sct/11000172109/version/20231115, http://snomed.info/sct/2011000195101/version/20230607, http://snomed.info/sct/32506021000036107/version/20230731, http://snomed.info/sct/45991000052106/version/20231130, http://snomed.info/sct/554471000005108/version/20250930, http://snomed.info/sct/731000124108/version/20230301, http://snomed.info/sct/731000124108/version/20250901, http://snomed.info/sct/827022005/version/20241216, http://snomed.info/sct/83821000000107/version/20230412, http://snomed.info/sct/900000000000207008/version/20240201, http://snomed.info/sct/900000000000207008/version/20250201, http://snomed.info/xsct/900000000000207008/version/20250814 and undefined\"},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"29857009\"},{\"name\":\"display\",\"valueString\":\"Chest pain\"},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"http://snomed.info/sct|http://snomed.info/sct/20611000087101\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"29857009\",\"display\":\"Chest pain\"}},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"bcd81115-ad33-4289-baed-3c73f7e23375\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueString\":\"http://snomed.info/sct|http://snomed.info/sct/20611000087101\"}]}"
+}

@@ -4457,6 +4457,68 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'unknown-system-vs-unknown-version',
+    description: 'When $validate-code is called with system-version pinning an unavailable SNOMED CT edition, prod treats the entire CodeSystem as unknown (UNKNOWN_CODESYSTEM, no version in x-caused-by-unknown-system) while dev recognizes SNOMED is loaded but the specific edition is not (UNKNOWN_CODESYSTEM_VERSION, lists valid versions, includes version in x-caused-by-unknown-system). Dev also returns a display parameter that prod omits. Both agree result=false. Affects 1 record with Canadian SNOMED edition 20611000087101.',
+    kind: 'temp-tolerance',
+    bugId: 'f33ebd3',
+    tags: ['normalize', 'validate-code', 'unknown-system', 'message-text'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      // Prod says system "could not be found" (no version), dev says version "could not be found"
+      if (prodMsg.includes('could not be found, so the code cannot be validated') &&
+          !prodMsg.includes('version') &&
+          devMsg.includes('could not be found, so the code cannot be validated') &&
+          devMsg.includes('Valid versions:')) {
+        return 'normalize';
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodMsg = getParamValue(prod, 'message');
+      const prodXCaused = getParamValue(prod, 'x-caused-by-unknown-system');
+
+      function normalizeBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter
+            .filter(p => {
+              // Strip display param if prod doesn't have it
+              if (p.name === 'display' && !getParamValue(prod, 'display')) return false;
+              return true;
+            })
+            .map(p => {
+              if (p.name === 'message' && p.valueString) {
+                return { ...p, valueString: prodMsg };
+              }
+              if (p.name === 'x-caused-by-unknown-system' && prodXCaused) {
+                return { ...p, valueCanonical: prodXCaused };
+              }
+              if (p.name === 'issues' && p.resource?.issue) {
+                return {
+                  ...p,
+                  resource: {
+                    ...p.resource,
+                    issue: p.resource.issue.map(iss => ({
+                      ...iss,
+                      details: iss.details ? { ...iss.details, text: prodMsg } : iss.details,
+                    })),
+                  },
+                };
+              }
+              return p;
+            }),
+        };
+      }
+
+      return both({ prod, dev }, normalizeBody);
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

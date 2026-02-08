@@ -145,12 +145,13 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770499565,
-            "time": "2026-02-07T15:26:05-06:00",
-            "lamport": 24
+            "timestamp": 1770518005,
+            "time": "2026-02-07T20:33:25-06:00",
+            "lamport": 243
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "reproduced",
             "status-mismatch",
             "tx-compare"
@@ -190,12 +191,13 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770499952,
-            "time": "2026-02-07T15:32:32-06:00",
-            "lamport": 29
+            "timestamp": 1770518116,
+            "time": "2026-02-07T20:35:16-06:00",
+            "lamport": 247
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "reproduced",
             "result-disagrees",
             "tx-compare"
@@ -326,12 +328,13 @@
             "lamport": 9
         },
         "edit_time": {
-            "timestamp": 1770501390,
-            "time": "2026-02-07T15:56:30-06:00",
-            "lamport": 45
+            "timestamp": 1770517968,
+            "time": "2026-02-07T20:32:48-06:00",
+            "lamport": 241
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -416,12 +419,13 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770516574,
-            "time": "2026-02-07T20:09:34-06:00",
-            "lamport": 214
+            "timestamp": 1770518049,
+            "time": "2026-02-07T20:34:09-06:00",
+            "lamport": 245
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -1691,6 +1695,50 @@
             "tx-compare"
         ],
         "title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "5f3b796d662e55aeb44da52131d5de37cc1c9f880d52a3fa225b06eae436e5ed",
+        "human_id": "5f3b796",
+        "create_time": {
+            "timestamp": 1770517852,
+            "time": "2026-02-07T20:30:52-06:00",
+            "lamport": 40
+        },
+        "edit_time": {
+            "timestamp": 1770517856,
+            "time": "2026-02-07T20:30:56-06:00",
+            "lamport": 239
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "LOINC $lookup: dev returns extra designations, RELATEDNAMES2 properties, and different CLASSTYPE format",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

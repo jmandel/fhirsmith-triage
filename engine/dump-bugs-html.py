@@ -69,7 +69,33 @@ def markdown_to_html(text):
 
     def inline_format(s):
         """Handle inline markdown: bold, inline code, links.
-        Expects RAW text (not pre-escaped). Escapes internally."""
+        Expects RAW text (not pre-escaped). Escapes internally.
+        Links are extracted first so that backtick-containing link text
+        like [`file.js#L10`](url) is handled correctly."""
+        # First pass: extract markdown links (which may contain backticks)
+        link_re = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
+        link_placeholder = []
+        def replace_link(m):
+            idx = len(link_placeholder)
+            link_text = m.group(1)
+            link_url = m.group(2)
+            # Render backtick-wrapped text inside link as <code>
+            inner = re.sub(r'`([^`]+)`', lambda cm: f'<code>{escape(cm.group(1))}</code>',
+                           escape(link_text) if '`' not in link_text else link_text)
+            if '`' in link_text:
+                # Re-escape non-code parts only
+                parts = []
+                for j, seg in enumerate(link_text.split('`')):
+                    if j % 2 == 1:
+                        parts.append(f'<code>{escape(seg)}</code>')
+                    else:
+                        parts.append(escape(seg))
+                inner = ''.join(parts)
+            link_placeholder.append(f'<a href="{escape(link_url)}" target="_blank">{inner}</a>')
+            return f'\x00LINK{idx}\x00'
+        s = link_re.sub(replace_link, s)
+
+        # Second pass: handle backtick code spans and other inline formatting
         parts = []
         segments = s.split("`")
         for i, seg in enumerate(segments):
@@ -77,7 +103,12 @@ def markdown_to_html(text):
                 parts.append(f"<code>{escape(seg)}</code>")
             else:
                 parts.append(format_non_code(escape(seg)))
-        return "".join(parts)
+        result = "".join(parts)
+
+        # Restore link placeholders
+        for idx, link_html in enumerate(link_placeholder):
+            result = result.replace(f'\x00LINK{idx}\x00', link_html)
+        return result
 
     def format_non_code(s):
         """Format bold, italic, links in non-code text."""
@@ -85,7 +116,10 @@ def markdown_to_html(text):
         s = re.sub(r'__(.+?)__', r'<strong>\1</strong>', s)
         s = re.sub(r'(?<!\w)\*(.+?)\*(?!\w)', r'<em>\1</em>', s)
         s = re.sub(r'(?<!\w)_(.+?)_(?!\w)', r'<em>\1</em>', s)
+        # Markdown links (already handled in first pass, but keep as fallback)
         s = re.sub(r'\[([^\]]+)\]\(([^)]+)\)', r'<a href="\2" target="_blank">\1</a>', s)
+        # Auto-link bare URLs not already inside an href
+        s = re.sub(r'(?<!href=")(?<!">)(https?://[^\s<>\)]+)', r'<a href="\1" target="_blank">\1</a>', s)
         return s
 
     i = 0
