@@ -53,11 +53,11 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770517481,
-            "time": "2026-02-07T20:24:41-06:00",
-            "lamport": 233
+            "timestamp": 1770525631,
+            "time": "2026-02-07T22:40:31-06:00",
+            "lamport": 265
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "code-defect",
             "content-differs",
@@ -87,7 +87,7 @@
             "name": "Claude (AI Assistant)",
             "login": ""
         },
-        "comments": 2,
+        "comments": 3,
         "metadata": {}
     },
     {
@@ -1874,6 +1874,50 @@
             "tx-compare"
         ],
         "title": "expand: dev returns 404 for unknown ISO 3166 version that prod resolves by fallback",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "fdc587a9bb7bd2ddf12775bc7a508432717246642111e7444ad98054640224b1",
+        "human_id": "fdc587a",
+        "create_time": {
+            "timestamp": 1770525634,
+            "time": "2026-02-07T22:40:34-06:00",
+            "lamport": 44
+        },
+        "edit_time": {
+            "timestamp": 1770525639,
+            "time": "2026-02-07T22:40:39-06:00",
+            "lamport": 268
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev returns result=false for ISO 3166 user-assigned code AA that prod considers valid",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

@@ -52,6 +52,7 @@ const tolerances = [
     id: 'skip-metadata-ops',
     description: 'CapabilityStatement/metadata responses differ by design between implementations',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ record }) {
       return /\/metadata/.test(record.url) ? 'skip' : null;
     },
@@ -60,6 +61,7 @@ const tolerances = [
     id: 'skip-root-page',
     description: 'Root page (/) differs by design between implementations',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ record }) {
       return /^\/r[345]\/$/.test(record.url) ? 'skip' : null;
     },
@@ -68,6 +70,7 @@ const tolerances = [
     id: 'skip-static-assets',
     description: 'Static asset requests like icons differ by design',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ record }) {
       return /\.(png|ico|css|js)$/.test(record.url) ? 'skip' : null;
     },
@@ -76,32 +79,17 @@ const tolerances = [
     id: 'skip-prod-xml',
     description: 'Prod returned XML — we only compare JSON responses',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ record }) {
       return record.prodBody && record.prodBody.trimStart().startsWith('<') ? 'skip' : null;
     },
   },
-  {
-    id: 'skip-truncated-body',
-    description: 'Response body truncated at 50KB during data collection, producing invalid JSON that cannot be parsed. Comparison is impossible. Affects 277 records (ValueSet/CodeSystem searches, large $expand responses).',
-    kind: 'equiv-autofix',
-    tags: ['skip', 'data-collection-artifact'],
-    match({ record }) {
-      const prodLen = (record.prodBody || '').length;
-      const devLen = (record.devBody || '').length;
-      if (prodLen >= 50000 || devLen >= 50000) {
-        // Verify at least one body fails to parse as JSON
-        try { if (prodLen >= 50000) JSON.parse(record.prodBody); } catch { return 'skip'; }
-        try { if (devLen >= 50000) JSON.parse(record.devBody); } catch { return 'skip'; }
-      }
-      return null;
-    },
-  },
-
   // Normalizations
   {
     id: 'strip-diagnostics',
     description: 'Trace diagnostics parameter has completely different formats between implementations (by design).',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ prod, dev }) {
       return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
     },
@@ -114,6 +102,7 @@ const tolerances = [
     id: 'sort-parameters-by-name',
     description: 'Parameters.parameter array ordering differs between implementations but has no semantic meaning in FHIR.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     match({ prod, dev }) {
       return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
     },
@@ -134,6 +123,7 @@ const tolerances = [
     id: 'strip-oo-message-id-extension',
     description: 'OperationOutcome issue extensions for operationoutcome-message-id are server-generated message identifiers. Both servers include them inconsistently — sometimes both have matching IDs, sometimes they differ, sometimes only one side has them. These are implementation-specific metadata with no terminology significance. Listed in Known Cosmetic Differences. Affects ~264 delta records where the extension presence or value differs.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     tags: ['normalize', 'operationoutcome', 'message-id-extension'],
     match({ prod, dev }) {
       function hasMessageIdExt(body) {
@@ -865,6 +855,75 @@ const tolerances = [
   },
 
   {
+    id: 'inactive-display-empty-status-in-message',
+    description: 'SNOMED validate-code INACTIVE_DISPLAY_FOUND message: dev renders empty status (status = ) where prod renders (status = inactive). The concept is actually inactive, so prod is correct. This prevents the inactive-display-message-extra-synonyms tolerance from matching because the prefixes differ.',
+    kind: 'temp-tolerance',
+    bugId: '1e5268a',
+    tags: ['normalize', 'message-text', 'snomed', 'display-comment', 'status'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const prodText = prodIssues.issue[i]?.details?.text || '';
+        const devText = devIssues.issue[i]?.details?.text || '';
+        if (prodText === devText) continue;
+        const prodHasDisplayComment = prodIssues.issue[i]?.details?.coding?.some(c => c.code === 'display-comment');
+        const devHasDisplayComment = devIssues.issue[i]?.details?.coding?.some(c => c.code === 'display-comment');
+        if (!prodHasDisplayComment || !devHasDisplayComment) continue;
+        // Check if the texts differ in the (status = ...) portion
+        const statusPattern = /\(status = ([^)]*)\)/;
+        const prodMatch = prodText.match(statusPattern);
+        const devMatch = devText.match(statusPattern);
+        if (prodMatch && devMatch && prodMatch[1] !== devMatch[1]) {
+          // One has a status value, the other is empty
+          if (prodMatch[1] && !devMatch[1]) return 'normalize';
+        }
+      }
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return { prod, dev };
+      const statusPattern = /\(status = ([^)]*)\)/;
+      function fixStatus(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  const prodText = prodIss.details?.text || '';
+                  const devText = iss.details?.text || '';
+                  const prodStatusMatch = prodText.match(statusPattern);
+                  const devStatusMatch = devText.match(statusPattern);
+                  if (prodStatusMatch && devStatusMatch && prodStatusMatch[1] && !devStatusMatch[1]) {
+                    const fixedText = devText.replace(statusPattern, `(status = ${prodStatusMatch[1]})`);
+                    return {
+                      ...iss,
+                      details: { ...iss.details, text: fixedText },
+                    };
+                  }
+                  return iss;
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: fixStatus(dev) };
+    },
+  },
+
+  {
     id: 'inactive-display-message-extra-synonyms',
     description: 'SNOMED validate-code with INACTIVE_DISPLAY_FOUND: dev lists multiple synonyms/designations in "The correct display is one of" message, prod lists only the preferred term. Dev is correct (GG adjudicated). Both identify the same code as having an inactive display.',
     kind: 'equiv-autofix',
@@ -1009,6 +1068,7 @@ const tolerances = [
     id: 'expand-metadata-identifier-timestamp',
     description: 'Expansion identifier (server-generated UUID) and timestamp differ between implementations. These are transient metadata with no terminology significance. Affects all $expand responses.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     tags: ['normalize', 'expand', 'transient-metadata'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1037,6 +1097,7 @@ const tolerances = [
     id: 'expand-meta-lastUpdated',
     description: 'meta.lastUpdated on the ValueSet resource wrapper in $expand responses reflects when each server last loaded the resource definition — server-instance metadata, not terminology content. The expansion contents are identical.',
     kind: 'equiv-autofix',
+    adjudication: ['jm'],
     tags: ['normalize', 'expand', 'transient-metadata'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;

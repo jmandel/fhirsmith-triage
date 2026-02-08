@@ -1,0 +1,49 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "26643006"
+    },
+    {
+      "name": "display",
+      "valueString": "Oral route"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "display-comment",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "'oral' is no longer considered a correct display for code '26643006' (status = inactive). The correct display is one of \"Oral route\""
+            },
+            "expression": [
+              "display"
+            ],
+            "severity": "warning"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

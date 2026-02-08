@@ -1,0 +1,55 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "26643006"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Oral route"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "text": "'oral' is no longer considered a correct display for code '26643006' (status = ). The correct display is one of Oral route,Per os,Oral route (qualifier value),Oral use,Per oral route,PO - Per os,By mouth",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ]
+            },
+            "expression": [
+              "display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "INACTIVE_DISPLAY_FOUND"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,60 +1,16 @@
 # tx-compare Bug Report
 
-_42 bugs (39 open, 3 closed)_
+_42 bugs (38 open, 4 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
+| TEMP | 1 | Temporary tolerances (real bugs, suppressed for triage) |
 
 ---
 
-## Other
+## Temporary tolerances (real bugs, suppressed for triage)
 
-### [x] `e18fdef` Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)
-
-Records-Impacted: 2
-Tolerance-ID: loinc-answer-list-expand-404
-Record-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0
-
-
-```bash
-curl -s https://tx.fhir.org/r4/ValueSet/\$expand \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
-
-curl -s https://tx-dev.fhir.org/r4/ValueSet/\$expand \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
-```
-
-**Result:** Both servers now return 200 with identical ValueSet expansions containing 7 codes. The bug is no longer reproduced - the dev server previously returned 404 with "ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1" but now correctly expands the LOINC answer list.
-
-
-When expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev **previously** returned 404 with:
-
-  ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1
-
-Dev was appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.
-
-
-2 records in the comparison dataset showed this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.
-
-Search:
-- `grep 'LL379-9' deltas.ndjson` → 2 records
-- `grep 'missing-resource' deltas.ndjson` → 3 total (1 is a separate CodeSystem/SOP issue)
-- All 2 matching records had identical error diagnostic
-
-The full comparison.ndjson had 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeeded on both servers.
-
-
-Tolerance ID: `loinc-answer-list-expand-404`
-Matched: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`
-Eliminated: 2 records
-
----
-
-### [ ] `a9cf20c` Dev omits deprecated location field on OperationOutcome issues
+### [x] `a9cf20c` Dev omits deprecated location field on OperationOutcome issues
 
 Records-Impacted: ~3316
 Record-ID: 59eff7c6-9fd2-45b2-8f27-c790368bcc54, 1697b0cd-971b-475c-8075-f249215b1205, 199de988-2772-45c3-83cb-5ff1de1f01ce
@@ -114,6 +70,58 @@ Prod returns `"location": ["system"]`, dev returns `"location": null` (field is 
 ac90cff #1 Claude (AI Assistant) <>
 
 (Consolidated into comment #0.)
+
+
+a29dcff #2 Claude (AI Assistant) <>
+
+Closing: GG adjudicated as won't fix. The `location` field is deprecated in FHIR R4 and prod has been populating it incorrectly — stopping populating it altogether is the correct behavior. Tolerances `oo-missing-location-field` and `oo-missing-location-post-version-skew` reclassified from temp-tolerance to equiv-autofix with adjudication: ['gg'].
+
+---
+
+## Other
+
+### [x] `e18fdef` Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)
+
+Records-Impacted: 2
+Tolerance-ID: loinc-answer-list-expand-404
+Record-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0
+
+
+```bash
+curl -s https://tx.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+```
+
+**Result:** Both servers now return 200 with identical ValueSet expansions containing 7 codes. The bug is no longer reproduced - the dev server previously returned 404 with "ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1" but now correctly expands the LOINC answer list.
+
+
+When expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev **previously** returned 404 with:
+
+  ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1
+
+Dev was appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.
+
+
+2 records in the comparison dataset showed this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.
+
+Search:
+- `grep 'LL379-9' deltas.ndjson` → 2 records
+- `grep 'missing-resource' deltas.ndjson` → 3 total (1 is a separate CodeSystem/SOP issue)
+- All 2 matching records had identical error diagnostic
+
+The full comparison.ndjson had 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeeded on both servers.
+
+
+Tolerance ID: `loinc-answer-list-expand-404`
+Matched: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`
+Eliminated: 2 records
 
 ---
 
@@ -322,134 +330,6 @@ Tolerance `v3-valueset-validate-code-result-disagrees` skips records where:
 - Both sides report the same CodeSystem version
 
 Eliminates 187 records.
-
----
-
-### [ ] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
-
-Records-Impacted: ~465
-Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21, ef77e7ca-9afa-4325-a1f3-a939a62a490f, 7813f9ee-79ee-445b-8064-603a98e876bf, 83509e51-1a8b-4d77-8f4e-7b0037009c4a, 2d18564d-4e72-425d-aca0-358240df2c57, 118efc0f-ad5c-4db9-b9e6-2120a5824b92
-Tolerance-ID: hl7-terminology-cs-version-skew, expand-hl7-terminology-version-skew-params, expand-hl7-terminology-version-skew-content, validate-code-hl7-terminology-vs-version-skew, expand-hl7-terminology-version-skew-vs-metadata, hl7-terminology-lookup-definition-designation-skew
-
-#####Summary
-
-Dev loads older/different versions of HL7 terminology CodeSystems and ValueSets (`http://terminology.hl7.org/CodeSystem/*`, `http://terminology.hl7.org/ValueSet/*`) than prod. For example, prod loads `consentcategorycodes` at version `4.0.1` while dev loads `1.0.1`; prod loads `observation-category` at `4.0.1` while dev loads `2.0.0`. Dev also loads different ValueSet versions (e.g., `v3-TribalEntityUS|4.0.0` vs dev's `|2018-08-12`, `v3-ActEncounterCode|3.0.0` vs dev's `|2014-03-26`). This version skew is the single root cause behind six distinct manifestations affecting `$validate-code`, `$expand`, and `$lookup` operations.
-
-Known affected CodeSystems and their version mismatches:
-- `consentcategorycodes`: prod=4.0.1, dev=1.0.1
-- `goal-achievement`: prod=4.0.1, dev=1.0.1
-- `observation-category`: prod=4.0.1, dev=2.0.0
-- `consentpolicycodes`: prod=4.0.1, dev=3.0.1
-- `condition-category`: prod=4.0.1, dev=2.0.0
-- `condition-clinical`: prod=4.0.1, dev=3.0.0
-- `v2-0116`: prod=2.9, dev=3.0.0
-
-Known affected ValueSets:
-- `v3-ActEncounterCode`: prod=3.0.0, dev=2014-03-26
-- `v3-TribalEntityUS`: prod=4.0.0, dev=2018-08-12
-
-#####Tolerances
-
-######1. `hl7-terminology-cs-version-skew` (~58 records)
-
-**What it handles**: `$validate-code` responses where the only differences are CodeSystem version strings in the `version` parameter, `message` text, and `issues` OperationOutcome `details.text`. Also strips draft `status-check` informational issues that prod includes but dev omits (because dev loads a version that lacks the draft status metadata). Both servers agree on validation results for all affected codes.
-
-**Normalizes**: Dev's version parameter and version strings in message/issues text to prod's values; strips prod's draft status-check issues.
-
-**Representative record**: `04364a8a-acce-491a-8018-9ac010d47d21` — validate-code for `consentcategorycodes` where prod says "version '4.0.1'", dev says "version '1.0.1'".
-
-######2. `expand-hl7-terminology-version-skew-params` (~236 records)
-
-**What it handles**: `$expand` responses where the `expansion.parameter` entries differ due to version skew. The `used-codesystem` version strings differ (e.g., `observation-category|4.0.1` vs `|2.0.0`) and prod includes `warning-draft` parameters that dev omits.
-
-**Normalizes**: `used-codesystem` versions for `terminology.hl7.org` systems to prod's values; strips `warning-draft` parameters from both sides.
-
-**Representative record**: `ef77e7ca-9afa-4325-a1f3-a939a62a490f` — expand of `us-core-simple-observation-category` where used-codesystem version and warning-draft differ.
-
-######3. `expand-hl7-terminology-version-skew-content` (~163 records)
-
-**What it handles**: `$expand` responses where prod and dev return slightly different sets of codes (1-5 extra/missing) because different CodeSystem versions include different codes. For example, dev's older `consentpolicycodes` includes `ch-epr` (removed in 4.0.1), and dev's older `observation-category` includes an extra `symptom` code. The common codes between prod and dev are identical.
-
-**Normalizes**: Both sides to the intersection of codes present in both responses; adjusts the total count accordingly.
-
-**Representative record**: `7813f9ee-79ee-445b-8064-603a98e876bf` — expand of `consent-policy` where dev returns 27 codes vs prod's 26 (extra `ch-epr`).
-
-######4. `validate-code-hl7-terminology-vs-version-skew` (4 records)
-
-**What it handles**: `$validate-code` responses where the only difference is the ValueSet version string in message text and issues details text. Both servers agree on `result=false` and all other parameters. The difference appears in "not found in the value set 'url|version'" messages where prod references the newer ValueSet version (e.g., `v3-ActEncounterCode|3.0.0`) and dev references the older version (e.g., `|2014-03-26`).
-
-**Normalizes**: ValueSet pipe-delimited version strings in message and issues text to prod's values.
-
-**Representative record**: `83509e51-1a8b-4d77-8f4e-7b0037009c4a` — validate-code for PLB in v3-ActEncounterCode where prod says `|3.0.0`, dev says `|2014-03-26`.
-
-######5. `expand-hl7-terminology-version-skew-vs-metadata` (3 records)
-
-**What it handles**: `$expand` responses where the ValueSet-level metadata fields (date, name, title, version, identifier, language, immutable, meta) differ because prod and dev loaded different editions of the same HL7 terminology ValueSet. The expansion contents are handled by other tolerances (e.g., code intersection), but the wrapper metadata still reflects the different loaded ValueSet versions. For example, TribalEntityUS: prod returns version=4.0.0/name=TribalEntityUS/date=2014-03-26, dev returns version=2018-08-12/name=v3.TribalEntityUS/date=2018-08-12.
-
-**Normalizes**: Dev's metadata fields (date, name, title, version, identifier, language, immutable, meta) to prod's values.
-
-**Representative record**: `2d18564d-4e72-425d-aca0-358240df2c57` — expand of v3-TribalEntityUS where all ValueSet metadata differs between versions.
-
-######6. `hl7-terminology-lookup-definition-designation-skew` (1 record)
-
-**What it handles**: `$lookup` responses for HL7 terminology CodeSystems where dev returns extra top-level `definition` and `designation` parameters that prod doesn't return. Dev has `definition` as a top-level parameter (with version-dependent text), while prod returns `definition` only as a property entry. Dev also includes a `designation` parameter with `preferredForLanguage` use that prod omits entirely. Both are consequences of dev loading a newer CodeSystem version with richer content.
-
-**Normalizes**: Strips `definition` and `designation` top-level parameters and `definition` property entries from both sides.
-
-**Representative record**: `118efc0f-ad5c-4db9-b9e6-2120a5824b92` — lookup of `active` in `condition-clinical` where dev (version 3.0.0) returns extra definition and designation, prod (version 4.0.1) returns definition only as a property.
-
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2Fv3-TribalEntityUS&incomplete-ok=true&_format=json' -H 'Accept: application/fhir+json' | jq '{version, name, title, date}'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2Fv3-TribalEntityUS&incomplete-ok=true&_format=json' -H 'Accept: application/fhir+json' | jq '{version, name, title, date}'
-```
-
-Prod returns `version=4.0.0, name=TribalEntityUS`, dev returns `version=2018-08-12, name=v3.TribalEntityUS`.
-
-
-61e2d5c #1 Claude (AI Assistant) <>
-
-The HL7 terminology CodeSystem version skew also affects $expand operations. Dev returns different expansion content (extra or missing codes) compared to prod for ValueSets using terminology.hl7.org CodeSystems.
-
-163 expand records have minor code differences (1-5 extra/missing codes, e.g., consent-policy 26 vs 27, observation-category 17 vs 18). The common codes between prod and dev are identical — only the set of included codes differs.
-
-Additionally, 246 expand records show dev returning total=1 where prod returns many codes for v3 ValueSets. These may be a separate root cause (dev failing to expand v3 included ValueSets) but also involve terminology.hl7.org CodeSystems.
-
-Adding tolerance `expand-hl7-terminology-version-skew-content` for the 163 minor-diff records.
-
-
-66ecd7c #2 Claude (AI Assistant) <>
-
-#####Updated scope (as of round 71)
-
-This bug now covers 3 tolerances handling different manifestations of the same root cause: dev loads older versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod.
-
-######Tolerances
-
-1. **`hl7-terminology-cs-version-skew`** (original) — Normalizes version strings in $validate-code message text and OperationOutcome issue details. Covers ~58 validate-code records where the only difference is the version string in error messages (e.g., prod says "version '4.0.1'", dev says "version '1.0.1'").
-
-2. **`expand-hl7-terminology-version-skew-content`** — Intersects code membership in $expand results where prod and dev return slightly different code sets (1-5 extra/missing codes) due to the version skew. Covers ~163 expand records.
-
-3. **`expand-hl7-terminology-version-skew-params`** — Normalizes `used-codesystem` version strings in expansion parameters (e.g., `observation-category|4.0.1` vs `|2.0.0`) and strips `warning-draft` parameters that only prod includes. Covers ~236 expand records.
-
-######Total impact: ~457 records across validate-code and expand operations.
-
-55 records referencing terminology.hl7.org remain in the delta file, likely involving additional patterns not yet covered by these tolerances.
-
-
-6be2dac #3 Claude (AI Assistant) <>
-
-Adding tolerance `expand-hl7-terminology-used-valueset-version-skew` to cover used-valueset version differences.
-
-The existing `expand-hl7-terminology-version-skew-params` tolerance handles used-codesystem and warning-draft parameter differences, but not used-valueset version strings. Prod reports newer HL7 terminology ValueSet versions (e.g., `|3.0.0`, `|3.1.0`) while dev reports older versions (e.g., `|2014-03-26`, `|2018-08-12`) for the same ValueSets. Same root cause — different loaded HL7 terminology editions.
-
-Also adding `expand-hl7-terminology-extra-params` to handle prod including `displayLanguage` and `warning-retired` parameters that dev omits.
-
-These tolerances affect the same 18 security-labels expand records. Updated total records impacted under this bug: ~255 (237 original + 18 new).
 
 ---
 
@@ -2421,6 +2301,41 @@ Tolerance `expand-iso3166-unknown-version-fallback` matches $expand records wher
 
 ```
 GET /r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fiso3166-1-2&system-version=urn:iso:std:iso:3166|2020&count=1000
+```
+
+---
+
+### [ ] `fdc587a` validate-code: dev returns result=false for ISO 3166 user-assigned code AA that prod considers valid
+
+Records-Impacted: 3
+Tolerance-ID: validate-code-iso3166-AA-result-disagrees
+Record-ID: 5a8b1eb2-7256-40a1-b0d4-9ba62b35f8e2
+
+#####What differs
+
+When CodeSystem/$validate-code is called with `url=urn:iso:std:iso:3166&code=AA`:
+
+- **Prod (200, result=true)**: Validates successfully. Returns `result: true`, `version: 2018`, `display: "User-assigned"`. Code "AA" is recognized as a valid user-assignable code in ISO 3166.
+- **Dev (200, result=false)**: Returns `result: false` with error message "Unknown code 'AA' in the CodeSystem 'urn:iso:std:iso:3166' version '2018'". Dev does not recognize "AA" as a valid code.
+
+This is a `result-disagrees` — the core validation result differs. Prod says the code is valid; dev says it's unknown.
+
+"AA" is a user-assigned code in ISO 3166. The ISO 3166 standard reserves certain codes (AA, QM-QZ, XA-XZ, ZZ) for user-defined purposes. Prod includes these in its code system data; dev does not.
+
+#####How widespread
+
+3 records in the deltas show this exact pattern — all are CodeSystem/$validate-code for `urn:iso:std:iso:3166` with code "AA", all with prod=true/dev=false.
+
+Search: `grep 'result-disagrees' deltas.ndjson | grep 'urn:iso:std:iso:3166' | wc -l` → 3
+
+#####What the tolerance covers
+
+Tolerance `validate-code-iso3166-AA-result-disagrees` matches validate-code requests on `urn:iso:std:iso:3166` where the result disagrees. Skips these records. Eliminates 3 records.
+
+#####Repro
+
+```
+GET /r4/CodeSystem/$validate-code?url=urn:iso:std:iso:3166&code=AA
 ```
 
 ---
