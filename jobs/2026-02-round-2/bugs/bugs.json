@@ -53,9 +53,9 @@
             "lamport": 3
         },
         "edit_time": {
-            "timestamp": 1770512482,
-            "time": "2026-02-07T19:01:22-06:00",
-            "lamport": 166
+            "timestamp": 1770512877,
+            "time": "2026-02-07T19:07:57-06:00",
+            "lamport": 174
         },
         "status": "open",
         "labels": [
@@ -1313,12 +1313,13 @@
             "lamport": 31
         },
         "edit_time": {
-            "timestamp": 1770512214,
-            "time": "2026-02-07T18:56:54-06:00",
-            "lamport": 164
+            "timestamp": 1770512884,
+            "time": "2026-02-07T19:08:04-06:00",
+            "lamport": 175
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "status-mismatch",
             "tx-compare"
         ],
@@ -1357,16 +1358,61 @@
             "lamport": 32
         },
         "edit_time": {
-            "timestamp": 1770512700,
-            "time": "2026-02-07T19:05:00-06:00",
-            "lamport": 169
+            "timestamp": 1770512971,
+            "time": "2026-02-07T19:09:31-06:00",
+            "lamport": 178
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev uses R5-style property instead of R4 extension for deprecated status in expand contains",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d05a4a6329f7db6c7e68839addcce1f12178838db83b956aaa5148d250e2bd6f",
+        "human_id": "d05a4a6",
+        "create_time": {
+            "timestamp": 1770513026,
+            "time": "2026-02-07T19:10:26-06:00",
+            "lamport": 33
+        },
+        "edit_time": {
+            "timestamp": 1770513031,
+            "time": "2026-02-07T19:10:31-06:00",
+            "lamport": 181
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev uses R5-style property instead of R4 extension for deprecated status in expand contains",
+        "title": "Dev omits retired status-check informational issues in validate-code OperationOutcome",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

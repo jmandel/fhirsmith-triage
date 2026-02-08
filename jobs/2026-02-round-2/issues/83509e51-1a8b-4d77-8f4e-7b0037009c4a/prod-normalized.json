@@ -1,0 +1,61 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "PLB"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'"
+            },
+            "expression": [
+              "code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|3.0.0'"
+            },
+            "expression": [
+              "code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|3.0.0'; Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://terminology.hl7.org/CodeSystem/v3-ActCode"
+    }
+  ],
+  "resourceType": "Parameters"
+}

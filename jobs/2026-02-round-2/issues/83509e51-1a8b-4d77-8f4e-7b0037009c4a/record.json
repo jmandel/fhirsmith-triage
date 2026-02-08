@@ -1,0 +1,33 @@
+{
+  "id": "83509e51-1a8b-4d77-8f4e-7b0037009c4a",
+  "url": "/r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2Fv3-ActEncounterCode&code=PLB&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1622,
+    "hash": "65295d8599b516dbb050fd5005c4ad87"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1516,
+    "hash": "80476cc2f080abc00607a5651700e2fb"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://terminology.hl7.org/CodeSystem/v3-ActCode\"},{\"name\" : \"code\",\"valueCode\" : \"PLB\"},{\"name\" : \"message\",\"valueString\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|3.0.0'; Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]},{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"None_of_the_provided_codes_are_in_the_value_set_one\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-in-vs\"}],\"text\" : \"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|3.0.0'\"},\"location\" : [\"code\"],\"expression\" : [\"code\"]}]}}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://terminology.hl7.org/CodeSystem/v3-ActCode\"},{\"name\":\"code\",\"valueCode\":\"PLB\"},{\"name\":\"message\",\"valueString\":\"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|2014-03-26'; Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'PLB' in the CodeSystem 'http://terminology.hl7.org/CodeSystem/v3-ActCode' version '9.0.0'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'http://terminology.hl7.org/CodeSystem/v3-ActCode#PLB' was not found in the value set 'http://terminology.hl7.org/ValueSet/v3-ActEncounterCode|2014-03-26'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"expression\":[\"code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}}]}"
+}

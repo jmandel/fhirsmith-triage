@@ -2773,6 +2773,80 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-hl7-terminology-vs-version-skew',
+    description: 'Dev loads different versions of HL7 terminology ValueSets than prod, causing ValueSet version strings in validate-code message/issues text to differ (e.g., v3-ActEncounterCode|3.0.0 vs |2014-03-26). The CodeSystem version matches; only the ValueSet version in "not found in the value set" messages differs. Same root cause as bug 6edc96c. Normalizes ValueSet pipe-delimited versions in message and issues text to prod values. Affects 4 validate-code records.',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'validate-code', 'version-skew', 'hl7-terminology'],
+    match({ record, prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const devMsg = getParamValue(dev, 'message') || '';
+      if (prodMsg === devMsg) return null;
+      // Check if messages differ only in terminology.hl7.org/ValueSet/ pipe-delimited versions
+      const vsVersionPattern = /terminology\.hl7\.org\/ValueSet\/[^|']*\|[^'"]*/g;
+      const prodNorm = prodMsg.replace(vsVersionPattern, 'VS|X');
+      const devNorm = devMsg.replace(vsVersionPattern, 'VS|X');
+      if (prodNorm === devNorm) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      // Build a map of VS base URI -> prod version from prod message text
+      const prodMsg = getParamValue(prod, 'message') || '';
+      const vsVersionMap = new Map();
+      const vsPattern = /(terminology\.hl7\.org\/ValueSet\/[^|'"]*)\|([^'"]*)/g;
+      let m;
+      while ((m = vsPattern.exec(prodMsg)) !== null) {
+        vsVersionMap.set(m[1], m[2]);
+      }
+
+      function normalizeVsVersionInText(text) {
+        if (!text) return text;
+        return text.replace(/(terminology\.hl7\.org\/ValueSet\/[^|'"]*)\|([^'"]*)/g, (match, base, ver) => {
+          const prodVer = vsVersionMap.get(base);
+          if (prodVer && prodVer !== ver) {
+            return base + '|' + prodVer;
+          }
+          return match;
+        });
+      }
+
+      function normalizeBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: normalizeVsVersionInText(p.valueString) };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue.map(iss => {
+                    if (iss.details?.text) {
+                      return {
+                        ...iss,
+                        details: { ...iss.details, text: normalizeVsVersionInText(iss.details.text) },
+                      };
+                    }
+                    return iss;
+                  }),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+
+      return { prod: normalizeBody(prod), dev: normalizeBody(dev) };
+    },
+  },
+
+  {
     id: 'expand-hl7-terminology-version-skew-content',
     description: 'Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org/CodeSystem/*) than prod, causing $expand to return different sets of codes. The common codes between prod and dev are identical — only extra/missing codes differ. Normalizes both sides to the intersection of codes and adjusts total. Affects 163 expand records across consent-policy (7), observation-category (130), patient-contactrelationship (5), TribalEntityUS (3), security-labels (18).',
     kind: 'temp-tolerance',
