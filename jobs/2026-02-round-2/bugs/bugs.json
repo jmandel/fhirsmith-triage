@@ -1538,16 +1538,61 @@
             "lamport": 36
         },
         "edit_time": {
-            "timestamp": 1770515332,
-            "time": "2026-02-07T19:48:52-06:00",
-            "lamport": 204
+            "timestamp": 1770515455,
+            "time": "2026-02-07T19:50:55-06:00",
+            "lamport": 207
         },
         "status": "open",
         "labels": [
             "dev-crash-on-valid",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on GET  with filter parameter: searchText.toLowerCase is not a function",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "44136eb5aba71c59b32e106958eb579ab83c21da123b37b7c3eb52925fe20b3d",
+        "human_id": "44136eb",
+        "create_time": {
+            "timestamp": 1770515631,
+            "time": "2026-02-07T19:53:51-06:00",
+            "lamport": 37
+        },
+        "edit_time": {
+            "timestamp": 1770515635,
+            "time": "2026-02-07T19:53:55-06:00",
+            "lamport": 210
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev returns expansion codes when prod marks expansion as too-costly (both HTTP 200)",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

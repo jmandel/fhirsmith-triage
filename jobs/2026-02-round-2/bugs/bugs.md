@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_35 bugs (30 open, 5 closed)_
+_36 bugs (32 open, 4 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1402,136 +1402,58 @@ Same root cause as bug 9fd2328 (Dev loads older SNOMED CT edition), which covers
 
 ---
 
-### [ ] `1433eb6` 
+### [ ] `1433eb6` Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)
 
-
-
----
-
-### [ ] `1932f81` Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests
-
-Records-Impacted: 16
-Tolerance-ID: dev-sqlite-misuse-expand-rxnorm
-Record-ID: e108a92a-a962-45b4-ad35-e0aa4fe4cf32
+Records-Impacted: 10
+Tolerance-ID: validate-code-valueset-not-found-dev-400
+Record-ID: 064711fa-e287-430e-a6f4-7ff723952ff1
 
 #####Repro
 
 ```bash
 ####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?_limit=1000&_incomplete=true' \
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
--d '{
-"resourceType": "Parameters",
-"parameter": [
-  {
-    "name": "x-system-cache-id",
-    "valueString": "dc8fd4bc-091a-424a-8a3b-6198ef146891"
-  },
-  {
-    "name": "includeDefinition",
-    "valueBoolean": false
-  },
-  {
-    "name": "excludeNested",
-    "valueBoolean": false
-  },
-  {
-    "name": "valueSet",
-    "resource": {
-      "resourceType": "ValueSet",
-      "status": "active",
-      "compose": {
-        "inactive": true,
-        "include": [
-          {
-            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "name": "_limit",
-    "valueString": "1000"
-  },
-  {
-    "name": "_incomplete",
-    "valueString": "true"
-  }
-]
-}'
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
 
 ####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?_limit=1000&_incomplete=true' \
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
--d '{
-"resourceType": "Parameters",
-"parameter": [
-  {
-    "name": "x-system-cache-id",
-    "valueString": "dc8fd4bc-091a-424a-8a3b-6198ef146891"
-  },
-  {
-    "name": "includeDefinition",
-    "valueBoolean": false
-  },
-  {
-    "name": "excludeNested",
-    "valueBoolean": false
-  },
-  {
-    "name": "valueSet",
-    "resource": {
-      "resourceType": "ValueSet",
-      "status": "active",
-      "compose": {
-        "inactive": true,
-        "include": [
-          {
-            "system": "http://www.nlm.nih.gov/research/umls/rxnorm"
-          }
-        ]
-      }
-    }
-  },
-  {
-    "name": "_limit",
-    "valueString": "1000"
-  },
-  {
-    "name": "_incomplete",
-    "valueString": "true"
-  }
-]
-}'
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
 ```
 
-Prod returns 500 with `"fdb_sqlite3_objects error: no such column: cui1"` (specific database schema error). Dev returns 500 with `"SQLITE_MISUSE: not an error"` (generic SQLite misuse error).
+Prod returns HTTP 200 with `{"resourceType":"Parameters","parameter":[{"name":"result","valueBoolean":true},...]}` indicating successful validation. Dev returns HTTP 400 with `{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"not-found","details":{"text":"A definition for the value Set 'http://hl7.org/fhir/ValueSet/@all' could not be found"}}]}`.
 
-#####What differs
+For $validate-code requests against certain ValueSets, prod returns HTTP 200 with a valid Parameters response (result=true or result=false), while dev returns HTTP 400 with an OperationOutcome saying "A definition for the value Set '...' could not be found."
 
-Dev returns 500 with error message "SQLITE_MISUSE: not an error" on POST /r4/ValueSet/$expand requests involving RxNorm-related code systems. This affects two sub-patterns:
+Prod successfully resolves these ValueSets and performs code validation. Dev fails at the ValueSet resolution step and returns an error instead of a validation result.
 
-1. **8 records (both 500)**: Prod also returns 500 but with a different, more descriptive SQLite error: "fdb_sqlite3_objects error: no such column: cui1". Both servers crash, but dev's error is generic/unhelpful while prod's points to a specific database schema issue.
 
-2. **8 records (prod 422, dev 500)**: Prod returns 422 with a proper error message like "A definition for CodeSystem 'https://hl7.org/fhir/sid/ndc' could not be found, so the value set cannot be expanded". Dev crashes with 500 SQLITE_MISUSE instead of returning a proper error response.
+10 records show this pattern (prod=200, dev=400 with "could not be found"):
 
-All 16 records are POST requests to /r4/ValueSet/$expand?_limit=1000&_incomplete=true with request bodies that include RxNorm (http://www.nlm.nih.gov/research/umls/rxnorm) in the ValueSet compose.
+- 3 records: `nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use*` (Indian NDHM ValueSets)
+- 5 records: `ontariohealth.ca/fhir/ValueSet/*` (Ontario Health ValueSets)
+- 2 records: `hl7.org/fhir/ValueSet/@all` (special @all ValueSet)
 
-#####How widespread
+Search: `grep 'could not be found' results/deltas/deltas.ndjson` filtered to prod=200 dev=400
 
-16 records total in the dataset. All are expand operations on the same URL pattern. Searched with:
-grep -c 'SQLITE_MISUSE' results/deltas/deltas.ndjson  → 16
+All are POST /r4/ValueSet/$validate-code requests. The ValueSets come from different IG packages (NDHM India, Ontario Health, and core FHIR @all), so the root cause may be that dev is missing certain IG-provided ValueSet definitions or doesn't support the @all pseudo-ValueSet.
 
-All have the same dev error text "SQLITE_MISUSE: not an error". The prod responses vary between internal SQLite errors (500) and proper FHIR error responses (422).
 
-#####What the tolerance covers
+Tolerance `validate-code-valueset-not-found-dev-400` matches: POST validate-code, prod=200, dev=400, where dev body contains OperationOutcome with "could not be found" text. Eliminates all 10 records.
 
-Tolerance ID: dev-sqlite-misuse-expand-rxnorm
-Matches records where the dev response is an OperationOutcome containing "SQLITE_MISUSE" in the error details, on $expand operations. Skips the entire record since dev's crash prevents meaningful content comparison.
-Eliminates 16 records.
+
+- 064711fa-e287-430e-a6f4-7ff723952ff1 (nrces.in ndhm-diagnosis-use--0)
+- 5beceead-a754-4f88-8dec-1a7a931166b9 (ontariohealth.ca symptoms-of-clinical-concern)
+- 38f6e665-4c34-4589-8d29-77c522b97845 (hl7.org/fhir/ValueSet/@all)
+
+---
+
+### [ ] `1932f81` 
+
+
 
 ---
 
@@ -1722,9 +1644,36 @@ Tolerance ID: `validate-code-no-system-422`. Matches validate-code records where
 
 ---
 
-### [ ] `7716e08` 
+### [ ] `7716e08` Dev uses R5-style property instead of R4 extension for deprecated status in expand contains
 
+Records-Impacted: 26
+Tolerance-ID: expand-r4-deprecated-status-representation
+Record-ID: 307d55c7-f148-4ddc-a360-3962e4e2fe7c, 131242e8-b7fb-4c3a-a45b-680355b8a70f
 
+In R4 $expand responses, prod and dev represent deprecated code status differently in two ways:
+
+**1. Per-code deprecated annotations on expansion.contains entries**
+
+- **security-labels (18 records)**: Prod uses R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property` to convey `status: deprecated`. Dev uses R5-native `property` elements directly (e.g., `"property": [{"code": "status", "valueCode": "deprecated"}]`). The R4 spec does not define `property` on `expansion.contains` — that was introduced in R5.
+
+- **patient-contactrelationship (5 records) + v3-TribalEntityUS (3 records)**: Prod annotates deprecated codes with the same R5 backport extension. Dev omits the deprecated status annotation entirely — no extension and no property.
+
+**2. Expansion-level property declaration extension**
+
+Prod includes an expansion-level extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property` that declares the "status" property used in per-code annotations. Dev either omits this entirely (patient-contactrelationship) or includes it with different key ordering (TribalEntityUS). This is the R5 backport mechanism for declaring expansion properties in R4.
+
+**How widespread**
+
+26 expand records across 3 ValueSets. All are R4 $expand operations containing codes from HL7 terminology CodeSystems with deprecated entries.
+
+```bash
+grep 'extension-ValueSet.expansion.contains.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
+grep 'extension-ValueSet.expansion.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
+```
+
+**Tolerance**
+
+Tolerance `expand-r4-deprecated-status-representation` normalizes by stripping both per-code annotations (R5 backport extension and R5-native property) and the expansion-level property declaration extension from both sides. This eliminates the structural difference so other content differences can still surface.
 
 ---
 
@@ -1892,6 +1841,20 @@ Records-Impacted: 58
 Tolerance-ID: expand-filter-crash
 Record-ID: dabcdc4f-feed-4ac8-adea-8999b06187a5
 
+#####Repro
+
+```bash
+####Prod (returns 200 with ValueSet expansion)
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/participant-role&filter=referr&count=50' \
+-H 'Accept: application/fhir+json'
+
+####Dev (returns 500 with error)
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/participant-role&filter=referr&count=50' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns HTTP 200 with a valid ValueSet expansion. Dev returns HTTP 500 with OperationOutcome: `searchText.toLowerCase is not a function`. Reproduced with multiple filter values (`referr`, `family`, `referring`) across different ValueSets.
+
 #####What differs
 
 Dev returns HTTP 500 with OperationOutcome error `searchText.toLowerCase is not a function` on all GET `$expand` requests (R4 and R5) that include a `filter` parameter. Prod returns 200 with a valid ValueSet expansion.
@@ -1916,6 +1879,32 @@ Eliminates: 58 records.
 #####Representative records
 
 - `dabcdc4f-feed-4ac8-adea-8999b06187a5` — `GET /r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/participant-role&filter=referr&count=50`
+
+---
+
+### [ ] `44136eb` Dev returns expansion codes when prod marks expansion as too-costly (both HTTP 200)
+
+Records-Impacted: 1
+Tolerance-ID: expand-toocostly-dev-returns-codes
+Record-ID: 227d1960-bfbd-4ca4-9c10-c5614d0e62d5
+
+#####What differs
+
+For $expand of ValueSets that include large code systems, prod returns HTTP 200 with an empty expansion (0 codes in `contains`) and marks it with `valueset-toocostly: true` extension and `limitedExpansion: true` parameter. Dev returns HTTP 200 with 1000 codes in `expansion.contains` — it proceeds with the expansion that prod considers too costly.
+
+After existing normalizations strip the toocostly extension difference (tolerance `expand-toocostly-extension-and-used-codesystem`), the remaining difference is: prod has no `expansion.contains` array while dev has 1000 codes.
+
+The observed record involves a Brazilian ValueSet (`cid10-ciap2`, URL `https://fhir.saude.go.gov.br/r4/core/ValueSet/cid10-ciap2`) that includes codes from `BRCID10` and `BRCIAP2` code systems.
+
+#####How widespread
+
+1 record in the current delta file shows this exact pattern (both 200, prod empty+toocostly, dev has codes). Related but distinct from bug 44d1916 (where prod returns 422 instead of 200).
+
+Search: checked all 56 records where prod has 0 codes and dev has >0 codes in comparison.ndjson; 55 of those have prod with no expansion metadata at all (handled by other tolerances), and only this 1 record has prod explicitly marking the expansion as too-costly with the toocostly extension.
+
+#####Tolerance
+
+Tolerance `expand-toocostly-dev-returns-codes` matches $expand records where both return 200, prod has the `valueset-toocostly` extension, and dev has codes in `expansion.contains` while prod does not. Skips these records since the responses are fundamentally different in content (empty vs populated expansion) and this is a known behavioral difference in expansion size enforcement.
 
 ---
 

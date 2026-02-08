@@ -927,6 +927,28 @@ const tolerances = [
   },
 
   {
+    id: 'expand-meta-lastUpdated',
+    description: 'meta.lastUpdated on the ValueSet resource wrapper in $expand responses reflects when each server last loaded the resource definition — server-instance metadata, not terminology content. The expansion contents are identical.',
+    kind: 'equiv-autofix',
+    tags: ['normalize', 'expand', 'transient-metadata'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      const prodLU = prod?.meta?.lastUpdated;
+      const devLU = dev?.meta?.lastUpdated;
+      if (prodLU && devLU && prodLU !== devLU) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const canonical = prod?.meta?.lastUpdated || dev?.meta?.lastUpdated;
+      return {
+        prod: { ...prod, meta: { ...prod.meta, lastUpdated: canonical } },
+        dev: { ...dev, meta: { ...dev.meta, lastUpdated: canonical } },
+      };
+    },
+  },
+
+  {
     id: 'expand-extension-child-order',
     description: 'Extension child element ordering within ValueSet.expansion.extension differs between implementations. Prod orders sub-extensions as [uri, code], dev orders as [code, uri]. Extension child order has no semantic meaning in FHIR. Affects 15 $expand records with R5 backport expansion.property extensions.',
     kind: 'equiv-autofix',
