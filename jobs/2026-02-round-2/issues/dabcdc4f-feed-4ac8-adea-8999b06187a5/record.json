@@ -1,0 +1,23 @@
+{
+  "id": "dabcdc4f-feed-4ac8-adea-8999b06187a5",
+  "url": "/r4/ValueSet/$expand?url=http://hl7.org/fhir/ValueSet/participant-role&filter=referr&count=50",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 929,
+    "hash": "c953e5b99db415f400aa6d426d06cd5a"
+  },
+  "dev": {
+    "status": 500,
+    "contentType": "application/json; charset=utf-8",
+    "size": 204,
+    "hash": "f6d3ba380d6b29c891d6475ed0855991"
+  },
+  "comparison": {
+    "category": "dev-crash-on-valid",
+    "op": "expand"
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"meta\" : {\"lastUpdated\" : \"2019-11-01T09:29:23.356+11:00\",\"profile\" : [\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"url\" : \"http://hl7.org/fhir/ValueSet/participant-role\",\"identifier\" : [{\"system\" : \"urn:ietf:rfc:3986\",\"value\" : \"urn:oid:2.16.840.1.113883.4.642.3.152\"}],\"version\" : \"4.0.1\",\"name\" : \"ParticipantRoles\",\"title\" : \"Participant Roles\",\"status\" : \"draft\",\"experimental\" : false,\"date\" : \"2019-11-01T09:29:23+11:00\",\"expansion\" : {\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/valueset-unclosed\",\"valueBoolean\" : true}],\"identifier\" : \"urn:uuid:65638548-a5d3-413f-9797-df2f455b42f4\",\"timestamp\" : \"2026-02-07T13:25:48.535Z\",\"parameter\" : [{\"name\" : \"filter\",\"valueString\" : \"referr\"},{\"name\" : \"count\",\"valueInteger\" : 50},{\"name\" : \"used-codesystem\",\"valueUri\" : \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"}]}}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"exception\",\"details\":{\"text\":\"searchText.toLowerCase is not a function\"},\"diagnostics\":\"searchText.toLowerCase is not a function\"}]}"
+}

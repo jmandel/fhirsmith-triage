@@ -1,0 +1,13 @@
+{
+  "issue": [
+    {
+      "code": "exception",
+      "details": {
+        "text": "searchText.toLowerCase is not a function"
+      },
+      "diagnostics": "searchText.toLowerCase is not a function",
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

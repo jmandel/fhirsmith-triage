@@ -1448,16 +1448,61 @@
             "lamport": 34
         },
         "edit_time": {
-            "timestamp": 1770514587,
-            "time": "2026-02-07T19:36:27-06:00",
-            "lamport": 191
+            "timestamp": 1770514683,
+            "time": "2026-02-07T19:38:03-06:00",
+            "lamport": 194
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "Dev SNOMED  returns URI-based name and omits most properties",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "7b445b05e615fb807b55e424f649657e6ac91a5685b02d1c0420dfa3ab50f302",
+        "human_id": "7b445b0",
+        "create_time": {
+            "timestamp": 1770514835,
+            "time": "2026-02-07T19:40:35-06:00",
+            "lamport": 35
+        },
+        "edit_time": {
+            "timestamp": 1770514840,
+            "time": "2026-02-07T19:40:40-06:00",
+            "lamport": 197
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "Dev SNOMED  returns URI-based name and omits most properties",
+        "title": "SNOMED $lookup: dev returns Synonym designation use type where prod returns Inactive",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

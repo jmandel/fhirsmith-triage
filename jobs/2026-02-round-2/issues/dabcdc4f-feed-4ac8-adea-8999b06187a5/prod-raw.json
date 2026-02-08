@@ -1,0 +1,46 @@
+{
+  "resourceType": "ValueSet",
+  "meta": {
+    "lastUpdated": "2019-11-01T09:29:23.356+11:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "url": "http://hl7.org/fhir/ValueSet/participant-role",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.3.152"
+    }
+  ],
+  "version": "4.0.1",
+  "name": "ParticipantRoles",
+  "title": "Participant Roles",
+  "status": "draft",
+  "experimental": false,
+  "date": "2019-11-01T09:29:23+11:00",
+  "expansion": {
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/StructureDefinition/valueset-unclosed",
+        "valueBoolean": true
+      }
+    ],
+    "identifier": "urn:uuid:65638548-a5d3-413f-9797-df2f455b42f4",
+    "timestamp": "2026-02-07T13:25:48.535Z",
+    "parameter": [
+      {
+        "name": "filter",
+        "valueString": "referr"
+      },
+      {
+        "name": "count",
+        "valueInteger": 50
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"
+      }
+    ]
+  }
+}

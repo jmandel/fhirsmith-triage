@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_33 bugs (30 open, 3 closed)_
+_34 bugs (29 open, 5 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1683,46 +1683,9 @@ The existing tolerance `expand-dev-crash-on-error` only matched POST requests (e
 
 ---
 
-### [ ] `af1ce69` validate-code: dev renders null status as literal 'null' in inactive concept message
+### [ ] `af1ce69` 
 
-Records-Impacted: 24
-Tolerance-ID: validate-code-null-status-in-message
-Record-ID: 20db1af0-c1c6-4f83-9019-2aaeff9ef549
 
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
--H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
--H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
-```
-
-Prod returns `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status), dev returns `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null").
-
-#####What differs
-
-In $validate-code responses for inactive concepts, the message and issues text differ in how a missing status value is rendered:
-
-- Prod: `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status)
-- Dev: `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null")
-
-Both servers agree on result=true, inactive=true, display, system, and version. The only difference is this string interpolation of a null/missing status value in the INACTIVE_CONCEPT_FOUND message.
-
-#####How widespread
-
-24 records in the current delta file, all identical: GET /r4/CodeSystem/$validate-code for RxNorm code 70618. The same underlying pattern (empty vs "null" in status message) also affects 20 NDC records already covered by a separate tolerance (ndc-validate-code-extra-inactive-params, bug 7258b41).
-
-Search: `grep 'has a status of  and' results/deltas/deltas.ndjson | wc -l` → 24
-All 24 are validate-code operations on http://www.nlm.nih.gov/research/umls/rxnorm, code 70618.
-
-#####What the tolerance covers
-
-Tolerance ID: validate-code-null-status-in-message
-Matches: validate-code Parameters responses where prod message contains "status of " (empty) and dev message contains "status of null" at the same position. Normalizes both message and issues text by replacing "status of null" with "status of " (prod's rendering) in dev. Eliminates 24 delta records.
 
 ---
 
@@ -1798,95 +1761,99 @@ Tolerance `expand-r4-deprecated-status-representation` normalizes by stripping b
 
 ---
 
-### [ ] `d05a4a6` Dev omits retired status-check informational issues in validate-code OperationOutcome
+### [ ] `d05a4a6` 
 
-Records-Impacted: 13
-Tolerance-ID: missing-retired-status-check-issue
-Record-ID: dc21c18a-fd57-429c-a51b-54bbfd23753f
 
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
--H 'Accept: application/fhir+json'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
--H 'Accept: application/fhir+json'
-```
-
-Prod returns 3 OperationOutcome issues: an informational `status-check` issue ("Reference to retired ValueSet http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0") plus two error-level issues (UNKNOWN_CODESYSTEM and not-in-vs). Dev returns only the 2 error-level issues, omitting the retired status-check informational issue entirely.
-
-#####What differs
-
-When validating a code against a ValueSet that includes a retired sub-ValueSet, prod returns an informational status-check issue in the OperationOutcome reporting the retired reference. Dev omits this issue entirely.
-
-Specifically, for validate-code on `http://hl7.org/fhir/ValueSet/security-labels|4.0.1` (which composes `http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0`, a retired ValueSet), prod includes:
-
-```json
-{
-"severity": "information",
-"code": "business-rule",
-"details": {
-  "coding": [{"system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type", "code": "status-check"}],
-  "text": "Reference to retired ValueSet http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0"
-}
-}
-```
-
-Dev's OperationOutcome has no such issue. All other parameters (result, system, code, message, and the two error-level issues) match between prod and dev.
-
-#####How widespread
-
-13 records in deltas.ndjson. All are GET validate-code requests on `http://hl7.org/fhir/ValueSet/security-labels|4.0.1` with system `urn:ihe:xds:scheme8`. Found via:
-```
-grep 'status-check' results/deltas/deltas.ndjson | wc -l
-```
-
-Note: the existing `hl7-terminology-cs-version-skew` tolerance already strips *draft* status-check issues for `terminology.hl7.org/CodeSystem/*` systems (bug 6edc96c). This is a separate pattern — *retired* status-check issues for ValueSet composition references.
-
-#####What the tolerance covers
-
-Tolerance `missing-retired-status-check-issue` strips informational status-check issues containing "retired" from prod's OperationOutcome, matching any validate-code operation where prod has a retired status-check issue and dev does not. Eliminates 13 records.
 
 ---
 
 ### [ ] `dc0132b` Dev SNOMED  returns URI-based name and omits most properties
 
-Records-Impacted: 2186
+Records-Impacted: 2170
 Tolerance-ID: snomed-lookup-name-and-properties
 Record-ID: 1a78565a-0d41-448b-b6cc-ae96754dd093
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000' -H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000' -H 'Accept: application/fhir+json'
+```
+
+Prod returns `name: "SNOMED CT"` with properties `copyright`, `moduleId`, `normalForm`, `normalFormTerse`, `parent`. Dev returns `name: "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"` with only the `inactive` property.
+
 #####What differs
 
-For SNOMED CT CodeSystem/$lookup requests, dev differs from prod in two ways:
+For SNOMED CT CodeSystem/$lookup requests, dev differs from prod in three ways:
 
 1. **`name` parameter**: Prod returns the human-readable code system name `"SNOMED CT"`. Dev returns a system|version URI like `"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"`. Per the FHIR R4 $lookup spec, the `name` output parameter (1..1 string) is defined as "A display name for the code system", so prod's value is correct.
 
 2. **Missing properties**: Prod returns properties `copyright`, `moduleId`, `normalForm`, `normalFormTerse`, `parent` (and `child` when applicable). Dev returns only `inactive`. Per the FHIR spec, "If no properties are specified, the server chooses what to return", but dev returns significantly fewer SNOMED-specific properties than prod.
 
+3. **Missing `abstract` parameter on R5**: For R5 SNOMED lookups (2170 of 2176 R5 records), prod returns `abstract: false` but dev omits the parameter entirely.
+
 #####How widespread
 
-2186 out of 2187 SNOMED $lookup delta records match this pattern (1 record has a parse error). All SNOMED $lookup requests via GET with `system=http://snomed.info/sct` in the URL are affected.
+2186 SNOMED $lookup delta records match the name + properties pattern. The tolerance eliminates 2170 of them. The remaining 16 have additional differences beyond what this tolerance covers (e.g., designation content differences).
 
-Search: `grep '$lookup.*snomed' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 2187
+Search: `grep '$lookup.*snomed' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 2187 (before tolerance)
 
-Both issues appear together on every affected record — the name format and missing properties always co-occur.
+All three issues co-occur on every affected record.
 
 #####What the tolerance covers
 
-Tolerance `snomed-lookup-name-and-properties` matches SNOMED $lookup requests where:
-- The prod `name` parameter is `"SNOMED CT"` and dev `name` starts with `http://snomed.info/sct|`
-- OR prod has SNOMED-specific properties (copyright, moduleId, normalForm, normalFormTerse, parent, child) that dev lacks
-
-The tolerance normalizes by:
-- Setting both sides' `name` to prod's value (`"SNOMED CT"`)
+Tolerance `snomed-lookup-name-and-properties` normalizes by:
+- Setting dev's `name` to prod's value (`"SNOMED CT"`)
 - Removing properties from prod that dev doesn't have (copyright, moduleId, normalForm, normalFormTerse, parent, child)
+- Removing `abstract` from prod when dev doesn't have it (R5 lookups)
 
 #####Representative record
 
 1a78565a-0d41-448b-b6cc-ae96754dd093 — `GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000`
+
+---
+
+### [ ] `7b445b0` SNOMED $lookup: dev returns Synonym designation use type where prod returns Inactive
+
+Records-Impacted: 4
+Tolerance-ID: snomed-lookup-inactive-designation-use
+Record-ID: eebd3d87-2015-48c3-84ac-c46d76ac23e1
+
+#####What differs
+
+For SNOMED CT CodeSystem/$lookup responses containing inactive descriptions, prod marks those designations with `use.code: "73425007"` (display: "Inactive") while dev marks the same designations with `use.code: "900000000000013009"` (display: "Synonym (core metadata concept)").
+
+In SNOMED CT, concept 73425007 identifies a description that is inactive (no longer preferred). Using Synonym (900000000000013009) instead loses the information that the description is inactive.
+
+Example for code 303071001 (Family member):
+- Prod: designation "People in the family" has `use.code: "73425007"` (Inactive)
+- Dev: same designation has `use.code: "900000000000013009"` (Synonym)
+
+For code 116101001, prod marks 7 of 9 designations with Inactive use type; dev marks none as Inactive, using Synonym or FSN instead.
+
+#####How widespread
+
+4 records in the delta set match this pattern. All are SNOMED $lookup operations on R4:
+- 1 record for code 303071001 (Family member)
+- 3 records for code 116101001 (Gonadotropin releasing hormone) — same code, different comparison record IDs
+
+Search: `python3` script checking for `73425007` in prodBody across all SNOMED lookup deltas found exactly 4 matches. Broader search across all 2187 SNOMED lookups in comparison.ndjson also found only 4 records.
+
+#####What the tolerance covers
+
+Tolerance `snomed-lookup-inactive-designation-use` normalizes the designation use type difference by:
+- Matching SNOMED $lookup records where prod has designation use code 73425007 and dev has 900000000000013009 for the same designation value
+- Normalizing dev designations to match prod's use type when the designation text matches
+
+Eliminates 4 records.
+
+#####Representative records
+
+- eebd3d87-2015-48c3-84ac-c46d76ac23e1 — GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=303071001
+- fcb6b89e-a38f-444f-8bcb-41eefd5509b0 — GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=116101001
 
 ---
 

@@ -1112,6 +1112,22 @@ const tolerances = [
   },
 
   {
+    id: 'expand-filter-crash',
+    description: 'Dev crashes (500) on GET $expand requests with filter parameter (R4 and R5). Error: "searchText.toLowerCase is not a function" — searchText is null/undefined during filter processing. Prod returns 200 with valid expansion. Affects 64 records across 3 ValueSets (participant-role, condition-code, medication-codes).',
+    kind: 'temp-tolerance',
+    bugId: '6b31694',
+    tags: ['skip', 'dev-crash-on-valid', 'expand', 'filter'],
+    match({ record }) {
+      if (!/^\/r[345]\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (!/[?&]filter=/.test(record.url)) return null;
+      if (record.prod?.status !== 200 || record.dev?.status !== 500) return null;
+      const devBody = record.devBody || '';
+      if (!devBody.includes('searchText.toLowerCase is not a function')) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'draft-codesystem-message-provenance-suffix',
     description: 'Dev omits " from <package>#<version>" provenance suffix in OperationOutcome issue text for draft CodeSystem warnings (MSG_DRAFT). Prod includes it, e.g. "Reference to draft CodeSystem ...event-status|4.0.1 from hl7.fhir.r4.core#4.0.1". Normalizes both sides to prod text. Affects 4 validate-code records.',
     kind: 'temp-tolerance',
