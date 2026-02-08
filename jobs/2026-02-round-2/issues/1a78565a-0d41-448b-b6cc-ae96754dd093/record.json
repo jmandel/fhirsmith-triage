@@ -1,0 +1,33 @@
+{
+  "id": "1a78565a-0d41-448b-b6cc-ae96754dd093",
+  "url": "/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000",
+  "method": "GET",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 2343,
+    "hash": "5ff5b1a320530dc4e777855f16b9a095"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1357,
+    "hash": "cf68819784f518911f8f2ed92234036e"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "lookup",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "name"
+      },
+      {
+        "type": "value-differs",
+        "param": "property"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"name\",\"valueString\" : \"SNOMED CT\"},{\"name\" : \"code\",\"valueCode\" : \"446050000\"},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"PCP - Primary care physician\"},{\"name\" : \"designation\",\"part\" : [{\"name\" : \"language\",\"valueCode\" : \"en\"},{\"name\" : \"use\",\"valueCoding\" : {\"system\" : \"http://snomed.info/sct\",\"code\" : \"900000000000003001\",\"display\" : \"Fully specified name\"}},{\"name\" : \"value\",\"valueString\" : \"Primary care physician (occupation)\"}]},{\"name\" : \"designation\",\"part\" : [{\"name\" : \"language\",\"valueCode\" : \"en\"},{\"name\" : \"use\",\"valueCoding\" : {\"system\" : \"http://snomed.info/sct\",\"code\" : \"900000000000013009\",\"display\" : \"Synonym (core metadata concept)\"}},{\"name\" : \"value\",\"valueString\" : \"PCP - Primary care physician\"}]},{\"name\" : \"designation\",\"part\" : [{\"name\" : \"language\",\"valueCode\" : \"en\"},{\"name\" : \"use\",\"valueCoding\" : {\"system\" : \"http://snomed.info/sct\",\"code\" : \"900000000000013009\",\"display\" : \"Synonym (core metadata concept)\"}},{\"name\" : \"value\",\"valueString\" : \"Primary care physician\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"inactive\"},{\"name\" : \"value\",\"valueBoolean\" : false}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"copyright\"},{\"name\" : \"value\",\"valueString\" : \"This response content from SNOMED CT, which is copyright ) 2002+ International Health Terminology Standards Development Organisation (IHTSDO), and distributed by agreement between IHTSDO and HL7. Implementer use of SNOMED CT is not covered by this agreement\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"moduleId\"},{\"name\" : \"value\",\"valueCode\" : \"900000000000207008\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"normalForm\"},{\"name\" : \"value\",\"valueString\" : \"446050000|PCP - Primary care physician|\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"normalFormTerse\"},{\"name\" : \"value\",\"valueString\" : \"446050000\"}]},{\"name\" : \"property\",\"part\" : [{\"name\" : \"code\",\"valueCode\" : \"parent\"},{\"name\" : \"value\",\"valueCode\" : \"309343006\"},{\"name\" : \"description\",\"valueString\" : \"Physician\"}]},{\"name\" : \"abstract\",\"valueBoolean\" : false}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"name\",\"valueString\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"code\",\"valueCode\":\"446050000\"},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Primary care physician (occupation)\"},{\"name\":\"abstract\",\"valueBoolean\":false},{\"name\":\"property\",\"part\":[{\"name\":\"code\",\"valueCode\":\"inactive\"},{\"name\":\"value\",\"valueBoolean\":false}]},{\"name\":\"designation\",\"part\":[{\"name\":\"language\",\"valueCode\":\"en\"},{\"name\":\"use\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"900000000000003001\",\"display\":\"Fully specified name\"}},{\"name\":\"value\",\"valueString\":\"Primary care physician (occupation)\"}]},{\"name\":\"designation\",\"part\":[{\"name\":\"language\",\"valueCode\":\"en\"},{\"name\":\"use\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"900000000000013009\",\"display\":\"Synonym (core metadata concept)\"}},{\"name\":\"value\",\"valueString\":\"PCP - Primary care physician\"}]},{\"name\":\"designation\",\"part\":[{\"name\":\"language\",\"valueCode\":\"en\"},{\"name\":\"use\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"900000000000013009\",\"display\":\"Synonym (core metadata concept)\"}},{\"name\":\"value\",\"valueString\":\"Primary care physician\"}]}]}"
+}

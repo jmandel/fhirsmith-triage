@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_32 bugs (29 open, 3 closed)_
+_33 bugs (30 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1070,52 +1070,29 @@ Tolerance `unknown-version-no-versions-known` normalizes the message text, Opera
 
 ### [ ] `9fd2328` Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets
 
-Records-Impacted: 40
-Tolerance-ID: expand-snomed-version-skew-content
-Record-ID: 2c7143df-3316-422a-b284-237f16fbcd6e
-
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"defaultDisplayLanguage","valueCode":"en-GB"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":false},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://snomed.info/sct","version":"http://snomed.info/sct/900000000000207008","filter":[{"property":"concept","op":"descendent-of","value":"365636006"}]}]}}}]}' \
-| jq '.expansion.parameter[] | select(.name == "used-codesystem") | .valueUri, .expansion.contains | length'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"defaultDisplayLanguage","valueCode":"en-GB"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":false},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://snomed.info/sct","version":"http://snomed.info/sct/900000000000207008","filter":[{"property":"concept","op":"descendent-of","value":"365636006"}]}]}}}]}' \
-| jq '.expansion.parameter[] | select(.name == "used-codesystem") | .valueUri, .expansion.contains | length'
-```
-
-Prod uses SNOMED version 20250201 and returns 208 codes; dev uses version 20240201 and returns 207 codes. Code 1351894008 "Mixed field RhD (finding)" is present in prod but absent in dev.
+Records-Impacted: 47
+Tolerance-ID: expand-snomed-version-skew-content, expand-snomed-version-skew-content-no-used-cs
+Record-ID: 2c7143df-3316-422a-b284-237f16fbcd6e, accdb602-a8bc-4e9c-a8fb-22a12b740f0e
 
 #####What differs
 
-Prod $expand uses SNOMED CT International edition version 20250201 while dev uses version 20240201. This causes expansion results to contain different sets of codes — prod includes codes added in the 2025 edition that dev does not have, and some codes present in both editions have different display text reflecting updates between versions.
+Prod and dev load different SNOMED CT editions, causing $expand to return different code sets. Two variants observed:
 
-For example, in the representative record (expanding descendants of 365636006 "Finding of blood group"), prod returns 208 codes while dev returns 207. Code 1351894008 "Mixed field RhD (finding)" is present in prod but absent from dev, consistent with it being added in the 2025 edition.
+1. **With `used-codesystem` parameter** (POST requests with inline ValueSets): Prod uses SNOMED International edition 20250201, dev uses 20240201. The `used-codesystem` expansion parameter confirms the version difference. Example: expanding descendants of 365636006 "Finding of blood group" — prod returns 208 codes, dev returns 207 (code 1351894008 "Mixed field RhD" only in prod).
 
-The used-codesystem parameter confirms the version difference:
-- Prod: `http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201`
-- Dev: `http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20240201`
+2. **Without `used-codesystem` parameter** (GET requests for VSAC ValueSets): Prod uses SNOMED US edition 20250901, dev uses 20250301. Version difference is only visible in `contains[].version` strings. Example: ValueSet 2.16.840.1.113762.1.4.1240.3 ("Sex") — dev returns 5 codes including 184115007 "Patient sex unknown (finding)" which is absent from prod's 4-code expansion.
 
 #####How widespread
 
-40 expand content-differs records in the current comparison have SNOMED version skew with code membership differences. Identified via:
-```
-grep expand+content-differs in deltas.ndjson, then check for SNOMED used-codesystem version mismatch + different code sets
-```
+47 expand content-differs records total:
+- 40 records with `used-codesystem` parameter (POST /r4/ValueSet/$expand with SNOMED filters)
+- 7 records without `used-codesystem` parameter (GET /r4/ValueSet/$expand for VSAC ValueSet 2.16.840.1.113762.1.4.1240.3)
 
-All 40 records are POST /r4/ValueSet/$expand requests using SNOMED CT.
+#####What the tolerances cover
 
-#####What the tolerance covers
+- **`expand-snomed-version-skew-content`** (40 records): Matches expand records where both sides return 200, SNOMED `used-codesystem` versions differ, and code membership differs. Normalizes both sides to the intersection of codes and adjusts total.
 
-Tolerance `expand-snomed-version-skew-content` matches expand records where both sides return 200, SNOMED used-codesystem versions differ, and the expansion contains arrays have different code membership. It normalizes both sides to the intersection of codes and adjusts the total count. This is the same approach used by `expand-hl7-terminology-version-skew-content` (bug 6edc96c).
+- **`expand-snomed-version-skew-content-no-used-cs`** (7 records): Matches expand records where SNOMED version skew is detectable only from `contains[].version` strings (no `used-codesystem` expansion parameter). Same normalization approach — intersects code membership, adjusts total, and normalizes version strings to prod's values.
 
 ---
 
@@ -1792,49 +1769,32 @@ Tolerance ID: `validate-code-no-system-422`. Matches validate-code records where
 
 Records-Impacted: 26
 Tolerance-ID: expand-r4-deprecated-status-representation
-Record-ID: 307d55c7-f148-4ddc-a360-3962e4e2fe7c
+Record-ID: 307d55c7-f148-4ddc-a360-3962e4e2fe7c, 131242e8-b7fb-4c3a-a45b-680355b8a70f
 
+In R4 $expand responses, prod and dev represent deprecated code status differently in two ways:
 
-**Case 1: Dev uses R5-style property (security-labels)**
+**1. Per-code deprecated annotations on expansion.contains entries**
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels&_format=json' \
--H 'Accept: application/fhir+json' | jq '.expansion.contains[] | select(.code == "42CFRPart2")'
+- **security-labels (18 records)**: Prod uses R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property` to convey `status: deprecated`. Dev uses R5-native `property` elements directly (e.g., `"property": [{"code": "status", "valueCode": "deprecated"}]`). The R4 spec does not define `property` on `expansion.contains` — that was introduced in R5.
 
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels&_format=json' \
--H 'Accept: application/fhir+json' | jq '.expansion.contains[] | select(.code == "42CFRPart2")'
-```
+- **patient-contactrelationship (5 records) + v3-TribalEntityUS (3 records)**: Prod annotates deprecated codes with the same R5 backport extension. Dev omits the deprecated status annotation entirely — no extension and no property.
 
-Prod returns deprecated status using R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property`, while dev uses R5-native `property: [{"code": "status", "valueCode": "deprecated"}]`.
+**2. Expansion-level property declaration extension**
 
-**Case 2: Dev omits deprecated status entirely (patient-contactrelationship)**
+Prod includes an expansion-level extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property` that declares the "status" property used in per-code annotations. Dev either omits this entirely (patient-contactrelationship) or includes it with different key ordering (TribalEntityUS). This is the R5 backport mechanism for declaring expansion properties in R4.
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fpatient-contactrelationship&_format=json' \
--H 'Accept: application/fhir+json' | jq '.expansion.contains[] | select(.code == "BP")'
+**How widespread**
 
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fpatient-contactrelationship&_format=json' \
--H 'Accept: application/fhir+json' | jq '.expansion.contains[] | select(.code == "BP")'
-```
-
-Prod returns the R4 extension for deprecated code "BP" (Billing contact person), while dev returns neither extension nor property (no deprecated annotation at all).
-
-
-In R4 $expand responses, prod and dev represent deprecated code status differently on expansion.contains entries:
-
-- **security-labels (18 records)**: Prod uses the R4-compatible extension `http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property` to convey `status: deprecated` on codes from v3-ActUSPrivacyLaw. Dev uses R5-native `property` elements directly (e.g., `"property": [{"code": "status", "valueCode": "deprecated"}]`). The R4 spec does not define `property` on `expansion.contains` — that element was introduced in R5.
-
-- **patient-contactrelationship (5 records) + v3-TribalEntityUS (3 records)**: Prod annotates deprecated codes (from v2-0131 and TribalEntityUS systems) with the same R5 backport extension. Dev omits the deprecated status annotation entirely — no extension and no property.
-
-
-26 expand records across 3 ValueSets in the delta file. All are R4 $expand operations containing codes from HL7 terminology CodeSystems that have deprecated entries.
+26 expand records across 3 ValueSets. All are R4 $expand operations containing codes from HL7 terminology CodeSystems with deprecated entries.
 
 ```bash
 grep 'extension-ValueSet.expansion.contains.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
+grep 'extension-ValueSet.expansion.property' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l
 ```
 
+**Tolerance**
 
-Tolerance `expand-r4-deprecated-status-representation` normalizes the representation by converting dev's R5-style `property` to R4 extension format (matching prod), and stripping prod's extension when dev has no annotation at all. This eliminates the structural difference so other content differences can still surface. Affects 26 records.
+Tolerance `expand-r4-deprecated-status-representation` normalizes by stripping both per-code annotations (R5 backport extension and R5-native property) and the expansion-level property declaration extension from both sides. This eliminates the structural difference so other content differences can still surface.
 
 ---
 
@@ -1889,6 +1849,44 @@ Note: the existing `hl7-terminology-cs-version-skew` tolerance already strips *d
 #####What the tolerance covers
 
 Tolerance `missing-retired-status-check-issue` strips informational status-check issues containing "retired" from prod's OperationOutcome, matching any validate-code operation where prod has a retired status-check issue and dev does not. Eliminates 13 records.
+
+---
+
+### [ ] `dc0132b` Dev SNOMED  returns URI-based name and omits most properties
+
+Records-Impacted: 2186
+Tolerance-ID: snomed-lookup-name-and-properties
+Record-ID: 1a78565a-0d41-448b-b6cc-ae96754dd093
+
+#####What differs
+
+For SNOMED CT CodeSystem/$lookup requests, dev differs from prod in two ways:
+
+1. **`name` parameter**: Prod returns the human-readable code system name `"SNOMED CT"`. Dev returns a system|version URI like `"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"`. Per the FHIR R4 $lookup spec, the `name` output parameter (1..1 string) is defined as "A display name for the code system", so prod's value is correct.
+
+2. **Missing properties**: Prod returns properties `copyright`, `moduleId`, `normalForm`, `normalFormTerse`, `parent` (and `child` when applicable). Dev returns only `inactive`. Per the FHIR spec, "If no properties are specified, the server chooses what to return", but dev returns significantly fewer SNOMED-specific properties than prod.
+
+#####How widespread
+
+2186 out of 2187 SNOMED $lookup delta records match this pattern (1 record has a parse error). All SNOMED $lookup requests via GET with `system=http://snomed.info/sct` in the URL are affected.
+
+Search: `grep '$lookup.*snomed' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 2187
+
+Both issues appear together on every affected record — the name format and missing properties always co-occur.
+
+#####What the tolerance covers
+
+Tolerance `snomed-lookup-name-and-properties` matches SNOMED $lookup requests where:
+- The prod `name` parameter is `"SNOMED CT"` and dev `name` starts with `http://snomed.info/sct|`
+- OR prod has SNOMED-specific properties (copyright, moduleId, normalForm, normalFormTerse, parent, child) that dev lacks
+
+The tolerance normalizes by:
+- Setting both sides' `name` to prod's value (`"SNOMED CT"`)
+- Removing properties from prod that dev doesn't have (copyright, moduleId, normalForm, normalFormTerse, parent, child)
+
+#####Representative record
+
+1a78565a-0d41-448b-b6cc-ae96754dd093 — `GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000`
 
 ---
 

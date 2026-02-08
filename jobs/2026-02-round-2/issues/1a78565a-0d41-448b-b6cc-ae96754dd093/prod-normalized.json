@@ -1,0 +1,174 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "446050000"
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000003001",
+            "display": "Fully specified name",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Primary care physician (occupation)"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000013009",
+            "display": "Synonym (core metadata concept)",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "PCP - Primary care physician"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000013009",
+            "display": "Synonym (core metadata concept)",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Primary care physician"
+        }
+      ]
+    },
+    {
+      "name": "display",
+      "valueString": "PCP - Primary care physician"
+    },
+    {
+      "name": "name",
+      "valueString": "SNOMED CT"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "copyright"
+        },
+        {
+          "name": "value",
+          "valueString": "This response content from SNOMED CT, which is copyright ) 2002+ International Health Terminology Standards Development Organisation (IHTSDO), and distributed by agreement between IHTSDO and HL7. Implementer use of SNOMED CT is not covered by this agreement"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "moduleId"
+        },
+        {
+          "name": "value",
+          "valueCode": "900000000000207008"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "normalForm"
+        },
+        {
+          "name": "value",
+          "valueString": "446050000|PCP - Primary care physician|"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "normalFormTerse"
+        },
+        {
+          "name": "value",
+          "valueString": "446050000"
+        }
+      ]
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "parent"
+        },
+        {
+          "name": "value",
+          "valueCode": "309343006"
+        },
+        {
+          "name": "description",
+          "valueString": "Physician"
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

@@ -3913,6 +3913,72 @@ const tolerances = [
   },
 
   {
+    id: 'snomed-lookup-name-and-properties',
+    description: 'Dev SNOMED $lookup returns URI-based name (system|version) instead of "SNOMED CT", omits most properties (copyright, moduleId, normalForm, normalFormTerse, parent, child), and on R5 omits abstract parameter.',
+    kind: 'temp-tolerance',
+    bugId: 'dc0132b',
+    tags: ['normalize', 'lookup', 'snomed', 'name', 'property'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$lookup')) return null;
+      if (!record.url.includes('snomed.info/sct')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodName = getParamValue(prod, 'name');
+      const devName = getParamValue(dev, 'name');
+      const namesDiffer = prodName === 'SNOMED CT' && devName && devName.startsWith('http://snomed.info/sct|');
+      const snomedOnlyProps = ['copyright', 'moduleId', 'normalForm', 'normalFormTerse', 'parent', 'child'];
+      const prodHasExtraProps = prod.parameter?.some(p =>
+        p.name === 'property' && p.part?.some(pp => pp.name === 'code' && snomedOnlyProps.includes(pp.valueCode))
+      );
+      const prodHasAbstract = prod.parameter?.some(p => p.name === 'abstract');
+      const devHasAbstract = dev.parameter?.some(p => p.name === 'abstract');
+      const abstractDiffers = prodHasAbstract && !devHasAbstract;
+      if (namesDiffer || prodHasExtraProps || abstractDiffers) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev, record }) {
+      let newProd = prod;
+      let newDev = dev;
+      // Normalize name: set dev to prod's value ("SNOMED CT")
+      const prodName = getParamValue(prod, 'name');
+      const devName = getParamValue(dev, 'name');
+      if (prodName === 'SNOMED CT' && devName !== prodName) {
+        newDev = {
+          ...newDev,
+          parameter: newDev.parameter.map(p =>
+            p.name === 'name' ? { ...p, valueString: 'SNOMED CT' } : p
+          ),
+        };
+      }
+      // Remove SNOMED-only properties from prod that dev doesn't have
+      const snomedOnlyProps = ['copyright', 'moduleId', 'normalForm', 'normalFormTerse', 'parent', 'child'];
+      const devPropCodes = new Set(
+        (newDev.parameter || [])
+          .filter(p => p.name === 'property')
+          .map(p => p.part?.find(pp => pp.name === 'code')?.valueCode)
+          .filter(Boolean)
+      );
+      newProd = {
+        ...newProd,
+        parameter: newProd.parameter.filter(p => {
+          if (p.name !== 'property') return true;
+          const code = p.part?.find(pp => pp.name === 'code')?.valueCode;
+          if (snomedOnlyProps.includes(code) && !devPropCodes.has(code)) return false;
+          return true;
+        }),
+      };
+      // Remove abstract from prod if dev doesn't have it
+      const devHasAbstract = newDev.parameter?.some(p => p.name === 'abstract');
+      if (!devHasAbstract) {
+        newProd = {
+          ...newProd,
+          parameter: newProd.parameter.filter(p => p.name !== 'abstract'),
+        };
+      }
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
     id: 'validate-code-no-system-422',
     description: 'Dev returns 200 instead of 422 for $validate-code with code but no system parameter. Prod correctly rejects per FHIR spec.',
     kind: 'temp-tolerance',
