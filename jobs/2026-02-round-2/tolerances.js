@@ -2953,6 +2953,51 @@ const tolerances = [
   },
 
   {
+    id: 'expand-hl7-terminology-version-skew-vs-metadata',
+    description: 'Dev loads different versions of HL7 terminology ValueSets than prod, causing $expand to return different ValueSet-level metadata (date, name, title, version, identifier, language, immutable, meta). The expansion contents may be identical (e.g., both empty) but the wrapper metadata reflects different loaded ValueSet editions. Normalizes dev metadata fields to prod values. Affects 3 expand records (TribalEntityUS).',
+    kind: 'temp-tolerance',
+    bugId: '6edc96c',
+    tags: ['normalize', 'expand', 'version-skew', 'hl7-terminology', 'vs-metadata'],
+    match({ record, prod, dev }) {
+      if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+
+      // Check that at least one used-codesystem is from terminology.hl7.org
+      const allParams = [
+        ...(prod.expansion?.parameter || []),
+        ...(dev.expansion?.parameter || []),
+      ];
+      const hasHl7Cs = allParams.some(p =>
+        p.name === 'used-codesystem' &&
+        (p.valueUri || '').includes('terminology.hl7.org/CodeSystem/')
+      );
+      if (!hasHl7Cs) return null;
+
+      // Check if top-level metadata differs
+      const metaFields = ['date', 'name', 'title', 'version', 'identifier', 'language', 'immutable', 'meta'];
+      const hasDiff = metaFields.some(f =>
+        JSON.stringify(prod[f]) !== JSON.stringify(dev[f])
+      );
+      if (!hasDiff) return null;
+
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const metaFields = ['date', 'name', 'title', 'version', 'identifier', 'language', 'immutable', 'meta'];
+      const newDev = { ...dev };
+      for (const f of metaFields) {
+        if (prod[f] !== undefined) {
+          newDev[f] = prod[f];
+        } else {
+          delete newDev[f];
+        }
+      }
+      return { prod, dev: newDev };
+    },
+  },
+
+  {
     id: 'expand-snomed-version-skew-content',
     description: 'Dev loads SNOMED CT edition 20240201 while prod loads 20250201, causing $expand to return different code sets. Codes added/removed between editions appear as extra/missing in the expansion. Normalizes both sides to the intersection of codes and adjusts total. Affects 40 expand records.',
     kind: 'temp-tolerance',

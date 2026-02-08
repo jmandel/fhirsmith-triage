@@ -1,0 +1,3050 @@
+{
+  "resourceType": "ValueSet",
+  "meta": {
+    "lastUpdated": "2018-08-12T00:00:00.000+10:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "url": "http://terminology.hl7.org/ValueSet/v3-TribalEntityUS",
+  "version": "2018-08-12",
+  "name": "v3.TribalEntityUS",
+  "title": "v3 Code System TribalEntityUS",
+  "status": "active",
+  "experimental": false,
+  "date": "2018-08-12",
+  "contact": [
+    {
+      "telecom": [
+        {
+          "system": "url",
+          "value": "http://hl7.org"
+        }
+      ]
+    }
+  ],
+  "immutable": true,
+  "expansion": {
+    "timestamp": "2026-02-07T13:54:45.644Z",
+    "identifier": "urn:uuid:960c404d-fe3f-4220-9b4b-1385b48ce191",
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US, en; q=0.9"
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS|4.0.0"
+      }
+    ],
+    "total": 581,
+    "contains": [
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+        "code": "_NativeEntityAlaska",
+        "abstract": true,
+        "display": "NativeEntityAlaska",
+        "contains": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "338",
+            "display": "Native Village of Afognak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "339",
+            "display": "Agdaagux Tribe of King Cove"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "340",
+            "display": "Native Village of Akhiok"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "341",
+            "display": "Akiachak Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "342",
+            "display": "Akiak Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "343",
+            "display": "Native Village of Akutan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "344",
+            "display": "Village of Alakanuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "345",
+            "display": "Alatna Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "346",
+            "display": "Native Village of Aleknagik"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "347",
+            "display": "Algaaciq Native Village (St. Mary's)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "348",
+            "display": "Allakaket Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "349",
+            "display": "Native Village of Ambler"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "350",
+            "display": "Village of Anaktuvuk Pass"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "351",
+            "display": "Yupiit of Andreafski"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "352",
+            "display": "Angoon Community Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "353",
+            "display": "Village of Aniak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "354",
+            "display": "Anvik Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "355",
+            "display": "Arctic Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "356",
+            "display": "Asa'carsarmiut Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "357",
+            "display": "Native Village of Atka"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "358",
+            "display": "Village of Atmautluak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "359",
+            "display": "Native Village of Atqasuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "360",
+            "display": "Native Village of Barrow Inupiat Traditional Government"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "361",
+            "display": "Beaver Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "362",
+            "display": "Native Village of Belkofski"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "363",
+            "display": "Village of Bill Moore's Slough"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "364",
+            "display": "Birch Creek Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "365",
+            "display": "Native Village of Brevig Mission"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "366",
+            "display": "Native Village of Buckland"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "367",
+            "display": "Native Village of Cantwell"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "368",
+            "display": "Native Village of Chenega (aka Chanega)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "369",
+            "display": "Chalkyitsik Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "370",
+            "display": "Village of Chefornak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "371",
+            "display": "Chevak Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "372",
+            "display": "Chickaloon Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "373",
+            "display": "Chignik Bay Tribal Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "374",
+            "display": "Native Village of Chignik Lagoon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "375",
+            "display": "Chignik Lake Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "376",
+            "display": "Chilkat Indian Village (Klukwan)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "377",
+            "display": "Chilkoot Indian Association (Haines)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "378",
+            "display": "Chinik Eskimo Community (Golovin)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "379",
+            "display": "Cheesh-Na Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "380",
+            "display": "Native Village of Chitina"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "381",
+            "display": "Native Village of Chuathbaluk (Russian Mission, Kuskokwim)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "382",
+            "display": "Chuloonawick Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "383",
+            "display": "Circle Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "384",
+            "display": "Village of Clarks Point"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "385",
+            "display": "Native Village of Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "386",
+            "display": "Craig Tribal Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "387",
+            "display": "Village of Crooked Creek"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "388",
+            "display": "Curyung Tribal Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "389",
+            "display": "Native Village of Deering"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "390",
+            "display": "Native Village of Diomede (aka Inalik)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "391",
+            "display": "Village of Dot Lake"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "392",
+            "display": "Douglas Indian Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "393",
+            "display": "Native Village of Eagle"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "394",
+            "display": "Native Village of Eek"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "395",
+            "display": "Egegik Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "396",
+            "display": "Eklutna Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "397",
+            "display": "Native Village of Ekuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "398",
+            "display": "Native Village of Ekwok"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "399",
+            "display": "Native Village of Elim"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "400",
+            "display": "Emmonak Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "401",
+            "display": "Evansville Village (aka Bettles Field)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "402",
+            "display": "Native Village of Eyak (Cordova)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "403",
+            "display": "Native Village of False Pass"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "404",
+            "display": "Native Village of Fort Yukon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "405",
+            "display": "Native Village of Gakona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "406",
+            "display": "Galena Village (aka Louden Village)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "407",
+            "display": "Native Village of Gambell"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "408",
+            "display": "Native Village of Georgetown"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "409",
+            "display": "Native Village of Goodnews Bay"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "410",
+            "display": "Organized Village of Grayling (aka Holikachuk)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "411",
+            "display": "Gulkana Village Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "412",
+            "display": "Native Village of Hamilton"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "413",
+            "display": "Healy Lake Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "414",
+            "display": "Holy Cross Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "415",
+            "display": "Hoonah Indian Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "416",
+            "display": "Native Village of Hooper Bay"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "417",
+            "display": "Hughes Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "418",
+            "display": "Huslia Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "419",
+            "display": "Hydaburg Cooperative Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "420",
+            "display": "Igiugig Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "421",
+            "display": "Village of Iliamna"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "422",
+            "display": "Inupiat Community of the Arctic Slope"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "423",
+            "display": "Iqugmiut Traditional Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "424",
+            "display": "Ivanof Bay Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "425",
+            "display": "Kaguyak Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "426",
+            "display": "Organized Village of Kake"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "427",
+            "display": "Kaktovik Village (aka Barter Island)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "428",
+            "display": "Village of Kalskag"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "429",
+            "display": "Village of Kaltag"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "430",
+            "display": "Native Village of Kanatak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "431",
+            "display": "Native Village of Karluk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "432",
+            "display": "Organized Village of Kasaan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "433",
+            "display": "Kasigluk Traditional Elders Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "434",
+            "display": "Kenaitze Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "435",
+            "display": "Ketchikan Indian Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "436",
+            "display": "Native Village of Kiana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "437",
+            "display": "King Island Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "438",
+            "display": "King Salmon Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "439",
+            "display": "Native Village of Kipnuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "440",
+            "display": "Native Village of Kivalina"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "441",
+            "display": "Klawock Cooperative Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "442",
+            "display": "Native Village of Kluti Kaah (aka Copper Center)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "443",
+            "display": "Knik Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "444",
+            "display": "Native Village of Kobuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "445",
+            "display": "Kokhanok Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "446",
+            "display": "Native Village of Kongiganak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "447",
+            "display": "Village of Kotlik"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "448",
+            "display": "Native Village of Kotzebue"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "449",
+            "display": "Native Village of Koyuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "450",
+            "display": "Koyukuk Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "451",
+            "display": "Organized Village of Kwethluk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "452",
+            "display": "Native Village of Kwigillingok"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "453",
+            "display": "Native Village of Kwinhagak (aka Quinhagak)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "454",
+            "display": "Native Village of Larsen Bay"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "455",
+            "display": "Levelock Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "456",
+            "display": "Tangirnaq Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "457",
+            "display": "Lime Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "458",
+            "display": "Village of Lower Kalskag"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "459",
+            "display": "Manley Hot Springs Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "460",
+            "display": "Manokotak Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "461",
+            "display": "Native Village of Marshall (aka Fortuna Ledge)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "462",
+            "display": "Native Village of Mary's Igloo"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "463",
+            "display": "McGrath Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "464",
+            "display": "Native Village of Mekoryuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "465",
+            "display": "Mentasta Traditional Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "466",
+            "display": "Metlakatla Indian Community, Annette Island Reserve"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "467",
+            "display": "Native Village of Minto"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "468",
+            "display": "Naknek Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "469",
+            "display": "Native Village of Nanwalek (aka English Bay)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "470",
+            "display": "Native Village of Napaimute"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "471",
+            "display": "Native Village of Napakiak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "472",
+            "display": "Native Village of Napaskiak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "473",
+            "display": "Native Village of Nelson Lagoon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "474",
+            "display": "Nenana Native Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "475",
+            "display": "New Koliganek Village Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "476",
+            "display": "New Stuyahok Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "477",
+            "display": "Newhalen Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "478",
+            "display": "Newtok Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "479",
+            "display": "Native Village of Nightmute"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "480",
+            "display": "Nikolai Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "481",
+            "display": "Native Village of Nikolski"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "482",
+            "display": "Ninilchik Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "483",
+            "display": "Native Village of Noatak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "484",
+            "display": "Nome Eskimo Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "485",
+            "display": "Nondalton Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "486",
+            "display": "Noorvik Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "487",
+            "display": "Northway Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "488",
+            "display": "Native Village of Nuiqsut (aka Nooiksut)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "489",
+            "display": "Nulato Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "490",
+            "display": "Nunakauyarmiut Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "491",
+            "display": "Native Village of Nunapitchuk"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "492",
+            "display": "Village of Ohogamiut"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "493",
+            "display": "Alutiiq Tribe of Old Harbor"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "494",
+            "display": "Orutsararmiut Traditional Native Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "495",
+            "display": "Oscarville Traditional Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "496",
+            "display": "Native Village of Ouzinkie"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "497",
+            "display": "Native Village of Paimiut"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "498",
+            "display": "Pauloff Harbor Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "499",
+            "display": "Pedro Bay Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "500",
+            "display": "Native Village of Perryville"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "501",
+            "display": "Petersburg Indian Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "502",
+            "display": "Native Village of Pilot Point"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "503",
+            "display": "Pilot Station Traditional Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "504",
+            "display": "Pitka's Point Traditional Council"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "505",
+            "display": "Platinum Traditional Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "506",
+            "display": "Native Village of Point Hope"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "507",
+            "display": "Native Village of Point Lay"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "508",
+            "display": "Native Village of Port Graham"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "509",
+            "display": "Native Village of Port Heiden"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "510",
+            "display": "Native Village of Port Lions"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "511",
+            "display": "Portage Creek Village (aka Ohgsenakale)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "512",
+            "inactive": true,
+            "display": "Pribilof Islands Aleut Communities of St. Paul & St. George Islands (Saint George Island and Saint Paul Island)",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property",
+                "extension": [
+                  {
+                    "url": "code",
+                    "valueCode": "status"
+                  },
+                  {
+                    "url": "value",
+                    "valueCode": "retired"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "513",
+            "display": "Qagan Tayagungin Tribe of Sand Point"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "514",
+            "display": "Qawalangin Tribe of Unalaska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "515",
+            "display": "Rampart Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "516",
+            "display": "Village of Red Devil"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "517",
+            "display": "Native Village of Ruby"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "518",
+            "display": "Saint George Island"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "519",
+            "display": "Native Village of Saint Michael"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "520",
+            "display": "Saint Paul Island"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "521",
+            "display": "Salamatof Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "522",
+            "display": "Native Village of Savoonga"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "523",
+            "display": "Organized Village of Saxman"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "524",
+            "display": "Native Village of Scammon Bay"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "525",
+            "display": "Native Village of Selawik"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "526",
+            "display": "Seldovia Village Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "527",
+            "display": "Shageluk Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "528",
+            "display": "Native Village of Shaktoolik"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "529",
+            "display": "Native Village of Nunam Iqua"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "530",
+            "display": "Native Village of Shishmaref"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "531",
+            "display": "Sun'aq Tribe of Kodiak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "532",
+            "display": "Native Village of Shungnak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "533",
+            "display": "Sitka Tribe of Alaska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "534",
+            "display": "Skagway Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "535",
+            "display": "Village of Sleetmute"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "536",
+            "display": "Village of Solomon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "537",
+            "display": "South Naknek Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "538",
+            "display": "Stebbins Community Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "539",
+            "display": "Native Village of Stevens"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "540",
+            "display": "Village of Stony River"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "541",
+            "display": "Takotna Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "542",
+            "display": "Native Village of Tanacross"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "543",
+            "display": "Native Village of Tanana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "544",
+            "display": "Native Village of Tatitlek"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "545",
+            "display": "Native Village of Tazlina"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "546",
+            "display": "Telida Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "547",
+            "display": "Native Village of Teller"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "548",
+            "display": "Native Village of Tetlin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "549",
+            "display": "Central Council of the Tlingit & Haida Indian Tribes"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "550",
+            "display": "Traditional Village of Togiak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "551",
+            "display": "Tuluksak Native Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "552",
+            "display": "Native Village of Tuntutuliak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "553",
+            "display": "Native Village of Tununak"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "554",
+            "display": "Twin Hills Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "555",
+            "display": "Native Village of Tyonek"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "556",
+            "display": "Ugashik Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "557",
+            "display": "Umkumiut Native Village"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "558",
+            "display": "Native Village of Unalakleet"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "559",
+            "display": "Native Village of Unga"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "560",
+            "display": "Village of Venetie"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "561",
+            "inactive": true,
+            "display": "Native Village of Venetie Tribal Government (Arctic Village and Village of Venetie)",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property",
+                "extension": [
+                  {
+                    "url": "code",
+                    "valueCode": "status"
+                  },
+                  {
+                    "url": "value",
+                    "valueCode": "retired"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "562",
+            "display": "Village of Wainwright"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "563",
+            "display": "Native Village of Wales"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "564",
+            "display": "Native Village of White Mountain"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "565",
+            "display": "Wrangell Cooperative Association"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "566",
+            "display": "Yakutat Tlingit Tribe"
+          }
+        ]
+      },
+      {
+        "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+        "code": "_NativeEntityContiguous",
+        "abstract": true,
+        "display": "NativeEntityContiguous",
+        "contains": [
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "1",
+            "display": "Absentee-Shawnee Tribe of Indians of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "2",
+            "display": "Agua Caliente Band of Cahuilla Indians of the Agua Caliente Indian Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "3",
+            "display": "Ak-Chin Indian Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "4",
+            "display": "Alabama-Coushatta Tribe of Texas"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "5",
+            "display": "Alabama-Quassarte Tribal Town"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "6",
+            "display": "Alturas Indian Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "7",
+            "display": "Apache Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "8",
+            "display": "Northern Arapaho Tribe of the Wind River Reservation, Wyoming"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "9",
+            "display": "Mi'kmaq Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "10",
+            "display": "Assiniboine and Sioux Tribes of the Fort Peck Indian Reservation, Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "11",
+            "display": "Augustine Band of Cahuilla Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "12",
+            "display": "Bad River Band of the Lake Superior Tribe of Chippewa Indians of the Bad River Reservation, Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "33",
+            "inactive": true,
+            "display": "Barona Group of Capitan Grande Band of Mission Ind",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property",
+                "extension": [
+                  {
+                    "url": "code",
+                    "valueCode": "status"
+                  },
+                  {
+                    "url": "value",
+                    "valueCode": "retired"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "13",
+            "display": "Bay Mills Indian Community, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "14",
+            "display": "Bear River Band of the Rohnerville Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "15",
+            "display": "Berry Creek Rancheria of Maidu Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "16",
+            "display": "Big Lagoon Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "17",
+            "display": "Big Pine Paiute Tribe of the Owens Valley"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "18",
+            "display": "Big Sandy Rancheria of Western Mono Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "19",
+            "display": "Big Valley Band of Pomo Indians of the Big Valley Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "20",
+            "display": "Blackfeet Tribe of the Blackfeet Indian Reservation of Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "21",
+            "display": "Blue Lake Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "160",
+            "inactive": true,
+            "display": "Bois Forte Band (Nett Lake); Fond du Lac Band; Gra",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property",
+                "extension": [
+                  {
+                    "url": "code",
+                    "valueCode": "status"
+                  },
+                  {
+                    "url": "value",
+                    "valueCode": "retired"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "22",
+            "display": "Bridgeport Indian Colony"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "23",
+            "display": "Buena Vista Rancheria of Me-Wuk Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "24",
+            "display": "Burns Paiute Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "25",
+            "display": "Cabazon Band of Cahuilla Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "26",
+            "display": "Cachil DeHe Band of Wintun Indians of the Colusa Indian Community of the Colusa Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "27",
+            "display": "Caddo Nation of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "29",
+            "display": "Cahto Tribe of the Laytonville Rancheria"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "28",
+            "display": "Cahuilla Band of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "30",
+            "display": "California Valley Miwok Tribe, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "31",
+            "display": "Campo Band of Diegueno Mission Indians of the Campo Indian Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "32",
+            "display": "Capitan Grande Band of Diegueno Mission Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "35",
+            "display": "Catawba Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "36",
+            "display": "Cayuga Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "37",
+            "display": "Cedarville Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "38",
+            "display": "Chemehuevi Indian Tribe of the Chemehuevi Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "39",
+            "display": "Cher-Ae Heights Indian Community of the Trinidad Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "40",
+            "display": "Cherokee Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "42",
+            "display": "Cheyenne River Sioux Tribe of the Cheyenne River Reservation, South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "41",
+            "display": "Cheyenne and Arapaho Tribes, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "43",
+            "display": "The Chickasaw Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "44",
+            "display": "Chicken Ranch Rancheria of Me-Wuk Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "45",
+            "display": "Chippewa Cree Indians of the Rocky Boy's Reservation, Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "46",
+            "display": "Chitimacha Tribe of Louisiana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "47",
+            "display": "The Choctaw Nation of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "48",
+            "display": "Citizen Potawatomi Nation, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "49",
+            "display": "Cloverdale Rancheria of Pomo Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "50",
+            "display": "Cocopah Tribe of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "51",
+            "display": "Coeur D'Alene Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "52",
+            "display": "Cold Springs Rancheria of Mono Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "53",
+            "display": "Colorado River Indian Tribes of the Colorado River Indian Reservation, Arizona and California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "54",
+            "display": "Comanche Nation, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "55",
+            "display": "Confederated Salish and Kootenai Tribes of the Flathead Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "64",
+            "display": "Confederated Tribes and Bands of the Yakama Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "56",
+            "display": "Confederated Tribes of the Chehalis Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "57",
+            "display": "Confederated Tribes of the Colville Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "58",
+            "display": "Confederated Tribes of the Coos, Lower Umpqua and Siuslaw Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "59",
+            "display": "Confederated Tribes of the Goshute Reservation, Nevada and Utah"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "60",
+            "display": "Confederated Tribes of the Grand Ronde Community of Oregon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "61",
+            "display": "Confederated Tribes of Siletz Indians of Oregon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "62",
+            "display": "Confederated Tribes of the Umatilla Indian Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "63",
+            "display": "Confederated Tribes of the Warm Springs Reservation of Oregon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "65",
+            "display": "Coquille Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "66",
+            "display": "Kletsel Dehe Wintun Nation of the Cortina Rancheria"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "67",
+            "display": "Coushatta Tribe of Louisiana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "68",
+            "display": "Cow Creek Band of Umpqua Tribe of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "69",
+            "display": "Coyote Valley Band of Pomo Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "71",
+            "display": "Crow Creek Sioux Tribe of the Crow Creek Reservation, South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "70",
+            "display": "Crow Tribe of Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "72",
+            "display": "Ewiiaapaayp Band of Kumeyaay Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "73",
+            "display": "Timbisha Shoshone Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "74",
+            "display": "Delaware Nation, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "75",
+            "display": "Delaware Tribe of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "76",
+            "display": "Dry Creek Rancheria Band of Pomo Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "77",
+            "display": "Duckwater Shoshone Tribe of the Duckwater Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "78",
+            "display": "Eastern Band of Cherokee Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "79",
+            "display": "Eastern Shawnee Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "80",
+            "display": "Elem Indian Colony of Pomo Indians of the Sulphur Bank Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "81",
+            "display": "Elk Valley Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "82",
+            "display": "Ely Shoshone Tribe of Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "83",
+            "display": "Enterprise Rancheria of Maidu Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "84",
+            "display": "Flandreau Santee Sioux Tribe of South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "85",
+            "display": "Forest County Potawatomi Community, Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "86",
+            "display": "Fort Belknap Indian Community of the Fort Belknap Reservation of Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "87",
+            "display": "Fort Bidwell Indian Community of the Fort Bidwell Reservation of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "88",
+            "display": "Fort Independence Indian Community of Paiute Indians of the Fort Independence Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "89",
+            "display": "Fort McDermitt Paiute and Shoshone Tribes of the Fort McDermitt Indian Reservation, Nevada and Oregon"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "90",
+            "display": "Fort McDowell Yavapai Nation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "91",
+            "display": "Fort Mojave Indian Tribe of Arizona, California & Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "92",
+            "display": "Fort Sill Apache Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "93",
+            "display": "Gila River Indian Community of the Gila River Indian Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "94",
+            "display": "Grand Traverse Band of Ottawa and Chippewa Indians, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "95",
+            "display": "Federated Indians of Graton Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "96",
+            "display": "Greenville Rancheria"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "97",
+            "display": "Grindstone Indian Rancheria of Wintun-Wailaki Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "98",
+            "display": "Guidiville Rancheria of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "99",
+            "display": "Hannahville Indian Community, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "100",
+            "display": "Havasupai Tribe of the Havasupai Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "101",
+            "display": "Ho-Chunk Nation of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "102",
+            "display": "Hoh Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "103",
+            "display": "Hoopa Valley Tribe, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "104",
+            "display": "Hopi Tribe of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "105",
+            "display": "Hopland Band of Pomo Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "106",
+            "display": "Houlton Band of Maliseet Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "107",
+            "display": "Hualapai Indian Tribe of the Hualapai Indian Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "108",
+            "display": "Nottawaseppi Huron Band of the Potawatomi, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "109",
+            "display": "Inaja Band of Diegueno Mission Indians of the Inaja and Cosmit Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "110",
+            "display": "Ione Band of Miwok Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "111",
+            "display": "Iowa Tribe of Kansas and Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "112",
+            "display": "Iowa Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "113",
+            "display": "Jackson Band of Miwuk Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "114",
+            "display": "Jamestown S'Klallam Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "115",
+            "display": "Jamul Indian Village of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "116",
+            "display": "Jena Band of Choctaw Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "117",
+            "display": "Jicarilla Apache Nation, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "118",
+            "display": "Kaibab Band of Paiute Indians of the Kaibab Indian Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "119",
+            "display": "Kalispel Indian Community of the Kalispel Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "120",
+            "display": "Karuk Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "121",
+            "display": "Kashia Band of Pomo Indians of the Stewarts Point Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "122",
+            "display": "Kaw Nation, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "123",
+            "display": "Keweenaw Bay Indian Community, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "124",
+            "display": "Kialegee Tribal Town"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "127",
+            "display": "Kickapoo Traditional Tribe of Texas"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "125",
+            "display": "Kickapoo Tribe of Indians of the Kickapoo Reservation in Kansas"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "126",
+            "display": "Kickapoo Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "128",
+            "display": "Kiowa Indian Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "129",
+            "display": "Klamath Tribes"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "130",
+            "display": "Kootenai Tribe of Idaho"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "131",
+            "display": "La Jolla Band of Luiseno Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "132",
+            "display": "La Posta Band of Diegueno Mission Indians of the La Posta Indian Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "133",
+            "display": "Lac Courte Oreilles Band of Lake Superior Chippewa Indians of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "134",
+            "display": "Lac du Flambeau Band of Lake Superior Chippewa Indians of the Lac du Flambeau Reservation of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "135",
+            "display": "Lac Vieux Desert Band of Lake Superior Chippewa Indians of Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "136",
+            "display": "Las Vegas Tribe of Paiute Indians of the Las Vegas Indian Colony, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "137",
+            "display": "Little River Band of Ottawa Indians, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "138",
+            "display": "Little Traverse Bay Bands of Odawa Indians, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "140",
+            "display": "Los Coyotes Band of Cahuilla and Cupeno Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "141",
+            "display": "Lovelock Paiute Tribe of the Lovelock Indian Colony, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "142",
+            "display": "Lower Brule Sioux Tribe of the Lower Brule Reservation, South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "143",
+            "display": "Lower Elwha Tribal Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "139",
+            "display": "Koi Nation of Northern California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "144",
+            "display": "Lower Sioux Indian Community in the State of Minnesota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "145",
+            "display": "Lummi Tribe of the Lummi Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "146",
+            "display": "Lytton Rancheria of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "147",
+            "display": "Makah Indian Tribe of the Makah Indian Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "148",
+            "display": "Manchester Band of Pomo Indians of the Manchester Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "149",
+            "display": "Manzanita Band of Diegueno Mission Indians of the Manzanita Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "150",
+            "display": "Mashantucket Pequot Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "151",
+            "display": "Match-e-be-nash-she-wish Band of Pottawatomi Indians of Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "152",
+            "display": "Mechoopda Indian Tribe of Chico Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "153",
+            "display": "Menominee Indian Tribe of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "154",
+            "display": "Mesa Grande Band of Diegueno Mission Indians of the Mesa Grande Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "155",
+            "display": "Mescalero Apache Tribe of the Mescalero Reservation, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "156",
+            "display": "Miami Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "157",
+            "display": "Miccosukee Tribe of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "158",
+            "display": "Middletown Rancheria of Pomo Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "159",
+            "display": "Minnesota Chippewa Tribe, Minnesota (Six component reservations: Bois Forte Band (Nett Lake); Fond du Lac Band; Grand Portage Band; Leech Lake Band; Mille Lacs Band; White Earth Band)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "161",
+            "display": "Mississippi Band of Choctaw Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "162",
+            "display": "Moapa Band of Paiute Indians of the Moapa River Indian Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "163",
+            "display": "Modoc Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "164",
+            "display": "Mohegan Tribe of Indians of Connecticut"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "165",
+            "display": "Mooretown Rancheria of Maidu Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "166",
+            "display": "Morongo Band of Mission Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "167",
+            "display": "Muckleshoot Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "168",
+            "display": "The Muscogee (Creek) Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "169",
+            "display": "Narragansett Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "170",
+            "display": "Navajo Nation, Arizona, New Mexico, & Utah"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "171",
+            "display": "Nez Perce Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "172",
+            "display": "Nisqually Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "173",
+            "display": "Nooksack Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "174",
+            "display": "Northern Cheyenne Tribe of the Northern Cheyenne Indian Reservation, Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "175",
+            "display": "Northfork Rancheria of Mono Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "176",
+            "display": "Northwestern Band of the Shoshone Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "177",
+            "display": "Oglala Sioux Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "178",
+            "display": "Omaha Tribe of Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "179",
+            "display": "Oneida Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "180",
+            "display": "Oneida Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "181",
+            "display": "Onondaga Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "182",
+            "display": "The Osage Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "184",
+            "display": "Otoe-Missouria Tribe of Indians, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "183",
+            "display": "Ottawa Tribe of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "185",
+            "display": "Paiute Indian Tribe of Utah (Cedar Band of Paiutes, Kanosh Band of Paiutes, Koosharem Band of Paiutes, Indian Peaks Band of Paiutes, and Shivwits Band of Paiutes)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "186",
+            "display": "Bishop Paiute Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "188",
+            "display": "Lone Pine Paiute-Shoshone Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "187",
+            "display": "Paiute-Shoshone Tribe of the Fallon Reservation and Colony, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "189",
+            "display": "Pala Band of Mission Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "190",
+            "display": "Pascua Yaqui Tribe of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "191",
+            "display": "Paskenta Band of Nomlaki Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "192",
+            "display": "Passamaquoddy Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "193",
+            "display": "Pauma Band of Luiseno Mission Indians of the Pauma & Yuima Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "194",
+            "display": "Pawnee Nation of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "195",
+            "display": "Pechanga Band of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "196",
+            "display": "Penobscot Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "197",
+            "display": "Peoria Tribe of Indians of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "198",
+            "display": "Picayune Rancheria of Chukchansi Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "199",
+            "display": "Pinoleville Pomo Nation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "200",
+            "display": "Pit River Tribe, California (includes XL Ranch, Big Bend, Likely, Lookout, Montgomery Creek, and Roaring Creek Rancherias)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "201",
+            "display": "Poarch Band of Creek Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "202",
+            "display": "Pokagon Band of Potawatomi Indians, Michigan and Indiana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "203",
+            "display": "Ponca Tribe of Indians of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "204",
+            "display": "Ponca Tribe of Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "205",
+            "display": "Port Gamble S'Klallam Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "206",
+            "display": "Potter Valley Tribe, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "207",
+            "display": "Prairie Band Potawatomi Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "208",
+            "display": "Prairie Island Indian Community in the State of Minnesota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "209",
+            "display": "Pueblo of Acoma, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "210",
+            "display": "Pueblo of Cochiti, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "212",
+            "display": "Pueblo of Isleta, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "211",
+            "display": "Pueblo of Jemez, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "213",
+            "display": "Pueblo of Laguna, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "214",
+            "display": "Pueblo of Nambe, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "215",
+            "display": "Pueblo of Picuris, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "216",
+            "display": "Pueblo of Pojoaque, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "217",
+            "display": "Pueblo of San Felipe, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "219",
+            "display": "Pueblo of San Ildefonso, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "218",
+            "display": "Ohkay Owingeh, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "220",
+            "display": "Pueblo of Sandia, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "221",
+            "display": "Pueblo of Santa Ana, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "222",
+            "display": "Pueblo of Santa Clara, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "223",
+            "display": "Santo Domingo Pueblo"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "224",
+            "display": "Pueblo of Taos, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "225",
+            "display": "Pueblo of Tesuque, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "226",
+            "display": "Pueblo of Zia, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "227",
+            "display": "Puyallup Tribe of the Puyallup Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "228",
+            "display": "Pyramid Lake Paiute Tribe of the Pyramid Lake Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "229",
+            "display": "Quapaw Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "230",
+            "display": "Quartz Valley Indian Community of the Quartz Valley Reservation of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "231",
+            "display": "Quechan Tribe of the Fort Yuma Indian Reservation, California & Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "232",
+            "display": "Quileute Tribe of the Quileute Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "233",
+            "display": "Quinault Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "234",
+            "display": "Ramona Band of Cahuilla, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "235",
+            "display": "Red Cliff Band of Lake Superior Chippewa Indians of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "236",
+            "display": "Red Lake Band of Chippewa Indians, Minnesota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "237",
+            "display": "Redding Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "238",
+            "display": "Redwood Valley or Little River Band of Pomo Indians of the Redwood Valley Rancheria California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "239",
+            "display": "Reno-Sparks Indian Colony, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "240",
+            "display": "Resighini Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "241",
+            "display": "Rincon Band of Luiseno Mission Indians of Rincon Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "242",
+            "display": "Robinson Rancheria"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "243",
+            "display": "Rosebud Sioux Tribe of the Rosebud Indian Reservation, South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "244",
+            "display": "Round Valley Indian Tribes, Round Valley Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "245",
+            "display": "Yocha Dehe Wintun Nation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "247",
+            "display": "Sac & Fox Nation of Missouri in Kansas and Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "248",
+            "display": "Sac & Fox Nation, Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "246",
+            "display": "Sac & Fox Tribe of the Mississippi in Iowa"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "249",
+            "display": "Saginaw Chippewa Indian Tribe of Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "250",
+            "display": "Salt River Pima-Maricopa Indian Community of the Salt River Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "251",
+            "display": "Samish Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "252",
+            "display": "San Carlos Apache Tribe of the San Carlos Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "253",
+            "display": "San Juan Southern Paiute Tribe of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "254",
+            "display": "Yuhaaviatam of San Manuel Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "255",
+            "display": "San Pasqual Band of Diegueno Mission Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "257",
+            "display": "Santa Rosa Band of Cahuilla Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "256",
+            "display": "Santa Rosa Indian Community of the Santa Rosa Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "258",
+            "display": "Santa Ynez Band of Chumash Mission Indians of the Santa Ynez Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "259",
+            "display": "Iipay Nation of Santa Ysabel, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "260",
+            "display": "Santee Sioux Nation, Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "261",
+            "display": "Sauk-Suiattle Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "262",
+            "display": "Sault Ste. Marie Tribe of Chippewa Indians, Michigan"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "263",
+            "display": "Scotts Valley Band of Pomo Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "264",
+            "display": "The Seminole Nation of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "265",
+            "display": "Seminole Tribe of Florida"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "266",
+            "display": "Seneca Nation of Indians"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "267",
+            "display": "Seneca-Cayuga Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "268",
+            "display": "Shakopee Mdewakanton Sioux Community of Minnesota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "269",
+            "display": "Shawnee Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "270",
+            "display": "Sherwood Valley Rancheria of Pomo Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "271",
+            "display": "Shingle Springs Band of Miwok Indians, Shingle Springs Rancheria (Verona Tract), California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "272",
+            "display": "Shoalwater Bay Indian Tribe of the Shoalwater Bay Indian Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "273",
+            "display": "Eastern Shoshone Tribe of the Wind River Reservation, Wyoming"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "274",
+            "display": "Shoshone-Bannock Tribes of the Fort Hall Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "275",
+            "display": "Shoshone-Paiute Tribes of the Duck Valley Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "276",
+            "display": "Sisseton-Wahpeton Oyate of the Lake Traverse Reservation, South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "277",
+            "display": "Skokomish Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "278",
+            "display": "Skull Valley Band of Goshute Indians of Utah"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "279",
+            "display": "Tolowa Dee-ni' Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "280",
+            "display": "Snoqualmie Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "281",
+            "display": "Soboba Band of Luiseno Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "282",
+            "display": "Sokaogon Chippewa Community, Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "283",
+            "display": "Southern Ute Indian Tribe of the Southern Ute Reservation, Colorado"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "284",
+            "display": "Spirit Lake Tribe, North Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "285",
+            "display": "Spokane Tribe of the Spokane Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "286",
+            "display": "Squaxin Island Tribe of the Squaxin Island Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "287",
+            "display": "St. Croix Chippewa Indians of Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "288",
+            "display": "Saint Regis Mohawk Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "289",
+            "display": "Standing Rock Sioux Tribe of North & South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "291",
+            "display": "Stillaguamish Tribe of Indians of Washington"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "290",
+            "display": "Stockbridge Munsee Community, Wisconsin"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "292",
+            "display": "Summit Lake Paiute Tribe of Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "293",
+            "display": "Suquamish Indian Tribe of the Port Madison Reservation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "294",
+            "display": "Susanville Indian Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "295",
+            "display": "Swinomish Indian Tribal Community"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "296",
+            "display": "Sycuan Band of the Kumeyaay Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "297",
+            "display": "Wiyot Tribe, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "298",
+            "display": "Table Mountain Rancheria"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "299",
+            "display": "Te-Moak Tribe of Western Shoshone Indians of Nevada (Four constituent bands: Battle Mountain Band; Elko Band; South Fork Band; and Wells Band)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "300",
+            "display": "Thlopthlocco Tribal Town"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "301",
+            "display": "Three Affiliated Tribes of the Fort Berthold Reservation, North Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "302",
+            "display": "Tohono O'odham Nation of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "303",
+            "display": "Tonawanda Band of Seneca"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "304",
+            "display": "Tonkawa Tribe of Indians of Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "305",
+            "display": "Tonto Apache Tribe of Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "306",
+            "display": "Torres Martinez Desert Cahuilla Indians, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "308",
+            "display": "Tulalip Tribes of Washington"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "307",
+            "display": "Tule River Indian Tribe of the Tule River Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "309",
+            "display": "Tunica-Biloxi Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "310",
+            "display": "Tuolumne Band of Me-Wuk Indians of the Tuolumne Rancheria of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "311",
+            "display": "Turtle Mountain Band of Chippewa Indians of North Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "312",
+            "display": "Tuscarora Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "313",
+            "display": "Twenty-Nine Palms Band of Mission Indians of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "314",
+            "display": "United Auburn Indian Community of the Auburn Rancheria of California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "315",
+            "display": "United Keetoowah Band of Cherokee Indians in Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "316",
+            "display": "Habematolel Pomo of Upper Lake, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "317",
+            "display": "Upper Sioux Community, Minnesota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "318",
+            "display": "Upper Skagit Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "319",
+            "display": "Ute Indian Tribe of the Uintah & Ouray Reservation, Utah"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "320",
+            "display": "Ute Mountain Ute Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "321",
+            "display": "Utu Utu Gwaitu Paiute Tribe of the Benton Paiute Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "34",
+            "inactive": true,
+            "display": "Viejas (Baron Long) Group of Capitan Grande Band o",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property",
+                "extension": [
+                  {
+                    "url": "code",
+                    "valueCode": "status"
+                  },
+                  {
+                    "url": "value",
+                    "valueCode": "retired"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "322",
+            "display": "Walker River Paiute Tribe of the Walker River Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "323",
+            "display": "Wampanoag Tribe of Gay Head (Aquinnah)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "324",
+            "display": "Washoe Tribe of Nevada & California (Carson Colony, Dresslerville Colony, Woodfords Community, Stewart Community, & Washoe Ranches)"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "325",
+            "display": "White Mountain Apache Tribe of the Fort Apache Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "326",
+            "display": "Wichita and Affiliated Tribes (Wichita, Keechi, Waco, & Tawakonie), Oklahoma"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "327",
+            "display": "Winnebago Tribe of Nebraska"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "328",
+            "display": "Winnemucca Indian Colony of Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "329",
+            "display": "Wyandotte Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "330",
+            "display": "Yankton Sioux Tribe of South Dakota"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "331",
+            "display": "Yavapai-Apache Nation of the Camp Verde Indian Reservation, Arizona"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "332",
+            "display": "Yavapai-Prescott Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "333",
+            "display": "Yerington Paiute Tribe of the Yerington Colony & Campbell Ranch, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "334",
+            "display": "Yomba Shoshone Tribe of the Yomba Reservation, Nevada"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "335",
+            "display": "Ysleta del Sur Pueblo"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "336",
+            "display": "Yurok Tribe of the Yurok Reservation, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "337",
+            "display": "Zuni Tribe of the Zuni Reservation, New Mexico"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "567",
+            "display": "Chickahominy Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "568",
+            "display": "Chickahominy Indian Tribe—Eastern Division"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "569",
+            "display": "Monacan Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "570",
+            "display": "Nansemond Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "571",
+            "display": "Rappahannock Tribe, Inc."
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "572",
+            "display": "Upper Mattaponi Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "573",
+            "display": "Cowlitz Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "574",
+            "display": "Little Shell Tribe of Chippewa Indians of Montana"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "575",
+            "display": "Mashpee Wampanoag Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "576",
+            "display": "Pamunkey Indian Tribe"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "577",
+            "display": "Shinnecock Indian Nation"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "578",
+            "display": "Wilton Rancheria, California"
+          },
+          {
+            "system": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS",
+            "code": "579",
+            "display": "Tejon Indian Tribe"
+          }
+        ]
+      }
+    ],
+    "extension": [
+      {
+        "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property",
+        "extension": [
+          {
+            "url": "code",
+            "valueCode": "status"
+          },
+          {
+            "url": "uri",
+            "valueUri": "http://hl7.org/fhir/concept-properties#status"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+[submodule "reference/tx-prod-fhirserver"]
+	path = reference/tx-prod-fhirserver
+	url = https://github.com/HealthIntersections/fhirserver.git
+	branch = master
+[submodule "reference/tx-dev-fhirsmith"]
+	path = reference/tx-dev-fhirsmith
+	url = https://github.com/HealthIntersections/FHIRsmith.git
+	branch = main

@@ -1,0 +1,31 @@
+{
+  "date": "2018-08-12",
+  "expansion": {
+    "contains": [],
+    "parameter": [
+      {
+        "name": "displayLanguage",
+        "valueCode": "en-US, en; q=0.9"
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "http://terminology.hl7.org/CodeSystem/v3-TribalEntityUS|4.0.0"
+      }
+    ],
+    "total": 0
+  },
+  "experimental": false,
+  "immutable": true,
+  "meta": {
+    "lastUpdated": "2018-08-12T00:00:00.000+10:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "name": "v3.TribalEntityUS",
+  "resourceType": "ValueSet",
+  "status": "active",
+  "title": "v3 Code System TribalEntityUS",
+  "url": "http://terminology.hl7.org/ValueSet/v3-TribalEntityUS",
+  "version": "2018-08-12"
+}

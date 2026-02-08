@@ -1583,13 +1583,14 @@
             "lamport": 37
         },
         "edit_time": {
-            "timestamp": 1770515635,
-            "time": "2026-02-07T19:53:55-06:00",
-            "lamport": 210
+            "timestamp": 1770515882,
+            "time": "2026-02-07T19:58:02-06:00",
+            "lamport": 212
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "tx-compare"
         ],
         "title": "Dev returns expansion codes when prod marks expansion as too-costly (both HTTP 200)",
