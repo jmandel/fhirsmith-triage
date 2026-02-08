@@ -1,0 +1,126 @@
+{
+  "parameter": [
+    {
+      "name": "abstract",
+      "valueBoolean": false
+    },
+    {
+      "name": "code",
+      "valueCode": "303071001"
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000013009",
+            "display": "Synonym (core metadata concept)",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "People in the family"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000013009",
+            "display": "Synonym (core metadata concept)",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Family member"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000003001",
+            "display": "Fully specified name",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Person in the family (person)"
+        }
+      ]
+    },
+    {
+      "name": "designation",
+      "part": [
+        {
+          "name": "language",
+          "valueCode": "en"
+        },
+        {
+          "name": "use",
+          "valueCoding": {
+            "code": "900000000000013009",
+            "display": "Synonym (core metadata concept)",
+            "system": "http://snomed.info/sct"
+          }
+        },
+        {
+          "name": "value",
+          "valueString": "Person in the family"
+        }
+      ]
+    },
+    {
+      "name": "display",
+      "valueString": "Family member"
+    },
+    {
+      "name": "name",
+      "valueString": "SNOMED CT"
+    },
+    {
+      "name": "property",
+      "part": [
+        {
+          "name": "code",
+          "valueCode": "inactive"
+        },
+        {
+          "name": "value",
+          "valueBoolean": false
+        }
+      ]
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}
