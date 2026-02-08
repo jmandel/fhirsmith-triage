@@ -1,0 +1,67 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "text": "Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "Empty code",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ]
+            },
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n0ms urn:ietf:bcp:47/vs: Validate \"[undefined#undefined (\"undefined\")]\"\n0ms urn:ietf:bcp:47/vs: Check \"urn:ietf:bcp:47#undefined\"\n1ms urn:ietf:bcp:47/vs: CodeSystem found: urn:ietf:bcp:47|null for urn:ietf:bcp:47\n1ms urn:ietf:bcp:47/vs: check code in () at Coding\n1ms urn:ietf:bcp:47/vs: Code \"undefined\" not found in urn:ietf:bcp:47|null: undefined"
+    }
+  ]
+}

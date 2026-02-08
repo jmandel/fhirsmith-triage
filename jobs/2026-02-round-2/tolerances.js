@@ -4196,6 +4196,57 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-undefined-null-in-unknown-code-message',
+    description: 'validate-code: dev renders JavaScript undefined/null as literal strings in "Unknown code" message when code/version are absent. Dev also returns an extra "Empty code" informational issue that prod omits. Affects 1 record (POST /r5/CodeSystem/$validate-code with urn:ietf:bcp:47 coding missing code).',
+    kind: 'temp-tolerance',
+    bugId: 'f9f6206',
+    tags: ['normalize', 'validate-code', 'message-format'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      // Dev has 'undefined' where prod has '' for code, and 'null' where prod has '' for version
+      if (/Unknown code ''/.test(prodMsg) && /Unknown code 'undefined'/.test(devMsg)) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Normalize dev message/issues to match prod (use prod's rendering as canonical)
+      const prodMsg = getParamValue(prod, 'message');
+      function fixBody(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message' && p.valueString) {
+              return { ...p, valueString: prodMsg };
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              return {
+                ...p,
+                resource: {
+                  ...p.resource,
+                  issue: p.resource.issue
+                    .filter(iss => iss.details?.text !== 'Empty code')
+                    .map(iss => ({
+                      ...iss,
+                      details: iss.details ? {
+                        ...iss.details,
+                        text: iss.details.text === getParamValue(dev, 'message') ? prodMsg : iss.details.text,
+                      } : iss.details,
+                    })),
+                },
+              };
+            }
+            return p;
+          }),
+        };
+      }
+      return { prod, dev: fixBody(dev) };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

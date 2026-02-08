@@ -1,0 +1,34 @@
+{
+  "id": "7f0c6cf8-a250-4935-8ab6-32f499d65302",
+  "url": "/r5/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1317,
+    "hash": "dcf9e575609ca450f6e2a25812893f58"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1331,
+    "hash": "6cce8d180293be0c36aa1ba5620fde43"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"urn:ietf:bcp:47\"},{\"name\" : \"message\",\"valueString\" : \"Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''\"},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"Unknown_Code_in_Version\"}],\"severity\" : \"error\",\"code\" : \"code-invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-code\"}],\"text\" : \"Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''\"},\"location\" : [\"Coding.code\"],\"expression\" : [\"Coding.code\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[urn:ietf:bcp:47# (\\\"\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"urn:ietf:bcp:47#\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"urn:ietf:bcp:47|\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"urn:ietf:bcp:47\"},{\"name\":\"message\",\"valueString\":\"Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"Unknown_Code_in_Version\"}]},{\"severity\":\"information\",\"code\":\"code-invalid\",\"details\":{\"text\":\"Empty code\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-code\"}]},\"expression\":[\"Coding.code\"]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n0ms urn:ietf:bcp:47/vs: Validate \\\"[undefined#undefined (\\\"undefined\\\")]\\\"\\n0ms urn:ietf:bcp:47/vs: Check \\\"urn:ietf:bcp:47#undefined\\\"\\n1ms urn:ietf:bcp:47/vs: CodeSystem found: urn:ietf:bcp:47|null for urn:ietf:bcp:47\\n1ms urn:ietf:bcp:47/vs: check code in () at Coding\\n1ms urn:ietf:bcp:47/vs: Code \\\"undefined\\\" not found in urn:ietf:bcp:47|null: undefined\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"urn:ietf:bcp:47\"}},{\"name\":\"displayLanguage\",\"valueString\":\"en\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"fe715271-177c-479d-a464-8d886ba22c65\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueCanonical\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

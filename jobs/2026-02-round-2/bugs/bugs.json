@@ -1618,5 +1618,49 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "15f5ce0e0d8dd2c30b2e880c66e049cd6685b7ef5a8223691f79b9b332e21bb9",
+        "human_id": "15f5ce0",
+        "create_time": {
+            "timestamp": 1770516729,
+            "time": "2026-02-07T20:12:09-06:00",
+            "lamport": 38
+        },
+        "edit_time": {
+            "timestamp": 1770516734,
+            "time": "2026-02-07T20:12:14-06:00",
+            "lamport": 217
+        },
+        "status": "open",
+        "labels": [
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "GET /r5/CodeSystem/$subsumes returns 400 despite valid system parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

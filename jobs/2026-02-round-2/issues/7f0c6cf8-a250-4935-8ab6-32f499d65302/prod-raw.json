@@ -1,0 +1,54 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Unknown_Code_in_Version"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-code"
+                }
+              ],
+              "text": "Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+            },
+            "location": [
+              "Coding.code"
+            ],
+            "expression": [
+              "Coding.code"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=en, default-to-latest\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[urn:ietf:bcp:47# (\"\")]\"\r\n0 0     : 0ms  : Check \"urn:ietf:bcp:47#\"\r\n0 0     : 0ms  : Using CodeSystem \"urn:ietf:bcp:47|\" (content = complete)\r\n"
+    }
+  ]
+}

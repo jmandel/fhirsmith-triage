@@ -1,0 +1,41 @@
+{
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code '' in the CodeSystem 'urn:ietf:bcp:47' version ''"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

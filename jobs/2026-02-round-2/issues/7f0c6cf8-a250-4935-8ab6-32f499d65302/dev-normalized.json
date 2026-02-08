@@ -1,0 +1,57 @@
+{
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          },
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-code",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Empty code"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Unknown code 'undefined' in the CodeSystem 'urn:ietf:bcp:47' version 'null'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:ietf:bcp:47"
+    }
+  ],
+  "resourceType": "Parameters"
+}

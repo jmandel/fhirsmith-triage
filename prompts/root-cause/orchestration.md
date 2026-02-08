@@ -40,11 +40,19 @@ git-bug bug label new <BUG_ID> "config-issue"
 
 ### Launch investigation
 
-For each code-likely bug, invoke a Claude agent with `prompts/root-cause/investigation.md` as the prompt, providing:
-- The bug ID
-- The job directory path
+For each code-likely bug, launch a `claude` subprocess in the background:
 
-You can run multiple investigation agents in parallel.
+```bash
+claude -p --dangerously-skip-permissions --model opus \
+  --output-format stream-json \
+  "$(cat prompts/root-cause/investigation.md)
+
+Bug ID: <BUG_ID>
+Job directory: <job-dir>" \
+  2>&1 | tee "<job-dir>/root-cause-logs/<BUG_ID>.log" | python3 engine/stream-filter.py &
+```
+
+Run at most **2 investigations in parallel** (adjustable if the user requests more or fewer). Wait for both to finish before launching the next batch.
 
 ## After all bugs are processed
 
