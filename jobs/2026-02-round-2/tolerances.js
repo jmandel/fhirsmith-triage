@@ -1962,7 +1962,8 @@ const tolerances = [
   {
     id: 'validate-code-undefined-system-result-disagrees',
     description: 'POST $validate-code: dev returns result=false with "undefined" system in diagnostics. Expected test artifact — dev server cache not warm at start of comparison run (GG adjudicated). Not a real server bug.',
-    kind: 'equiv-autofix',
+    kind: 'temp-tolerance',
+    bugId: '3e1d117',
     adjudication: ['gg'],
     tags: ['skip', 'result-disagrees', 'validate-code', 'undefined-system'],
     match({ record, prod, dev }) {
@@ -2121,7 +2122,8 @@ const tolerances = [
   {
     id: 'validate-code-undefined-system-missing-params',
     description: 'POST $validate-code result=false: dev missing code/system/display params due to undefined system extraction. Expected test artifact — dev server cache not warm at start of comparison run (GG adjudicated). Same root cause as validate-code-undefined-system-result-disagrees.',
-    kind: 'equiv-autofix',
+    kind: 'temp-tolerance',
+    bugId: '3e1d117',
     adjudication: ['gg'],
     tags: ['skip', 'validate-code', 'undefined-system', 'content-differs'],
     match({ record, prod, dev }) {
