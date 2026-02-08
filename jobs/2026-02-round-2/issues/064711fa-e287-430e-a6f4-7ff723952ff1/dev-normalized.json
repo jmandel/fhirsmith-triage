@@ -1,0 +1,24 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "details": {
+        "coding": [
+          {
+            "code": "not-found",
+            "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+          }
+        ],
+        "text": "A definition for the value Set 'https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use--0|6.5.0' could not be found"
+      },
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueString": "Unable_to_resolve_value_Set_"
+        }
+      ],
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

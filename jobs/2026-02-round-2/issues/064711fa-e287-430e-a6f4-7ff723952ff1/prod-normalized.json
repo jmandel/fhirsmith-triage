@@ -1,0 +1,25 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "148006"
+    },
+    {
+      "name": "display",
+      "valueString": "Preliminary diagnosis"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

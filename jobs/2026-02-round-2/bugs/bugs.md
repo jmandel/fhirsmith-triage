@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_23 bugs (21 open, 2 closed)_
+_24 bugs (21 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1243,19 +1243,60 @@ Total breakdown:
 
 ---
 
-### [ ] `44d6f07` Dev truncates BCP-47 language tag region in expand displayLanguage parameter
+### [x] `44d6f07` Dev truncates BCP-47 language tag region in expand displayLanguage parameter
 
 Records-Impacted: 2
 Tolerance-ID: expand-displayLanguage-region-truncated
 Record-ID: 4bd05003-c9ae-4886-9009-3f794f2690a1
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+  "resourceType": "Parameters",
+  "parameter": [
+    {"name": "displayLanguage", "valueCode": "fr-FR"},
+    {"name": "excludeNested", "valueBoolean": true},
+    {"name": "count", "valueInteger": 10},
+    {"name": "valueSet", "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
+      }
+    }}
+  ]
+}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{
+  "resourceType": "Parameters",
+  "parameter": [
+    {"name": "displayLanguage", "valueCode": "fr-FR"},
+    {"name": "excludeNested", "valueBoolean": true},
+    {"name": "count", "valueInteger": 10},
+    {"name": "valueSet", "resource": {
+      "resourceType": "ValueSet",
+      "status": "active",
+      "compose": {
+        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
+      }
+    }}
+  ]
+}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
+```
+
+**Result**: Both servers now return `{"name": "displayLanguage", "valueCode": "fr-FR"}`. The bug has been fixed - dev no longer truncates the region subtag.
+
 
 In $expand responses, the `displayLanguage` expansion parameter echoed back by dev truncates the BCP-47 language tag to just the language code, dropping the region subtag. When the request specifies `displayLanguage=fr-FR`, prod echoes back `fr-FR` in the expansion parameters, but dev echoes back `fr`.
 
 The actual expansion content (codes, display text) is identical between prod and dev — the difference is only in the echoed `displayLanguage` parameter value.
 
-#####How widespread
 
 2 records in the current comparison show this pattern. Both are POST /r4/ValueSet/$expand requests with `displayLanguage=fr-FR` in the request body.
 
@@ -1263,13 +1304,44 @@ Search: grep for records where both prod and dev have a `displayLanguage` expans
 
 There are an additional 62 records with a different displayLanguage mismatch pattern (prod has displayLanguage=en or en-US but dev omits it entirely), which is a separate issue.
 
-#####What the tolerance covers
 
 Tolerance `expand-displayLanguage-region-truncated` normalizes the displayLanguage expansion parameter to the prod value when both sides have a displayLanguage parameter but the values differ only by region subtag truncation (e.g., fr-FR vs fr). This eliminates 2 records.
 
-#####Representative record
 
 `grep -n '4bd05003-c9ae-4886-9009-3f794f2690a1' jobs/2026-02-round-2/comparison.ndjson`
+
+---
+
+### [ ] `4aebc14` Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition
+
+Records-Impacted: 57
+Tolerance-ID: snomed-version-skew-validate-code-result-disagrees
+Record-ID: a74520f2-677a-41d4-a489-57b323c8dfb9
+
+#####What differs
+
+On ValueSet $validate-code operations with SNOMED CT codes, prod returns result=true while dev returns result=false. The root cause is that dev loads older SNOMED CT editions than prod (e.g., International 20240201 vs 20250201, US 20240201 vs 20250901). When a ValueSet uses hierarchy-based filters (e.g., is-a or descendent-of), the code membership can differ between SNOMED versions because the hierarchical relationships change between editions.
+
+For example, in the representative record, SNOMED code 39154008 ("Clinical diagnosis") is validated against ValueSet ndhm-diagnosis-use (which filters for descendants of 106229004 "Qualifier for type of diagnosis"). Prod (version 20250201) says the code is in the ValueSet; dev (version 20240201) says it is not.
+
+#####How widespread
+
+57 records in the full comparison.ndjson have SNOMED version-skewed validate-code result disagreements. Of those, 12 still appear in deltas.ndjson (the remaining 45 are already handled by other tolerances, likely because they also have status mismatches). Found via:
+
+```python
+####Check all validate-code records for SNOMED version skew + result disagreement
+####across comparison.ndjson
+```
+
+Affected SNOMED modules: International (20240201 vs 20250201) and US (20240201/20230301 vs 20250901). Multiple codes affected: 39154008, 116154003, 309343006, 1287116005, 428041000124106, and others.
+
+#####What the tolerance covers
+
+Tolerance `snomed-version-skew-validate-code-result-disagrees` skips validate-code records where both prod and dev return 200, both have SNOMED version parameters that differ, and the result boolean disagrees. This is the validate-code counterpart of the existing expand-snomed-version-skew-content tolerance (bug 9fd2328). Eliminates 1 delta record (the others are already handled by existing status-mismatch tolerances).
+
+#####Related
+
+Same root cause as bug 9fd2328 (Dev loads older SNOMED CT edition), which covers $expand operations.
 
 ---
 

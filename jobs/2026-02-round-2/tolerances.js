@@ -3179,6 +3179,22 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-valueset-not-found-dev-400',
+    description: 'Dev returns 400 "ValueSet could not be found" for $validate-code requests that prod handles successfully (200). Affected ValueSets include nrces.in/ndhm, ontariohealth.ca, and hl7.org/fhir/ValueSet/@all. Dev is missing certain ValueSet definitions that prod resolves. 10 records.',
+    kind: 'temp-tolerance',
+    bugId: '1433eb6',
+    tags: ['skip', 'status-mismatch', 'missing-valueset'],
+    match({ record, dev }) {
+      if (!/validate-code/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 400) return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      const text = dev.issue?.[0]?.details?.text || '';
+      if (/could not be found/.test(text)) return 'skip';
+      return null;
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

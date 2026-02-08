@@ -998,16 +998,61 @@
             "lamport": 24
         },
         "edit_time": {
-            "timestamp": 1770508219,
-            "time": "2026-02-07T17:50:19-06:00",
-            "lamport": 126
+            "timestamp": 1770508419,
+            "time": "2026-02-07T17:53:39-06:00",
+            "lamport": 131
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "content-differs",
+            "not-reproduced",
             "tx-compare"
         ],
         "title": "Dev truncates BCP-47 language tag region in expand displayLanguage parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4aebc149c4fb24826a4edadc46fcde1e9f405eb9b8eedae9340e6ed995b33069",
+        "human_id": "4aebc14",
+        "create_time": {
+            "timestamp": 1770508638,
+            "time": "2026-02-07T17:57:18-06:00",
+            "lamport": 25
+        },
+        "edit_time": {
+            "timestamp": 1770508642,
+            "time": "2026-02-07T17:57:22-06:00",
+            "lamport": 134
+        },
+        "status": "open",
+        "labels": [
+            "result-disagrees",
+            "tx-compare"
+        ],
+        "title": "Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
