@@ -1,0 +1,6 @@
+expand-metadata-identifier-timestamp: normalize
+expand-hl7-terminology-version-skew-params: normalize
+expand-dev-extra-contact-metadata: normalize
+expand-hl7-terminology-version-skew-content: normalize
+expand-contains-sort-order: normalize
+expand-r4-deprecated-status-representation: normalize

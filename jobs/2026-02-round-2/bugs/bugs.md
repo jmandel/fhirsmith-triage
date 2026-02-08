@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_30 bugs (27 open, 3 closed)_
+_32 bugs (29 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -292,13 +292,13 @@ Eliminates 187 records.
 
 ### [ ] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
 
-Records-Impacted: ~457
-Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21, ef77e7ca-9afa-4325-a1f3-a939a62a490f, 7813f9ee-79ee-445b-8064-603a98e876bf
-Tolerance-ID: hl7-terminology-cs-version-skew, expand-hl7-terminology-version-skew-params, expand-hl7-terminology-version-skew-content
+Records-Impacted: ~461
+Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21, ef77e7ca-9afa-4325-a1f3-a939a62a490f, 7813f9ee-79ee-445b-8064-603a98e876bf, 83509e51-1a8b-4d77-8f4e-7b0037009c4a
+Tolerance-ID: hl7-terminology-cs-version-skew, expand-hl7-terminology-version-skew-params, expand-hl7-terminology-version-skew-content, validate-code-hl7-terminology-vs-version-skew
 
 #####Summary
 
-Dev loads older/different versions of HL7 terminology CodeSystems (`http://terminology.hl7.org/CodeSystem/*`) than prod. For example, prod loads `consentcategorycodes` at version `4.0.1` while dev loads `1.0.1`; prod loads `observation-category` at `4.0.1` while dev loads `2.0.0`. This version skew is the single root cause behind three distinct manifestations affecting both `$validate-code` and `$expand` operations.
+Dev loads older/different versions of HL7 terminology CodeSystems and ValueSets (`http://terminology.hl7.org/CodeSystem/*`, `http://terminology.hl7.org/ValueSet/*`) than prod. For example, prod loads `consentcategorycodes` at version `4.0.1` while dev loads `1.0.1`; prod loads `observation-category` at `4.0.1` while dev loads `2.0.0`. Dev also loads different ValueSet versions (e.g., `v3-ActEncounterCode|2014-03-26` vs prod's `|3.0.0`). This version skew is the single root cause behind four distinct manifestations affecting both `$validate-code` and `$expand` operations.
 
 Known affected CodeSystems and their version mismatches:
 - `consentcategorycodes`: prod=4.0.1, dev=1.0.1
@@ -308,11 +308,14 @@ Known affected CodeSystems and their version mismatches:
 - `condition-category`: prod=4.0.1, dev=2.0.0
 - `v2-0116`: prod=2.9, dev=3.0.0
 
+Known affected ValueSets:
+- `v3-ActEncounterCode`: prod=3.0.0, dev=2014-03-26
+
 #####Tolerances
 
 ######1. `hl7-terminology-cs-version-skew` (~58 records)
 
-**What it handles**: `$validate-code` responses where the only differences are version strings in the `version` parameter, `message` text, and `issues` OperationOutcome `details.text`. Also strips draft `status-check` informational issues that prod includes but dev omits (because dev loads a version that lacks the draft status metadata). Both servers agree on validation results for all affected codes.
+**What it handles**: `$validate-code` responses where the only differences are CodeSystem version strings in the `version` parameter, `message` text, and `issues` OperationOutcome `details.text`. Also strips draft `status-check` informational issues that prod includes but dev omits (because dev loads a version that lacks the draft status metadata). Both servers agree on validation results for all affected codes.
 
 **Normalizes**: Dev's version parameter and version strings in message/issues text to prod's values; strips prod's draft status-check issues.
 
@@ -334,17 +337,25 @@ Known affected CodeSystems and their version mismatches:
 
 **Representative record**: `7813f9ee-79ee-445b-8064-603a98e876bf` — expand of `consent-policy` where dev returns 27 codes vs prod's 26 (extra `ch-epr`).
 
+######4. `validate-code-hl7-terminology-vs-version-skew` (4 records)
+
+**What it handles**: `$validate-code` responses where the only difference is the ValueSet version string in message text and issues details text. Both servers agree on `result=false` and all other parameters. The difference appears in "not found in the value set 'url|version'" messages where prod references the newer ValueSet version (e.g., `v3-ActEncounterCode|3.0.0`) and dev references the older version (e.g., `|2014-03-26`).
+
+**Normalizes**: ValueSet pipe-delimited version strings in message and issues text to prod's values.
+
+**Representative record**: `83509e51-1a8b-4d77-8f4e-7b0037009c4a` — validate-code for PLB in v3-ActEncounterCode where prod says `|3.0.0`, dev says `|2014-03-26`.
+
 #####Repro
 
 ```bash
 ####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=idscl&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fconsentcategorycodes' -H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2Fv3-ActEncounterCode&code=PLB&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' -H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
 
 ####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fconsent-category&code=idscl&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fconsentcategorycodes' -H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fterminology.hl7.org%2FValueSet%2Fv3-ActEncounterCode&code=PLB&_format=json&system=http:%2F%2Fterminology.hl7.org%2FCodeSystem%2Fv3-ActCode' -H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
 ```
 
-Prod returns `version '4.0.1'`, dev returns `version '1.0.1'`.
+Prod returns `v3-ActEncounterCode|3.0.0`, dev returns `v3-ActEncounterCode|2014-03-26`.
 
 
 61e2d5c #1 Claude (AI Assistant) <>
@@ -1414,6 +1425,55 @@ Same root cause as bug 9fd2328 (Dev loads older SNOMED CT edition), which covers
 
 ---
 
+### [ ] `1433eb6` Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)
+
+Records-Impacted: 10
+Tolerance-ID: validate-code-valueset-not-found-dev-400
+Record-ID: 064711fa-e287-430e-a6f4-7ff723952ff1
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/@all"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"48546005","display":"Diazepam-containing product"}]}},{"name":"displayLanguage","valueCode":"en-US"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+Prod returns HTTP 200 with `{"resourceType":"Parameters","parameter":[{"name":"result","valueBoolean":true},...]}` indicating successful validation. Dev returns HTTP 400 with `{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"not-found","details":{"text":"A definition for the value Set 'http://hl7.org/fhir/ValueSet/@all' could not be found"}}]}`.
+
+For $validate-code requests against certain ValueSets, prod returns HTTP 200 with a valid Parameters response (result=true or result=false), while dev returns HTTP 400 with an OperationOutcome saying "A definition for the value Set '...' could not be found."
+
+Prod successfully resolves these ValueSets and performs code validation. Dev fails at the ValueSet resolution step and returns an error instead of a validation result.
+
+
+10 records show this pattern (prod=200, dev=400 with "could not be found"):
+
+- 3 records: `nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use*` (Indian NDHM ValueSets)
+- 5 records: `ontariohealth.ca/fhir/ValueSet/*` (Ontario Health ValueSets)
+- 2 records: `hl7.org/fhir/ValueSet/@all` (special @all ValueSet)
+
+Search: `grep 'could not be found' results/deltas/deltas.ndjson` filtered to prod=200 dev=400
+
+All are POST /r4/ValueSet/$validate-code requests. The ValueSets come from different IG packages (NDHM India, Ontario Health, and core FHIR @all), so the root cause may be that dev is missing certain IG-provided ValueSet definitions or doesn't support the @all pseudo-ValueSet.
+
+
+Tolerance `validate-code-valueset-not-found-dev-400` matches: POST validate-code, prod=200, dev=400, where dev body contains OperationOutcome with "could not be found" text. Eliminates all 10 records.
+
+
+- 064711fa-e287-430e-a6f4-7ff723952ff1 (nrces.in ndhm-diagnosis-use--0)
+- 5beceead-a754-4f88-8dec-1a7a931166b9 (ontariohealth.ca symptoms-of-clinical-concern)
+- 38f6e665-4c34-4589-8d29-77c522b97845 (hl7.org/fhir/ValueSet/@all)
+
+---
+
 ### [ ] `1932f81` Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests
 
 Records-Impacted: 16
@@ -1538,6 +1598,53 @@ All have the same dev error text "SQLITE_MISUSE: not an error". The prod respons
 Tolerance ID: dev-sqlite-misuse-expand-rxnorm
 Matches records where the dev response is an OperationOutcome containing "SQLITE_MISUSE" in the error details, on $expand operations. Skips the entire record since dev's crash prevents meaningful content comparison.
 Eliminates 16 records.
+
+---
+
+### [ ] `4f12dda` Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ
+
+Records-Impacted: 198
+Tolerance-ID: expand-contains-version-skew
+Record-ID: 6f9cf4c7-e6f4-445c-bc86-323b2b6d7165
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+```
+
+Prod returns SNOMED version `http://snomed.info/sct/731000124108/version/20250901` and CPT version `2026`, dev returns SNOMED version `http://snomed.info/sct/731000124108/version/20250301` and CPT version `2025`.
+
+#####What differs
+
+In $expand responses, prod and dev return the same set of codes (same system + code pairs) but with different `version` strings on `expansion.contains[]` entries:
+
+- **SNOMED CT US edition**: prod returns `http://snomed.info/sct/731000124108/version/20250901`, dev returns `http://snomed.info/sct/731000124108/version/20250301`
+- **CPT (AMA)**: prod returns `2026`, dev returns `2025`
+
+Both sides return 200 with identical code membership (280 codes in the representative record), but each code's version field reflects the loaded edition.
+
+This differs from bug 9fd2328, which covers the case where SNOMED version skew causes *different* code sets to appear. Here, the codes are the same — only the version annotations differ.
+
+#####How widespread
+
+198 expand delta records exhibit this pattern. All are the same ValueSet URL (`http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1267.23`) requested with different parameters. Each contains 280 codes with both SNOMED and CPT codes, where all codes match but version strings differ.
+
+Found via:
+```python
+####For each expand delta with same code membership,
+####check if contains[].version differs for common codes
+```
+
+#####What the tolerance covers
+
+Tolerance `expand-contains-version-skew` matches expand records where both sides return 200, the code membership is identical, but `contains[].version` strings differ for common codes. It normalizes all `contains[].version` values to prod's values. This only triggers when code sets are the same (no extra/missing codes) — the existing `expand-snomed-version-skew-content` tolerance handles cases with code membership differences.
 
 ---
 
@@ -1736,6 +1843,20 @@ Tolerance `expand-r4-deprecated-status-representation` normalizes the representa
 Records-Impacted: 13
 Tolerance-ID: missing-retired-status-check-issue
 Record-ID: dc21c18a-fd57-429c-a51b-54bbfd23753f
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
+-H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fsecurity-labels%7C4.0.1&code=code8&_format=json&system=urn:ihe:xds:scheme8' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns 3 OperationOutcome issues: an informational `status-check` issue ("Reference to retired ValueSet http://terminology.hl7.org/ValueSet/v3-ActUSPrivacyLaw|3.0.0") plus two error-level issues (UNKNOWN_CODESYSTEM and not-in-vs). Dev returns only the 2 error-level issues, omitting the retired status-check informational issue entirely.
 
 #####What differs
 

@@ -3098,35 +3098,44 @@ const tolerances = [
 
   {
     id: 'expand-r4-deprecated-status-representation',
-    description: 'In R4 $expand responses, prod and dev represent deprecated code status differently on expansion.contains entries. For security-labels, prod uses R4-compatible extension (http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property) while dev uses R5-native property elements. For patient-contactrelationship and TribalEntityUS, prod has the extension but dev omits the annotation entirely. Normalizes by stripping both extension and property from contains entries that carry this R5 backport extension. Affects 26 expand records.',
+    description: 'In R4 $expand responses, prod and dev represent deprecated code status differently. Prod uses R4-compatible extension (http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property) on contains entries, plus a property declaration extension (http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property) on the expansion itself. Dev either uses R5-native property elements (security-labels) or omits the annotation entirely (patient-contactrelationship, TribalEntityUS). Normalizes by stripping both per-code annotations and expansion-level property declaration extensions. Affects 26+ expand records.',
     kind: 'temp-tolerance',
     bugId: '7716e08',
     tags: ['normalize', 'expand', 'r5-backport', 'deprecated-status'],
     match({ record, prod, dev }) {
       if (!/\/ValueSet\/\$expand/.test(record.url)) return null;
-      if (!prod?.expansion?.contains || !dev?.expansion?.contains) return null;
+      if (!prod?.expansion && !dev?.expansion) return null;
 
-      const r5PropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+      const r5ContainsPropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+      const r5ExpansionPropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property';
 
-      // Check if prod has the R5 backport extension on any contains entry
-      const prodHasExt = prod.expansion.contains.some(c =>
-        (c.extension || []).some(e => e.url === r5PropUrl)
+      // Check if prod or dev has the R5 backport extension on any contains entry
+      const prodContains = prod?.expansion?.contains || [];
+      const devContains = dev?.expansion?.contains || [];
+      const prodHasContainsExt = prodContains.some(c =>
+        (c.extension || []).some(e => e.url === r5ContainsPropUrl)
       );
-      // Check if dev has R5-native property on any contains entry
-      const devHasProp = dev.expansion.contains.some(c => c.property);
+      const devHasProp = devContains.some(c => c.property);
 
-      if (prodHasExt || devHasProp) return 'normalize';
+      // Check if prod or dev has the expansion-level property declaration extension
+      const prodExpExt = (prod?.expansion?.extension || []);
+      const devExpExt = (dev?.expansion?.extension || []);
+      const hasExpansionPropExt = prodExpExt.some(e => e.url === r5ExpansionPropUrl) ||
+                                  devExpExt.some(e => e.url === r5ExpansionPropUrl);
+
+      if (prodHasContainsExt || devHasProp || hasExpansionPropExt) return 'normalize';
       return null;
     },
     normalize({ prod, dev }) {
-      const r5PropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+      const r5ContainsPropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.contains.property';
+      const r5ExpansionPropUrl = 'http://hl7.org/fhir/5.0/StructureDefinition/extension-ValueSet.expansion.property';
 
       function stripDeprecatedAnnotation(contains) {
         return contains.map(c => {
           const result = { ...c };
           // Remove R5 backport extension from prod
           if (result.extension) {
-            result.extension = result.extension.filter(e => e.url !== r5PropUrl);
+            result.extension = result.extension.filter(e => e.url !== r5ContainsPropUrl);
             if (result.extension.length === 0) delete result.extension;
           }
           // Remove R5-native property from dev
@@ -3135,19 +3144,35 @@ const tolerances = [
         });
       }
 
+      function stripExpansionPropertyDecl(expansion) {
+        if (!expansion?.extension) return expansion;
+        const filtered = expansion.extension.filter(e => e.url !== r5ExpansionPropUrl);
+        const result = { ...expansion };
+        if (filtered.length === 0) {
+          delete result.extension;
+        } else {
+          result.extension = filtered;
+        }
+        return result;
+      }
+
       return {
         prod: {
           ...prod,
           expansion: {
-            ...prod.expansion,
-            contains: stripDeprecatedAnnotation(prod.expansion.contains),
+            ...stripExpansionPropertyDecl(prod?.expansion),
+            contains: prod?.expansion?.contains
+              ? stripDeprecatedAnnotation(prod.expansion.contains)
+              : undefined,
           },
         },
         dev: {
           ...dev,
           expansion: {
-            ...dev.expansion,
-            contains: stripDeprecatedAnnotation(dev.expansion.contains),
+            ...stripExpansionPropertyDecl(dev?.expansion),
+            contains: dev?.expansion?.contains
+              ? stripDeprecatedAnnotation(dev.expansion.contains)
+              : undefined,
           },
         },
       };
