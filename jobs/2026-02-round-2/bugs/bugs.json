@@ -953,13 +953,14 @@
             "lamport": 23
         },
         "edit_time": {
-            "timestamp": 1770507934,
-            "time": "2026-02-07T17:45:34-06:00",
-            "lamport": 122
+            "timestamp": 1770508221,
+            "time": "2026-02-07T17:50:21-06:00",
+            "lamport": 128
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
             "content-differs",
+            "not-reproduced",
             "tx-compare"
         ],
         "title": "Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)",
@@ -986,6 +987,50 @@
             "login": ""
         },
         "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "44d6f078f017f7c46ae1dd8be29e6992dace6061e86250a8ba708565fbf6407e",
+        "human_id": "44d6f07",
+        "create_time": {
+            "timestamp": 1770508214,
+            "time": "2026-02-07T17:50:14-06:00",
+            "lamport": 24
+        },
+        "edit_time": {
+            "timestamp": 1770508219,
+            "time": "2026-02-07T17:50:19-06:00",
+            "lamport": 126
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "tx-compare"
+        ],
+        "title": "Dev truncates BCP-47 language tag region in expand displayLanguage parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
         "metadata": {}
     }
 ]

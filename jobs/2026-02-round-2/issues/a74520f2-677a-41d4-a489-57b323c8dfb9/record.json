@@ -1,0 +1,28 @@
+{
+  "id": "a74520f2-677a-41d4-a489-57b323c8dfb9",
+  "url": "/r4/ValueSet/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 346,
+    "hash": "68851a9170527f831abf7fb52bc2a540"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/json; charset=utf-8",
+    "size": 1124,
+    "hash": "2e0bc1995552f67a360e338632839b8a"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": true,
+    "devResult": false,
+    "system": "http://snomed.info/sct",
+    "code": "39154008"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"39154008\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Clinical diagnosis\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20240201\"},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"39154008\"},{\"name\":\"display\",\"valueString\":\"Clinical diagnosis\"},{\"name\":\"message\",\"valueString\":\"The provided code 'http://snomed.info/sct#39154008 ('Clinical diagnosis')' was not found in the value set 'https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use|6.5.0'\"},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"code-invalid\",\"details\":{\"text\":\"The provided code 'http://snomed.info/sct#39154008 ('Clinical diagnosis')' was not found in the value set 'https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use|6.5.0'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-in-vs\"}]},\"expression\":[\"Coding.code\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"None_of_the_provided_codes_are_in_the_value_set_one\"}]}]}}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"39154008\",\"display\":\"Clinical diagnosis\"}},{\"name\":\"valueSetMode\",\"valueString\":\"NO_MEMBERSHIP_CHECK\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"valueSet\",\"resource\":{\"resourceType\":\"ValueSet\",\"id\":\"ndhm-diagnosis-use\",\"text\":{\"status\":\"generated\",\"div\":\"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p class=\\\"res-header-id\\\"><b>Generated Narrative: ValueSet ndhm-diagnosis-use</b></p><a name=\\\"ndhm-diagnosis-use\\\"> </a><a name=\\\"hcndhm-diagnosis-use\\\"> </a><a name=\\\"ndhm-diagnosis-use-hi-IN\\\"> </a><p>This value set includes codes based on the following rules:</p><ul><li>Include codes from<a href=\\\"http://www.snomed.org/\\\"><code>http://snomed.info/sct</code></a> where concept  is-a 106229004 (Qualifier for type of diagnosis)</li></ul><p>This value set excludes codes based on the following rules:</p><ul><li>Exclude these codes as defined in <a href=\\\"http://www.snomed.org/\\\"><code>http://snomed.info/sct</code></a><table class=\\\"none\\\"><tr><td style=\\\"white-space:nowrap\\\"><b>Code</b></td><td><b>Display</b></td></tr><tr><td><a href=\\\"http://snomed.info/id/106229004\\\">106229004</a></td><td>Qualifier for type of diagnosis</td></tr></table></li></ul></div>\"},\"url\":\"https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use\",\"version\":\"6.5.0\",\"name\":\"DiagnosisUse\",\"title\":\"Diagnosis Use\",\"status\":\"draft\",\"experimental\":false,\"date\":\"2020-08-25\",\"publisher\":\"National Resource Center for EHR Standards\",\"contact\":[{\"name\":\"National Resource Center for EHR Standards\",\"telecom\":[{\"system\":\"url\",\"value\":\"https://nrces.in/\"}]}],\"description\":\"This value set contains a set of SNOMED CT codes for Diagnosis type\",\"jurisdiction\":[{\"coding\":[{\"system\":\"urn:iso:std:iso:3166\",\"code\":\"IN\",\"display\":\"India\"}]}],\"copyright\":\"This value set includes content from SNOMED CT, which is copyright © 2002+ International Health Terminology Standards Development Organisation (IHTSDO), and distributed by agreement between IHTSDO and HL7. Implementer use of SNOMED CT is not covered by this agreement\",\"compose\":{\"include\":[{\"system\":\"http://snomed.info/sct\",\"filter\":[{\"property\":\"concept\",\"op\":\"is-a\",\"value\":\"106229004\"}]}],\"exclude\":[{\"system\":\"http://snomed.info/sct\",\"concept\":[{\"code\":\"106229004\",\"display\":\"Qualifier for type of diagnosis\"}]}]}}},{\"name\":\"cache-id\",\"valueId\":\"378d7095-7d69-4a2d-aa0f-af544d76d232\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueString\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008\"}]}"
+}

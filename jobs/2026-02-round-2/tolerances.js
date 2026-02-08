@@ -3150,6 +3150,35 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'snomed-version-skew-validate-code-result-disagrees',
+    description: 'SNOMED CT version skew causes $validate-code result to disagree: prod returns result=true, dev returns result=false (or vice versa) because different SNOMED editions have different hierarchical relationships affecting filter-based ValueSet membership. Same root cause as expand-snomed-version-skew-content (bug 9fd2328). Affects 57 comparison records (1 delta record after existing tolerances).',
+    kind: 'temp-tolerance',
+    bugId: '4aebc14',
+    tags: ['skip', 'result-disagrees', 'validate-code', 'snomed', 'version-skew'],
+    match({ record, prod, dev }) {
+      if (!/validate-code/.test(record.url)) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 200) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      // Check result disagreement on the (possibly normalized) bodies
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult === devResult) return null;
+      // Check raw versions for SNOMED skew (versions may already be normalized to match)
+      try {
+        const rawProd = JSON.parse(record.prodBody);
+        const rawDev = JSON.parse(record.devBody);
+        const rawProdVer = getParamValue(rawProd, 'version') || '';
+        const rawDevVer = getParamValue(rawDev, 'version') || '';
+        if (!rawProdVer.includes('snomed.info/sct') && !rawDevVer.includes('snomed.info/sct')) return null;
+        if (rawProdVer === rawDevVer) return null;
+      } catch {
+        return null;
+      }
+      return 'skip';
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

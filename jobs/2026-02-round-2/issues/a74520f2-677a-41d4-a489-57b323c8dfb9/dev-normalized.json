@@ -1,0 +1,53 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "39154008"
+    },
+    {
+      "name": "display",
+      "valueString": "Clinical diagnosis"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#39154008 ('Clinical diagnosis')' was not found in the value set 'https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use|6.5.0'"
+            },
+            "expression": [
+              "Coding.code"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The provided code 'http://snomed.info/sct#39154008 ('Clinical diagnosis')' was not found in the value set 'https://nrces.in/ndhm/fhir/r4/ValueSet/ndhm-diagnosis-use|6.5.0'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

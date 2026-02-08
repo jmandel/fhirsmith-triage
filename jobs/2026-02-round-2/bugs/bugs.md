@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_22 bugs (21 open, 1 closed)_
+_23 bugs (21 open, 2 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1148,11 +1148,61 @@ Tolerance ID: `expand-too-costly-succeeds`. Matches any $expand request (any FHI
 
 ---
 
-### [ ] `1bc5e64` Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)
+### [x] `1bc5e64` Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)
 
 Records-Impacted: 7
 Tolerance-ID: validate-code-x-unknown-system-extra
 Record-ID: f7e61c56-3c3c-4925-8822-f0f4e4406e3f
+
+#####Repro
+
+```bash
+####Test RxNorm version 04072025
+curl -s https://tx.fhir.org/r4/ValueSet/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "url",
+    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
+  },
+  {
+    "name": "coding",
+    "valueCoding": {
+      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+      "version": "04072025",
+      "code": "1049221"
+    }
+  }
+]
+}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
+
+####Dev (same request)
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "url",
+    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
+  },
+  {
+    "name": "coding",
+    "valueCoding": {
+      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+      "version": "04072025",
+      "code": "1049221"
+    }
+  }
+]
+}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
+```
+
+**Result**: Both servers now return identical responses with `x-unknown-system` parameter. The bug describes a scenario where prod did NOT return this parameter but dev did. The servers have converged — both now handle the unknown version the same way.
 
 #####What differs
 
@@ -1190,6 +1240,36 @@ Total breakdown:
 - 4 records: RxNorm version 04072025 (x-caused-by-unknown-system)
 - 3 records: SNOMED US version 20220301 (x-caused-by-unknown-system)  
 - 3 records: SNOMED US version 20250301 (x-unknown-system)
+
+---
+
+### [ ] `44d6f07` Dev truncates BCP-47 language tag region in expand displayLanguage parameter
+
+Records-Impacted: 2
+Tolerance-ID: expand-displayLanguage-region-truncated
+Record-ID: 4bd05003-c9ae-4886-9009-3f794f2690a1
+
+#####What differs
+
+In $expand responses, the `displayLanguage` expansion parameter echoed back by dev truncates the BCP-47 language tag to just the language code, dropping the region subtag. When the request specifies `displayLanguage=fr-FR`, prod echoes back `fr-FR` in the expansion parameters, but dev echoes back `fr`.
+
+The actual expansion content (codes, display text) is identical between prod and dev — the difference is only in the echoed `displayLanguage` parameter value.
+
+#####How widespread
+
+2 records in the current comparison show this pattern. Both are POST /r4/ValueSet/$expand requests with `displayLanguage=fr-FR` in the request body.
+
+Search: grep for records where both prod and dev have a `displayLanguage` expansion parameter but with different values — found only these 2 records (IDs: 4bd05003-c9ae-4886-9009-3f794f2690a1, 57537a3f-f65b-4f96-b9d7-3354772c3973).
+
+There are an additional 62 records with a different displayLanguage mismatch pattern (prod has displayLanguage=en or en-US but dev omits it entirely), which is a separate issue.
+
+#####What the tolerance covers
+
+Tolerance `expand-displayLanguage-region-truncated` normalizes the displayLanguage expansion parameter to the prod value when both sides have a displayLanguage parameter but the values differ only by region subtag truncation (e.g., fr-FR vs fr). This eliminates 2 records.
+
+#####Representative record
+
+`grep -n '4bd05003-c9ae-4886-9009-3f794f2690a1' jobs/2026-02-round-2/comparison.ndjson`
 
 ---
 
