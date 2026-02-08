@@ -1,0 +1,12 @@
+{
+  "issue": [
+    {
+      "code": "not-found",
+      "details": {
+        "text": "Unable to find code '710136005' in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201"
+      },
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

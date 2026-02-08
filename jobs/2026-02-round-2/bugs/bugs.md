@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_39 bugs (36 open, 3 closed)_
+_40 bugs (37 open, 3 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -499,6 +499,22 @@ Tolerance ID: `expand-v3-hierarchical-incomplete`. Matches expand operations whe
 
 Bug 6edc96c mentions these 246 records in a comment as potentially a separate root cause from the version skew issue. This bug tracks the specific failure to expand hierarchical v3 ValueSets.
 
+#####Root Cause
+
+**Classification**: code-level defect
+
+**Prod** resolves parent-child hierarchy from CodeSystem property definitions by matching on URI:
+[`library/ftx/fhir_codesystem_service.pas#L438-L458`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/library/ftx/fhir_codesystem_service.pas#L438-L458)
+— Iterates CodeSystem property definitions and matches any property where `code = 'parent'` OR `uri = 'http://hl7.org/fhir/concept-properties#parent'`. Then uses the matched property's actual `code` (e.g. `subsumedBy`) to find concept-level property entries and build parent-child relationships.
+
+**Dev** only matches hardcoded property code names `parent` and `child`:
+[`tx/library/codesystem.js#L507-L523`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/library/codesystem.js#L507-L523)
+— The `_buildHierarchyMaps` method checks `property.code === 'parent'` and `property.code === 'child'` but never consults the CodeSystem's property definitions to discover that `subsumedBy` maps to the standard parent URI `http://hl7.org/fhir/concept-properties#parent`.
+
+The v3 CodeSystems (e.g. `v3-ActReason`) define their parent property as `{code: "subsumedBy", uri: "http://hl7.org/fhir/concept-properties#parent"}`. Since the dev server only checks for the literal string `"parent"`, it never builds the hierarchy for these code systems. When ValueSets like `v3-PurposeOfUse` use a `filter: [{property: "concept", op: "is-a", value: "PurposeOfUse"}]`, the `_addDescendants` call in `cs-cs.js` finds zero descendants because the `parentToChildrenMap` was never populated.
+
+**Fix**: In `_buildHierarchyMaps` (or `buildMaps`), consult the CodeSystem's top-level `property` definitions to identify which property codes map to `http://hl7.org/fhir/concept-properties#parent` (or `#child`), then use those codes when scanning concept properties — matching the prod server's approach.
+
 ---
 
 ### [ ] `f2b2cef` Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions
@@ -939,6 +955,24 @@ Tolerance ID: hgvs-extra-syntax-issue. Matches $validate-code records for http:/
 
 
 cdf72565-a646-4daa-86f9-ed5ead0058d6
+
+#####Root Cause
+
+**Classification**: code-level defect
+
+**Dev** adds an extra informational issue from the `locate()` message when a code is not found:
+[`tx/workers/validate.js#L1506-L1508`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/workers/validate.js#L1506-L1508)
+— In `checkConceptSet`, after adding the `Unknown_Code_in_Version` error, dev checks `if (loc.message && op)` and adds an informational issue with the message returned by the HGVS provider's `locate()` method.
+
+**Dev HGVS provider** passes the NLM service error message through as `loc.message`:
+[`tx/cs/cs-hgvs.js#L111-L115`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/cs/cs-hgvs.js#L111-L115)
+— When the NLM `$validate-code` returns `result=false`, the HGVS syntax error message (e.g., "Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'") is returned as `{ context: null, message: result.message }`.
+
+**Prod** does not add informational issues from the `locate()` message:
+[`library/ftx/fhir_valuesets.pas#L2273-L2281`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/library/ftx/fhir_valuesets.pas#L2273-L2281)
+— In `checkConceptSet`, when `loc = nil`, prod only adds the `Unknown_Code_in_Version` error issue. There is no code to emit the `message` var as an additional informational issue. (Additionally, the prod HGVS `locate` at [`server/tx/tx_hgvs.pas#L252-L253`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/server/tx/tx_hgvs.pas#L252-L253) reads `o.str['message']` instead of `o.str['valueString']`, so the NLM error message is never captured regardless.)
+
+**Fix**: Remove the informational issue emission in `tx/workers/validate.js` lines 1506-1508, or gate it behind a condition that matches prod behavior. The `loc.message` from `locate()` should not be surfaced as a separate OperationOutcome issue since prod does not emit it.
 
 ---
 
@@ -2234,7 +2268,21 @@ Records-Impacted: 1
 Tolerance-ID: loinc-lookup-extra-designations-properties
 Record-ID: e5ceaa8d-ae90-42ed-a02d-1dc612d44d30
 
-#####What differs
+
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$lookup' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://loinc.org"},{"name":"code","valueCode":"4548-4"}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$lookup' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"system","valueUri":"http://loinc.org"},{"name":"code","valueCode":"4548-4"}]}'
+```
+
+Prod returns CLASSTYPE with `value: "Laboratory class"` and 0 RELATEDNAMES2 properties. Dev returns CLASSTYPE with `value: "1"` plus `description: "Laboratory class"`, an extra `preferredForLanguage` designation, and 14 RELATEDNAMES2 properties with language-specific related names.
+
 
 On POST /r4/CodeSystem/$lookup for LOINC code 4548-4, dev returns three categories of differences compared to prod:
 
@@ -2244,13 +2292,11 @@ On POST /r4/CodeSystem/$lookup for LOINC code 4548-4, dev returns three categori
 
 3. **Extra RELATEDNAMES2 properties**: Dev returns 14 `RELATEDNAMES2` property parameters with language-specific related names (en-US, ar-JO, de-AT, de-DE, el-GR, es-ES, et-EE, fr-BE, it-IT, pl-PL, pt-BR, ru-RU, uk-UA, zh-CN). Prod returns none of these RELATEDNAMES2 properties.
 
-#####How widespread
 
 Only 1 LOINC $lookup record exists in this comparison dataset. All LOINC $lookup requests would likely be affected since these differences stem from how LOINC properties and designations are served.
 
 grep 'lookup' deltas.ndjson | grep 'loinc' → 1 record
 
-#####What the tolerance covers
 
 Tolerance `loinc-lookup-extra-designations-properties` normalizes all three differences:
 - Strips the `preferredForLanguage` designation from dev
@@ -2259,6 +2305,35 @@ Tolerance `loinc-lookup-extra-designations-properties` normalizes all three diff
 - Strips all RELATEDNAMES2 properties from dev
 
 This eliminates 1 record from deltas.
+
+---
+
+### [ ] `f33ebd3` validate-code: prod reports UNKNOWN_CODESYSTEM, dev reports UNKNOWN_CODESYSTEM_VERSION when system-version pins unavailable SNOMED edition
+
+Records-Impacted: 1
+Tolerance-ID: unknown-system-vs-unknown-version
+Record-ID: 06cfc4c9-c3c4-42a6-abb8-3068cd06190f
+
+#####What differs
+
+When `$validate-code` on `CodeSystem` is called with `system-version` pinning an unavailable SNOMED CT edition (Canadian edition `http://snomed.info/sct/20611000087101`), prod and dev disagree on the error classification:
+
+- **Prod**: Treats the entire CodeSystem as unknown — message-id `UNKNOWN_CODESYSTEM`, message "A definition for CodeSystem 'http://snomed.info/sct' could not be found", `x-caused-by-unknown-system: http://snomed.info/sct` (no version), no `display` parameter
+- **Dev**: Recognizes SNOMED is loaded but the specific edition is not — message-id `UNKNOWN_CODESYSTEM_VERSION`, message "A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/20611000087101' could not be found ... Valid versions: ..." listing all available editions, `x-caused-by-unknown-system: http://snomed.info/sct|http://snomed.info/sct/20611000087101` (with version), and includes `display: "Chest pain"` parameter
+
+Both return `result: false` but for different reasons: prod says the system is entirely unknown, dev says the specific version is unknown and helpfully lists available versions.
+
+The request includes `system-version` parameter `http://snomed.info/sct|http://snomed.info/sct/20611000087101` (Canadian SNOMED edition), `default-to-latest-version: true`, and code `29857009` (Chest pain).
+
+#####How widespread
+
+Only 1 record in the deltas matches this exact pattern (prod=UNKNOWN_CODESYSTEM, dev=UNKNOWN_CODESYSTEM_VERSION). In the full comparison data, also only 1 record has this specific disagreement — the remaining SNOMED records with system-version for this edition are handled by existing tolerances.
+
+Search: `grep 'UNKNOWN_CODESYSTEM' deltas.ndjson` → 2 hits, but only 1 has this prod-vs-dev message-id disagreement (the other is a missing-resource for $expand).
+
+#####What the tolerance covers
+
+Tolerance `unknown-system-vs-unknown-version` matches validate-code records where prod has message-id `UNKNOWN_CODESYSTEM` and dev has `UNKNOWN_CODESYSTEM_VERSION`. Normalizes dev's messages, issues, x-caused-by-unknown-system, and display to match prod's values. Eliminates 1 record.
 
 ---
 

@@ -1,0 +1,14 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Unable to find code 710136005 in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "invalid",
+      "diagnostics": "Unable to find code 710136005 in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ]
+}

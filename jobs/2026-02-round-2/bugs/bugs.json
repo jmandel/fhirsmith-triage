@@ -283,12 +283,13 @@
             "lamport": 8
         },
         "edit_time": {
-            "timestamp": 1770501026,
-            "time": "2026-02-07T15:50:26-06:00",
-            "lamport": 40
+            "timestamp": 1770518252,
+            "time": "2026-02-07T20:37:32-06:00",
+            "lamport": 251
         },
         "status": "open",
         "labels": [
+            "code-defect",
             "content-differs",
             "reproduced",
             "tx-compare"
@@ -600,9 +601,9 @@
             "lamport": 15
         },
         "edit_time": {
-            "timestamp": 1770503856,
-            "time": "2026-02-07T16:37:36-06:00",
-            "lamport": 82
+            "timestamp": 1770518420,
+            "time": "2026-02-07T20:40:20-06:00",
+            "lamport": 255
         },
         "status": "open",
         "labels": [
@@ -1729,16 +1730,61 @@
             "lamport": 40
         },
         "edit_time": {
-            "timestamp": 1770517856,
-            "time": "2026-02-07T20:30:56-06:00",
-            "lamport": 239
+            "timestamp": 1770518225,
+            "time": "2026-02-07T20:37:05-06:00",
+            "lamport": 249
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "tx-compare"
+        ],
+        "title": "LOINC $lookup: dev returns extra designations, RELATEDNAMES2 properties, and different CLASSTYPE format",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f33ebd3ebe8614751d69dac4f8ba00b933f0d5d494cebaac0072a59b4ca0e735",
+        "human_id": "f33ebd3",
+        "create_time": {
+            "timestamp": 1770518315,
+            "time": "2026-02-07T20:38:35-06:00",
+            "lamport": 41
+        },
+        "edit_time": {
+            "timestamp": 1770518320,
+            "time": "2026-02-07T20:38:40-06:00",
+            "lamport": 254
         },
         "status": "open",
         "labels": [
             "content-differs",
             "tx-compare"
         ],
-        "title": "LOINC $lookup: dev returns extra designations, RELATEDNAMES2 properties, and different CLASSTYPE format",
+        "title": "validate-code: prod reports UNKNOWN_CODESYSTEM, dev reports UNKNOWN_CODESYSTEM_VERSION when system-version pins unavailable SNOMED edition",
         "actors": [
             {
                 "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",

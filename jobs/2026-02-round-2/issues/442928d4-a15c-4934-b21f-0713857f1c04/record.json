@@ -1,0 +1,25 @@
+{
+  "id": "442928d4-a15c-4934-b21f-0713857f1c04",
+  "url": "/r5/CodeSystem/$lookup?system=http://snomed.info/sct&code=710136005",
+  "method": "GET",
+  "prod": {
+    "status": 400,
+    "contentType": "application/fhir+json",
+    "size": 456,
+    "hash": "8944722fd0c94e910f5894aaf734db97"
+  },
+  "dev": {
+    "status": 404,
+    "contentType": "application/json; charset=utf-8",
+    "size": 231,
+    "hash": "61b83a4f9213852d3ad3dbba7ae09353"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "lookup",
+    "prodStatus": 400,
+    "devStatus": 404
+  },
+  "prodBody": "{\"resourceType\" : \"OperationOutcome\",\"text\" : {\"status\" : \"generated\",\"div\" : \"<div xmlns=\\\"http://www.w3.org/1999/xhtml\\\"><p>Unable to find code 710136005 in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201</p></div>\"},\"issue\" : [{\"severity\" : \"error\",\"code\" : \"invalid\",\"diagnostics\" : \"Unable to find code 710136005 in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201\"}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"Unable to find code '710136005' in http://snomed.info/sct version http://snomed.info/sct/900000000000207008/version/20250201\"}}]}"
+}
