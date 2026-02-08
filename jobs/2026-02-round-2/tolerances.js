@@ -264,7 +264,7 @@ const tolerances = [
     id: 'dev-null-expression-location',
     description: 'Dev returns expression:[null] and location:[null] on OperationOutcome issues that have no specific location. Prod correctly omits these fields. Null values in arrays are invalid FHIR. Same root cause as empty-string variant (bug e9c7e58). Affects 5 records total (2 in deltas).',
     kind: 'temp-tolerance',
-    bugId: 'e9c7e58',
+    bugId: 'round-1-bug-id:e9c7e58',
     tags: ['normalize', 'operationoutcome', 'invalid-fhir'],
     match({ dev }) {
       if (!isParameters(dev)) return null;
@@ -312,7 +312,7 @@ const tolerances = [
     id: 'dev-empty-string-expression-location',
     description: 'Dev returns expression:[""] and location:[""] on OperationOutcome issues that have no specific location (e.g. TX_GENERAL_CC_ERROR_MESSAGE, MSG_DRAFT, MSG_DEPRECATED). Prod correctly omits these fields. Empty strings are invalid FHIR. Affects 318 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: 'e9c7e58',
+    bugId: 'round-1-bug-id:e9c7e58',
     match({ dev }) {
       if (!isParameters(dev)) return null;
       const issues = getParamValue(dev, 'issues');
@@ -359,7 +359,7 @@ const tolerances = [
     id: 'invalid-display-message-format',
     description: 'Wrong Display Name error messages differ in format: prod may list duplicate display options (e.g. "6 choices"), dev de-duplicates and appends language tags like "(en)". Core validation result agrees. Affects ~44 validate-code records with invalid-display issues.',
     kind: 'temp-tolerance',
-    bugId: 'cf90495',
+    bugId: 'round-1-bug-id:cf90495',
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
       const prodIssues = getParamValue(prod, 'issues');
@@ -421,7 +421,7 @@ const tolerances = [
     id: 'batch-invalid-display-message-format',
     description: 'Same as invalid-display-message-format but for $batch-validate-code responses, where each validation is a nested Parameters resource. Dev appends language tags like "(en)" to invalid-display messages inside each validation. Affects 12 batch-validate-code records.',
     kind: 'temp-tolerance',
-    bugId: 'cf90495',
+    bugId: 'round-1-bug-id:cf90495',
     tags: ['normalize', 'message-format', 'batch-validate-code', 'invalid-display'],
     match({ record, prod, dev }) {
       if (!record.url.includes('batch-validate-code')) return null;
@@ -506,7 +506,7 @@ const tolerances = [
     id: 'bcp47-display-format',
     description: 'BCP-47 display text format differs: prod returns "English (United States)", dev returns "English (Region=United States)". Dev uses explicit subtag labels ("Region=") which is non-standard. Affects 7 validate-code records for urn:ietf:bcp:47.',
     kind: 'temp-tolerance',
-    bugId: 'e09cff6',
+    bugId: 'round-1-bug-id:e09cff6',
     tags: ['normalize', 'display-text', 'bcp47'],
     match({ record, prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -539,7 +539,7 @@ const tolerances = [
     id: 'ucum-display-code-as-display',
     description: 'UCUM $validate-code: dev returns human-readable display (e.g. "(inch)") instead of code-as-display (e.g. "[in_i]"). Per FHIR UCUM guidance, the code itself IS the display. Normalizes both sides to prod display (the code). Affects 220 validate-code records for http://unitsofmeasure.org.',
     kind: 'temp-tolerance',
-    bugId: '17ad254',
+    bugId: 'round-1-bug-id:17ad254',
     tags: ['normalize', 'display-text', 'ucum'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -570,7 +570,7 @@ const tolerances = [
     id: 'expand-422-vs-404-codesystem-not-found',
     description: 'Dev returns 404 instead of 422 for $expand when a referenced CodeSystem is not found. Both servers return identical OperationOutcome with issue code "not-found" and message "could not be found, so the value set cannot be expanded". Affects POST and GET /r4/ValueSet/$expand records (with or without query params).',
     kind: 'temp-tolerance',
-    bugId: '1c145d2',
+    bugId: 'round-1-bug-id:1c145d2',
     tags: ['skip', 'status-mismatch', 'expand'],
     match({ record }) {
       if (!record.url.startsWith('/r4/ValueSet/$expand')) return null;
@@ -583,7 +583,7 @@ const tolerances = [
     id: 'missing-dicom-cid29-valueset',
     description: 'DICOM CID 29 AcquisitionModality ValueSet is not loaded in dev. Prod returns the full ValueSet (51 codes) for both direct reads (/r4/ValueSet/dicom-cid-29-AcquisitionModality) and URL searches (?url=...sect_CID_29.html). Dev returns 404 or empty Bundle. Affects 10 records (5 P3, 5 P6).',
     kind: 'temp-tolerance',
-    bugId: '51f23f5',
+    bugId: 'round-1-bug-id:51f23f5',
     tags: ['skip', 'missing-resource', 'dicom'],
     match({ record }) {
       if (record.url.includes('dicom-cid-29') || record.url.includes('sect_CID_29')) {
@@ -597,7 +597,7 @@ const tolerances = [
     id: 'searchset-bundle-wrapper',
     description: 'Searchset Bundle wrapper differences: dev includes empty entry:[] arrays (invalid FHIR), extra first/last pagination links, absolute URLs with _offset param, and search.mode on entries. Prod includes server-generated id/meta. Normalizes both sides by stripping id, meta, links, entry-level search elements, and removing empty entry arrays. Affects ~498 records (ValueSet and CodeSystem searches). Does NOT hide entry content differences for non-empty results.',
     kind: 'temp-tolerance',
-    bugId: '4233647',
+    bugId: 'round-1-bug-id:4233647',
     tags: ['normalize', 'searchset', 'bundle-wrapper'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'Bundle' || prod?.type !== 'searchset') return null;
@@ -638,7 +638,7 @@ const tolerances = [
     id: 'searchset-duplicate-entries',
     description: 'Prod returns multiple entries (duplicates or different versions) for the same resource in searchset Bundle results, while dev returns one. Normalizes by keeping only the first entry from prod and setting total to match. Affects 3 records (ValueSet and CodeSystem searches where prod has multiple copies loaded).',
     kind: 'temp-tolerance',
-    bugId: '91e49e8',
+    bugId: 'round-1-bug-id:91e49e8',
     tags: ['normalize', 'searchset', 'duplicate-entries'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'Bundle' || prod?.type !== 'searchset') return null;
@@ -669,7 +669,7 @@ const tolerances = [
     id: 'snomed-version-skew',
     description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod across multiple modules (International 20240201 vs 20250201, US 20230301 vs 20250901, etc.). Normalizes version and display parameters to prod values. Display text changes between editions as preferred terms are updated (e.g. "Rehabilitation - specialty" → "Rehabilitation specialty"). Also matches ValueSet $validate-code with result=false where system param is absent but version URIs identify SNOMED. Affects ~292 validate-code records for http://snomed.info/sct.',
     kind: 'temp-tolerance',
-    bugId: 'da50d17',
+    bugId: 'round-1-bug-id:da50d17',
     tags: ['normalize', 'version-skew', 'snomed'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -705,7 +705,7 @@ const tolerances = [
     id: 'snomed-same-version-display-differs',
     description: 'SNOMED $validate-code: dev returns different display text (preferred term) than prod for the same SNOMED CT edition version. Examples: prod="Hearing loss" vs dev="Deafness", prod="Counselling" vs dev="Counseling (regime/therapy)". Both agree on result, system, code, and version. Normalizes display to prod value. Affects 59 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '8f739e9',
+    bugId: 'round-1-bug-id:8f739e9',
     tags: ['normalize', 'display-text', 'snomed'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -736,7 +736,7 @@ const tolerances = [
     id: 'batch-validate-snomed-display-differs',
     description: 'Batch $validate-code: SNOMED display text differs inside nested validation resources even when both sides use the same SNOMED CT edition version. Same root cause as snomed-same-version-display-differs (bug 8f739e9) — the existing tolerance only handles top-level Parameters, not the batch wrapper. Normalizes each validation resource display to prod value. Affects batch-validate-code records with SNOMED codes.',
     kind: 'temp-tolerance',
-    bugId: '8f739e9',
+    bugId: 'round-1-bug-id:8f739e9',
     tags: ['normalize', 'display-text', 'snomed', 'batch-validate-code'],
     match({ record, prod, dev }) {
       if (!record.url.includes('$batch-validate-code')) return null;
@@ -863,7 +863,7 @@ const tolerances = [
     id: 'vsac-modifier-extension-error',
     description: 'Dev fails to process VSAC ValueSets with vsacOpModifier extension in exclude filters. Returns generic "Cannot process resource" business-rule error instead of proper validation. Both servers return result=false but for different reasons. Affects 3 POST /r4/ValueSet/$validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '933fdcc',
+    bugId: 'round-1-bug-id:933fdcc',
     tags: ['skip', 'vsac', 'modifier-extension'],
     match({ record, dev }) {
       if (!isParameters(dev)) return null;
@@ -877,7 +877,7 @@ const tolerances = [
     id: 'v2-0360-lookup-version-skew',
     description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev returns extra definition and designation parameters reflecting newer CodeSystem edition. Strips version, definition, designation params and definition property from both sides.',
     kind: 'temp-tolerance',
-    bugId: 'd3b49ff',
+    bugId: 'round-1-bug-id:d3b49ff',
     match({ record }) {
       if (record.url.includes('$lookup') && record.url.includes('v2-0360')) {
         return 'normalize';
@@ -978,7 +978,7 @@ const tolerances = [
     id: 'expand-dev-empty-id',
     description: 'Dev $expand returns "id":"" (empty string) on ValueSet responses. Prod omits id. Empty string is invalid FHIR. Affects 690 expand records.',
     kind: 'temp-tolerance',
-    bugId: '2abe02d',
+    bugId: 'round-1-bug-id:2abe02d',
     tags: ['normalize', 'expand', 'invalid-fhir'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -999,7 +999,7 @@ const tolerances = [
     id: 'expand-dev-includeDefinition-param',
     description: 'Dev $expand echoes includeDefinition=false in expansion.parameter. Prod omits it. Affects 677 expand records.',
     kind: 'temp-tolerance',
-    bugId: 'd1b7d3b',
+    bugId: 'round-1-bug-id:d1b7d3b',
     tags: ['normalize', 'expand', 'extra-param'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1060,7 +1060,7 @@ const tolerances = [
     id: 'expand-dev-warning-experimental-param',
     description: 'Dev $expand includes warning-experimental expansion parameter (flags experimental ValueSet status) that prod omits. Affects 1 expand record (CommonLanguages ValueSet).',
     kind: 'temp-tolerance',
-    bugId: '67df517',
+    bugId: 'round-1-bug-id:67df517',
     tags: ['normalize', 'expand', 'extra-param'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1102,7 +1102,7 @@ const tolerances = [
     id: 'expand-dev-crash-on-valid',
     description: 'Dev crashes (500) on valid $expand requests that prod handles successfully (200). Dev returns JavaScript TypeErrors: "vs.expansion.parameter is not iterable" (1 record, us-core-pregnancy-status) and "exp.addParamUri is not a function" (14 records, Verily phenotype ValueSets). Affects 15 POST /r4/ValueSet/$expand records.',
     kind: 'temp-tolerance',
-    bugId: '2ae971e',
+    bugId: 'round-1-bug-id:2ae971e',
     tags: ['skip', 'dev-crash-on-valid', 'expand'],
     match({ record }) {
       if (record.url !== '/r4/ValueSet/$expand') return null;
@@ -1115,7 +1115,7 @@ const tolerances = [
     id: 'draft-codesystem-message-provenance-suffix',
     description: 'Dev omits " from <package>#<version>" provenance suffix in OperationOutcome issue text for draft CodeSystem warnings (MSG_DRAFT). Prod includes it, e.g. "Reference to draft CodeSystem ...event-status|4.0.1 from hl7.fhir.r4.core#4.0.1". Normalizes both sides to prod text. Affects 4 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '241f1d8',
+    bugId: 'round-1-bug-id:241f1d8',
     tags: ['normalize', 'message-text', 'draft-codesystem'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1250,7 +1250,7 @@ const tolerances = [
     id: 'expand-used-codesystem-version-skew',
     description: 'Dev $expand reports different used-codesystem versions than prod, reflecting different loaded code system editions. Normalizes used-codesystem to prod value. Affects 37 expand records across SNOMED, ICD-9-CM, LOINC, and others.',
     kind: 'temp-tolerance',
-    bugId: '515117b',
+    bugId: 'round-1-bug-id:515117b',
     tags: ['normalize', 'expand', 'version-skew'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1282,7 +1282,7 @@ const tolerances = [
     id: 'expand-dev-extra-contact-metadata',
     description: 'Dev $expand includes ValueSet contact field (publisher contact info) that prod omits. The contact data is source ValueSet metadata passed through by dev but stripped by prod. Affects 12 expand records in deltas (59 in full comparison).',
     kind: 'temp-tolerance',
-    bugId: '3967e97',
+    bugId: 'round-1-bug-id:3967e97',
     tags: ['normalize', 'expand', 'extra-metadata'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1303,7 +1303,7 @@ const tolerances = [
     id: 'validate-code-display-echo-on-unknown-system',
     description: 'Dev echoes back input display parameter on $validate-code when result=false and CodeSystem is unknown. Prod correctly omits display when it cannot validate it. FHIR spec says output display is "a valid display for the concept" — inapplicable when the system is unknown. Affects 74 validate-code records across 38+ unknown code systems.',
     kind: 'temp-tolerance',
-    bugId: '9390fe4',
+    bugId: 'round-1-bug-id:9390fe4',
     tags: ['normalize', 'validate-code', 'display-echo'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1323,7 +1323,7 @@ const tolerances = [
     id: 'hcpcs-codesystem-availability',
     description: 'HCPCS CodeSystem (http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets) is loaded in dev (version 2025-01) but unknown in prod. Prod returns result=false with x-caused-by-unknown-system, dev returns result=true with valid code details. Affects 110 validate-code result-disagrees records.',
     kind: 'temp-tolerance',
-    bugId: 'ac95424',
+    bugId: 'round-1-bug-id:ac95424',
     tags: ['skip', 'codesystem-availability', 'hcpcs'],
     match({ prod }) {
       if (!isParameters(prod)) return null;
@@ -1337,7 +1337,7 @@ const tolerances = [
     id: 'cs-validate-code-no-system-error-format',
     description: 'CodeSystem/$validate-code with no system: prod returns warning with "Coding has no system" message and tx-issue-type coding, dev returns error with "No CodeSystem specified" message and no coding. Both agree result=false. Severity, message text, and issue detail structure all differ. Affects 1 record (POST /r4/CodeSystem/$validate-code without system).',
     kind: 'temp-tolerance',
-    bugId: '52ecb75',
+    bugId: 'round-1-bug-id:52ecb75',
     tags: ['normalize', 'validate-code', 'error-format'],
     match({ record, dev }) {
       if (!isParameters(dev)) return null;
@@ -1377,7 +1377,7 @@ const tolerances = [
     id: 'cpt-validate-code-result-disagrees',
     description: 'CPT $validate-code: dev returns result=false for valid CPT codes that prod validates as result=true. Dev reports "Unknown code" for 17 distinct CPT codes in system http://www.ama-assn.org/go/cpt version 2023. Affects 45 validate-code records (41 CodeSystem, 4 ValueSet).',
     kind: 'temp-tolerance',
-    bugId: 'f559b53',
+    bugId: 'round-1-bug-id:f559b53',
     tags: ['skip', 'result-disagrees', 'cpt'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1394,7 +1394,7 @@ const tolerances = [
     id: 'ndc-validate-code-unknown-code-version-diffs',
     description: 'NDC $validate-code result=false: prod reports empty version in error messages, dev reports version 2021-11-01. Prod also includes an extra informational issue ("Code X not found in NDC") that dev omits. Both agree result=false. Root cause is NDC version skew (same as ndc-validate-code-extra-inactive-params). Normalizes version strings in message/issues text and strips extra informational issue from prod. Affects 15 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '7258b41',
+    bugId: 'round-1-bug-id:7258b41',
     tags: ['normalize', 'ndc', 'validate-code', 'version-skew'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1455,7 +1455,7 @@ const tolerances = [
     id: 'unknown-version-valid-versions-message',
     description: 'UNKNOWN_CODESYSTEM_VERSION error messages list available versions, which differ between prod and dev because they load different editions. Dev also appends "and undefined" to some version lists (bug de8b2f7) and uses ", " vs "," separators. Both sides agree result=false and the same error type. Normalizes by truncating the "Valid versions:" portion from message and issues text. Affects 13 validate-code records where both sides report UNKNOWN_CODESYSTEM_VERSION for SNOMED 2017-09.',
     kind: 'temp-tolerance',
-    bugId: 'de8b2f7',
+    bugId: 'round-1-bug-id:de8b2f7',
     tags: ['normalize', 'validate-code', 'version-list', 'unknown-version'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1512,7 +1512,7 @@ const tolerances = [
     id: 'expand-display-text-differs',
     description: 'Expand display text differs between prod and dev for the same codes in expansion.contains[].display. Reflects version skew and different preferred term selection across SNOMED (134 records), ISO 3166 (22), and UCUM (1). Normalizes both sides to prod display value. Affects 157 expand records.',
     kind: 'temp-tolerance',
-    bugId: 'b9e3cfd',
+    bugId: 'round-1-bug-id:b9e3cfd',
     tags: ['normalize', 'expand', 'display-text'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1559,7 +1559,7 @@ const tolerances = [
     id: 'ndc-validate-code-extra-inactive-params',
     description: 'NDC $validate-code: dev returns inactive, version, message, and issues parameters that prod omits. Dev loads NDC version 2021-11-01 and flags concepts as inactive (status=null); prod uses unversioned NDC and omits these. Both agree result=true. Affects 16 validate-code records for http://hl7.org/fhir/sid/ndc.',
     kind: 'temp-tolerance',
-    bugId: '7258b41',
+    bugId: 'round-1-bug-id:7258b41',
     tags: ['normalize', 'ndc', 'validate-code', 'extra-params'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1587,7 +1587,7 @@ const tolerances = [
     id: 'ndc-valueset-validate-code-extra-version',
     description: 'NDC ValueSet $validate-code result=false: dev returns extra version parameter ("2021-11-01") that prod omits. These are ValueSet validate-code with codeableConcept containing NDC codes — the code is not found in the ValueSet but dev still reports its NDC edition version. Same root cause as other NDC version skew (bug 7258b41). Affects 2 records.',
     kind: 'temp-tolerance',
-    bugId: '7258b41',
+    bugId: 'round-1-bug-id:7258b41',
     tags: ['normalize', 'ndc', 'validate-code', 'extra-version'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1610,7 +1610,7 @@ const tolerances = [
     id: 'validate-code-crash-undefined-system-code',
     description: 'Dev crashes (500) on POST /r4/ValueSet/$validate-code with error "No Match for undefined|undefined". Dev fails to extract system and code from the request body, receiving them as JavaScript undefined. Prod returns 200 with successful validation. Affects 1 record (detailed-race ValueSet, code 2108-9).',
     kind: 'temp-tolerance',
-    bugId: '4cdcd85',
+    bugId: 'round-1-bug-id:4cdcd85',
     tags: ['skip', 'dev-crash-on-valid', 'validate-code'],
     match({ record, dev }) {
       if (!record.url.includes('$validate-code')) return null;
@@ -1626,7 +1626,7 @@ const tolerances = [
     id: 'bcp47-case-sensitive-validation',
     description: 'BCP-47 $validate-code: dev accepts lowercase regional variant "en-us" as valid (result=true), prod correctly rejects it (result=false) because BCP-47 is case-sensitive in FHIR and the valid form is "en-US". Affects 2 result-disagrees records (1 CodeSystem, 1 ValueSet validate-code).',
     kind: 'temp-tolerance',
-    bugId: '85d0977',
+    bugId: 'round-1-bug-id:85d0977',
     tags: ['skip', 'result-disagrees', 'bcp47', 'case-sensitivity'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1659,7 +1659,7 @@ const tolerances = [
     id: 'validate-code-extra-filter-miss-message',
     description: 'Dev $validate-code returns extra message parameter with "Code X is not in the specified filter" warnings when validating against ValueSets with multiple include filters. When the code is valid (result=true, found in at least one filter), prod omits the message entirely. Dev reports intermediate filter-miss messages for each include filter the code did not match. Affects 12 validate-code records (all IPS ValueSets with SNOMED codes).',
     kind: 'temp-tolerance',
-    bugId: 'eaeccdd',
+    bugId: 'round-1-bug-id:eaeccdd',
     tags: ['normalize', 'validate-code', 'extra-message', 'filter-miss'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1681,7 +1681,7 @@ const tolerances = [
     id: 'validate-code-filter-miss-message-prefix',
     description: 'Dev $validate-code prepends "Code X is not in the specified filter; " (once per include filter) to the message parameter when result=false. Prod returns only the standard error message. Same root cause as validate-code-extra-filter-miss-message (bug eaeccdd). Affects 32 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '40c3ecc',
+    bugId: 'round-1-bug-id:40c3ecc',
     tags: ['normalize', 'validate-code', 'message-text', 'filter-miss'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1715,7 +1715,7 @@ const tolerances = [
     id: 'expand-iso3166-extra-reserved-codes',
     description: 'ISO 3166 $expand: prod includes 42 reserved/user-assigned codes (AA, QM-QZ, XA-XZ, XX, XZ, ZZ) that dev omits. Prod returns total=291, dev returns total=249. Normalizes by filtering prod contains to only codes present in dev and setting both totals to dev count. Affects 7 expand records.',
     kind: 'temp-tolerance',
-    bugId: 'e5a78af',
+    bugId: 'round-1-bug-id:e5a78af',
     tags: ['normalize', 'expand', 'iso3166', 'code-set-difference'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1775,7 +1775,7 @@ const tolerances = [
     id: 'snomed-expression-parse-message-diff',
     description: 'SNOMED expression parse error message differs: prod says "and neither could it be parsed as an expression...at character 1", dev says "and could not be parsed as an expression...at character 0". Both convey the same parse failure for invalid SNOMED codes. Normalizes dev issue text to prod text. Affects 2 records (batch-validate-code and validate-code for code "freetext").',
     kind: 'temp-tolerance',
-    bugId: '36675d4',
+    bugId: 'round-1-bug-id:36675d4',
     tags: ['normalize', 'message-text', 'snomed', 'expression-parse'],
     match({ prod, dev }) {
       // Check all OperationOutcome issues in both top-level and nested (batch) parameters
@@ -1940,7 +1940,7 @@ const tolerances = [
     id: 'cpt-expand-empty-results',
     description: 'CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes. Prod returns the expected codes. Dev reports used-codesystem http://www.ama-assn.org/go/cpt|2023 but fails to resolve any codes from it. Same root cause as CPT validate-code bug f559b53. Affects 45 expand records.',
     kind: 'temp-tolerance',
-    bugId: '1176a4a',
+    bugId: 'round-1-bug-id:1176a4a',
     tags: ['skip', 'expand', 'cpt', 'empty-expansion'],
     match({ prod, dev }) {
       if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
@@ -1960,7 +1960,7 @@ const tolerances = [
     id: 'validate-code-missing-message-on-true',
     description: 'Dev omits the message output parameter on $validate-code when result=true. FHIR spec says message "carries hints and warnings" when result is true. Prod returns it (e.g. fragment code system warnings). The same text appears in issues OperationOutcome. Normalizes by stripping message from prod when dev omits it and result=true. Affects 150 records (111 ValueSet, 39 CodeSystem validate-code).',
     kind: 'temp-tolerance',
-    bugId: '8f148da',
+    bugId: 'round-1-bug-id:8f148da',
     tags: ['normalize', 'validate-code', 'missing-message'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -1980,7 +1980,7 @@ const tolerances = [
     id: 'cpt-validate-code-unknown-vs-invalid-display',
     description: 'CPT $validate-code result=false: prod finds the code and reports invalid-display (wrong display text), dev cannot find the code at all and reports invalid-code (unknown code). Both agree result=false but for different reasons. Same root cause as bug f559b53 — dev CPT CodeSystem is missing codes. Affects 4 CodeSystem/$validate-code records for code 99235.',
     kind: 'temp-tolerance',
-    bugId: '79fe417',
+    bugId: 'round-1-bug-id:79fe417',
     tags: ['skip', 'cpt', 'validate-code', 'content-differs'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2006,7 +2006,7 @@ const tolerances = [
     id: 'cpt-validate-code-missing-info-issue',
     description: 'CPT $validate-code result=false: dev omits informational "Code X not found in CPT" OperationOutcome issue that prod includes. For ValueSet validate-code, prod also prefixes message with this text. Both agree on result=false and the primary error issue. Normalizes by stripping the extra informational issue from prod and removing the message prefix. Affects 10 records (8 CodeSystem, 2 ValueSet).',
     kind: 'temp-tolerance',
-    bugId: '9d6a37e',
+    bugId: 'round-1-bug-id:9d6a37e',
     tags: ['normalize', 'validate-code', 'cpt', 'missing-info-issue'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2063,7 +2063,7 @@ const tolerances = [
     id: 'case-insensitive-code-validation-diffs',
     description: 'Case-insensitive code validation (ICD-10, ICD-10-CM): dev returns extra normalized-code parameter with correctly-cased code, uses severity "information" instead of "warning" for CODE_CASE_DIFFERENCE issue, and includes version in system URI within issue text. Both agree result=true. Affects 4 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: 'fd9fd91',
+    bugId: 'round-1-bug-id:fd9fd91',
     tags: ['normalize', 'validate-code', 'case-insensitive', 'normalized-code'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2121,7 +2121,7 @@ const tolerances = [
     id: 'validate-code-undefined-code-message-diff',
     description: 'POST ValueSet/$validate-code with empty code: dev stringifies absent code as literal "undefined" in error messages (JavaScript undefined-to-string coercion). Both agree result=false but messages differ ("http://loinc.org#" vs "http://loinc.org#undefined") and dev returns extra invalid-code issue. Same root cause as bugs 19283df and 4cdcd85. Affects 2 records.',
     kind: 'temp-tolerance',
-    bugId: 'c9d8333',
+    bugId: 'round-1-bug-id:c9d8333',
     tags: ['skip', 'validate-code', 'undefined-code', 'content-differs'],
     match({ record, prod, dev }) {
       if (!record.url.includes('$validate-code')) return null;
@@ -2201,7 +2201,7 @@ const tolerances = [
     id: 'error-operationoutcome-structure-diff',
     description: 'When both prod and dev return 500 OperationOutcome, structural differences remain: prod omits required issue.code field, dev includes it; dev includes issue.diagnostics duplicating details.text, prod omits it; prod includes text narrative, dev omits it. Normalizes by setting canonical issue.code, stripping diagnostics (redundant with details.text), and stripping text (narrative only). Affects 4 validate-code records.',
     kind: 'temp-tolerance',
-    bugId: '98ae4ce',
+    bugId: 'round-1-bug-id:98ae4ce',
     tags: ['normalize', 'operationoutcome', 'error-structure'],
     match({ record, prod, dev }) {
       if (record.prod.status !== 500 || record.dev.status !== 500) return null;
@@ -2254,7 +2254,7 @@ const tolerances = [
     id: 'message-concat-missing-issues',
     description: 'Dev message parameter only includes first issue text instead of concatenating all issue texts with "; ". Prod correctly joins all OperationOutcome issue details.text values. The issues resource itself is identical. Affects 8 validate-code records (CodeSystem and ValueSet) where multiple issues exist.',
     kind: 'temp-tolerance',
-    bugId: '093fde6',
+    bugId: 'round-1-bug-id:093fde6',
     tags: ['normalize', 'message-format', 'validate-code'],
     match({ prod, dev }) {
       if (!isParameters(prod) || !isParameters(dev)) return null;
@@ -2405,7 +2405,7 @@ const tolerances = [
     id: 'ucum-error-message-format',
     description: 'UCUM error message formatting differs: prod says "Error processing Unit: \'Torr\': The unit \\"Torr\\" is unknown", dev says "Error processing unit \'Torr\': The unit \'Torr\' is unknown". Different capitalization, punctuation, and quoting style. Both convey the same parse error. Affects 1 batch-validate-code record for http://unitsofmeasure.org.',
     kind: 'temp-tolerance',
-    bugId: '4f27f83',
+    bugId: 'round-1-bug-id:4f27f83',
     tags: ['normalize', 'message-text', 'ucum', 'batch-validate-code'],
     match({ record, prod, dev }) {
       if (!record.url.includes('$batch-validate-code') && !record.url.includes('$validate-code')) return null;
@@ -3975,6 +3975,58 @@ const tolerances = [
         };
       }
       return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
+    id: 'snomed-lookup-inactive-designation-use',
+    description: 'Dev SNOMED $lookup returns Synonym (900000000000013009) designation use type where prod returns Inactive (73425007) for inactive descriptions. 4 records.',
+    kind: 'temp-tolerance',
+    bugId: '7b445b0',
+    tags: ['normalize', 'lookup', 'snomed', 'designation'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$lookup')) return null;
+      if (!record.url.includes('snomed.info/sct')) return null;
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodDesigs = (prod.parameter || []).filter(p => p.name === 'designation');
+      const hasInactiveUse = prodDesigs.some(d =>
+        (d.part || []).some(p => p.name === 'use' && p.valueCoding?.code === '73425007')
+      );
+      if (!hasInactiveUse) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev, record }) {
+      // Build a map of prod designations: value text -> use coding
+      const prodDesigs = (prod.parameter || []).filter(p => p.name === 'designation');
+      const prodUseByValue = new Map();
+      for (const d of prodDesigs) {
+        const parts = d.part || [];
+        const value = parts.find(p => p.name === 'value')?.valueString;
+        const use = parts.find(p => p.name === 'use')?.valueCoding;
+        if (value && use) {
+          prodUseByValue.set(value, use);
+        }
+      }
+      // Normalize dev designations to match prod's use type where the value text matches
+      const newDev = {
+        ...dev,
+        parameter: (dev.parameter || []).map(p => {
+          if (p.name !== 'designation') return p;
+          const parts = p.part || [];
+          const value = parts.find(pp => pp.name === 'value')?.valueString;
+          const prodUse = value ? prodUseByValue.get(value) : null;
+          if (!prodUse) return p;
+          const devUse = parts.find(pp => pp.name === 'use')?.valueCoding;
+          if (!devUse || devUse.code === prodUse.code) return p;
+          return {
+            ...p,
+            part: parts.map(pp =>
+              pp.name === 'use' ? { ...pp, valueCoding: prodUse } : pp
+            ),
+          };
+        }),
+      };
+      return { prod, dev: newDev };
     },
   },
 
