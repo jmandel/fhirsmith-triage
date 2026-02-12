@@ -4485,16 +4485,18 @@
             "lamport": 99
         },
         "edit_time": {
-            "timestamp": 1770861830,
-            "time": "2026-02-11T20:03:50-06:00",
-            "lamport": 720
+            "timestamp": 1770862200,
+            "time": "2026-02-11T20:10:00-06:00",
+            "lamport": 725
         },
         "status": "open",
         "labels": [
             "content-differs",
             "no-repro-needed",
             "round:2026-02-round-3",
-            "tx-compare"
+            "tx-compare",
+            "version-skew",
+            "wont-fix"
         ],
         "title": "validate-code: version-not-found issue text and count differ due to code system version skew",
         "actors": [

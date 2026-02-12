@@ -105,6 +105,23 @@ const tolerances = [
       return record.prodBody && record.prodBody.trimStart().startsWith('<') ? 'skip' : null;
     },
   },
+
+  {
+    id: 'expand-too-costly-succeeds',
+    description: 'Prod returns 422 with OperationOutcome code "too-costly" for $expand of large code systems (LOINC, BCP-13 MIME types), refusing to expand >10000 codes. Dev returns 200 with a ValueSet expansion (either paginated results or empty). Responses are fundamentally incomparable (error vs success).',
+    kind: 'temp-tolerance',
+    bugId: '44d1916',
+    tags: ['skip', 'expand', 'too-costly', 'status-mismatch'],
+    match({ record, prod, dev }) {
+      if (!record.url.includes('$expand')) return null;
+      if (record.prod.status !== 422 || record.dev.status !== 200) return null;
+      // Check prod is OperationOutcome with too-costly issue code
+      if (prod?.resourceType !== 'OperationOutcome') return null;
+      const hasToosCostly = prod.issue?.some(i => i.code === 'too-costly');
+      if (!hasToosCostly) return null;
+      return 'skip';
+    },
+  },
   // Normalizations
   {
     id: 'strip-diagnostics',

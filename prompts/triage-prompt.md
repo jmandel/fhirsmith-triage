@@ -91,10 +91,14 @@ Do **not** include speculation about code paths, modules, or suggested fixes.
 
 Always add the `tx-compare` label. Also add the record's comparison category as a label (e.g., `content-differs`, `status-mismatch`).
 
+**Version-skew bugs**: When the root cause is that prod and dev have different versions/editions of a terminology (e.g., different SNOMED CT editions, different LOINC versions), also add `version-skew`, `wont-fix`, and `no-repro-needed` labels. These are real differences but not actionable code bugs — they reflect data configuration differences between the servers.
+
 ```bash
 git-bug bug new -t "Title" -m "Description" --non-interactive
 git-bug bug label new <BUG_ID> "tx-compare"
 git-bug bug label new <BUG_ID> "content-differs"
+# If version-skew:
+git-bug bug label new <BUG_ID> "version-skew" "wont-fix" "no-repro-needed"
 ```
 
 **Checking for existing bugs**: Before filing a new bug, check whether an existing bug already covers this pattern: `git-bug bug -l tx-compare 2>/dev/null | grep -i '<keyword>'`. If a matching bug exists, add your tolerance with its `bugId` instead of filing a duplicate.
