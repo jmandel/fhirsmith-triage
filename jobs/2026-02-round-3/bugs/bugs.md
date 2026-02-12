@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_105 bugs (73 open, 32 closed)_
+_105 bugs (72 open, 33 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -5337,74 +5337,9 @@ Tolerance `validate-code-no-valueset-codeableconcept` matches POST validate-code
 
 ---
 
-### [ ] `7b694ba` validate-code: dev omits version params for secondary codings in multi-coding CodeableConcept responses
+### [ ] `7b694ba` 
 
-Records-Impacted: 148
-Tolerance-ID: validate-code-missing-extra-version-params
-Record-ID: 1f21c334-667f-4e2a-ae2c-6e73b8760cce
 
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"85354-9","display":"Blood pressure panel with all children optional"},{"system":"http://snomed.info/sct","code":"75367002","display":"Blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"observation-vitalsignresult","meta":{"lastUpdated":"2019-11-01T09:29:23.356+11:00","profile":["http://hl7.org/fhir/StructureDefinition/shareablevalueset"]},"extension":[{"url":"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg","valueCode":"oo"}],"url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","identifier":[{"system":"urn:ietf:rfc:3986","value":"urn:oid:2.16.840.1.113883.3.88.12.80.62"}],"version":"4.0.1","name":"VitalSigns","title":"Vital Signs","status":"active","experimental":false,"date":"2019-11-01T09:29:23+11:00","publisher":"FHIR project team","contact":[{"telecom":[{"system":"url","value":"http://hl7.org/fhir"}]}],"description":"This value set indicates the allowed vital sign result types.","copyright":"This content from LOINC is copyright 1995 Regenstrief Institute, Inc.","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"85354-9","display":"Blood pressure panel with all children optional"},{"system":"http://snomed.info/sct","code":"75367002","display":"Blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"observation-vitalsignresult","meta":{"lastUpdated":"2019-11-01T09:29:23.356+11:00","profile":["http://hl7.org/fhir/StructureDefinition/shareablevalueset"]},"extension":[{"url":"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg","valueCode":"oo"}],"url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","identifier":[{"system":"urn:ietf:rfc:3986","value":"urn:oid:2.16.840.1.113883.3.88.12.80.62"}],"version":"4.0.1","name":"VitalSigns","title":"Vital Signs","status":"active","experimental":false,"date":"2019-11-01T09:29:23+11:00","publisher":"FHIR project team","contact":[{"telecom":[{"system":"url","value":"http://hl7.org/fhir"}]}],"description":"This value set indicates the allowed vital sign result types.","copyright":"This content from LOINC is copyright 1995 Regenstrief Institute, Inc.","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
-```
-
-**Prod** returns two `version` parameters:
-> `"version": "http://snomed.info/sct/900000000000207008/version/20250201"` (SNOMED CT)
-> `"version": "2.81"` (LOINC)
-
-**Dev** returns only one `version` parameter:
-> `"version": "2.81"` (LOINC only -- SNOMED version is missing)
-
-#####What differs
-
-When $validate-code is called with a CodeableConcept containing multiple codings from different code systems, prod returns `version` parameters for all systems involved in validation, while dev returns fewer (typically only the primary system's version). For example:
-
-- **Request**: CodeableConcept with LOINC 85354-9 + SNOMED 75367002 against observation-vitalsignresult ValueSet
-- **Prod**: returns `version: "2.81"` (LOINC) AND `version: "http://snomed.info/sct/900000000000207008/version/20250201"` (SNOMED)
-- **Dev**: returns only `version: "2.81"` (LOINC), omitting the SNOMED version
-
-The version parameter tells clients which code system edition was used during validation. Omitting it for secondary codings loses this provenance information.
-
-This also affects single-coding and no-CodeableConcept cases on CodeSystem/$validate-code where dev returns 0 version params and prod returns 1, as well as cases with 3 vs 1 version params.
-
-#####How widespread
-
-~459 records in comparison.ndjson have version count mismatch (prod > dev). Of these, 148 have version count as the sole remaining difference after the full tolerance pipeline — these are directly eliminated by this tolerance. The remaining ~311 records also have the version mismatch normalized but remain as deltas due to other differences (display text, message text, etc.).
-
-Breakdown by version count (raw):
-- prod=1 dev=0: 187 records
-- prod=2 dev=1: 119 records
-- prod=3 dev=1: 140 records
-
-By request type:
-- Multi-coding CodeableConcept: 414 records
-- Single-coding CodeableConcept: 29 records
-- No CodeableConcept: 3 records (CodeSystem/$validate-code)
-
-Found via:
-```python
-prod_versions = [p for p in prod.parameter if p.name == 'version']
-dev_versions = [p for p in dev.parameter if p.name == 'version']
-if len(prod_versions) > len(dev_versions): count += 1
-```
-
-#####What the tolerance covers
-
-Tolerance ID: `validate-code-missing-extra-version-params`
-Matches validate-code records where prod has more `version` parameters than dev.
-Normalizes by adding the missing version values from prod to dev, then applying stable sort by name+value on both sides for consistent ordering.
-Eliminates 148 records directly. Normalizes version params on ~311 additional records (reducing noise for other tolerance passes).
 
 ---
 
