@@ -1,0 +1,69 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "103693007"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "103693007",
+            "display": "Diagnostic procedure",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Diagnostic procedure"
+    },
+    {
+      "name": "inactive",
+      "valueBoolean": true
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "code-comment",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The concept '103693007' has a status of inactive and its use should be reviewed"
+            },
+            "expression": [
+              "CodeableConcept.coding[0]"
+            ],
+            "severity": "warning"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "The concept '103693007' has a status of inactive and its use should be reviewed"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_104 bugs (69 open, 35 closed)_
+_104 bugs (72 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -450,7 +450,7 @@ Closing: GG adjudicated as won't fix. The `location` field is deprecated in FHIR
 
 ---
 
-### [x] `3e1d117` validate-code: dev returns result=false with 'undefined' system when dev cache not warm at comparison start
+### [ ] `3e1d117` validate-code: dev returns result=false with 'undefined' system when dev cache not warm at comparison start
 
 Tolerance-ID: validate-code-undefined-system-result-disagrees
 Record-ID: 49614070-0a84-4943-942d-0f40746020a5
@@ -674,7 +674,7 @@ e5639442-a91b-4de0-b1d9-9b901023b6c1 — GET /r4/ValueSet/$validate-code for Pra
 
 ---
 
-### [ ] `167be81` Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code
+### [x] `167be81` Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code
 
 Records-Impacted: 187
 Tolerance-ID: v3-valueset-validate-code-result-disagrees
@@ -748,7 +748,7 @@ Eliminates 187 records.
 
 ---
 
-### [x] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
+### [ ] `6edc96c` Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod
 
 Records-Impacted: ~465
 Record-ID: 04364a8a-acce-491a-8018-9ac010d47d21, ef77e7ca-9afa-4325-a1f3-a939a62a490f, 7813f9ee-79ee-445b-8064-603a98e876bf, 83509e51-1a8b-4d77-8f4e-7b0037009c4a, 2d18564d-4e72-425d-aca0-358240df2c57, 118efc0f-ad5c-4db9-b9e6-2120a5824b92
@@ -1095,9 +1095,9 @@ Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters 
 
 ### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
 
-Records-Impacted: 701+
+Records-Impacted: 717+
 Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-invalid-display-different-coding, display-lang-result-disagrees, display-lang-prod-only-invalid-display
-Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20, 1b420213-1e39-4839-96e8-77cc1f98ca44, aa3b6190-20cb-4f12-b46c-e3547d5b55f3
+Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20, 1b420213-1e39-4839-96e8-77cc1f98ca44, aa3b6190-20cb-4f12-b46c-e3547d5b55f3, ee67e8d5-293d-45c5-9198-d47a49d47757
 
 #####What differs
 
@@ -1111,20 +1111,20 @@ When $validate-code is called with a `displayLanguage` parameter, dev handles "n
 
 **Variant 4 — result-disagrees (display-lang-result-disagrees):** Prod returns result=true. Dev returns result=false with "Wrong Display Name" error. When the provided display doesn't exactly match the default display AND no language-specific displays exist, dev rejects it while prod accepts via default language fallback. Most severe manifestation.
 
-**Variant 5 — invalid-display on different codings (display-lang-invalid-display-different-coding, 78 records):** Both agree result=true, both have same number of issues after earlier tolerances strip display-comment. But the remaining `invalid-display` issues reference different codings — prod flags one coding (e.g., LOINC at coding[1]) while dev flags a different one (e.g., SNOMED at coding[0]). The non-invalid-display issues (status-check, etc.) are identical. This is a multi-coding CodeableConcept pattern where displayLanguage causes each server to flag a different coding for the display warning.
+**Variant 5 — invalid-display on different codings (display-lang-invalid-display-different-coding, 94 records):** Both agree result=true, both have same number of issues after earlier tolerances strip display-comment. But the remaining `invalid-display` issues reference different codings — prod flags one coding (e.g., LOINC at coding[1]) while dev flags a different one (e.g., SNOMED at coding[0]). The issues also differ in severity (warning vs information). The non-invalid-display issues (status-check, etc.) are identical. This is a multi-coding CodeableConcept pattern where displayLanguage causes each server to flag a different coding for the display warning. Tolerance normalizes dev's invalid-display issues to prod's text, expression, and severity.
 
 **Variant 6 — prod-only invalid-display with lenient-display-validation (display-lang-prod-only-invalid-display, 98 records):** When `mode=lenient-display-validation` is used with `displayLanguage`, prod generates `invalid-display` warning issues (severity=warning, 106 records; severity=information, 8 records) about "Wrong Display Name" or "There are no valid display names found". Dev omits these invalid-display issues entirely. Both servers agree on `result`. The only diffs are the missing `invalid-display` issue(s) and the corresponding `message` parameter. All 114 records in the full dataset match this pattern (98 eliminated by the tolerance, 16 remain because they also have result-disagrees as a separate primary issue). Affected code systems: LOINC, SNOMED, ISO 11073, UCUM, and others.
 
 #####How widespread
 
-701+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM, ISO 11073).
+717+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM, ISO 11073).
 
 #####Tolerances
 
 - `dev-extra-display-lang-not-found-message`: Matches validate-code where result=true on both sides, prod has no message, dev has message containing "no valid display names found". Strips dev's extra message/issues.
 - `prod-display-comment-default-display-lang`: Matches when prod has display-comment issues about "is the default display" and dev has no issues (after earlier tolerances ran). Strips prod's display-comment issues. Eliminates 372 records.
 - `display-comment-vs-invalid-display-issues`: Matches when prod has display-comment issues and dev also has issues (not yet stripped). Strips display-comment from prod, strips extra dev-only invalid-display issues, and strips dev's extra wrong-display-name message. Eliminates 153 records.
-- `display-lang-invalid-display-different-coding`: Matches when both sides have same number of issues but invalid-display issues differ in text/expression (referencing different codings). Normalizes dev's invalid-display issues to prod values. Eliminates 78 records.
+- `display-lang-invalid-display-different-coding`: Matches when both sides have same number of issues but invalid-display issues differ in text/expression/severity (referencing different codings). Normalizes dev's invalid-display issues to prod's text, expression, and severity. Eliminates 94 records (previously 78, increased by 16 after adding severity normalization).
 - `display-lang-result-disagrees`: Matches when prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips error message/issues.
 - `display-lang-prod-only-invalid-display`: Matches when prod has invalid-display issues that dev lacks entirely. All affected records use lenient-display-validation mode with displayLanguage. Strips prod-only invalid-display issues and corresponding message parameter. Eliminates 98 records.
 
@@ -1894,7 +1894,7 @@ Tolerance `expand-displayLanguage-region-truncated` normalizes the displayLangua
 
 ---
 
-### [x] `4aebc14` Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition
+### [ ] `4aebc14` Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition
 
 Records-Impacted: 57
 Tolerance-ID: snomed-version-skew-validate-code-result-disagrees
@@ -2178,7 +2178,7 @@ Closing as won't-fix. SNOMED/CPT version annotations differ due to edition skew.
 
 ---
 
-### [x] `f73e488` Dev crashes (500) on GET  when CodeSystem content mode prevents expansion
+### [ ] `f73e488` Dev crashes (500) on GET  when CodeSystem content mode prevents expansion
 
 Records-Impacted: 258
 Tolerance-ID: expand-dev-crash-on-error

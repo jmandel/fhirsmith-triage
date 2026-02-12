@@ -101,15 +101,16 @@
             "lamport": 4
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 538
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 780
         },
         "status": "open",
         "labels": [
             "code-defect",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
         ],
@@ -148,15 +149,16 @@
             "lamport": 5
         },
         "edit_time": {
-            "timestamp": 1770569577,
-            "time": "2026-02-08T10:52:57-06:00",
-            "lamport": 563
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 783
         },
         "status": "open",
         "labels": [
             "code-defect",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
         ],
@@ -195,16 +197,26 @@
             "lamport": 6
         },
         "edit_time": {
-            "timestamp": 1770569575,
-            "time": "2026-02-08T10:52:55-06:00",
-            "lamport": 534
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 792
         },
-        "status": "open",
+        "status": "closed",
         "labels": [
+            "1c145d2",
+            "4f27f83",
+            "515117b",
+            "67df517",
+            "7258b41",
+            "8f148da",
+            "9390fe4",
             "code-defect",
+            "de8b2f7",
+            "not-reproduced",
             "reproduced",
             "result-disagrees",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code",
@@ -242,16 +254,17 @@
             "lamport": 7
         },
         "edit_time": {
-            "timestamp": 1770601787,
-            "time": "2026-02-08T19:49:47-06:00",
-            "lamport": 681
+            "timestamp": 1770865818,
+            "time": "2026-02-11T21:10:18-06:00",
+            "lamport": 794
         },
-        "status": "closed",
+        "status": "open",
         "labels": [
             "config-issue",
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare",
             "won't-fix"
         ],
@@ -431,9 +444,9 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770865006,
-            "time": "2026-02-11T20:56:46-06:00",
-            "lamport": 747
+            "timestamp": 1770865848,
+            "time": "2026-02-11T21:10:48-06:00",
+            "lamport": 795
         },
         "status": "open",
         "labels": [
@@ -667,15 +680,16 @@
             "lamport": 16
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 542
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 788
         },
         "status": "open",
         "labels": [
             "missing-resource",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev returns 404 for SNOMED CT implicit ValueSet  (fhir_vs URLs)",
@@ -760,15 +774,16 @@
             "lamport": 18
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 555
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 790
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev message parameter omits issue texts when validating CodeableConcept with multiple coding errors",
@@ -1086,16 +1101,17 @@
             "lamport": 25
         },
         "edit_time": {
-            "timestamp": 1770598111,
-            "time": "2026-02-08T18:48:31-06:00",
-            "lamport": 678
+            "timestamp": 1770865564,
+            "time": "2026-02-11T21:06:04-06:00",
+            "lamport": 761
         },
-        "status": "closed",
+        "status": "open",
         "labels": [
             "config-issue",
             "reproduced",
             "result-disagrees",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "to-discuss",
             "tx-compare"
         ],
@@ -1134,14 +1150,15 @@
             "lamport": 26
         },
         "edit_time": {
-            "timestamp": 1770569575,
-            "time": "2026-02-08T10:52:55-06:00",
-            "lamport": 532
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 781
         },
         "status": "open",
         "labels": [
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
         ],
@@ -1275,16 +1292,17 @@
             "lamport": 29
         },
         "edit_time": {
-            "timestamp": 1770572986,
-            "time": "2026-02-08T11:49:46-06:00",
-            "lamport": 600
+            "timestamp": 1770865564,
+            "time": "2026-02-11T21:06:04-06:00",
+            "lamport": 756
         },
-        "status": "closed",
+        "status": "open",
         "labels": [
             "code-defect",
             "dev-crash-on-error",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev crashes (500) on GET  when CodeSystem content mode prevents expansion",
@@ -1322,15 +1340,16 @@
             "lamport": 30
         },
         "edit_time": {
-            "timestamp": 1770569577,
-            "time": "2026-02-08T10:52:57-06:00",
-            "lamport": 558
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 787
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "validate-code: dev renders null status as literal 'null' in inactive concept message",
@@ -1368,14 +1387,15 @@
             "lamport": 31
         },
         "edit_time": {
-            "timestamp": 1770569577,
-            "time": "2026-02-08T10:52:57-06:00",
-            "lamport": 569
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 779
         },
         "status": "open",
         "labels": [
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
         ],
@@ -1414,15 +1434,16 @@
             "lamport": 32
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 552
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 778
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev uses R5-style property instead of R4 extension for deprecated status in expand contains",
@@ -1460,15 +1481,16 @@
             "lamport": 33
         },
         "edit_time": {
-            "timestamp": 1770569577,
-            "time": "2026-02-08T10:52:57-06:00",
-            "lamport": 564
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 791
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "Dev omits retired status-check informational issues in validate-code OperationOutcome",
@@ -1736,15 +1758,16 @@
             "lamport": 39
         },
         "edit_time": {
-            "timestamp": 1770569577,
-            "time": "2026-02-08T10:52:57-06:00",
-            "lamport": 574
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 784
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
@@ -1782,15 +1805,16 @@
             "lamport": 40
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 549
+            "timestamp": 1770865805,
+            "time": "2026-02-11T21:10:05-06:00",
+            "lamport": 789
         },
         "status": "open",
         "labels": [
             "content-differs",
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "LOINC $lookup: dev returns extra designations, RELATEDNAMES2 properties, and different CLASSTYPE format",
@@ -2058,14 +2082,15 @@
             "lamport": 46
         },
         "edit_time": {
-            "timestamp": 1770569615,
-            "time": "2026-02-08T10:53:35-06:00",
-            "lamport": 576
+            "timestamp": 1770865564,
+            "time": "2026-02-11T21:06:04-06:00",
+            "lamport": 758
         },
-        "status": "closed",
+        "status": "open",
         "labels": [
             "repro-inconclusive",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "tx-compare"
         ],
         "title": "validate-code: dev returns result=false with 'undefined' system when dev cache not warm at comparison start",

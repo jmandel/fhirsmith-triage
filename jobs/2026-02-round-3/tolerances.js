@@ -1362,6 +1362,40 @@ const tolerances = [
   },
 
   {
+    id: 'dev-message-appends-display-lang-text',
+    description: 'validate-code with displayLanguage: when both sides have a message (e.g., inactive concept warning), dev appends extra display-language text ("; There are no valid display names found...") that prod omits. The OperationOutcome issues for this display-language difference are already handled by earlier tolerances. Same root cause as display-lang-result-disagrees.',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'message-concat'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (!prodMsg || !devMsg) return null;
+      if (prodMsg === devMsg) return null;
+      // Dev message starts with prod message and has extra display-lang text appended
+      if (!devMsg.startsWith(prodMsg)) return null;
+      const extra = devMsg.slice(prodMsg.length);
+      if (!/no valid display names found/i.test(extra)) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev, record }) {
+      // Normalize dev's message to match prod's (strip the appended display-lang text)
+      const prodMsg = getParamValue(prod, 'message');
+      if (!dev?.parameter) return { prod, dev };
+      return {
+        prod,
+        dev: {
+          ...dev,
+          parameter: dev.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        },
+      };
+    },
+  },
+
+  {
     id: 'display-lang-invalid-display-different-coding',
     description: 'validate-code with displayLanguage + multi-coding CodeableConcept: after earlier tolerances strip display-comment from prod and extra issues from dev, both sides have invalid-display issues but referencing different codings (different expression paths and text). Same root cause as display-lang-result-disagrees — prod and dev disagree on which coding triggers the display language warning. Normalizes dev invalid-display issues to match prod.',
     kind: 'temp-tolerance',

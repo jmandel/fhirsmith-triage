@@ -1,0 +1,107 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "103693007"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "display",
+      "valueString": "Diagnostic procedure"
+    },
+    {
+      "name": "inactive",
+      "valueBoolean": true
+    },
+    {
+      "name": "message",
+      "valueString": "The concept '103693007' has a status of inactive and its use should be reviewed"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "103693007",
+            "display": "Diagnostic procedure"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_LANG_NONE"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ],
+              "text": "'Diagnostic procedure' is the default display; the code system http://snomed.info/sct has no Display Names for the language de"
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "INACTIVE_CONCEPT_FOUND"
+              }
+            ],
+            "severity": "warning",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "code-comment"
+                }
+              ],
+              "text": "The concept '103693007' has a status of inactive and its use should be reviewed"
+            },
+            "location": [
+              "CodeableConcept.coding[0]"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0]"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=de, default-to-latest\r\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n16 0    : 0ms  : Prepare include: \"()\"\r\n16 0    : 0ms  : Validate \"[http://snomed.info/sct#103693007 (\"Diagnostic procedure\")]\"\r\n16 0    : 0ms  : Check \"http://snomed.info/sct#103693007\"\r\n16 0    : 0ms  : Using CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\" (content = complete)\r\n"
+    }
+  ]
+}
