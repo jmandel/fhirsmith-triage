@@ -1,0 +1,111 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://snomed.info/sct|http://snomed.info/sct/11000274103"
+    },
+    {
+      "name": "code",
+      "valueCode": "8480-6"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "display",
+      "valueString": "Blutdruck systolisch"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/11000274103' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150017",
+            "display": "MDC_PRESS_BLD_SYS"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "version": "http://snomed.info/sct/11000274103",
+            "code": "271649006",
+            "display": "Systolischer Blutdruck"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8480-6"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            }
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION"
+              }
+            ],
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ],
+              "text": "A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/11000274103' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814"
+            },
+            "location": [
+              "CodeableConcept.coding[1].system"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].system"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\r\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n16 0    : 0ms  : Prepare include: \"()\"\r\n16 0    : 0ms  : Validate \"[urn:iso:std:iso:11073:10101#150017 (\"MDC_PRESS_BLD_SYS\"), http://snomed.info/sct|http://snomed.info/sct/11000274103#271649006 (\"Systolischer Blutdruck\"), http://loinc.org#8480-6 (\"\")]\"\r\n16 0    : 0ms  : Check \"urn:iso:std:iso:11073:10101#150017\"\r\n32 16   : 16ms : Using CodeSystem \"urn:iso:std:iso:11073:10101|2024-12-05 (from fhir.tx.support.r4#0.32.0)\" (content = complete)\r\n32 0    : 16ms : Check \"http://snomed.info/sct|http://snomed.info/sct/11000274103#271649006\"\r\n32 0    : 16ms : Didn't find CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/11000274103\"\r\n32 0    : 16ms : Check \"http://loinc.org#8480-6\"\r\n32 0    : 16ms : Using CodeSystem \"http://loinc.org|2.81\" (content = complete)\r\n"
+    }
+  ]
+}

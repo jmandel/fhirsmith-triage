@@ -1158,9 +1158,9 @@ curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?' \
 
 ### [ ] `b6d19d8` Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system
 
-Records-Impacted: 16
+Records-Impacted: 171
 Tolerance-ID: cc-validate-code-missing-known-coding-params, validate-code-xcaused-unknown-system-disagree
-Record-ID: 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4
+Record-ID: 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4, 2e1dab4e-07c3-4a29-8bab-983289ba6a7d
 
 #####Repro
 
@@ -1178,40 +1178,40 @@ curl -s 'https://tx-dev.fhir.org/r5/CodeSystem/$validate-code' \
 
 #####What differs
 
-When `$validate-code` is called with a CodeableConcept containing multiple codings and `result=false` on both sides, prod and dev disagree on how they report the error — specifically which coding's system is reported as "unknown" and what downstream params they return. This manifests in two related patterns:
+When `$validate-code` is called with a CodeableConcept containing multiple codings and `result=false` on both sides, prod returns system/code/display params for the known coding while dev omits them. Additionally, when both sides disagree on which system is unknown, all downstream params (code, display, system, version, message, issues) diverge.
 
-**Pattern 1: Dev omits known-coding params (5 records, tolerance `cc-validate-code-missing-known-coding-params`)**
+Three sub-patterns:
 
-When the CodeableConcept contains one truly unknown system and one known system:
-- Prod validates the known coding and returns `system`, `code`, `version`, `display` for it, plus all related OperationOutcome issues
-- Dev only reports the unknown system error, omitting `system`/`code`/`version`/`display` params entirely and any additional issues for the known coding
+**Pattern 1: Same unknown system, dev omits known-coding params (155 records, tolerance `cc-validate-code-missing-known-coding-params`)**
 
-Example: CodeableConcept with LOINC (known) + smartypower (unknown) → prod returns system=http://loinc.org, code=72106-8 etc.; dev returns none of those.
+When the CodeableConcept contains one coding with an unknown system version and one coding from a known system (LOINC in 140 cases, SNOMED in 15), and both sides agree on the same `x-caused-by-unknown-system` value:
+- Prod validates the known coding and returns `system`, `code`, `display` params for it, plus any related informational OperationOutcome issues (e.g., display-language warnings)
+- Dev only returns `result=false` with the unknown-system error, omitting `system`/`code`/`display` params and the informational issues for the known coding entirely
 
-Unknown systems involved: smartypower-cognitive-tests (2 records), el-observation-code-cs (3 records)
+All 155 records are POST `/r4/CodeSystem/$validate-code` (153 records) or `/r5/CodeSystem/$validate-code` (2 records). All involve multi-coding CodeableConcepts where one SNOMED CT edition version is unavailable on the server.
 
-**Pattern 2: x-caused-by-unknown-system disagrees (11 records, tolerance `validate-code-xcaused-unknown-system-disagree`)**
+**Pattern 2: Dev omits known-coding params with truly unknown system (5 records, also in tolerance `cc-validate-code-missing-known-coding-params`)**
 
-When both sides encounter unknown system versions, they disagree on *which* system to report as unknown. Sub-patterns:
-- **LOINC/SNOMED version skew (3 records)**: Prod has LOINC 2.77 but not SNOMED Danish edition; dev has LOINC 2.81 only. Each reports the version they lack. Also causes missing code/display/system/version in dev.
-- **Missing x-caused-by-unknown-system (2 records)**: Prod reports x-caused-by-unknown-system for c80-practice-codes ValueSet URL; dev omits it entirely.
-- **Cerner/RxNorm (2 records)**: Dev reports x-caused-by-unknown-system for RxNorm version; prod uses x-unknown-system for Cerner system instead.
-- **b-zion count mismatch (4 records)**: Prod reports 2 x-caused-by-unknown-system params; dev reports only 1.
+Same as Pattern 1, but the unknown system is a completely unrecognized CodeSystem URI (e.g., smartypower-cognitive-tests, el-observation-code-cs) rather than an unavailable version of a known system.
+
+**Pattern 3: x-caused-by-unknown-system disagrees (11 records, tolerance `validate-code-xcaused-unknown-system-disagree`)**
+
+When both sides encounter unknown system versions, they disagree on *which* system to report as unknown. Sub-patterns include LOINC/SNOMED version skew, missing x-caused-by-unknown-system, Cerner/RxNorm disagreements, and b-zion count mismatches.
 
 #####Tolerance details
 
-- `cc-validate-code-missing-known-coding-params`: Matches validate-code with codeableConcept, result=false, x-caused-by-unknown-system present, where prod has system/code params that dev lacks. Normalizes by adding prod's params to dev. Eliminates 5 records. (round 2)
-- `validate-code-xcaused-unknown-system-disagree`: Matches validate-code, both result=false, where x-caused-by-unknown-system values differ between sides. Normalizes by replacing dev's error-related params (code, display, system, version, message, issues, x-caused-by-unknown-system, x-unknown-system) with prod's values. Eliminates 11 records. (round 3)
+- `cc-validate-code-missing-known-coding-params`: Matches validate-code with result=false, same x-caused-by-unknown-system on both sides, where prod has code/system params that dev lacks. Normalizes by copying prod's code/system/display params and issues to dev. Eliminates 155 records (round 3) + 5 records (round 2, Pattern 2).
+- `validate-code-xcaused-unknown-system-disagree`: Matches validate-code, both result=false, where x-caused-by-unknown-system values differ between sides. Normalizes by replacing dev's error-related params with prod's values. Eliminates 11 records. (round 3)
 
-Total: 16 records impacted across both tolerances.
+Total: 171 records impacted across both tolerances.
 
 #####Representative records
 
-- 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4 (Pattern 1: LOINC + smartypower, /r5)
-- 6f70f14a-81e1-427e-9eed-1b2c53801296 (Pattern 1: SNOMED + essilorluxottica, /r4)
-- ebda357c-2153-47cc-800c-61aac44fedb2 (Pattern 2: LOINC/SNOMED version skew, /r4)
-- 64d09ecc-5a88-4173-889c-2cd0681a59fc (Pattern 2: b-zion count mismatch, /r4)
-- 341b0b28-c0a7-4af9-a448-0bdff37c8475 (Pattern 2: Cerner/RxNorm, /r4)
+- 2e1dab4e-07c3-4a29-8bab-983289ba6a7d (Pattern 1: LOINC + SNOMED unknown version, /r4)
+- 84b0cee7-5f7e-4fbc-af8a-aed5ad7a91d4 (Pattern 2: LOINC + smartypower, /r5)
+- 6f70f14a-81e1-427e-9eed-1b2c53801296 (Pattern 2: SNOMED + essilorluxottica, /r4)
+- ebda357c-2153-47cc-800c-61aac44fedb2 (Pattern 3: LOINC/SNOMED version skew, /r4)
+- 64d09ecc-5a88-4173-889c-2cd0681a59fc (Pattern 3: b-zion count mismatch, /r4)
 
 ---
 

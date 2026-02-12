@@ -1,0 +1,72 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "8480-6"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "150017",
+            "display": "MDC_PRESS_BLD_SYS",
+            "system": "urn:iso:std:iso:11073:10101"
+          },
+          {
+            "code": "271649006",
+            "display": "Systolischer Blutdruck",
+            "system": "http://snomed.info/sct",
+            "version": "http://snomed.info/sct/11000274103"
+          },
+          {
+            "code": "8480-6",
+            "system": "http://loinc.org"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Blutdruck systolisch"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "status-check",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            },
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://snomed.info/sct|http://snomed.info/sct/11000274103"
+    }
+  ],
+  "resourceType": "Parameters"
+}
