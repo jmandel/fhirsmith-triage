@@ -1356,6 +1356,70 @@ const tolerances = [
   },
 
   {
+    id: 'display-lang-invalid-display-different-coding',
+    description: 'validate-code with displayLanguage + multi-coding CodeableConcept: after earlier tolerances strip display-comment from prod and extra issues from dev, both sides have invalid-display issues but referencing different codings (different expression paths and text). Same root cause as display-lang-result-disagrees — prod and dev disagree on which coding triggers the display language warning. Normalizes dev invalid-display issues to match prod.',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'invalid-display', 'multi-coding'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      if (prodIssues.issue.length !== devIssues.issue.length) return null;
+      // Check if any invalid-display issues differ in text or expression
+      let hasDiff = false;
+      for (let i = 0; i < prodIssues.issue.length; i++) {
+        const pi = prodIssues.issue[i];
+        const di = devIssues.issue[i];
+        const piIsInvalidDisplay = pi.details?.coding?.some(c => c.code === 'invalid-display');
+        const diIsInvalidDisplay = di.details?.coding?.some(c => c.code === 'invalid-display');
+        if (piIsInvalidDisplay && diIsInvalidDisplay) {
+          if (pi.details?.text !== di.details?.text ||
+              JSON.stringify(pi.expression) !== JSON.stringify(di.expression)) {
+            hasDiff = true;
+          }
+        }
+      }
+      if (!hasDiff) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodIssues = getParamValue(prod, 'issues');
+      if (!prodIssues?.issue) return { prod, dev };
+      function canonicalize(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            return {
+              ...p,
+              resource: {
+                ...p.resource,
+                issue: p.resource.issue.map((iss, idx) => {
+                  const prodIss = prodIssues.issue[idx];
+                  if (!prodIss) return iss;
+                  const issIsInvalidDisplay = iss.details?.coding?.some(c => c.code === 'invalid-display');
+                  const prodIsInvalidDisplay = prodIss.details?.coding?.some(c => c.code === 'invalid-display');
+                  if (!issIsInvalidDisplay || !prodIsInvalidDisplay) return iss;
+                  // Canonicalize to prod's text and expression
+                  return {
+                    ...iss,
+                    details: { ...iss.details, text: prodIss.details?.text },
+                    expression: prodIss.expression,
+                  };
+                }),
+              },
+            };
+          }),
+        };
+      }
+      return { prod, dev: canonicalize(dev) };
+    },
+  },
+
+  {
     id: 'display-lang-result-disagrees',
     description: 'validate-code with displayLanguage: dev returns result=false with "Wrong Display Name" error when no language-specific displays exist, prod returns result=true. Dev is stricter because it does not pass defLang to hasDisplay, causing it to reject displays that prod accepts via default language fallback.',
     kind: 'temp-tolerance',

@@ -1095,33 +1095,34 @@ Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters 
 
 ### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
 
-Records-Impacted: 553
-Tolerance-ID: dev-extra-display-lang-not-found-message, display-lang-result-disagrees, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues
+Records-Impacted: 525+
+Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-result-disagrees
 Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20
 
 #####What differs
 
-When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod.
+When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod. This manifests in four variants:
 
-**Variant 1 — content-differs (19 records in round 2, 5 in round 3):** Both servers agree result=true. Prod omits message/issues entirely. Dev returns extra `message` ("There are no valid display names found for the code ...") and `issues` (OperationOutcome with informational severity, tx-issue-type=`invalid-display`). Affected systems: SNOMED, ISO 3166, M49 regions.
+**Variant 1 — extra message/issues (dev-extra-display-lang-not-found-message):** Both servers agree result=true. Prod omits message/issues entirely. Dev returns extra `message` ("There are no valid display names found for the code ...") and `issues` (OperationOutcome with informational severity, tx-issue-type=`invalid-display`). Affected systems: SNOMED, ISO 3166, M49 regions.
 
-**Variant 2a — content-differs (372 records in round 3):** Both servers agree result=true. Prod returns `issues` with tx-issue-type=`display-comment`, severity=information ("'X' is the default display; the code system has no Display Names for the language Y"). Dev either returns no issues at all (44 records), or returns issues with tx-issue-type=`invalid-display`, severity=warning, with differently-worded text (328 records). After the `dev-extra-display-lang-not-found-message` tolerance strips dev's extra message/issues, prod's informational display-comment issue is left as the sole diff. Handled by `prod-display-comment-default-display-lang`.
+**Variant 2 — display-comment vs no issues (prod-display-comment-default-display-lang, 372 records):** Both agree result=true. Prod returns `issues` with tx-issue-type=`display-comment` ("X is the default display; the code system has no Display Names for the language Y"). Dev either had its issues stripped by dev-extra-display-lang-not-found-message or never had issues. After existing tolerances run, prod's display-comment issue is the only remaining difference.
 
-**Variant 2b — content-differs (153 records in round 3):** Both servers agree result=true. Prod has display-comment issues AND other issues in its OperationOutcome. Dev has invalid-display issues where prod has display-comment, plus the same other issues. The issue type code and severity differ (display-comment/information vs invalid-display/warning) but convey the same information. These records had additional co-occurring differences beyond just the display-comment that prevented variant 2a's tolerance from matching. Handled by `display-comment-vs-invalid-display-issues`.
+**Variant 3 — display-comment vs invalid-display (display-comment-vs-invalid-display-issues, 153 records):** Both agree result=true. Prod has a `display-comment` issue (information severity) and possibly other issues. Dev has `invalid-display` issue (warning severity) instead. After stripping the display-comment from prod and corresponding extra invalid-display from dev, the remaining issues match. Includes 21 records where dev also has an extra `message` about "Wrong Display Name ... Valid display is ..." that prod lacks.
 
-**Variant 3 — result-disagrees (2 records in round 3):** Prod returns result=true. Dev returns result=false with "Wrong Display Name 'FRANCE' for urn:iso:std:iso:3166#FR. There are no valid display names found for language(s) 'fr-FR'". This is the most severe manifestation — when the provided display ("FRANCE") doesn't exactly match the default display ("France") AND no language-specific displays exist, dev treats it as an error and flips the result to false, while prod accepts it via default language fallback.
+**Variant 4 — result-disagrees (display-lang-result-disagrees):** Prod returns result=true. Dev returns result=false with "Wrong Display Name" error. When the provided display doesn't exactly match the default display AND no language-specific displays exist, dev rejects it while prod accepts via default language fallback. Most severe manifestation.
 
 #####How widespread
 
-Round 2: 21 records.
-Round 3: 532 records eliminated total — 5 content-differs (`dev-extra-display-lang-not-found-message`) + 2 result-disagrees (`display-lang-result-disagrees`) + 372 content-differs (`prod-display-comment-default-display-lang`) + 153 content-differs (`display-comment-vs-invalid-display-issues`).
+525+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM).
+
+Search: `grep 'display-comment' jobs/2026-02-round-3/results/deltas/deltas.ndjson | wc -l` (before tolerances).
 
 #####Tolerances
 
-- `dev-extra-display-lang-not-found-message`: Matches validate-code where result=true on both sides, prod has no message, and dev has a message containing "no valid display names found". Strips dev's extra message/issues.
-- `display-lang-result-disagrees`: Matches validate-code where prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips the error message/issues.
-- `prod-display-comment-default-display-lang`: Matches validate-code where result=true on both sides, prod has informational display-comment issues about "is the default display", and dev has no issues (either never had them or stripped by earlier tolerance). Strips prod's orphaned display-comment issues. Eliminates 372 records.
-- `display-comment-vs-invalid-display-issues`: Matches validate-code where prod has display-comment issues and dev also has issues (with invalid-display type). Strips display-comment from prod and corresponding extra invalid-display issues/message from dev. Eliminates 153 records.
+- `dev-extra-display-lang-not-found-message`: Matches validate-code where result=true on both sides, prod has no message, dev has message containing "no valid display names found". Strips dev's extra message/issues.
+- `prod-display-comment-default-display-lang`: Matches when prod has display-comment issues about "is the default display" and dev has no issues (after earlier tolerances ran). Strips prod's display-comment issues. Eliminates 372 records.
+- `display-comment-vs-invalid-display-issues`: Matches when prod has display-comment issues and dev also has issues (not yet stripped). Strips display-comment from prod, strips extra dev-only invalid-display issues, and strips dev's extra wrong-display-name message. Eliminates 153 records.
+- `display-lang-result-disagrees`: Matches when prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips error message/issues.
 
 #####Repro
 

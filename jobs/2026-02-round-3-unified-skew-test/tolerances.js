@@ -64,6 +64,329 @@ function sortAt(obj, path, ...keys) {
   return obj;
 }
 
+// ---- Version skew detection and normalization ----
+// Unified handler for all version-skew patterns: SNOMED, HL7 terminology, CPT, NDC, v2 tables.
+// Replaces 18 individual version-skew tolerances (12 in round-3, 6 in round-2 only).
+// GG adjudicated: version skew is by design (round-1 bugs 5b3ae71 "By design — VSAC", be888eb "Dev is correct").
+
+function hasRawVersionSkew(record) {
+  try {
+    const rawProd = JSON.parse(record.prodBody);
+    const rawDev = JSON.parse(record.devBody);
+    const getUris = (body) => (body.expansion?.parameter || [])
+      .filter(p => p.name === 'used-codesystem').map(p => p.valueUri).sort();
+    const prodUris = getUris(rawProd);
+    const devUris = getUris(rawDev);
+    if (prodUris.length && devUris.length &&
+        JSON.stringify(prodUris) !== JSON.stringify(devUris)) return true;
+    const prodVers = new Set((rawProd.expansion?.contains || []).map(c => c.version).filter(Boolean));
+    const devVers = new Set((rawDev.expansion?.contains || []).map(c => c.version).filter(Boolean));
+    if (prodVers.size && devVers.size &&
+        JSON.stringify([...prodVers].sort()) !== JSON.stringify([...devVers].sort())) return true;
+  } catch { /* ignore parse errors */ }
+  return false;
+}
+
+function urlHasPinnedVersion(url) {
+  if (!url) return false;
+  const lower = url.toLowerCase();
+  if (/[?&](version|system-version|force-system-version|check-system-version|valuesetversion|codesystemversion)=/.test(lower)) {
+    return true;
+  }
+  // Canonical params with explicit |version (including percent-encoded)
+  if (/[?&](url|system|valueset|codesystem|coding)=[^&]*(\||%7c)/.test(lower)) {
+    return true;
+  }
+  return false;
+}
+
+function bodyHasPinnedVersion(requestBody) {
+  if (!requestBody) return false;
+  let body;
+  try {
+    body = JSON.parse(requestBody);
+  } catch {
+    return false;
+  }
+
+  function scan(node) {
+    if (!node || typeof node !== 'object') return false;
+    if (Array.isArray(node)) return node.some(scan);
+
+    if (node.resourceType === 'Parameters' && Array.isArray(node.parameter)) {
+      for (const p of node.parameter) {
+        const name = (p?.name || '').toLowerCase();
+        if (['version', 'system-version', 'force-system-version', 'check-system-version', 'valuesetversion', 'codesystemversion'].includes(name)) {
+          return true;
+        }
+        for (const key of ['valueUri', 'valueCanonical']) {
+          const v = p?.[key];
+          if (typeof v === 'string' && v.includes('|')) return true;
+        }
+        if (scan(p?.part) || scan(p?.resource)) return true;
+      }
+    }
+
+    if (node.resourceType === 'ValueSet') {
+      const groups = [...(node?.compose?.include || []), ...(node?.compose?.exclude || [])];
+      if (groups.some(g => typeof g?.version === 'string' && g.version)) return true;
+      if (groups.some(g => (g?.valueSet || []).some(v => typeof v === 'string' && v.includes('|')))) return true;
+    }
+
+    for (const [key, value] of Object.entries(node)) {
+      if (typeof value === 'string') {
+        const k = key.toLowerCase();
+        if ((k === 'url' || k === 'system' || k === 'valueset' || k === 'codesystem' || k.endsWith('uri') || k.endsWith('canonical')) &&
+            value.includes('|')) {
+          return true;
+        }
+      } else if (scan(value)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  return scan(body);
+}
+
+function isVersionPinnedRequest(record) {
+  return urlHasPinnedVersion(record?.url || '') || bodyHasPinnedVersion(record?.requestBody);
+}
+
+function detectVersionSkew({ record, prod, dev }) {
+  // Respect explicitly pinned version requests: these are not "default edition" skew.
+  if (isVersionPinnedRequest(record)) return null;
+
+  // --- Parameters responses (validate-code, lookup) ---
+  if (isParameters(prod) && isParameters(dev)) {
+    const prodVer = getParamValue(prod, 'version');
+    const devVer = getParamValue(dev, 'version');
+    const prodResult = getParamValue(prod, 'result');
+    const devResult = getParamValue(dev, 'result');
+
+    // Hard evidence: explicit version parameter mismatch.
+    if (prodVer && devVer && prodVer !== devVer) {
+      if (prodResult !== undefined && devResult !== undefined && prodResult !== devResult) {
+        try {
+          const rawProd = JSON.parse(record.prodBody);
+          const rawDev = JSON.parse(record.devBody);
+          const rawPV = getParamValue(rawProd, 'version') || '';
+          const rawDV = getParamValue(rawDev, 'version') || '';
+          if ((rawPV.includes('snomed.info/sct') || rawDV.includes('snomed.info/sct')) &&
+              rawPV !== rawDV) return 'skip';
+        } catch { /* fall through to normalize */ }
+      }
+      return 'normalize';
+    }
+
+    // Hard evidence: result disagreement with raw SNOMED edition mismatch.
+    if (prodResult !== undefined && devResult !== undefined && prodResult !== devResult) {
+      try {
+        const rawProd = JSON.parse(record.prodBody);
+        const rawDev = JSON.parse(record.devBody);
+        const rawPV = getParamValue(rawProd, 'version') || '';
+        const rawDV = getParamValue(rawDev, 'version') || '';
+        if ((rawPV.includes('snomed.info/sct') || rawDV.includes('snomed.info/sct')) &&
+            rawPV !== rawDV) return 'skip';
+      } catch { /* not version skew */ }
+    }
+  }
+
+  // --- ValueSet responses (expand) ---
+  if (prod?.resourceType === 'ValueSet' && dev?.resourceType === 'ValueSet' &&
+      record.prod.status === 200 && record.dev.status === 200) {
+    const prodParams = prod.expansion?.parameter || [];
+    const devParams = dev.expansion?.parameter || [];
+
+    // used-codesystem version differs
+    const prodUcs = prodParams.filter(p => p.name === 'used-codesystem').map(p => p.valueUri).sort();
+    const devUcs = devParams.filter(p => p.name === 'used-codesystem').map(p => p.valueUri).sort();
+    if (prodUcs.length && devUcs.length && JSON.stringify(prodUcs) !== JSON.stringify(devUcs)) return 'normalize';
+
+    // used-valueset version differs
+    const prodUvs = prodParams.filter(p => p.name === 'used-valueset').map(p => p.valueUri).sort();
+    const devUvs = devParams.filter(p => p.name === 'used-valueset').map(p => p.valueUri).sort();
+    if (prodUvs.length && devUvs.length && JSON.stringify(prodUvs) !== JSON.stringify(devUvs)) return 'normalize';
+
+    // Hard evidence: contains version/membership differences.
+    if (prod.expansion?.contains?.length && dev.expansion?.contains?.length) {
+      const prodCodes = new Set(prod.expansion.contains.map(c => c.system + '|' + c.code));
+      const devCodes = new Set(dev.expansion.contains.map(c => c.system + '|' + c.code));
+      if (prodCodes.size === devCodes.size && [...prodCodes].every(k => devCodes.has(k))) {
+        const prodVerMap = {};
+        for (const c of prod.expansion.contains) prodVerMap[c.system + '|' + c.code] = c.version;
+        for (const c of dev.expansion.contains) {
+          if (prodVerMap[c.system + '|' + c.code] !== c.version) return 'normalize';
+        }
+      } else {
+        if (hasRawVersionSkew(record)) return 'normalize';
+      }
+    }
+
+  }
+
+  return null;
+}
+
+function normalizeValidateCodeVersionSkew({ prod, dev }) {
+  if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+  const newProd = prod;
+  let newDev = dev;
+
+  // Determine target version from prod
+  const prodVer = getParamValue(prod, 'version');
+  let targetVer = prodVer;
+  if (!targetVer) {
+    const prodMsg = getParamValue(prod, 'message') || '';
+    const m = prodMsg.match(/version '([^']*)'/);
+    if (m) targetVer = m[1];
+  }
+
+  // Normalize version param to prod value
+  if (targetVer && getParamValue(newDev, 'version') &&
+      getParamValue(newDev, 'version') !== targetVer) {
+    newDev = {
+      ...newDev,
+      parameter: newDev.parameter.map(p =>
+        p.name === 'version' ? { ...p, valueString: targetVer } : p
+      ),
+    };
+  }
+
+  // Version string replacement in text
+  const prodMsg = getParamValue(prod, 'message') || '';
+  const snomedRe = /snomed\.info\/sct\/\d+\/version\/\d+/g;
+  const prodSnomedVers = prodMsg.match(snomedRe) || [];
+
+  function normalizeText(text) {
+    if (!text) return text;
+    // SNOMED version URIs
+    const textSnomedVers = text.match(snomedRe) || [];
+    for (let i = 0; i < textSnomedVers.length; i++) {
+      if (prodSnomedVers[i] && textSnomedVers[i] !== prodSnomedVers[i]) {
+        text = text.split(textSnomedVers[i]).join(prodSnomedVers[i]);
+      }
+    }
+    if (targetVer) {
+      text = text.replace(/version '[^']*'/g, "version '" + targetVer + "'");
+      text = text.replace(/terminology\.hl7\.org\/(?:CodeSystem|ValueSet)\/[^|]*\|[^\s"']*/g, (m) =>
+        m.split('|')[0] + '|' + targetVer
+      );
+    }
+    return text;
+  }
+
+  function normalizeBody(body) {
+    if (!body?.parameter) return body;
+    return {
+      ...body,
+      parameter: body.parameter.map(p => {
+        if (p.name === 'message' && p.valueString) {
+          return { ...p, valueString: normalizeText(p.valueString) };
+        }
+        if (p.name === 'issues' && p.resource?.issue) {
+          return {
+            ...p,
+            resource: {
+              ...p.resource,
+              issue: p.resource.issue.map(iss => iss.details?.text
+                ? { ...iss, details: { ...iss.details, text: normalizeText(iss.details.text) } }
+                : iss
+              ),
+            },
+          };
+        }
+        return p;
+      }),
+    };
+  }
+
+  return { prod: normalizeBody(newProd), dev: normalizeBody(newDev) };
+}
+
+function normalizeExpandVersionSkew({ prod, dev }) {
+  let newProd = { ...prod, expansion: { ...prod.expansion } };
+  let newDev = { ...dev, expansion: { ...dev.expansion } };
+
+  // Build version maps from prod parameters
+  const versionMaps = { cs: new Map(), vs: new Map() };
+  for (const p of (prod.expansion?.parameter || [])) {
+    if (p.name === 'used-codesystem' && p.valueUri)
+      versionMaps.cs.set(p.valueUri.split('|')[0], p.valueUri);
+    if (p.name === 'used-valueset' && p.valueUri)
+      versionMaps.vs.set(p.valueUri.split('|')[0], p.valueUri);
+  }
+
+  // Normalize used-codesystem and used-valueset versions to prod
+  function normalizeParams(params) {
+    if (!params) return params;
+    return params
+      .map(p => {
+        if (p.name === 'used-codesystem' && p.valueUri) {
+          const base = p.valueUri.split('|')[0];
+          const prodUri = versionMaps.cs.get(base);
+          if (prodUri && prodUri !== p.valueUri) return { ...p, valueUri: prodUri };
+        }
+        if (p.name === 'used-valueset' && p.valueUri) {
+          const base = p.valueUri.split('|')[0];
+          const prodUri = versionMaps.vs.get(base);
+          if (prodUri && prodUri !== p.valueUri) return { ...p, valueUri: prodUri };
+        }
+        return p;
+      });
+  }
+  newProd.expansion.parameter = normalizeParams(newProd.expansion.parameter);
+  newDev.expansion.parameter = normalizeParams(newDev.expansion.parameter);
+
+  // Normalize contains
+  if (newProd.expansion?.contains?.length && newDev.expansion?.contains?.length) {
+    const prodCodes = new Set(newProd.expansion.contains.map(c => c.system + '|' + c.code));
+    const devCodes = new Set(newDev.expansion.contains.map(c => c.system + '|' + c.code));
+    const prodVerMap = {};
+    for (const c of newProd.expansion.contains) prodVerMap[c.system + '|' + c.code] = c.version;
+
+    if (prodCodes.size === devCodes.size && [...prodCodes].every(k => devCodes.has(k))) {
+      // Same membership — normalize contains[].version to prod
+      newDev.expansion.contains = newDev.expansion.contains.map(c => {
+        const key = c.system + '|' + c.code;
+        return prodVerMap[key] && prodVerMap[key] !== c.version ? { ...c, version: prodVerMap[key] } : c;
+      });
+    } else {
+      // Different membership — intersect code sets
+      const commonKeys = new Set([...prodCodes].filter(k => devCodes.has(k)));
+      const filterContains = (contains) => contains.filter(c => commonKeys.has(c.system + '|' + c.code));
+      newProd.expansion.contains = filterContains(newProd.expansion.contains);
+      newDev.expansion.contains = filterContains(newDev.expansion.contains);
+      newProd.expansion.total = commonKeys.size;
+      newDev.expansion.total = commonKeys.size;
+      newDev.expansion.contains = newDev.expansion.contains.map(c => {
+        const key = c.system + '|' + c.code;
+        return prodVerMap[key] && prodVerMap[key] !== c.version ? { ...c, version: prodVerMap[key] } : c;
+      });
+    }
+  }
+
+  return { prod: newProd, dev: newDev };
+}
+
+function normalizeLookupVersionSkew({ prod, dev }) {
+  const prodVer = getParamValue(prod, 'version');
+  const devVer = getParamValue(dev, 'version');
+  if (!prod?.parameter || !dev?.parameter || !prodVer || !devVer || prodVer === devVer) {
+    return { prod, dev };
+  }
+  return {
+    prod,
+    dev: {
+      ...dev,
+      parameter: dev.parameter.map(p =>
+        p.name === 'version' ? { ...p, valueString: prodVer } : p
+      ),
+    },
+  };
+}
+
 // ---- Baseline tolerances ----
 
 const tolerances = [
@@ -483,40 +806,29 @@ const tolerances = [
   },
 
   {
-    id: 'snomed-version-skew',
-    description: 'SNOMED CT edition version skew: dev loads different (generally older) SNOMED CT editions than prod. By design — an old version was added to better support VSAC (GG adjudicated). Normalizes version and display parameters to prod values.',
+    id: 'version-skew',
+    description: 'Unified version-skew tolerance: prod and dev load different editions of terminology code systems ' +
+      '(SNOMED, HL7 terminology, CPT, NDC, v2 tables). When the request does not pin a specific version, the servers ' +
+      'resolve to different defaults. Detects version differences across all signal locations and dispatches to ' +
+      'operation-specific normalizers. Replaces 18 individual version-skew tolerances. ' +
+      'GG adjudicated: version skew is by design (round-1 bugs 5b3ae71 "By design — VSAC", be888eb "Dev is correct").',
     kind: 'equiv-autofix',
-    bugId: 'round-1-bug-id:da50d17',
     adjudication: ['gg'],
-    adjudicationText: 'By design — added an old version to better support VSAC',
-    tags: ['normalize', 'version-skew', 'snomed'],
-    match({ prod, dev }) {
-      if (!isParameters(prod) || !isParameters(dev)) return null;
-      const prodSystem = getParamValue(prod, 'system');
-      const prodVersion = getParamValue(prod, 'version');
-      const devVersion = getParamValue(dev, 'version');
-      if (!prodVersion || !devVersion) return null;
-      if (!prodVersion.includes('snomed.info/sct') || !devVersion.includes('snomed.info/sct')) return null;
-      // Match when system is SNOMED, OR when system is absent but version URIs identify SNOMED
-      if (prodSystem && prodSystem !== 'http://snomed.info/sct') return null;
-      if (prodVersion === devVersion) return null;
-      return 'normalize';
+    adjudicationText: 'Version skew is by design — servers load different editions',
+    tags: ['normalize', 'version-skew'],
+    match(ctx) {
+      return detectVersionSkew(ctx);
     },
-    normalize({ prod, dev }) {
-      const prodVersion = getParamValue(prod, 'version');
-      const prodDisplay = getParamValue(prod, 'display');
-      function setVersionAndDisplay(body) {
-        if (!body?.parameter) return body;
-        return {
-          ...body,
-          parameter: body.parameter.map(p => {
-            if (p.name === 'version') return { ...p, valueString: prodVersion };
-            if (p.name === 'display' && prodDisplay !== undefined) return { ...p, valueString: prodDisplay };
-            return p;
-          }),
-        };
+    normalize(ctx) {
+      const { record, prod, dev } = ctx;
+      if (prod?.resourceType === 'ValueSet' && dev?.resourceType === 'ValueSet') {
+        return normalizeExpandVersionSkew(ctx);
       }
-      return { prod: setVersionAndDisplay(prod), dev: setVersionAndDisplay(dev) };
+      if (isParameters(prod) && isParameters(dev)) {
+        if (record.url.includes('$lookup')) return normalizeLookupVersionSkew(ctx);
+        return normalizeValidateCodeVersionSkew(ctx);
+      }
+      return { prod, dev };
     },
   },
 
@@ -712,33 +1024,6 @@ const tolerances = [
         };
       }
       return { prod, dev: canonicalize(dev) };
-    },
-  },
-
-  {
-    id: 'v2-0360-lookup-version-skew',
-    description: 'v2-0360 $lookup: dev has version 3.0.0, prod has 2.0.0. Dev is correct — newer version is expected (GG adjudicated: "Dev is correct"). Strips version, definition, designation params from both sides.',
-    kind: 'equiv-autofix',
-    bugId: 'round-1-bug-id:d3b49ff',
-    adjudication: ['gg'],
-    adjudicationText: 'Dev is correct',
-    match({ record }) {
-      if (record.url.includes('$lookup') && record.url.includes('v2-0360')) {
-        return 'normalize';
-      }
-      return null;
-    },
-    normalize(ctx) {
-      function clean(body) {
-        if (!body?.parameter) return body;
-        return {
-          ...body,
-          parameter: body.parameter
-            .filter(p => !['version', 'definition', 'designation'].includes(p.name))
-            .filter(p => !(p.name === 'property' && p.part?.some(pp => pp.name === 'code' && pp.valueCode === 'definition'))),
-        };
-      }
-      return both(ctx, clean);
     },
   },
 
@@ -1547,44 +1832,6 @@ const tolerances = [
   },
 
   {
-    id: 'validate-code-xcaused-unknown-system-disagree',
-    description: 'validate-code with result=false on both sides: prod and dev disagree on which system/version is unknown (x-caused-by-unknown-system differs). Caused by version skew or content differences — each server fails on a different coding. This also causes downstream diffs in code/display/system/version/message/issues params. Filed under b6d19d8 (dev omits params for known codings when unknown system present).',
-    kind: 'temp-tolerance',
-    bugId: 'b6d19d8',
-    tags: ['normalize', 'validate-code', 'x-caused-by-unknown-system', 'version-skew'],
-    match({ prod, dev }) {
-      if (!isParameters(prod) || !isParameters(dev)) return null;
-      const prodResult = getParamValue(prod, 'result');
-      const devResult = getParamValue(dev, 'result');
-      if (prodResult !== false || devResult !== false) return null;
-      // Collect all x-caused-by-unknown-system values from each side
-      const prodXCaused = (prod.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical);
-      const devXCaused = (dev.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical);
-      // At least one side must have it, and they must differ (values or count)
-      if (prodXCaused.length === 0 && devXCaused.length === 0) return null;
-      if (JSON.stringify(prodXCaused.sort()) === JSON.stringify(devXCaused.sort())) return null;
-      return 'normalize';
-    },
-    normalize({ prod, dev }) {
-      // Normalize all params that follow from the disagreement to prod's values
-      // Some params (x-caused-by-unknown-system) can appear multiple times
-      const paramsToCanon = new Set(['code', 'display', 'system', 'version', 'message', 'issues', 'x-caused-by-unknown-system', 'x-unknown-system']);
-      // Collect all prod params to canonicalize (preserving duplicates)
-      const prodCanonParams = (prod.parameter || []).filter(p => paramsToCanon.has(p.name));
-      // Build new dev params: keep non-canon params, drop all canon params
-      let newDevParams = (dev.parameter || []).filter(p => !paramsToCanon.has(p.name));
-      // Add all prod canon params
-      newDevParams.push(...prodCanonParams);
-      // Re-sort by name to stay consistent with sort-parameters-by-name
-      newDevParams.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-      return {
-        prod,
-        dev: { ...dev, parameter: newDevParams },
-      };
-    },
-  },
-
-  {
     id: 'validate-code-no-valueset-codeableconcept',
     description: 'POST /r4/ValueSet/$validate-code with only codeableConcept (no url/context/valueSet): prod returns 200 and validates against the CodeSystem, dev returns 400 "No ValueSet specified". Dev is stricter per spec (url/context/valueSet required at type level), but prod handles it gracefully.',
     kind: 'temp-tolerance',
@@ -1600,60 +1847,6 @@ const tolerances = [
       );
       if (!hasNoVsMsg) return null;
       return 'skip';
-    },
-  },
-
-  {
-    id: 'version-not-found-skew',
-    description: 'validate-code with result=false on both sides: issues about "could not be found, so the code cannot be validated" differ due to version skew — different Valid versions lists, or dev reports extra not-found issues for code system versions that prod has loaded. Both servers agree result=false; differences are only in explanatory details about which editions are available.',
-    kind: 'temp-tolerance',
-    bugId: 'f9e35f6',
-    tags: ['normalize', 'validate-code', 'version-skew', 'not-found-issues'],
-    match({ record, prod, dev }) {
-      if (!isParameters(prod) || !isParameters(dev)) return null;
-      const prodResult = getParamValue(prod, 'result');
-      const devResult = getParamValue(dev, 'result');
-      if (prodResult !== false || devResult !== false) return null;
-      const prodIssues = getParamValue(prod, 'issues');
-      const devIssues = getParamValue(dev, 'issues');
-      if (!prodIssues?.issue || !devIssues?.issue) return null;
-      const marker = 'could not be found, so the code cannot be validated';
-      const hasMarker = [...prodIssues.issue, ...devIssues.issue].some(
-        i => (i.details?.text || '').includes(marker)
-      );
-      if (!hasMarker) return null;
-      // Only match if issues or message actually differ
-      const prodMsg = getParamValue(prod, 'message');
-      const devMsg = getParamValue(dev, 'message');
-      if (JSON.stringify(prodIssues) === JSON.stringify(devIssues) && prodMsg === devMsg) return null;
-      return 'normalize';
-    },
-    normalize({ prod, dev }) {
-      const marker = 'could not be found, so the code cannot be validated';
-      function stripVersionNotFound(body) {
-        if (!body?.parameter) return body;
-        return {
-          ...body,
-          parameter: body.parameter.map(p => {
-            if (p.name === 'message') {
-              // Strip message param entirely — it follows from issues
-              return null;
-            }
-            if (p.name === 'issues' && p.resource?.issue) {
-              const filtered = p.resource.issue.filter(
-                i => !(i.details?.text || '').includes(marker)
-              );
-              if (filtered.length === 0) return null;
-              return {
-                ...p,
-                resource: { ...p.resource, issue: filtered },
-              };
-            }
-            return p;
-          }).filter(Boolean),
-        };
-      }
-      return both({ prod, dev }, stripVersionNotFound);
     },
   },
 
