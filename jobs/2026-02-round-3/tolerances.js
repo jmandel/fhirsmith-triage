@@ -121,14 +121,32 @@ const tolerances = [
 
   {
     id: 'sort-parameters-by-name',
-    description: 'Parameters.parameter array ordering differs between implementations but has no semantic meaning in FHIR.',
+    description: 'Parameters.parameter array ordering differs between implementations but has no semantic meaning in FHIR. Sorts by name, then by value as tiebreaker for duplicate-named parameters (e.g. multiple version params).',
     kind: 'equiv-autofix',
     adjudication: ['jm'],
     match({ prod, dev }) {
       return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
     },
     normalize(ctx) {
-      return both(ctx, body => sortAt(body, ['parameter'], 'name'));
+      function paramSortValue(p) {
+        // Extract a stable string value for tiebreaking duplicate-named params
+        for (const key of Object.keys(p)) {
+          if (key.startsWith('value')) return String(p[key] ?? '');
+        }
+        return '';
+      }
+      function sortParams(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: [...body.parameter].sort((a, b) => {
+            const nameCmp = (a.name || '').localeCompare(b.name || '');
+            if (nameCmp !== 0) return nameCmp;
+            return paramSortValue(a).localeCompare(paramSortValue(b));
+          }),
+        };
+      }
+      return both(ctx, sortParams);
     },
   },
 
@@ -1372,6 +1390,55 @@ const tolerances = [
         };
       }
       return both({ prod, dev }, stripVersionNotFound);
+    },
+  },
+
+  {
+    id: 'validate-code-missing-extra-version-params',
+    description: 'validate-code: dev omits version parameters for secondary codings in multi-coding CodeableConcept responses. Prod returns version strings for all code systems involved in validation, dev returns fewer. Normalizes by adding missing version values from prod to dev.',
+    kind: 'temp-tolerance',
+    bugId: '7b694ba',
+    tags: ['normalize', 'validate-code', 'version-params', 'multi-coding'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodVersions = (prod.parameter || []).filter(p => p.name === 'version');
+      const devVersions = (dev.parameter || []).filter(p => p.name === 'version');
+      if (prodVersions.length <= devVersions.length) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodVersionVals = (prod.parameter || [])
+        .filter(p => p.name === 'version')
+        .map(p => p.valueString);
+      const devVersionVals = (dev.parameter || [])
+        .filter(p => p.name === 'version')
+        .map(p => p.valueString);
+      // Find versions in prod that dev is missing
+      const devSet = new Set(devVersionVals);
+      const missing = prodVersionVals.filter(v => !devSet.has(v));
+      if (missing.length === 0) return { prod, dev };
+      // Add missing version params to dev
+      const newDevParams = [
+        ...(dev.parameter || []).filter(p => p.name !== 'version'),
+        ...missing.map(v => ({ name: 'version', valueString: v })),
+        ...(dev.parameter || []).filter(p => p.name === 'version'),
+      ];
+      // Sort: first by name, then for same-name params sort by value for stable ordering
+      newDevParams.sort((a, b) => {
+        const nameCmp = (a.name || '').localeCompare(b.name || '');
+        if (nameCmp !== 0) return nameCmp;
+        return JSON.stringify(a).localeCompare(JSON.stringify(b));
+      });
+      // Apply same stable sort to prod for consistency
+      const newProdParams = [...(prod.parameter || [])].sort((a, b) => {
+        const nameCmp = (a.name || '').localeCompare(b.name || '');
+        if (nameCmp !== 0) return nameCmp;
+        return JSON.stringify(a).localeCompare(JSON.stringify(b));
+      });
+      return {
+        prod: { ...prod, parameter: newProdParams },
+        dev: { ...dev, parameter: newDevParams },
+      };
     },
   },
 

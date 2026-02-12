@@ -1,0 +1,76 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "85354-9"
+    },
+    {
+      "name": "display",
+      "valueString": "Blood pressure"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "85354-9",
+            "display": "Blood pressure panel with all children optional"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "75367002",
+            "display": "Blood pressure (observable entity)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://snomed.info/sct#75367002 ('Blood pressure (observable entity)')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[1].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n6ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Analysing http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1 for validation purposes\n6ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Prepare include[0]: \"()\"\n220ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: CodeSystem found: \"http://loinc.org|2.81\"\n220ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Validate \"[undefined#85354-9 (\"Blood pressure panel with all children optional\"), undefined#75367002 (\"Blood pressure (observable entity)\")]\"\n427ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"http://loinc.org#85354-9\"\n1400ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: CodeSystem found: http://loinc.org|2.81 for http://loinc.org\n1400ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: check code in () at CodeableConcept.coding[0]\n1400ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Code \"85354-9\" found in http://loinc.org|2.81\n1401ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"http://snomed.info/sct#75367002\""
+    }
+  ]
+}
