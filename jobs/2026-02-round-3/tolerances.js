@@ -43,6 +43,27 @@ function both(ctx, fn) {
   return { prod: fn(ctx.prod), dev: fn(ctx.dev) };
 }
 
+function sortAt(obj, path, ...keys) {
+  // Navigate to the array at `path` (e.g. ['expansion', 'contains']) and sort
+  // it in place by `keys` (e.g. 'system', 'code'). Returns obj for chaining.
+  // No-op if the path doesn't resolve to an array.
+  let target = obj;
+  for (let i = 0; i < path.length - 1; i++) {
+    if (!target || typeof target !== 'object') return obj;
+    target = target[path[i]];
+  }
+  const last = path[path.length - 1];
+  if (!target || !Array.isArray(target[last])) return obj;
+  target[last] = [...target[last]].sort((a, b) => {
+    for (const k of keys) {
+      const cmp = String(a?.[k] ?? '').localeCompare(String(b?.[k] ?? ''));
+      if (cmp !== 0) return cmp;
+    }
+    return 0;
+  });
+  return obj;
+}
+
 // ---- Baseline tolerances ----
 
 const tolerances = [
@@ -84,15 +105,6 @@ const tolerances = [
       return record.prodBody && record.prodBody.trimStart().startsWith('<') ? 'skip' : null;
     },
   },
-  {
-    id: 'skip-missing-bodies',
-    description: 'Data collection artifact: response bodies not captured (normMatch=true in source). Both prodBody and devBody are absent, so comparison engine parses both as null and flags parse-error. Safe to skip — the collection pipeline already determined these match after normalization.',
-    kind: 'equiv-autofix',
-    tags: ['skip', 'data-collection-artifact'],
-    match({ record }) {
-      return (!record.prodBody && !record.devBody) ? 'skip' : null;
-    },
-  },
   // Normalizations
   {
     id: 'strip-diagnostics',
@@ -116,15 +128,7 @@ const tolerances = [
       return (isParameters(prod) || isParameters(dev)) ? 'normalize' : null;
     },
     normalize(ctx) {
-      return both(ctx, body => {
-        if (!body?.parameter || !Array.isArray(body.parameter)) return body;
-        return {
-          ...body,
-          parameter: [...body.parameter].sort((a, b) =>
-            (a.name || '').localeCompare(b.name || '')
-          ),
-        };
-      });
+      return both(ctx, body => sortAt(body, ['parameter'], 'name'));
     },
   },
 
@@ -1255,24 +1259,8 @@ const tolerances = [
       }
       return null;
     },
-    normalize({ prod, dev }) {
-      const sortKey = (c) => (c.system || '') + '|' + (c.code || '');
-      return {
-        prod: {
-          ...prod,
-          expansion: {
-            ...prod.expansion,
-            contains: [...prod.expansion.contains].sort((a, b) => sortKey(a).localeCompare(sortKey(b))),
-          },
-        },
-        dev: {
-          ...dev,
-          expansion: {
-            ...dev.expansion,
-            contains: [...dev.expansion.contains].sort((a, b) => sortKey(a).localeCompare(sortKey(b))),
-          },
-        },
-      };
+    normalize(ctx) {
+      return both(ctx, body => sortAt(body, ['expansion', 'contains'], 'system', 'code'));
     },
   },
 
@@ -1311,6 +1299,60 @@ const tolerances = [
         prod,
         dev: { ...dev, parameter: newDevParams },
       };
+    },
+  },
+
+  {
+    id: 'version-not-found-skew',
+    description: 'validate-code with result=false on both sides: issues about "could not be found, so the code cannot be validated" differ due to version skew — different Valid versions lists, or dev reports extra not-found issues for code system versions that prod has loaded. Both servers agree result=false; differences are only in explanatory details about which editions are available.',
+    kind: 'temp-tolerance',
+    bugId: 'f9e35f6',
+    tags: ['normalize', 'validate-code', 'version-skew', 'not-found-issues'],
+    match({ record, prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue || !devIssues?.issue) return null;
+      const marker = 'could not be found, so the code cannot be validated';
+      const hasMarker = [...prodIssues.issue, ...devIssues.issue].some(
+        i => (i.details?.text || '').includes(marker)
+      );
+      if (!hasMarker) return null;
+      // Only match if issues or message actually differ
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (JSON.stringify(prodIssues) === JSON.stringify(devIssues) && prodMsg === devMsg) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const marker = 'could not be found, so the code cannot be validated';
+      function stripVersionNotFound(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name === 'message') {
+              // Strip message param entirely — it follows from issues
+              return null;
+            }
+            if (p.name === 'issues' && p.resource?.issue) {
+              const filtered = p.resource.issue.filter(
+                i => !(i.details?.text || '').includes(marker)
+              );
+              if (filtered.length === 0) return null;
+              return {
+                ...p,
+                resource: { ...p.resource, issue: filtered },
+              };
+            }
+            return p;
+          }).filter(Boolean),
+        };
+      }
+      return both({ prod, dev }, stripVersionNotFound);
     },
   },
 

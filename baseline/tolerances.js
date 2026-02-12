@@ -43,6 +43,27 @@ function both(ctx, fn) {
   return { prod: fn(ctx.prod), dev: fn(ctx.dev) };
 }
 
+function sortAt(obj, path, ...keys) {
+  // Navigate to the array at `path` (e.g. ['expansion', 'contains']) and sort
+  // it in place by `keys` (e.g. 'system', 'code'). Returns obj for chaining.
+  // No-op if the path doesn't resolve to an array.
+  let target = obj;
+  for (let i = 0; i < path.length - 1; i++) {
+    if (!target || typeof target !== 'object') return obj;
+    target = target[path[i]];
+  }
+  const last = path[path.length - 1];
+  if (!target || !Array.isArray(target[last])) return obj;
+  target[last] = [...target[last]].sort((a, b) => {
+    for (const k of keys) {
+      const cmp = String(a?.[k] ?? '').localeCompare(String(b?.[k] ?? ''));
+      if (cmp !== 0) return cmp;
+    }
+    return 0;
+  });
+  return obj;
+}
+
 // ---- Baseline tolerances ----
 
 const tolerances = [
