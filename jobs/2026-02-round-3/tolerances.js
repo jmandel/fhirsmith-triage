@@ -1301,6 +1301,38 @@ const tolerances = [
   },
 
   {
+    id: 'expand-missing-limited-expansion',
+    description: 'Dev $expand omits limitedExpansion parameter from expansion.parameter when the expansion is truncated. Prod includes limitedExpansion: true to signal that the expansion was incomplete (triggered by _incomplete=true in the request). Without this parameter, clients cannot tell if the expansion was truncated. Affects 24 records across LOINC, SNOMED, and other large code system expansions.',
+    kind: 'temp-tolerance',
+    bugId: '3071698',
+    tags: ['normalize', 'expand', 'limitedExpansion'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion?.parameter || !dev?.expansion) return null;
+      const prodHasLimited = prod.expansion.parameter.some(
+        p => p.name === 'limitedExpansion' && p.valueBoolean === true
+      );
+      const devHasLimited = (dev.expansion.parameter || []).some(
+        p => p.name === 'limitedExpansion' && p.valueBoolean === true
+      );
+      if (prodHasLimited && !devHasLimited) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      return {
+        prod: {
+          ...prod,
+          expansion: {
+            ...prod.expansion,
+            parameter: prod.expansion.parameter.filter(p => p.name !== 'limitedExpansion'),
+          },
+        },
+        dev,
+      };
+    },
+  },
+
+  {
     id: 'expand-contains-sort-order',
     description: 'Expansion.contains code ordering differs between prod and dev. Both return the same set of codes but in different order. Code ordering in ValueSet expansion has no semantic meaning in FHIR — the expansion is a set, not a sequence. Sorts contains by system+code to normalize. Applies to all $expand operations with identical code membership but different ordering.',
     kind: 'equiv-autofix',
