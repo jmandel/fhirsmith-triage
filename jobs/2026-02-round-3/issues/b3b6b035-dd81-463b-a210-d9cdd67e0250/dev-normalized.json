@@ -1,0 +1,44 @@
+{
+  "date": "2019-11-01T09:29:23+11:00",
+  "expansion": {
+    "offset": 0,
+    "parameter": [
+      {
+        "name": "excludeNested",
+        "valueBoolean": true
+      },
+      {
+        "name": "offset",
+        "valueInteger": 0
+      },
+      {
+        "name": "count",
+        "valueInteger": 1000
+      },
+      {
+        "name": "used-codesystem",
+        "valueUri": "urn:ietf:bcp:13"
+      }
+    ],
+    "total": 0
+  },
+  "experimental": false,
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:2.16.840.1.113883.4.642.3.1024"
+    }
+  ],
+  "meta": {
+    "lastUpdated": "2019-11-01T09:29:23.356+11:00",
+    "profile": [
+      "http://hl7.org/fhir/StructureDefinition/shareablevalueset"
+    ]
+  },
+  "name": "Mime Types",
+  "resourceType": "ValueSet",
+  "status": "active",
+  "title": "MimeType",
+  "url": "http://hl7.org/fhir/ValueSet/mimetypes",
+  "version": "4.0.1"
+}

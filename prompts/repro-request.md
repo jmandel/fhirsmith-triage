@@ -65,8 +65,14 @@ curl -s 'https://tx.fhir.org/...' ...
 curl -s 'https://tx-dev.fhir.org/...' ...
 ```
 
-Prod returns `<key detail>`, dev returns `<key detail>`.
+**Prod** returns:
+> `"result": true`, `"display": "Acetaminophen 500 MG Oral Tablet"`
+
+**Dev** returns:
+> `"result": false`, `"message": "Unknown code '315266'"`
 ```
+
+Show **specific snippets** from the actual curl responses that demonstrate the difference. Quote the key JSON fields/values or message text — don't just say "responses differ". A reader should see exactly what each server returned without running the curls themselves. Keep it concise: just the fields that matter for the bug, not the entire response.
 
 To edit the bug, first get the comment ID:
 ```bash

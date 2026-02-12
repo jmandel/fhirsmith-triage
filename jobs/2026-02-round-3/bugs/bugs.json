@@ -4659,5 +4659,50 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "30716984a707465f7c60ecfd569bd68c96deb9eb17ba0014a86bafb6f0e12da9",
+        "human_id": "3071698",
+        "create_time": {
+            "timestamp": 1770862578,
+            "time": "2026-02-11T20:16:18-06:00",
+            "lamport": 103
+        },
+        "edit_time": {
+            "timestamp": 1770862728,
+            "time": "2026-02-11T20:18:48-06:00",
+            "lamport": 730
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "round:2026-02-round-3",
+            "tx-compare"
+        ],
+        "title": "Dev  omits limitedExpansion parameter when expansion is truncated",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

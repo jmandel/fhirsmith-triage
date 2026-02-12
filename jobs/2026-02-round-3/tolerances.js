@@ -1333,6 +1333,58 @@ const tolerances = [
   },
 
   {
+    id: 'expand-toocostly-extension-and-used-codesystem',
+    description: 'Dev omits valueset-toocostly extension on $expand of grammar-based code systems (BCP-13 MIME types, all-languages) where expansion returns total=0. Prod marks these with expansion.extension valueset-toocostly: true; dev does not. Dev also adds a used-codesystem parameter that prod omits. Both differences always co-occur on grammar-based code systems that cannot be enumerated.',
+    kind: 'temp-tolerance',
+    bugId: 'c7004d3',
+    tags: ['normalize', 'expand', 'toocostly', 'used-codesystem'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      // Check if prod has valueset-toocostly extension but dev doesn't
+      const prodHasTooCostly = prod.expansion.extension?.some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+      );
+      const devHasTooCostly = dev.expansion.extension?.some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+      );
+      if (prodHasTooCostly && !devHasTooCostly) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Strip valueset-toocostly extension from prod
+      let prodExp = { ...prod.expansion };
+      if (prodExp.extension) {
+        const filtered = prodExp.extension.filter(
+          e => e.url !== 'http://hl7.org/fhir/StructureDefinition/valueset-toocostly'
+        );
+        if (filtered.length === 0) {
+          delete prodExp.extension;
+        } else {
+          prodExp.extension = filtered;
+        }
+      }
+      // Strip dev-only used-codesystem parameters
+      let devExp = { ...dev.expansion };
+      if (devExp.parameter) {
+        const prodUsedCs = new Set(
+          (prod.expansion.parameter || [])
+            .filter(p => p.name === 'used-codesystem')
+            .map(p => p.valueUri)
+        );
+        devExp.parameter = devExp.parameter.filter(p => {
+          if (p.name !== 'used-codesystem') return true;
+          return prodUsedCs.has(p.valueUri);
+        });
+      }
+      return {
+        prod: { ...prod, expansion: prodExp },
+        dev: { ...dev, expansion: devExp },
+      };
+    },
+  },
+
+  {
     id: 'expand-contains-sort-order',
     description: 'Expansion.contains code ordering differs between prod and dev. Both return the same set of codes but in different order. Code ordering in ValueSet expansion has no semantic meaning in FHIR — the expansion is a set, not a sequence. Sorts contains by system+code to normalize. Applies to all $expand operations with identical code membership but different ordering.',
     kind: 'equiv-autofix',

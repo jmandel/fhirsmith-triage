@@ -1,0 +1,25 @@
+{
+  "id": "b3b6b035-dd81-463b-a210-d9cdd67e0250",
+  "url": "/r4/ValueSet/$expand",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 906,
+    "hash": "fa42a56ae41cbc89310bc8837e5a8338"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 822,
+    "hash": "0dbf2084cfa0e604ba1c39ed7d5ac292"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "expand",
+    "diffs": []
+  },
+  "prodBody": "{\"resourceType\" : \"ValueSet\",\"meta\" : {\"lastUpdated\" : \"2019-11-01T09:29:23.356+11:00\",\"profile\" : [\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"url\" : \"http://hl7.org/fhir/ValueSet/mimetypes\",\"identifier\" : [{\"system\" : \"urn:ietf:rfc:3986\",\"value\" : \"urn:oid:2.16.840.1.113883.4.642.3.1024\"}],\"version\" : \"4.0.1\",\"name\" : \"Mime Types\",\"title\" : \"MimeType\",\"status\" : \"active\",\"experimental\" : false,\"date\" : \"2019-11-01T09:29:23+11:00\",\"expansion\" : {\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/valueset-toocostly\",\"valueBoolean\" : true}],\"identifier\" : \"urn:uuid:1bf685d5-e82e-4b57-8c3a-0dcecdee0274\",\"timestamp\" : \"2026-02-11T11:58:26.895Z\",\"total\" : 0,\"offset\" : 0,\"parameter\" : [{\"name\" : \"limitedExpansion\",\"valueBoolean\" : true},{\"name\" : \"excludeNested\",\"valueBoolean\" : true},{\"name\" : \"offset\",\"valueInteger\" : 0},{\"name\" : \"count\",\"valueInteger\" : 1000}]}}",
+  "devBody": "{\"resourceType\":\"ValueSet\",\"meta\":{\"lastUpdated\":\"2019-11-01T09:29:23.356+11:00\",\"profile\":[\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"url\":\"http://hl7.org/fhir/ValueSet/mimetypes\",\"identifier\":[{\"system\":\"urn:ietf:rfc:3986\",\"value\":\"urn:oid:2.16.840.1.113883.4.642.3.1024\"}],\"version\":\"4.0.1\",\"name\":\"Mime Types\",\"title\":\"MimeType\",\"status\":\"active\",\"experimental\":false,\"date\":\"2019-11-01T09:29:23+11:00\",\"contact\":[{\"telecom\":[{\"system\":\"url\",\"value\":\"http://hl7.org/fhir\"}]}],\"expansion\":{\"timestamp\":\"2026-02-11T11:58:26.945Z\",\"identifier\":\"urn:uuid:5206b402-e151-4513-9c94-f0321193a504\",\"parameter\":[{\"name\":\"excludeNested\",\"valueBoolean\":true},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"used-codesystem\",\"valueUri\":\"urn:ietf:bcp:13\"}],\"offset\":0,\"total\":0}}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"defaultDisplayLanguage\",\"valueCode\":\"en\"},{\"name\":\"_limit\",\"valueInteger\":10000},{\"name\":\"_incomplete\",\"valueBoolean\":true},{\"name\":\"count\",\"valueInteger\":1000},{\"name\":\"offset\",\"valueInteger\":0},{\"name\":\"excludeNested\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"7e22ee42-75e4-4f70-b4a0-bf758c62a3f4\"},{\"name\":\"valueSet\",\"resource\":{\"resourceType\":\"ValueSet\",\"id\":\"mimetypes\",\"meta\":{\"lastUpdated\":\"2019-11-01T09:29:23.356+11:00\",\"profile\":[\"http://hl7.org/fhir/StructureDefinition/shareablevalueset\"]},\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg\",\"valueCode\":\"fhir\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-standards-status\",\"valueCode\":\"normative\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-normative-version\",\"valueCode\":\"4.0.0\"},{\"url\":\"http://hl7.org/fhir/StructureDefinition/structuredefinition-fmm\",\"valueInteger\":5}],\"url\":\"http://hl7.org/fhir/ValueSet/mimetypes\",\"identifier\":[{\"system\":\"urn:ietf:rfc:3986\",\"value\":\"urn:oid:2.16.840.1.113883.4.642.3.1024\"}],\"version\":\"4.0.1\",\"name\":\"Mime Types\",\"title\":\"MimeType\",\"status\":\"active\",\"experimental\":false,\"date\":\"2019-11-01T09:29:23+11:00\",\"publisher\":\"HL7 International - FHIR-Infrastructure\",\"contact\":[{\"telecom\":[{\"system\":\"url\",\"value\":\"http://hl7.org/fhir\"}]}],\"description\":\"This value set includes all possible codes from BCP-13 (http://tools.ietf.org/html/bcp13)\",\"compose\":{\"include\":[{\"system\":\"urn:ietf:bcp:13\"}]}}}]}"
+}
