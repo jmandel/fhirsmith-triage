@@ -1,0 +1,191 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "8329-5"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "display",
+      "valueString": "Körpertemperatur"
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://loinc.org#8329-5 for language(s) 'de'. The display is 'Body temperature - Core' the default language display; Wrong Display Name 'Body temperature - Core' for urn:iso:std:iso:11073:10101#150368. Valid display is 'MDC_TEMP_CORE' (for the language(s) 'de'); Wrong Display Name 'Body temperature' for http://loinc.org#8310-5. Valid display is one of 2 choices: 'Körpertemperatur' (de-AT) or 'Körpertemperatur' (de-DE) (for the language(s) 'de')"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5",
+            "display": "Body temperature"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "276885007",
+            "display": "Core body temperature"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150364"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150368",
+            "display": "Body temperature - Core"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8329-5",
+            "display": "Body temperature - Core"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "Wrong Display Name 'Body temperature' for http://loinc.org#8310-5. Valid display is one of 2 choices: 'Körpertemperatur' (de-AT) or 'Körpertemperatur' (de-DE) (for the language(s) 'de')"
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_LANG_NONE"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ],
+              "text": "'Core body temperature' is the default display; the code system http://snomed.info/sct has no Display Names for the language de"
+            },
+            "location": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            }
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "Wrong Display Name 'Body temperature - Core' for urn:iso:std:iso:11073:10101#150368. Valid display is 'MDC_TEMP_CORE' (for the language(s) 'de')"
+            },
+            "location": [
+              "CodeableConcept.coding[3].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[3].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "There are no valid display names found for the code http://loinc.org#8329-5 for language(s) 'de'. The display is 'Body temperature - Core' the default language display"
+            },
+            "location": [
+              "CodeableConcept.coding[4].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[4].display"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://loinc.org#8310-5 (\"Body temperature\"), http://snomed.info/sct#276885007 (\"Core body temperature\"), urn:iso:std:iso:11073:10101#150364 (\"\"), urn:iso:std:iso:11073:10101#150368 (\"Body temperature - Core\"), http://loinc.org#8329-5 (\"Body temperature - Core\")]\"\r\n0 0     : 0ms  : Check \"http://loinc.org#8310-5\"\r\n0 0     : 0ms  : Using CodeSystem \"http://loinc.org|2.81\" (content = complete)\r\n437 437 : 437ms : Check \"http://snomed.info/sct#276885007\"\r\n437 0   : 437ms : Using CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\" (content = complete)\r\n437 0   : 437ms : Check \"urn:iso:std:iso:11073:10101#150364\"\r\n453 16  : 453ms : Using CodeSystem \"urn:iso:std:iso:11073:10101|2024-12-05 (from fhir.tx.support.r4#0.32.0)\" (content = complete)\r\n453 0   : 453ms : Check \"urn:iso:std:iso:11073:10101#150368\"\r\n468 15  : 468ms : Using CodeSystem \"urn:iso:std:iso:11073:10101|2024-12-05 (from fhir.tx.support.r4#0.32.0)\" (content = complete)\r\n468 0   : 468ms : Check \"http://loinc.org#8329-5\"\r\n468 0   : 468ms : Using CodeSystem \"http://loinc.org|2.81\" (content = complete)\r\n"
+    }
+  ]
+}

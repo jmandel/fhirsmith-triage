@@ -1,0 +1,129 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "8329-5"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "8310-5",
+            "display": "Body temperature",
+            "system": "http://loinc.org"
+          },
+          {
+            "code": "276885007",
+            "display": "Core body temperature",
+            "system": "http://snomed.info/sct"
+          },
+          {
+            "code": "150364",
+            "system": "urn:iso:std:iso:11073:10101"
+          },
+          {
+            "code": "150368",
+            "display": "Body temperature - Core",
+            "system": "urn:iso:std:iso:11073:10101"
+          },
+          {
+            "code": "8329-5",
+            "display": "Body temperature - Core",
+            "system": "http://loinc.org"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Körpertemperatur"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'Body temperature' for http://loinc.org#8310-5. Valid display is one of 2 choices: 'Körpertemperatur' (de-AT) or 'Körpertemperatur' (de-DE) (for the language(s) 'de')"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "severity": "warning"
+          },
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "status-check",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            },
+            "severity": "information"
+          },
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'Body temperature - Core' for urn:iso:std:iso:11073:10101#150368. Valid display is 'MDC_TEMP_CORE' (for the language(s) 'de')"
+            },
+            "expression": [
+              "CodeableConcept.coding[3].display"
+            ],
+            "severity": "warning"
+          },
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "There are no valid display names found for the code http://loinc.org#8329-5 for language(s) 'de'. The display is 'Body temperature - Core' the default language display"
+            },
+            "expression": [
+              "CodeableConcept.coding[4].display"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://loinc.org#8329-5 for language(s) 'de'. The display is 'Body temperature - Core' the default language display; Wrong Display Name 'Body temperature - Core' for urn:iso:std:iso:11073:10101#150368. Valid display is 'MDC_TEMP_CORE' (for the language(s) 'de'); Wrong Display Name 'Body temperature' for http://loinc.org#8310-5. Valid display is one of 2 choices: 'Körpertemperatur' (de-AT) or 'Körpertemperatur' (de-DE) (for the language(s) 'de')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    }
+  ],
+  "resourceType": "Parameters"
+}

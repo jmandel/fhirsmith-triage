@@ -1266,6 +1266,50 @@ const tolerances = [
   },
 
   {
+    id: 'duplicate-draft-codesystem-status-check',
+    description: 'Dev emits duplicate MSG_DRAFT status-check issues when a CodeableConcept has multiple codings from a draft CodeSystem (e.g., urn:iso:std:iso:11073:10101). Prod correctly emits one status-check per unique CodeSystem reference; dev emits one per coding. Deduplicates by removing duplicate status-check issues from dev.',
+    kind: 'temp-tolerance',
+    bugId: 'b3c97a1',
+    tags: ['normalize', 'validate-code', 'status-check', 'duplicate-issue'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const devIssues = getParamValue(dev, 'issues');
+      if (!devIssues?.issue) return null;
+      // Check for duplicate status-check issues in dev (same details.text)
+      const statusCheckTexts = devIssues.issue
+        .filter(iss => iss.details?.coding?.some(c => c.code === 'status-check'))
+        .map(iss => iss.details?.text || '');
+      if (statusCheckTexts.length !== new Set(statusCheckTexts).size) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      function deduplicateStatusChecks(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const seen = new Set();
+            const deduped = p.resource.issue.filter(iss => {
+              const isStatusCheck = iss.details?.coding?.some(c => c.code === 'status-check');
+              if (!isStatusCheck) return true;
+              const text = iss.details?.text || '';
+              if (seen.has(text)) return false;
+              seen.add(text);
+              return true;
+            });
+            return {
+              ...p,
+              resource: { ...p.resource, issue: deduped },
+            };
+          }),
+        };
+      }
+      return { prod, dev: deduplicateStatusChecks(dev) };
+    },
+  },
+
+  {
     id: 'display-comment-vs-invalid-display-issues',
     description: 'validate-code with displayLanguage: prod has extra display-comment issues in its OperationOutcome that dev lacks. Dev uses invalid-display where prod uses display-comment, with different severity (information vs warning) and text. Both convey the same information — the provided display does not match a language-specific display. Same root cause as display-lang-result-disagrees. Strips display-comment issues from prod and corresponding dev-only invalid-display issues/message.',
     kind: 'temp-tolerance',

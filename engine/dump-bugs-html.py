@@ -1006,7 +1006,7 @@ function renderBugList() {{
     const labels = bug.labels.map(l => `<span class="pill pill-label" data-label="${{l}}">${{l}}</span>`).join("");
     const impactPill = bug.impact ? `<span class="pill pill-impact">${{bug.impact.toLocaleString()}} records</span>` : "";
 
-    html += `<div class="bug-card" data-status="${{bug.status}}" data-id="${{bug.id}}" data-labels="${{bug.labels.join(",")}}" data-impact="${{bug.impact || 0}}">
+    html += `<div class="bug-card" id="bug-${{bug.id}}" data-status="${{bug.status}}" data-id="${{bug.id}}" data-labels="${{bug.labels.join(",")}}" data-impact="${{bug.impact || 0}}">
       <div class="bug-header" onclick="toggleBug(this)">
         <svg class="bug-expand-icon" viewBox="0 0 16 16" fill="currentColor">
           <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/>
@@ -1156,6 +1156,18 @@ document.querySelectorAll(".sort-btn").forEach(btn => {{
 // Initial render
 renderBugList();
 updatePillVisuals();
+
+// Deep-link: if URL has #bug-<id>, expand and scroll to it
+(function() {{
+  const hash = location.hash;
+  if (!hash || !hash.startsWith("#bug-")) return;
+  const card = document.querySelector(hash);
+  if (!card) return;
+  // Show regardless of status filter
+  card.classList.remove("hidden");
+  card.classList.add("expanded");
+  requestAnimationFrame(() => card.scrollIntoView({{ behavior: "smooth", block: "start" }}));
+}})();
 </script>
 </body>
 </html>"""
