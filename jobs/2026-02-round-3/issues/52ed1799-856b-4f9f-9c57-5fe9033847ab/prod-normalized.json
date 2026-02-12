@@ -1,0 +1,42 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "LA15920-4"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "LA15920-4",
+            "display": "Former smoker",
+            "system": "http://loinc.org",
+            "version": "2.77"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Former smoker"
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.77"
+    }
+  ],
+  "resourceType": "Parameters"
+}

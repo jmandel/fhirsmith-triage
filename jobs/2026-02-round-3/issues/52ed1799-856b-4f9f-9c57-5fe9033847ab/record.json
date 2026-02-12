@@ -1,0 +1,28 @@
+{
+  "id": "52ed1799-856b-4f9f-9c57-5fe9033847ab",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1952,
+    "hash": "fa8c4340ec7b0f894231d1e3c6fe2d44"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 1038,
+    "hash": "fa625c9eb42ac7760e5b9012efc158ff"
+  },
+  "comparison": {
+    "category": "result-disagrees",
+    "op": "validate-code",
+    "prodResult": true,
+    "devResult": false,
+    "system": "http://loinc.org",
+    "code": "LA15920-4"
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://loinc.org\"},{\"name\" : \"code\",\"valueCode\" : \"LA15920-4\"},{\"name\" : \"version\",\"valueString\" : \"2.77\"},{\"name\" : \"display\",\"valueString\" : \"Former smoker\"},{\"name\" : \"message\",\"valueString\" : \"There are no valid display names found for the code http://loinc.org#LA15920-4 for language(s) 'de'. The display is 'Former smoker' the default language display\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://loinc.org\",\"version\" : \"2.77\",\"code\" : \"LA15920-4\",\"display\" : \"Former smoker\"}]}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK\"}],\"severity\" : \"information\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"invalid-display\"}],\"text\" : \"There are no valid display names found for the code http://loinc.org#LA15920-4 for language(s) 'de'. The display is 'Former smoker' the default language display\"},\"location\" : [\"CodeableConcept.coding[0].display\"],\"expression\" : [\"CodeableConcept.coding[0].display\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n16 0    : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\\r\\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n16 0    : 0ms  : Prepare include: \\\"()\\\"\\r\\n16 0    : 0ms  : Validate \\\"[http://loinc.org|2.77#LA15920-4 (\\\"Former smoker\\\")]\\\"\\r\\n16 0    : 0ms  : Check \\\"http://loinc.org|2.77#LA15920-4\\\"\\r\\n16 0    : 0ms  : Using CodeSystem \\\"http://loinc.org|2.77\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"CodeableConcept.coding[0].system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://loinc.org\",\"version\":\"2.77\",\"code\":\"LA15920-4\",\"display\":\"Former smoker\"}]}},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"http://loinc.org|2.77\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://loinc.org\",\"version\":\"2.77\",\"code\":\"LA15920-4\",\"display\":\"Former smoker\"}]}},{\"name\":\"displayLanguage\",\"valueString\":\"de\"},{\"name\":\"lenient-display-validation\",\"valueBoolean\":true},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"682b9794-e6ca-4120-b516-17382b3aff31\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueCanonical\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008\"},{\"name\":\"mode\",\"valueString\":\"lenient-display-validation\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}

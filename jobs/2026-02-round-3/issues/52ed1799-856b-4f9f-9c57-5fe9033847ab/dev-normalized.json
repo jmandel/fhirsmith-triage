@@ -1,0 +1,58 @@
+{
+  "parameter": [
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "LA15920-4",
+            "display": "Former smoker",
+            "system": "http://loinc.org",
+            "version": "2.77"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "not-found",
+            "details": {
+              "coding": [
+                {
+                  "code": "not-found",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].system"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "version",
+      "valueString": "2.77"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://loinc.org|2.77"
+    }
+  ],
+  "resourceType": "Parameters"
+}

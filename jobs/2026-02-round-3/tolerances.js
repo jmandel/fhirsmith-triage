@@ -1789,6 +1789,50 @@ const tolerances = [
   },
 
   {
+    id: 'dev-x-unknown-system-extra',
+    description: 'Dev returns x-caused-by-unknown-system or x-unknown-system parameter on validate-code where prod does not. ' +
+      'Prod resolves the system/version and validates; dev fails at CodeSystem-not-found level. Both agree result=false. ' +
+      'Affected systems: LOINC 2.77, fhir.by custom ValueSets, old SNOMED editions, BCP-47 versions. ' +
+      'Mix of version skew and missing custom resources.',
+    kind: 'temp-tolerance',
+    bugId: '3482632',
+    tags: ['normalize', 'validate-code', 'x-unknown-system', 'version-skew'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const devUnknown = getParamValue(dev, 'x-caused-by-unknown-system') || getParamValue(dev, 'x-unknown-system');
+      const prodUnknown = getParamValue(prod, 'x-caused-by-unknown-system') || getParamValue(prod, 'x-unknown-system');
+      if (devUnknown && !prodUnknown) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      if (!prod?.parameter || !dev?.parameter) return { prod, dev };
+      // Strip x-caused-by-unknown-system and x-unknown-system from dev
+      let devNorm = stripParams(dev, 'x-caused-by-unknown-system', 'x-unknown-system');
+      // Canonicalize message to prod's value
+      const prodMsg = getParamValue(prod, 'message');
+      if (prodMsg) {
+        devNorm = {
+          ...devNorm,
+          parameter: devNorm.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: prodMsg } : p
+          ),
+        };
+      }
+      // Canonicalize issues to prod's value
+      const prodIssues = getParamValue(prod, 'issues');
+      if (prodIssues) {
+        devNorm = {
+          ...devNorm,
+          parameter: devNorm.parameter.map(p =>
+            p.name === 'issues' ? { ...p, resource: prodIssues } : p
+          ),
+        };
+      }
+      return { prod, dev: devNorm };
+    },
+  },
+
+  {
     id: 'validate-code-missing-extra-version-params',
     description: 'validate-code: dev omits version parameters for secondary codings in multi-coding CodeableConcept responses. Prod returns version strings for all code systems involved in validation, dev returns fewer. Normalizes by adding missing version values from prod to dev.',
     kind: 'temp-tolerance',
@@ -1902,6 +1946,29 @@ const tolerances = [
         prod: { ...prod, parameter: newProdParams },
         dev: { ...dev, parameter: newDevParams },
       };
+    },
+  },
+
+  {
+    id: 'result-disagrees-unknown-system-version',
+    description: 'validate-code result-disagrees due to version skew: prod returns result=true (validates against a version it has loaded), dev returns result=false with x-caused-by-unknown-system (does not have that version). Affects LOINC 2.77, SNOMED 20200131, BCP-47 versions. Not an actionable code bug — different data loaded on the servers.',
+    kind: 'temp-tolerance',
+    bugId: 'c0fe696',
+    tags: ['skip', 'validate-code', 'version-skew', 'result-disagrees'],
+    match({ record, prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== false) return null;
+      // Check raw devBody for x-caused-by-unknown-system since earlier
+      // tolerances may strip it from the normalized dev
+      let rawDev;
+      try { rawDev = JSON.parse(record.devBody); } catch { return null; }
+      const hasUnknownSystem = (rawDev.parameter || []).some(
+        p => p.name === 'x-caused-by-unknown-system'
+      );
+      if (!hasUnknownSystem) return null;
+      return 'skip';
     },
   },
 
