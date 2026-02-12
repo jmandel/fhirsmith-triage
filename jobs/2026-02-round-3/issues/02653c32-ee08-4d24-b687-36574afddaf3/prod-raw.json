@@ -1,0 +1,17 @@
+{
+  "resourceType": "OperationOutcome",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>The value set '' expansion has too many codes to display (&gt;10000)</p></div>"
+  },
+  "issue": [
+    {
+      "severity": "error",
+      "code": "too-costly",
+      "details": {
+        "text": "The value set '' expansion has too many codes to display (>10000)"
+      },
+      "diagnostics": "0 0 : start\r\n32 32   : not in cache\r\n32 0    : 0ms start working\r\n32 0    : 0ms compose #1\r\n"
+    }
+  ]
+}

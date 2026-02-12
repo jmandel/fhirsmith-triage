@@ -1,40 +1,32 @@
-# Analysis: temp-tolerance
+# Analysis: already-handled
 
 **Operation**: `POST /r4/ValueSet/$validate-code?`
 **Category**: content-differs
 **Status**: prod=200 dev=200
-**Bug**: b9034b0
-**Tolerance**: validate-code-display-text-differs
+**Bug**: none (existing tolerances cover this)
+**Tolerance**: validate-code-display-text-differs, validate-code-missing-extra-version-params
 
 ## What differs
 
-The `display` parameter in the validate-code response differs between prod and dev for the same code and same version:
+The original difference was in the `display` parameter for LOINC code `8478-0`:
+- **Prod**: `"Mean blood pressure"`
+- **Dev**: `"Mean arterial pressure"`
 
-- Prod: `display = "Mean blood pressure"`
-- Dev: `display = "Mean arterial pressure"`
+Additionally, prod returned an extra `version` parameter (SNOMED CT version string) that dev omitted.
 
-Both for LOINC code 8478-0, version 2.81. Everything else is identical: `result=true`, `system=http://loinc.org`, `code=8478-0`, `version=2.81`, `codeableConcept`, and `issues` all match after normalization.
+Both servers agree on `result=true`, `system=http://loinc.org`, `code=8478-0`, and the `codeableConcept` output. The request validated a multi-coding CodeableConcept (LOINC 8478-0 + SNOMED 6797001) against the Vital Signs ValueSet.
 
-The LOINC code 8478-0 has multiple designations. Prod returns "Mean blood pressure" (the LOINC long common name), while dev returns "Mean arterial pressure" (a different designation). The request included `displayLanguage=en-US`.
+## Category: `already-handled`
 
-## Broader pattern
+After the existing tolerance pipeline runs, **prod-normalized.json and dev-normalized.json are identical**. The record is no longer present in deltas.ndjson (0 matches). Six tolerances were applied:
 
-275 validate-code delta records have display as their only difference, across multiple code systems:
-
-- **http://loinc.org**: 261 records (prod returns short/common names, dev returns longer or different designations)
-- **urn:iso:std:iso:3166**: 10 records (e.g., DE: prod="Deutschland", dev="Germany")
-- **http://unitsofmeasure.org**: 2 records (e.g., mL: prod="ml", dev="mL")
-- **urn:ietf:bcp:13**: 2 records (e.g., application/pdf: prod="PDF", dev="application/pdf")
-
-Same class of issue as the previously handled SNOMED display text difference (bug 39d9af6, tolerance `snomed-same-version-display-differs`), but for non-SNOMED systems.
-
-## Category: `temp-tolerance`
-
-This is a real, meaningful difference — display text is terminology content and the two servers return different values for the same code. However, it follows a recognizable pattern (designation selection) affecting many records, and the same issue class was already triaged for SNOMED. Filed as temp-tolerance with a git-bug.
+1. `strip-diagnostics` — removed trace diagnostics (different formats by design)
+2. `sort-parameters-by-name` — sorted parameters for stable comparison
+3. `strip-oo-message-id-extension` — removed server-generated message ID extensions
+4. `oo-missing-location-field` — stripped deprecated `location` field from prod
+5. `validate-code-display-text-differs` (bugId: b9034b0) — normalized display text to prod value
+6. `validate-code-missing-extra-version-params` (bugId: 7b694ba) — added missing SNOMED version param to dev
 
 ## Tolerance
 
-Tolerance ID: `validate-code-display-text-differs`. Matches validate-code Parameters responses where both sides have display values that differ, excluding systems already handled by other tolerances (SNOMED, BCP-47). Normalizes both sides to prod's display value.
-
-- Records eliminated: 275 (from 2434 to 2159 deltas)
-- Validated 12 randomly sampled eliminated records: all had display as the sole difference, confirming the tolerance is correctly scoped.
+No new tolerance needed. The existing pipeline fully resolves all differences for this record. The two bugs already filed (b9034b0 for display text, 7b694ba for missing version params) cover the root causes.
