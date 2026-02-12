@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_105 bugs (73 open, 32 closed)_
+_104 bugs (72 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -4195,45 +4195,6 @@ Tolerance ID: snomed-same-version-display-differs. Matches SNOMED validate-code 
 329fd29 #1 Claude (AI Assistant) <>
 
 Adjudicated by GG: Fixed — but won't achieve consistency with prod, since prod has the same bug (random which it chooses)
-
----
-
-### [ ] `674611c` Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code
-
-Records-Impacted: 12
-Tolerance-ID: validate-code-extra-filter-miss-message
-Record-ID: 7c3bf322-7db7-42f5-82d6-dd1ef9bd9588
-
-
-**Status: Inconclusive** -- the IPS ValueSets (e.g. `allergies-intolerances-uv-ips|2.0.0`) used in all 12 affected records are not loaded on the public tx.fhir.org / tx-dev.fhir.org servers, so the original requests cannot be replayed. The request bodies were not stored in the comparison records.
-
-Attempted:
-1. Reconstructed POST to `/r4/ValueSet/$validate-code` for SNOMED 716186003 against `http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips` (with and without version) -- both servers return "value Set could not be found"
-2. Checked 33 related delta records -- only IPS ValueSet records (not publicly available) match the exact bug pattern (result=true on both, dev extra message, prod no message)
-3. Non-IPS records (medication-form-codes, us-core-encounter-type) show a different pattern (result=false on both sides, different message content)
-
-
-On $validate-code requests against ValueSets with multiple include filters (e.g. IPS allergies-intolerances, medical-devices), when the code is valid (result=true, found in at least one filter), dev returns an extra `message` parameter containing "Code X is not in the specified filter" for each filter the code did NOT match. Prod omits the `message` parameter entirely when the overall result is true.
-
-Example (record 7c3bf322):
-- Prod: result=true, no message parameter
-- Dev: result=true, message="Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter"
-
-The code 716186003 (No known allergy) is valid in the IPS allergies ValueSet but only matches the 4th include filter (concept<<716186003). Dev reports failure messages for the 3 filters it didn't match.
-
-
-12 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=true. All involve SNOMED codes against IPS ValueSets with multiple include filters. Found via:
-```
-grep 'extra-in-dev' results/deltas/deltas.ndjson | grep '"message"' → 23 hits
-```
-Of those, 12 have this pattern (single diff: extra-in-dev:message, result=true on both sides, dev message contains "is not in the specified filter", prod has no message param).
-
-The remaining 11 are different patterns (multiple diffs, result=false, or different message content).
-
-
-Tolerance ID: validate-code-extra-filter-miss-message
-Matches: validate-code where result=true on both sides, dev has a `message` parameter that prod lacks, and the dev message matches the pattern "is not in the specified filter".
-Normalizes: strips the extra `message` parameter from dev.
 
 ---
 
