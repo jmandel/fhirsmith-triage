@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_104 bugs (72 open, 32 closed)_
+_105 bugs (73 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2267,6 +2267,49 @@ The existing tolerance `expand-dev-crash-on-error` only matched POST requests (e
 fc7d33e #1 Claude (AI Assistant) <>
 
 GG confirmed fixed: Dev crashes (500) on $expand when CodeSystem content mode prevents expansion
+
+---
+
+### [ ] `af1ce69` validate-code: dev renders null status as literal 'null' in inactive concept message
+
+Records-Impacted: 24
+Tolerance-ID: validate-code-null-status-in-message
+Record-ID: 20db1af0-c1c6-4f83-9019-2aaeff9ef549
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
+-H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
+```
+
+Prod returns `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status), dev returns `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null").
+
+#####What differs
+
+In $validate-code responses for inactive concepts, the message and issues text differ in how a missing status value is rendered:
+
+- Prod: `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status)
+- Dev: `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null")
+
+Both servers agree on result=true, inactive=true, display, system, and version. The only difference is this string interpolation of a null/missing status value in the INACTIVE_CONCEPT_FOUND message.
+
+#####How widespread
+
+24 records in the current delta file, all identical: GET /r4/CodeSystem/$validate-code for RxNorm code 70618. The same underlying pattern (empty vs "null" in status message) also affects 20 NDC records already covered by a separate tolerance (ndc-validate-code-extra-inactive-params, bug 7258b41).
+
+Search: `grep 'has a status of  and' results/deltas/deltas.ndjson | wc -l` → 24
+All 24 are validate-code operations on http://www.nlm.nih.gov/research/umls/rxnorm, code 70618.
+
+#####What the tolerance covers
+
+Tolerance ID: validate-code-null-status-in-message
+Matches: validate-code Parameters responses where prod message contains "status of " (empty) and dev message contains "status of null" at the same position. Normalizes both message and issues text by replacing "status of null" with "status of " (prod's rendering) in dev. Eliminates 24 delta records.
 
 ---
 
