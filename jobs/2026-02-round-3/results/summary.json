@@ -1,7 +1,7 @@
 {
-  "jobDir": "jobs/2026-02-round-3",
+  "jobDir": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3",
   "tolerancesPath": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3/tolerances.js",
-  "timestamp": "2026-02-12T02:49:37.129Z",
+  "timestamp": "2026-02-12T02:54:37.294Z",
   "totalRecords": 9206,
   "skipped": 54,
   "skippedByKind": {
@@ -14,10 +14,10 @@
     "skip-prod-xml": 5
   },
   "categories": {
-    "OK": 7829,
+    "OK": 7927,
     "status-mismatch": 248,
-    "content-differs": 1001,
     "result-disagrees": 49,
+    "content-differs": 903,
     "dev-crash-on-error": 20,
     "dev-crash-on-valid": 4,
     "missing-resource": 1
@@ -25,13 +25,13 @@
   "okBreakdown": {
     "strict": 0,
     "equiv-autofix": 4356,
-    "temp-tolerance": 3473
+    "temp-tolerance": 3571
   },
   "operationBreakdown": {
     "validate-code": {
-      "OK": 7248,
-      "content-differs": 894,
+      "OK": 7346,
       "result-disagrees": 49,
+      "content-differs": 796,
       "dev-crash-on-valid": 4,
       "status-mismatch": 39
     },

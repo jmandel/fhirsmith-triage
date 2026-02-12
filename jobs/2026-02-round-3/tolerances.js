@@ -1426,6 +1426,67 @@ const tolerances = [
   },
 
   {
+    id: 'display-lang-prod-only-invalid-display',
+    description: 'validate-code with lenient-display-validation + displayLanguage: prod generates invalid-display warning issues that dev omits entirely. All 114 affected records use mode=lenient-display-validation with a displayLanguage parameter. Same root cause as display-lang-result-disagrees — dev does not pass defLang to hasDisplay. In this variant, dev skips the display warning path entirely rather than generating a different error. Normalizes by stripping prod-only invalid-display issues and the corresponding message parameter.',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'invalid-display', 'lenient-display-validation'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      const devIssues = getParamValue(dev, 'issues');
+      if (!prodIssues?.issue) return null;
+      // Prod has invalid-display issues that dev lacks
+      const prodHasInvalidDisplay = prodIssues.issue.some(iss =>
+        iss.details?.coding?.some(c => c.code === 'invalid-display')
+      );
+      if (!prodHasInvalidDisplay) return null;
+      const devHasInvalidDisplay = devIssues?.issue?.some(iss =>
+        iss.details?.coding?.some(c => c.code === 'invalid-display')
+      );
+      if (devHasInvalidDisplay) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Strip invalid-display issues from prod's OperationOutcome
+      function stripInvalidDisplayIssues(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter(iss =>
+              !iss.details?.coding?.some(c => c.code === 'invalid-display')
+            );
+            if (filtered.length === 0) return null;
+            return {
+              ...p,
+              resource: { ...p.resource, issue: filtered },
+            };
+          }).filter(Boolean),
+        };
+      }
+      let newProd = stripInvalidDisplayIssues(prod);
+      // Handle message parameter: if prod has message and dev doesn't, strip from prod.
+      // If both have message but they differ due to invalid-display text, canonicalize.
+      const prodMsg = getParamValue(prod, 'message');
+      const devMsg = getParamValue(dev, 'message');
+      if (prodMsg && !devMsg) {
+        newProd = stripParams(newProd, 'message');
+      } else if (prodMsg && devMsg && prodMsg !== devMsg) {
+        // Canonicalize to dev's message (which lacks the display warning text)
+        newProd = {
+          ...newProd,
+          parameter: newProd.parameter.map(p =>
+            p.name === 'message' ? { ...p, valueString: devMsg } : p
+          ),
+        };
+      }
+      return { prod: newProd, dev };
+    },
+  },
+
+  {
     id: 'display-lang-result-disagrees',
     description: 'validate-code with displayLanguage: dev returns result=false with "Wrong Display Name" error when no language-specific displays exist, prod returns result=true. Dev is stricter because it does not pass defLang to hasDisplay, causing it to reject displays that prod accepts via default language fallback.',
     kind: 'temp-tolerance',
