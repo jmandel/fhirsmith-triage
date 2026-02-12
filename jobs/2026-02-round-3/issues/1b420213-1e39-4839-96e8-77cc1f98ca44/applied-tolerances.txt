@@ -1,0 +1,7 @@
+strip-diagnostics: normalize
+sort-parameters-by-name: normalize
+strip-oo-message-id-extension: normalize
+oo-missing-location-field: normalize
+invalid-display-message-format: normalize
+multi-coding-cc-system-code-version-disagree: normalize
+display-comment-vs-invalid-display-issues: normalize

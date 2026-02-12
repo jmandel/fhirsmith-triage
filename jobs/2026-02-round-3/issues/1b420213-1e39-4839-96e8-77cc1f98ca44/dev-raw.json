@@ -1,0 +1,104 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://snomed.info/sct"
+    },
+    {
+      "name": "code",
+      "valueCode": "82799009"
+    },
+    {
+      "name": "display",
+      "valueString": "Cardiac output"
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://snomed.info/sct#82799009 for language(s) 'de'. The display is 'Cardiac output' which is the default language display"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "82799009",
+            "display": "Cardiac output"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8741-1",
+            "display": "Left ventricular Cardiac output"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150276",
+            "display": "Cardiac output"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "text": "There are no valid display names found for the code http://snomed.info/sct#82799009 for language(s) 'de'. The display is 'Cardiac output' which is the default language display",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Validate \"[undefined#82799009 (\"Cardiac output\"), undefined#8741-1 (\"Left ventricular Cardiac output\"), undefined#150276 (\"Cardiac output\")]\"\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \"http://snomed.info/sct#82799009\"\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: check code in () at CodeableConcept.coding[0]\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Code \"82799009\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\n2ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \"http://loinc.org#8741-1\"\n46ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \"urn:iso:std:iso:11073:10101#150276\""
+    }
+  ]
+}

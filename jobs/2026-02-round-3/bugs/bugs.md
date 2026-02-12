@@ -1095,9 +1095,9 @@ Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters 
 
 ### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
 
-Records-Impacted: 28
-Tolerance-ID: dev-extra-display-lang-not-found-message, display-lang-result-disagrees
-Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593
+Records-Impacted: 553
+Tolerance-ID: dev-extra-display-lang-not-found-message, display-lang-result-disagrees, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues
+Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20
 
 #####What differs
 
@@ -1105,21 +1105,23 @@ When $validate-code is called with a `displayLanguage` parameter, dev handles "n
 
 **Variant 1 — content-differs (19 records in round 2, 5 in round 3):** Both servers agree result=true. Prod omits message/issues entirely. Dev returns extra `message` ("There are no valid display names found for the code ...") and `issues` (OperationOutcome with informational severity, tx-issue-type=`invalid-display`). Affected systems: SNOMED, ISO 3166, M49 regions.
 
-**Variant 2 — content-differs (2 records in round 2):** Both servers agree result=true. Prod returns `issues` with tx-issue-type=`display-comment` ("'Laboratory procedure' is the default display; the code system has no Display Names for the language es-AR"). Dev returns `message` and `issues` with tx-issue-type=`invalid-display` with differently-worded text. Both convey the same information but use different issue type codes and message wording.
+**Variant 2a — content-differs (372 records in round 3):** Both servers agree result=true. Prod returns `issues` with tx-issue-type=`display-comment`, severity=information ("'X' is the default display; the code system has no Display Names for the language Y"). Dev either returns no issues at all (44 records), or returns issues with tx-issue-type=`invalid-display`, severity=warning, with differently-worded text (328 records). After the `dev-extra-display-lang-not-found-message` tolerance strips dev's extra message/issues, prod's informational display-comment issue is left as the sole diff. Handled by `prod-display-comment-default-display-lang`.
+
+**Variant 2b — content-differs (153 records in round 3):** Both servers agree result=true. Prod has display-comment issues AND other issues in its OperationOutcome. Dev has invalid-display issues where prod has display-comment, plus the same other issues. The issue type code and severity differ (display-comment/information vs invalid-display/warning) but convey the same information. These records had additional co-occurring differences beyond just the display-comment that prevented variant 2a's tolerance from matching. Handled by `display-comment-vs-invalid-display-issues`.
 
 **Variant 3 — result-disagrees (2 records in round 3):** Prod returns result=true. Dev returns result=false with "Wrong Display Name 'FRANCE' for urn:iso:std:iso:3166#FR. There are no valid display names found for language(s) 'fr-FR'". This is the most severe manifestation — when the provided display ("FRANCE") doesn't exactly match the default display ("France") AND no language-specific displays exist, dev treats it as an error and flips the result to false, while prod accepts it via default language fallback.
 
 #####How widespread
 
-Round 2: 21 records (tolerance `dev-extra-display-lang-not-found-message`).
-Round 3: 7 records eliminated — 5 content-differs (tolerance `dev-extra-display-lang-not-found-message`) + 2 result-disagrees (tolerance `display-lang-result-disagrees`). Additionally ~504 content-differs records are normalized by the tolerance but remain in deltas due to other co-occurring differences.
-
-Search: `grep -i 'no valid display' jobs/2026-02-round-3/results/deltas/deltas.ndjson | wc -l` → 511 (before tolerance); 0 (after tolerance normalizes them).
+Round 2: 21 records.
+Round 3: 532 records eliminated total — 5 content-differs (`dev-extra-display-lang-not-found-message`) + 2 result-disagrees (`display-lang-result-disagrees`) + 372 content-differs (`prod-display-comment-default-display-lang`) + 153 content-differs (`display-comment-vs-invalid-display-issues`).
 
 #####Tolerances
 
 - `dev-extra-display-lang-not-found-message`: Matches validate-code where result=true on both sides, prod has no message, and dev has a message containing "no valid display names found". Strips dev's extra message/issues.
 - `display-lang-result-disagrees`: Matches validate-code where prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips the error message/issues.
+- `prod-display-comment-default-display-lang`: Matches validate-code where result=true on both sides, prod has informational display-comment issues about "is the default display", and dev has no issues (either never had them or stripped by earlier tolerance). Strips prod's orphaned display-comment issues. Eliminates 372 records.
+- `display-comment-vs-invalid-display-issues`: Matches validate-code where prod has display-comment issues and dev also has issues (with invalid-display type). Strips display-comment from prod and corresponding extra invalid-display issues/message from dev. Eliminates 153 records.
 
 #####Repro
 
@@ -5289,6 +5291,28 @@ Records-Impacted: 9
 Tolerance-ID: validate-code-no-valueset-codeableconcept
 Record-ID: abd1a7d8-3110-4b8a-a14b-267543425ffd
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","version":"2.77","code":"8867-4","display":"Heart rate"},{"system":"http://loinc.org","version":"2.77","code":"8480-6","display":"Systolic blood pressure"}]}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","version":"2.77","code":"8867-4","display":"Heart rate"},{"system":"http://loinc.org","version":"2.77","code":"8480-6","display":"Systolic blood pressure"}]}}]}'
+```
+
+**Prod** (HTTP 200) returns:
+> `"result": true`, `"system": "http://loinc.org"`, `"code": "8480-6"`, `"display": "Systolic blood pressure"`, plus echoed codeableConcept with both codings
+
+**Dev** (HTTP 400) returns:
+> `"severity": "error"`, `"code": "invalid"`, `"details": {"text": "No ValueSet specified - provide url parameter or valueSet resource"}`
+
 #####What differs
 
 POST /r4/ValueSet/$validate-code with only a `codeableConcept` parameter (no `url`, `context`, or `valueSet`):
@@ -5323,6 +5347,29 @@ Tolerance `validate-code-no-valueset-codeableconcept` matches POST validate-code
 Records-Impacted: 148
 Tolerance-ID: validate-code-missing-extra-version-params
 Record-ID: 1f21c334-667f-4e2a-ae2c-6e73b8760cce
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"85354-9","display":"Blood pressure panel with all children optional"},{"system":"http://snomed.info/sct","code":"75367002","display":"Blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"observation-vitalsignresult","meta":{"lastUpdated":"2019-11-01T09:29:23.356+11:00","profile":["http://hl7.org/fhir/StructureDefinition/shareablevalueset"]},"extension":[{"url":"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg","valueCode":"oo"}],"url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","identifier":[{"system":"urn:ietf:rfc:3986","value":"urn:oid:2.16.840.1.113883.3.88.12.80.62"}],"version":"4.0.1","name":"VitalSigns","title":"Vital Signs","status":"active","experimental":false,"date":"2019-11-01T09:29:23+11:00","publisher":"FHIR project team","contact":[{"telecom":[{"system":"url","value":"http://hl7.org/fhir"}]}],"description":"This value set indicates the allowed vital sign result types.","copyright":"This content from LOINC is copyright 1995 Regenstrief Institute, Inc.","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"85354-9","display":"Blood pressure panel with all children optional"},{"system":"http://snomed.info/sct","code":"75367002","display":"Blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"observation-vitalsignresult","meta":{"lastUpdated":"2019-11-01T09:29:23.356+11:00","profile":["http://hl7.org/fhir/StructureDefinition/shareablevalueset"]},"extension":[{"url":"http://hl7.org/fhir/StructureDefinition/structuredefinition-wg","valueCode":"oo"}],"url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","identifier":[{"system":"urn:ietf:rfc:3986","value":"urn:oid:2.16.840.1.113883.3.88.12.80.62"}],"version":"4.0.1","name":"VitalSigns","title":"Vital Signs","status":"active","experimental":false,"date":"2019-11-01T09:29:23+11:00","publisher":"FHIR project team","contact":[{"telecom":[{"system":"url","value":"http://hl7.org/fhir"}]}],"description":"This value set indicates the allowed vital sign result types.","copyright":"This content from LOINC is copyright 1995 Regenstrief Institute, Inc.","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
+```
+
+**Prod** returns two `version` parameters:
+> `"version": "http://snomed.info/sct/900000000000207008/version/20250201"` (SNOMED CT)
+> `"version": "2.81"` (LOINC)
+
+**Dev** returns only one `version` parameter:
+> `"version": "2.81"` (LOINC only -- SNOMED version is missing)
 
 #####What differs
 
@@ -5372,6 +5419,46 @@ Records-Impacted: 275
 Tolerance-ID: validate-code-display-text-differs
 Record-ID: 4da8e1fd-f8a0-4474-b81b-57cbd5b0b4b6
 
+#####Repro
+
+```bash
+####Example 1: LOINC 8478-0 via ValueSet/$validate-code (en-US)
+
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"8478-0","display":"Mean blood pressure"},{"system":"http://snomed.info/sct","code":"6797001","display":"Mean blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","version":"4.0.1","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"8478-0","display":"Mean blood pressure"},{"system":"http://snomed.info/sct","code":"6797001","display":"Mean blood pressure (observable entity)"}]}},{"name":"displayLanguage","valueString":"en-US"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/ValueSet/observation-vitalsignresult","version":"4.0.1","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"85353-1"},{"code":"9279-1"},{"code":"8867-4"},{"code":"2708-6"},{"code":"8310-5"},{"code":"8302-2"},{"code":"9843-4"},{"code":"29463-7"},{"code":"39156-5"},{"code":"85354-9"},{"code":"8480-6"},{"code":"8462-4"},{"code":"8478-0"}]}]}}}]}'
+
+####Example 2: LOINC 718-7 via CodeSystem/$validate-code (de displayLanguage)
+
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"718-7"}]}},{"name":"displayLanguage","valueString":"de"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://loinc.org","code":"718-7"}]}},{"name":"displayLanguage","valueString":"de"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+**Example 1** (LOINC 8478-0, en-US): Both return `"result": true`, `"code": "8478-0"`, `"version": "2.81"`.
+- **Prod**: `"display": "Mean blood pressure"`
+- **Dev**: `"display": "Mean arterial pressure"`
+
+**Example 2** (LOINC 718-7, de): Both return `"result": true`, `"code": "718-7"`, `"version": "2.81"`.
+- **Prod**: `"display": "Hämoglobin"`
+- **Dev**: `"display": "Hämoglobin [Masse/Volumen] in Blut"`
+
 #####What differs
 
 In $validate-code responses, the `display` parameter returned for the same code and same version differs between prod and dev. Both servers agree on result, system, code, and version — only the display text (the human-readable name) differs.
@@ -5413,6 +5500,30 @@ Tolerance ID: `validate-code-display-text-differs`. Matches validate-code Parame
 Records-Impacted: 24
 Tolerance-ID: expand-missing-limited-expansion
 Record-ID: 5b67c797-72f0-45ff-b8ca-a9b57e6fddb1
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"_incomplete","valueBoolean":true},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-codes"}]}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"_incomplete","valueBoolean":true},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/observation-codes"}]}'
+```
+
+**Prod** returns (in `expansion.parameter`):
+> `{"name": "limitedExpansion", "valueBoolean": true}`, `{"name": "offset", "valueInteger": 0}`, `{"name": "count", "valueInteger": 1000}`, `{"name": "used-codesystem", "valueUri": "http://loinc.org|2.81"}`
+
+**Dev** returns (in `expansion.parameter`):
+> `{"name": "offset", "valueInteger": 0}`, `{"name": "count", "valueInteger": 1000}`, `{"name": "used-codesystem", "valueUri": "http://loinc.org|2.81"}`
+
+Both return 1000 codes in `expansion.contains`. Prod includes `limitedExpansion: true` to signal the expansion is truncated; dev omits it entirely.
 
 #####What differs
 

@@ -1,0 +1,88 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "150276"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "82799009",
+            "display": "Cardiac output",
+            "system": "http://snomed.info/sct"
+          },
+          {
+            "code": "8741-1",
+            "display": "Left ventricular Cardiac output",
+            "system": "http://loinc.org"
+          },
+          {
+            "code": "150276",
+            "display": "Cardiac output",
+            "system": "urn:iso:std:iso:11073:10101"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Cardiac output"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "There are no valid display names found for the code http://loinc.org#8741-1 for language(s) 'de'. The display is 'Left ventricular Cardiac output' the default language display"
+            },
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "severity": "information"
+          },
+          {
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "code": "status-check",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            },
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://loinc.org#8741-1 for language(s) 'de'. The display is 'Left ventricular Cardiac output' the default language display"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:11073:10101"
+    },
+    {
+      "name": "version",
+      "valueString": "2024-12-05"
+    }
+  ],
+  "resourceType": "Parameters"
+}

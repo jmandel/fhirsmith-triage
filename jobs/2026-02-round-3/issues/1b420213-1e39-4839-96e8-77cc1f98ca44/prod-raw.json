@@ -1,0 +1,132 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:11073:10101"
+    },
+    {
+      "name": "code",
+      "valueCode": "150276"
+    },
+    {
+      "name": "version",
+      "valueString": "2024-12-05"
+    },
+    {
+      "name": "display",
+      "valueString": "Cardiac output"
+    },
+    {
+      "name": "message",
+      "valueString": "There are no valid display names found for the code http://loinc.org#8741-1 for language(s) 'de'. The display is 'Left ventricular Cardiac output' the default language display"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "82799009",
+            "display": "Cardiac output"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8741-1",
+            "display": "Left ventricular Cardiac output"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150276",
+            "display": "Cardiac output"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_LANG_NONE"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ],
+              "text": "'Cardiac output' is the default display; the code system http://snomed.info/sct has no Display Names for the language de"
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_OK"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "There are no valid display names found for the code http://loinc.org#8741-1 for language(s) 'de'. The display is 'Left ventricular Cardiac output' the default language display"
+            },
+            "location": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://snomed.info/sct#82799009 (\"Cardiac output\"), http://loinc.org#8741-1 (\"Left ventricular Cardiac output\"), urn:iso:std:iso:11073:10101#150276 (\"Cardiac output\")]\"\r\n0 0     : 0ms  : Check \"http://snomed.info/sct#82799009\"\r\n0 0     : 0ms  : Using CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\" (content = complete)\r\n0 0     : 0ms  : Check \"http://loinc.org#8741-1\"\r\n0 0     : 0ms  : Using CodeSystem \"http://loinc.org|2.81\" (content = complete)\r\n390 390 : 390ms : Check \"urn:iso:std:iso:11073:10101#150276\"\r\n406 16  : 406ms : Using CodeSystem \"urn:iso:std:iso:11073:10101|2024-12-05 (from fhir.tx.support.r4#0.32.0)\" (content = complete)\r\n"
+    }
+  ]
+}

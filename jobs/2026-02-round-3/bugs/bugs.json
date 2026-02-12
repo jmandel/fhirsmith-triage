@@ -431,9 +431,9 @@
             "lamport": 11
         },
         "edit_time": {
-            "timestamp": 1770859574,
-            "time": "2026-02-11T19:26:14-06:00",
-            "lamport": 698
+            "timestamp": 1770863410,
+            "time": "2026-02-11T20:30:10-06:00",
+            "lamport": 740
         },
         "status": "open",
         "labels": [
@@ -4535,12 +4535,13 @@
             "lamport": 100
         },
         "edit_time": {
-            "timestamp": 1770861322,
-            "time": "2026-02-11T19:55:22-06:00",
-            "lamport": 711
+            "timestamp": 1770863260,
+            "time": "2026-02-11T20:27:40-06:00",
+            "lamport": 736
         },
         "status": "open",
         "labels": [
+            "reproduced",
             "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
@@ -4580,13 +4581,14 @@
             "lamport": 101
         },
         "edit_time": {
-            "timestamp": 1770861816,
-            "time": "2026-02-11T20:03:36-06:00",
-            "lamport": 719
+            "timestamp": 1770863293,
+            "time": "2026-02-11T20:28:13-06:00",
+            "lamport": 738
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "round:2026-02-round-3",
             "tx-compare"
         ],
@@ -4625,13 +4627,14 @@
             "lamport": 102
         },
         "edit_time": {
-            "timestamp": 1770862041,
-            "time": "2026-02-11T20:07:21-06:00",
-            "lamport": 724
+            "timestamp": 1770863435,
+            "time": "2026-02-11T20:30:35-06:00",
+            "lamport": 742
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "round:2026-02-round-3",
             "tx-compare"
         ],
@@ -4670,13 +4673,14 @@
             "lamport": 103
         },
         "edit_time": {
-            "timestamp": 1770862728,
-            "time": "2026-02-11T20:18:48-06:00",
-            "lamport": 730
+            "timestamp": 1770863205,
+            "time": "2026-02-11T20:26:45-06:00",
+            "lamport": 734
         },
         "status": "open",
         "labels": [
             "content-differs",
+            "reproduced",
             "round:2026-02-round-3",
             "tx-compare"
         ],

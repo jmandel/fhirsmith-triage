@@ -29,4 +29,4 @@ Two tolerances were written under bug bd89513:
 
 2. **`display-comment-vs-invalid-display-issues`**: Matches validate-code where prod has display-comment issues and dev also has issues with invalid-display type. Strips display-comment from prod and extra invalid-display issues/message from dev. Eliminates **153 additional records**.
 
-Combined: **525 records eliminated** (2100 → 1575 deltas). Validated by sampling 15+10 eliminated records — all match the expected pattern with no other differences hidden.
+Combined: **525 records eliminated** (1728 → 1575 deltas for the new tolerance; 372 records handled by prod-display-comment-default-display-lang in an earlier pass). Validated by sampling 12 eliminated records — all match the expected pattern with no other differences hidden.
