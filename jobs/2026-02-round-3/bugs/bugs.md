@@ -1095,13 +1095,13 @@ Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters 
 
 ### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
 
-Records-Impacted: 717+
-Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-invalid-display-different-coding, display-lang-result-disagrees, display-lang-prod-only-invalid-display
-Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20, 1b420213-1e39-4839-96e8-77cc1f98ca44, aa3b6190-20cb-4f12-b46c-e3547d5b55f3, ee67e8d5-293d-45c5-9198-d47a49d47757
+Records-Impacted: 718+
+Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-invalid-display-different-coding, display-lang-result-disagrees, display-lang-prod-only-invalid-display, dev-message-appends-display-lang-text
+Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20, 1b420213-1e39-4839-96e8-77cc1f98ca44, aa3b6190-20cb-4f12-b46c-e3547d5b55f3, ee67e8d5-293d-45c5-9198-d47a49d47757, 4075d0b1-054d-4e61-b929-b6a67528cb8f
 
 #####What differs
 
-When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod. This manifests in six variants:
+When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod. This manifests in seven variants:
 
 **Variant 1 — extra message/issues (dev-extra-display-lang-not-found-message):** Both servers agree result=true. Prod omits message/issues entirely. Dev returns extra `message` ("There are no valid display names found for the code ...") and `issues` (OperationOutcome with informational severity, tx-issue-type=`invalid-display`). Affected systems: SNOMED, ISO 3166, M49 regions.
 
@@ -1115,9 +1115,11 @@ When $validate-code is called with a `displayLanguage` parameter, dev handles "n
 
 **Variant 6 — prod-only invalid-display with lenient-display-validation (display-lang-prod-only-invalid-display, 98 records):** When `mode=lenient-display-validation` is used with `displayLanguage`, prod generates `invalid-display` warning issues (severity=warning, 106 records; severity=information, 8 records) about "Wrong Display Name" or "There are no valid display names found". Dev omits these invalid-display issues entirely. Both servers agree on `result`. The only diffs are the missing `invalid-display` issue(s) and the corresponding `message` parameter. All 114 records in the full dataset match this pattern (98 eliminated by the tolerance, 16 remain because they also have result-disagrees as a separate primary issue). Affected code systems: LOINC, SNOMED, ISO 11073, UCUM, and others.
 
+**Variant 7 — dev appends display-lang text to existing message (dev-message-appends-display-lang-text, 1 record in deltas, 13 in full comparison):** Both servers agree result=true and have matching OperationOutcome issues (after earlier tolerances). Both have a `message` parameter with the same base text (e.g., inactive concept warning). But dev appends extra display-language text ("; There are no valid display names found for the code ...") to the message. Prod's message contains only the non-display-language issue texts. The OperationOutcome issues for the display-language difference are already handled by `display-comment-vs-invalid-display-issues`, but the message parameter still carries the extra text.
+
 #####How widespread
 
-717+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM, ISO 11073).
+718+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM, ISO 11073).
 
 #####Tolerances
 
@@ -1127,6 +1129,7 @@ When $validate-code is called with a `displayLanguage` parameter, dev handles "n
 - `display-lang-invalid-display-different-coding`: Matches when both sides have same number of issues but invalid-display issues differ in text/expression/severity (referencing different codings). Normalizes dev's invalid-display issues to prod's text, expression, and severity. Eliminates 94 records (previously 78, increased by 16 after adding severity normalization).
 - `display-lang-result-disagrees`: Matches when prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips error message/issues.
 - `display-lang-prod-only-invalid-display`: Matches when prod has invalid-display issues that dev lacks entirely. All affected records use lenient-display-validation mode with displayLanguage. Strips prod-only invalid-display issues and corresponding message parameter. Eliminates 98 records.
+- `dev-message-appends-display-lang-text`: Matches when both sides have a message, dev's message starts with prod's message, and the extra appended text contains "no valid display names found". Normalizes dev's message to match prod's. Eliminates 1 record in deltas (13 in full comparison, 12 handled by earlier tolerances).
 
 #####Repro
 
