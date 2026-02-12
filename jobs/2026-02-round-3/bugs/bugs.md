@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_101 bugs (66 open, 35 closed)_
+_102 bugs (67 open, 35 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -5403,6 +5403,44 @@ Tolerance ID: `validate-code-display-text-differs`. Matches validate-code Parame
 #####Representative records
 
 - 4da8e1fd-f8a0-4474-b81b-57cbd5b0b4b6 (LOINC 8478-0, "Mean blood pressure" vs "Mean arterial pressure")
+
+---
+
+### [ ] `3071698` Dev  omits limitedExpansion parameter when expansion is truncated
+
+Records-Impacted: 24
+Tolerance-ID: expand-missing-limited-expansion
+Record-ID: 5b67c797-72f0-45ff-b8ca-a9b57e6fddb1
+
+#####What differs
+
+For $expand operations where the request includes `_incomplete: true` (which maps to the `limitedExpansion` expansion parameter), prod includes `limitedExpansion: true` in `expansion.parameter` to signal that the expansion was truncated. Dev omits this parameter entirely.
+
+This affects large expansions (e.g., all LOINC codes via `observation-codes` ValueSet, all SNOMED codes) where the returned count is capped (e.g., count=1000) and the actual code system has far more codes. The `limitedExpansion` parameter tells clients that the expansion is incomplete — without it, a client cannot distinguish between "these are all the codes" and "there are more codes not shown."
+
+In all 24 affected records:
+- Both servers return 200 with the same number of codes (e.g., 1000)
+- Both use the same code system versions (e.g., LOINC 2.81)
+- Prod includes `{name: "limitedExpansion", valueBoolean: true}` in expansion.parameter
+- Dev omits it
+
+#####How widespread
+
+24 records across both /r4/ and /r5/ $expand operations. All are POST ValueSet/$expand requests with `_incomplete: true` in the request parameters. The affected expansions span multiple code systems including LOINC, SNOMED, and others where the total code count exceeds the requested count limit.
+
+Search: `grep 'limitedExpansion' results/deltas/deltas.ndjson | wc -l` → 24
+
+Of these 24 records:
+- 10 have limitedExpansion as the only remaining difference
+- 14 have limitedExpansion plus other differences (e.g., missing used-codesystem, warning-experimental params)
+
+#####What the tolerance covers
+
+Tolerance `expand-missing-limited-expansion` matches $expand responses where prod has `limitedExpansion: true` in expansion.parameter and dev doesn't. Normalizes by stripping the parameter from prod.
+
+#####Representative record IDs
+
+- `5b67c797-72f0-45ff-b8ca-a9b57e6fddb1`: POST /r4/ValueSet/$expand — LOINC observation-codes, count=1000, _incomplete=true
 
 ---
 
