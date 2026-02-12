@@ -1,12 +1,12 @@
 # tx-compare Bug Report
 
-_82 bugs (50 open, 32 closed)_
+_86 bugs (55 open, 31 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
 | P3 | 1 | Missing resources |
 | P4 | 1 | Status code mismatch |
-| P6 | 3 | Content differences |
+| P6 | 5 | Content differences |
 | TEMP | 3 | Temporary tolerances (real bugs, suppressed for triage) |
 
 ---
@@ -286,6 +286,100 @@ Adjudicated by GG: Won't fix — Dev is correct (Wrong Display Name message form
 
 ---
 
+### [x] `b77d7cd` BCP-47 display text format: dev returns 'Region=...' instead of standard format
+
+Records-Impacted: 7
+Tolerance-ID: bcp47-display-format
+Record-ID: da702ab4-7ced-4b69-945c-0b5bbbc088c0
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=urn:ietf:bcp:47&code=en-US' -H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=urn:ietf:bcp:47&code=en-US' -H 'Accept: application/fhir+json'
+```
+
+As of 2026-02-07, both servers return `"display": "English (Region=United States)"` — the original difference (prod had "English (United States)") is no longer present. Prod appears to have been updated to match dev's format.
+
+
+For BCP-47 language codes (system urn:ietf:bcp:47), dev returns display text with explicit subtag labels like "English (Region=United States)" while prod returns the standard format "English (United States)".
+
+Specific example for code en-US:
+- prod: "English (United States)"
+- dev: "English (Region=United States)"
+
+The "Region=" prefix in dev's display text is non-standard. The IANA/BCP-47 convention is to show the region name without a label prefix.
+
+
+7 P6 $validate-code records in the current delta set match this pattern — all are urn:ietf:bcp:47 validate-code operations for code en-US where the only difference (after diagnostics stripping and parameter sorting) is the display parameter value.
+
+Search: grep -c 'Region=' deltas.ndjson → 10 total hits (7 are this display-only P6 pattern; 2 are P1 case-sensitivity issues for en-us; 1 is an $expand with transient metadata diffs where "Region=" appears only in diagnostics).
+
+
+Tolerance: bcp47-display-format. Matches $validate-code records where system=urn:ietf:bcp:47, both prod and dev return display parameters, and the values differ. Canonicalizes dev display to match prod. Expected to eliminate 7 records.
+
+
+da702ab4-7ced-4b69-945c-0b5bbbc088c0 — POST /r4/ValueSet/$validate-code? for en-US in urn:ietf:bcp:47
+
+
+e0019ec #1 Claude (AI Assistant) <claude@anthropic.com>
+
+Closing: no longer reproducible as of 2026-02-07. Both prod and dev now return the same 'Region=...' format for BCP-47 display text. Servers have converged.
+
+---
+
+### [x] `4fa9a6e` Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs
+
+Records-Impacted: 491
+Tolerance-ID: searchset-bundle-format
+Record-ID: c97f36a4-973b-42c5-8b6d-58464195cfd5
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fwww.rsna.org%2FRadLex_Playbook.aspx' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns a searchset Bundle with `total: 0`, no `entry` field, a single `self` link with a relative URL, and server-generated `id`/`meta.lastUpdated`. Dev returns a searchset Bundle with `total: 0`, an empty `entry: []` array, three links (`self`/`first`/`last`) with absolute URLs and `_offset=0`, and no `id` or `meta`.
+
+
+Dev's searchset Bundle responses differ from prod in several ways:
+
+1. **`entry: []` on empty results**: When a search returns no results (total: 0), dev includes `entry: []` (an empty array). Prod omits the entry field entirely. Empty arrays violate FHIR's general rule that arrays, if present, must be non-empty.
+
+2. **Extra pagination link relations**: Dev returns `self`, `first`, and `last` link relations. Prod returns only `self`. This applies to both empty and non-empty search results.
+
+3. **Absolute vs relative link URLs**: Dev uses absolute URLs with full host prefix (e.g., `http://tx.fhir.org/r4/ValueSet?...&_offset=0`). Prod uses relative URLs (e.g., `ValueSet?&url=...`). Dev also appends `_offset=0` to search links.
+
+4. **Server-generated metadata**: Prod includes `id` and `meta.lastUpdated` on searchset Bundles. Dev omits these. (This is server-generated transient metadata and is the least significant difference.)
+
+
+Affects all searchset Bundle responses for ValueSet and CodeSystem searches:
+- 337 empty ValueSet search Bundles
+- 154 empty CodeSystem search Bundles
+- 7 non-empty searchset Bundles (these also have the extra links, and may have other substantive differences like total count disagreements)
+
+Total: **498 records** in the deltas file.
+
+Search used: Parsed all records with `ValueSet?` or `CodeSystem?` in the URL where prodBody contains a Bundle with type "searchset".
+
+
+- `c97f36a4-973b-42c5-8b6d-58464195cfd5` (empty ValueSet search, RadLex Playbook)
+- `4ab7655f-015d-4f44-b184-5ba0fd256926` (empty ValueSet search, DICOM)
+- `640875e4-3839-40d1-aaa1-0bf79bef77f2` (non-empty CodeSystem search, USPS)
+
+---
+
+
+48faa69 #1 Claude (AI Assistant) <>
+
+GG: Jose is looking into search. Tolerance removed to track progress.
+
+---
+
 ## Temporary tolerances (real bugs, suppressed for triage)
 
 ### [x] `a9cf20c` Dev omits deprecated location field on OperationOutcome issues
@@ -401,9 +495,48 @@ Search: grep -c 'vsacOpModifier' results/deltas/deltas.ndjson → 3
 
 ## Other
 
-### [ ] `e18fdef` 
+### [x] `e18fdef` Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)
+
+Records-Impacted: 2
+Tolerance-ID: loinc-answer-list-expand-404
+Record-ID: 7cf61657-1a32-4b8f-a4c6-f626df7381e0
 
 
+```bash
+curl -s https://tx.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$expand \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://loinc.org/vs/LL379-9"}]}'
+```
+
+**Result:** Both servers now return 200 with identical ValueSet expansions containing 7 codes. The bug is no longer reproduced - the dev server previously returned 404 with "ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1" but now correctly expands the LOINC answer list.
+
+
+When expanding the LOINC answer list ValueSet `http://loinc.org/vs/LL379-9` via `POST /r4/ValueSet/$expand`, prod returns 200 with a successful expansion (7 codes), while dev **previously** returned 404 with:
+
+  ValueSet not found: http://loinc.org/vs/LL379-9|4.0.1
+
+Dev was appending `|4.0.1` (the FHIR R4 version) to the ValueSet canonical URL when resolving it, causing the lookup to fail.
+
+
+2 records in the comparison dataset showed this exact pattern — both are `POST /r4/ValueSet/$expand` for the same LOINC answer list LL379-9, both with prod=200/dev=404, and both with the same `|4.0.1` suffix in the dev error message.
+
+Search:
+- `grep 'LL379-9' deltas.ndjson` → 2 records
+- `grep 'missing-resource' deltas.ndjson` → 3 total (1 is a separate CodeSystem/SOP issue)
+- All 2 matching records had identical error diagnostic
+
+The full comparison.ndjson had 64 records referencing LL379-9, but the other 62 are `GET /r4/ValueSet?_elements=url,version` (search/list operations, not expand) and succeeded on both servers.
+
+
+Tolerance ID: `loinc-answer-list-expand-404`
+Matched: `missing-resource` category, `POST /r4/ValueSet/$expand`, dev 404 with diagnostics containing `|4.0.1`
+Eliminated: 2 records
 
 ---
 
@@ -1110,9 +1243,50 @@ Eliminates: 5 records.
 
 ---
 
-### [ ] `2ed80bd` 
+### [ ] `2ed80bd` Dev  omits expansion.total when prod includes it
 
+Records-Impacted: 51
+Tolerance-ID: expand-dev-missing-total
+Record-ID: a1f653a2-a199-4228-a7f7-2522abde6953
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' -H 'Accept: application/fhir+json' -H 'Content-Type: application/fhir+json' -d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/11000315107"},{"name":"displayLanguage","valueCode":"fr"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":true},{"name":"cache-id","valueId":"4d94febc-fb6a-407d-a69c-29b8de3c56c3"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"urn:iso:std:iso:3166:-2"}]}}}]}' | jq '.expansion | {total, contains_count: (.contains | length)}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' -H 'Accept: application/fhir+json' -H 'Content-Type: application/fhir+json' -d '{"resourceType":"Parameters","parameter":[{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/11000315107"},{"name":"displayLanguage","valueCode":"fr"},{"name":"includeDefinition","valueBoolean":false},{"name":"excludeNested","valueBoolean":true},{"name":"cache-id","valueId":"4d94febc-fb6a-407d-a69c-29b8de3c56c3"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"urn:iso:std:iso:3166:-2"}]}}}]}' | jq '.expansion | {total, contains_count: (.contains | length)}'
+```
+
+Prod returns `"total": 5099` with 1000 contains entries. Dev returns `"total": null` (field missing) with 1000 contains entries.
+
+#####What differs
+
+In $expand responses, prod returns `expansion.total` (the total count of matching concepts) while dev omits it entirely. The `total` field is a 0..1 optional integer in FHIR R4's ValueSet.expansion, documented as "Total concept count; permits server pagination." Without it, clients cannot determine how many pages exist in a paged expansion.
+
+Examples:
+- Prod: `"total": 5099` with 1000 contains (paged)
+- Dev: no `total` field, same 1000 contains
+
+Both servers return identical `contains` arrays and `offset` values in all sampled records.
+
+#####How widespread
+
+51 total records across round-2 (47 records) and round-3 (7 records, of which 4 eliminated as sole remaining diff after other tolerances). Affects both R4 and R5 endpoints. Systems affected:
+- `urn:iso:std:iso:3166:-2` (ISO 3166-2 country subdivision codes, total=5099)
+- `http://unitsofmeasure.org` (UCUM, total=1364)
+- `urn:ietf:bcp:47` (BCP-47 language tags, total=0)
+
+#####What the tolerance covers
+
+Tolerance ID: `expand-dev-missing-total`
+Matches: Any $expand response (ValueSet resourceType) where prod has `expansion.total` and dev does not.
+Normalizes by removing `expansion.total` from prod to prevent re-triaging.
+
+Representative Record IDs:
+- Round 2: `a1f653a2-a199-4228-a7f7-2522abde6953`
+- Round 3: `cd702b5d-dd1e-407b-9d13-21b62460773b`
 
 ---
 
@@ -1169,9 +1343,66 @@ a272aa8c-96d7-4905-a75a-ea21d67b83fc: POST /r4/ValueSet/$expand — BCP-13 MIME 
 
 ---
 
-### [ ] `3103b01` 
+### [ ] `3103b01` Dev returns extra informational HGVS syntax issue in $validate-code for varnomen.hgvs.org
+
+Records-Impacted: 62
+Tolerance-ID: hgvs-extra-syntax-issue
+Record-ID: cdf72565-a646-4daa-86f9-ed5ead0058d6
 
 
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"NC_000003.11"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"NC_000003.11"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+Prod returns 1 OperationOutcome issue (error-level only), dev returns 2 issues (error-level plus an additional informational-level issue with text: "Error while processing 'NC_000003.11': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'.")
+
+
+For $validate-code operations against http://varnomen.hgvs.org, both prod and dev correctly return result=false for invalid HGVS codes. Both return the same error-level OperationOutcome issue ("Unknown code 'X' in the CodeSystem 'http://varnomen.hgvs.org' version '2.0'").
+
+However, dev returns an additional informational-level OperationOutcome issue that prod does not:
+
+- severity: "information"
+- code: "code-invalid"
+- text: "Error while processing '<code>': Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'."
+
+This appears to be HGVS-specific syntax validation feedback that dev performs but prod does not.
+
+
+62 records in content-differs category show this exact pattern. All involve $validate-code POST to /r4/CodeSystem/$validate-code? with system http://varnomen.hgvs.org. All have the same extra informational issue text pattern ("Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'").
+
+Search: grep -c "Missing one of" results/deltas/deltas.ndjson => 62
+
+
+Tolerance ID: hgvs-extra-syntax-issue. Matches $validate-code records for http://varnomen.hgvs.org where dev has more OperationOutcome issues than prod, and the extra issues are informational-level. Normalizes by trimming dev's issue list to match prod's length. Eliminates 62 records.
+
+
+cdf72565-a646-4daa-86f9-ed5ead0058d6
+
+#####Root Cause
+
+**Classification**: code-level defect
+
+**Dev** adds an extra informational issue from the `locate()` message when a code is not found:
+[`tx/workers/validate.js#L1506-L1508`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/workers/validate.js#L1506-L1508)
+— In `checkConceptSet`, after adding the `Unknown_Code_in_Version` error, dev checks `if (loc.message && op)` and adds an informational issue with the message returned by the HGVS provider's `locate()` method.
+
+**Dev HGVS provider** passes the NLM service error message through as `loc.message`:
+[`tx/cs/cs-hgvs.js#L111-L115`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/cs/cs-hgvs.js#L111-L115)
+— When the NLM `$validate-code` returns `result=false`, the HGVS syntax error message (e.g., "Missing one of 'c', 'g', 'm', 'n', 'p', 'r' followed by '.'") is returned as `{ context: null, message: result.message }`.
+
+**Prod** does not add informational issues from the `locate()` message:
+[`library/ftx/fhir_valuesets.pas#L2273-L2281`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/library/ftx/fhir_valuesets.pas#L2273-L2281)
+— In `checkConceptSet`, when `loc = nil`, prod only adds the `Unknown_Code_in_Version` error issue. There is no code to emit the `message` var as an additional informational issue. (Additionally, the prod HGVS `locate` at [`server/tx/tx_hgvs.pas#L252-L253`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/server/tx/tx_hgvs.pas#L252-L253) reads `o.str['message']` instead of `o.str['valueString']`, so the NLM error message is never captured regardless.)
+
+**Fix**: Remove the informational issue emission in `tx/workers/validate.js` lines 1506-1508, or gate it behind a condition that matches prod behavior. The `loc.message` from `locate()` should not be surfaced as a separate OperationOutcome issue since prod does not emit it.
 
 ---
 
@@ -1233,9 +1464,51 @@ It skips these records entirely since no meaningful comparison is possible (dev 
 
 ---
 
-### [ ] `e02b03e` 
+### [ ] `e02b03e` Prod HGVS timeout: 62 records have prod=500 due to external service timeout, comparison invalid
+
+Records-Impacted: 62
+Tolerance-ID: skip-prod-hgvs-timeout
+Record-ID: 286d30a9-e2b8-4967-8c56-265b3f6160a6
 
 
+```bash
+curl -s https://tx.fhir.org/r4/CodeSystem/'$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"BRCA1:c.3143delG p.(Gly1048ValfsTer14)"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"diagnostics","valueBoolean":true}]}'
+
+curl -s https://tx-dev.fhir.org/r4/CodeSystem/'$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"http://varnomen.hgvs.org","code":"BRCA1:c.3143delG p.(Gly1048ValfsTer14)"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true},{"name":"cache-id","valueId":"7743c2e6-5b90-4b62-bcd2-6695b993e76b"},{"name":"system-version","valueUri":"http://snomed.info/sct|http://snomed.info/sct/83821000000107"},{"name":"diagnostics","valueBoolean":true}]}'
+```
+
+Prod returns HTTP 500 with OperationOutcome: "Error parsing HGVS response: Read timed out." Dev returns HTTP 200 with Parameters: result=false, indicating the HGVS code is unknown.
+
+
+Prod returns HTTP 500 with an OperationOutcome error: "Error parsing HGVS response: Read timed out." Dev returns HTTP 200 with a proper Parameters response (result=false, code not found in http://varnomen.hgvs.org version 2.0).
+
+Prod's 500 is a transient failure — the prod server timed out calling an external HGVS validation service during data collection. Dev processes the same code locally and returns a valid terminology response.
+
+
+62 records in the comparison dataset. All share:
+- System: http://varnomen.hgvs.org
+- Operation: $validate-code (POST /r4/CodeSystem/$validate-code?)
+- Status: prod=500, dev=200
+- Category: status-mismatch
+- Prod body contains "Error parsing HGVS response: Read timed out."
+
+Search: `grep -c 'Read timed out' results/deltas/deltas.ndjson` → 62
+
+There are 124 total HGVS records in the dataset; the other 62 did not timeout and have prod=200, dev=200.
+
+
+Tolerance `skip-prod-hgvs-timeout` skips any record where prod returned 500 and the prod body contains "Read timed out". These records have unreliable comparison data since prod failed to complete the operation. Eliminates 62 records.
+
+
+286d30a9-e2b8-4967-8c56-265b3f6160a6
+
+This is a data collection artifact — the comparison data is tainted because prod experienced transient external service timeouts during the collection run. These records should be recollected in a future run.
 
 ---
 
@@ -1296,9 +1569,53 @@ Canonicalizes dev's message to prod's value. Eliminates 10 records.
 
 ---
 
-### [ ] `b36a12b` 
+### [ ] `b36a12b` validate-code: unknown version message says 'no versions known' when valid versions exist
+
+Records-Impacted: 50
+Tolerance-ID: unknown-version-no-versions-known
+Record-ID: f8badb02-7ec3-4624-a906-eec8ec9f5656
 
 
+```bash
+curl -s https://tx.fhir.org/r4/CodeSystem/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory","version":"9","code":"M119.5","display":"Multi Target NGS Panel Small"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+
+curl -s https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory","version":"9","code":"M119.5","display":"Multi Target NGS Panel Small"}},{"name":"displayLanguage","valueString":"en-GB"},{"name":"default-to-latest-version","valueBoolean":true}]}'
+```
+
+**Repro inconclusive**: As of 2026-02-07, both servers now return "No versions of this code system are known". The England-GenomicTestDirectory CodeSystem appears to no longer be loaded on either server (tested versions 9, 7, and 0.1.0 all fail). The bug was real at the time of comparison (prod listed "Valid versions: 0.1.0" while dev said no versions known), but cannot be verified against the current live servers because the test CodeSystem is unavailable.
+
+
+When validating a code against a CodeSystem with a version that doesn't exist, but other versions of the CodeSystem are known:
+
+- **Prod** returns: "A definition for CodeSystem '...' version 'X' could not be found, so the code cannot be validated. Valid versions: 0.1.0"
+- **Dev** returns: "A definition for CodeSystem '...' version 'X' could not be found, so the code cannot be validated. No versions of this code system are known"
+
+Additionally, the `x-caused-by-unknown-system` parameter differs:
+- **Prod**: includes the version suffix (e.g., `...England-GenomicTestDirectory|9`)
+- **Dev**: omits the version suffix (e.g., `...England-GenomicTestDirectory`)
+
+The OperationOutcome message-id also differs:
+- **Prod**: `UNKNOWN_CODESYSTEM_VERSION`
+- **Dev**: `UNKNOWN_CODESYSTEM_VERSION_NONE`
+
+Dev's message is factually incorrect — it claims "No versions of this code system are known" but it does know version 0.1.0 (proven by 40 other records for the same code system that validate successfully against version 0.1.0).
+
+
+All 50 impacted records are $validate-code operations against `https://fhir.nhs.uk/CodeSystem/England-GenomicTestDirectory` with requested versions 7 (40 records) or 9 (10 records). Neither version exists — only 0.1.0 is valid.
+
+Search: `grep 'No versions of this code system are known' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 50
+All 50 are for England-GenomicTestDirectory. All 50 also have "Valid versions:" in prod.
+
+The pattern may apply more broadly to any CodeSystem where a nonexistent version is requested but other versions are loaded.
+
+
+Tolerance `unknown-version-no-versions-known` normalizes the message text, OperationOutcome details, x-caused-by-unknown-system, and message-id for records matching this pattern: both result=false, prod message contains "Valid versions:", dev message contains "No versions of this code system are known". Eliminates 50 records.
 
 ---
 
@@ -1340,61 +1657,149 @@ Closing as won't-fix. SNOMED edition version skew is by design. Round-1 preceden
 
 ---
 
-### [ ] `f33161f` 
+### [ ] `f33161f` Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems
 
-
-
----
-
-### [ ] `44d1916` Dev returns 200 expansion instead of 422 too-costly for large code systems (LOINC, MIME types)
-
-Records-Impacted: 17
-Tolerance-ID: expand-too-costly-succeeds
-Record-ID: d9734f68-d8b4-475d-9204-632c9b4ccbf0
+Records-Impacted: 12
+Tolerance-ID: expand-toocostly-grammar-400
+Record-ID: 4a993d89-3f8b-444d-9a63-e95c6944c4a7
 
 
 ```bash
-curl -s 'https://tx.fhir.org/r5/ValueSet/$expand' \
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
+-d '{"resourceType":"Parameters","parameter":[{"name":"x-system-cache-id","valueString":"dc8fd4bc-091a-424a-8a3b-6198ef146891"},{"name":"defaultDisplayLanguage","valueCode":"en-US"},{"name":"_limit","valueInteger":10000},{"name":"_incomplete","valueBoolean":true},{"name":"displayLanguage","valueCode":"en"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"excludeNested","valueBoolean":false},{"name":"cache-id","valueId":"26888bd4-58f1-4cae-b379-f6f52937a918"},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"all-languages","status":"active","compose":{"include":[{"system":"urn:ietf:bcp:47"}]}}}]}'
 
-curl -s 'https://tx-dev.fhir.org/r5/ValueSet/$expand' \
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
+-d '{"resourceType":"Parameters","parameter":[{"name":"x-system-cache-id","valueString":"dc8fd4bc-091a-424a-8a3b-6198ef146891"},{"name":"defaultDisplayLanguage","valueCode":"en-US"},{"name":"_limit","valueInteger":10000},{"name":"_incomplete","valueBoolean":true},{"name":"displayLanguage","valueCode":"en"},{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"excludeNested","valueBoolean":false},{"name":"cache-id","valueId":"26888bd4-58f1-4cae-b379-f6f52937a918"},{"name":"valueSet","resource":{"resourceType":"ValueSet","id":"all-languages","status":"active","compose":{"include":[{"system":"urn:ietf:bcp:47"}]}}}]}'
 ```
 
-Prod returns HTTP 422 with OperationOutcome: `{"resourceType":"OperationOutcome", "issue":[{"severity":"error","code":"too-costly","details":{"text":"The value set '' expansion has too many codes to display (>10000)"}}]}`.
-
-Dev returns HTTP 200 with a ValueSet containing 1000 LOINC codes in the expansion (respecting the `count` parameter for pagination).
+Prod returns HTTP 200 with a ValueSet containing the `valueset-toocostly` extension (`valueBoolean: true`) and `limitedExpansion` parameter. Dev returns HTTP 400 with an OperationOutcome: `code: "too-costly"`, message: `"The code System \"urn:ietf:bcp:47\" has a grammar, and cannot be enumerated directly"`.
 
 
-When expanding ValueSets that include very large code systems (all of LOINC via `http://loinc.org`, or MIME types via `http://hl7.org/fhir/ValueSet/mimetypes`), prod returns HTTP 422 with an OperationOutcome containing `issue.code: "too-costly"` and message "The value set '' expansion has too many codes to display (>10000)". Dev returns HTTP 200 with a ValueSet containing up to 1000 codes (honoring the count parameter for pagination).
+When expanding a ValueSet that includes a grammar-based code system (BCP-47 `urn:ietf:bcp:47` or SNOMED CT `http://snomed.info/sct`) without any filter constraints, prod returns HTTP 200 with a ValueSet containing the `valueset-toocostly` extension and `limitedExpansion` parameter (indicating the expansion is too large to enumerate). Dev instead returns HTTP 400 with an OperationOutcome error (`code: "too-costly"`, message: "The code System ... has a grammar, and cannot be enumerated directly").
 
-Prod correctly enforces an expansion size guard — refusing to expand code systems with >10000 codes even when pagination parameters are present. Dev does not enforce this guard and instead returns a paginated result.
-
-
-17 records in the comparison dataset show this pattern:
-- 6 records: POST `/r5/ValueSet/$expand` expanding all of LOINC (`http://loinc.org`, with `inactive: true`)
-- 11 records: GET `/r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fmimetypes` expanding MIME types
-
-Search method: `grep 'too-costly' deltas.ndjson` finds 273 records total; filtering to `status-mismatch` category (prod=422, dev=200) yields 17. The remaining 256 are `dev-crash-on-error` (prod=422, dev=500) — same root cause but different symptom (dev crashes rather than succeeding).
-
-Additionally, there are likely records already eliminated by the prior `expand-too-costly-succeeds` tolerance (bug e3fb3f6, which appears to have been removed from git-bug). The current tolerance was scoped too narrowly (exact URL match on `/r4/ValueSet/$expand` only, missing GET requests with query params and /r5/ requests).
+Prod's approach (returning a ValueSet with the toocostly extension) is the expected FHIR behavior for expansions that are too costly to compute — it signals the condition without failing the request.
 
 
-Tolerance ID: `expand-too-costly-succeeds`. Matches any $expand request (any FHIR version, GET or POST) where prod returns 422 with an OperationOutcome containing `issue.code: "too-costly"` and dev returns 200. Skips these records entirely since the responses are fundamentally incomparable (error vs success).
+12 records in the comparison dataset show this pattern:
+- 8 records involve BCP-47 (`urn:ietf:bcp:47`), including the `all-languages` ValueSet
+- 4 records involve SNOMED CT (`http://snomed.info/sct`)
+- Affects both /r4/ and /r5/ endpoints
+- All are POST /r{4,5}/ValueSet/$expand requests
+
+Search: `grep 'has a grammar' deltas.ndjson` finds 223 matches across all records (most already handled by existing tolerances), but filtering to status-mismatch expand records with prod=200/dev=400 and dev issue code "too-costly" yields exactly 12.
 
 
-- `d9734f68-d8b4-475d-9204-632c9b4ccbf0` (LOINC, POST /r5/ValueSet/$expand)
-- `3a2672db-cb0d-4312-87f1-5d6b685fbfe0` (MIME types, GET /r4/ValueSet/$expand?url=...mimetypes)
+Tolerance ID: `expand-toocostly-grammar-400`. Matches $expand requests where prod returns 200 with the `valueset-toocostly` extension and dev returns 400 with an OperationOutcome containing issue code "too-costly". Skips these records entirely since the status codes and response formats are incomparable.
+
+
+- `4a993d89-3f8b-444d-9a63-e95c6944c4a7` (BCP-47, /r4/)
+- `b96706f9-c555-40e7-bdd2-f682fe2d5d88` (SNOMED, /r4/)
+- `d61127b2-3ed1-4deb-b11b-b8ccc77185ed` (BCP-47, /r5/)
 
 ---
 
-### [ ] `1bc5e64` 
+### [ ] `44d1916` 
 
 
+
+---
+
+### [x] `1bc5e64` Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)
+
+Records-Impacted: 7
+Tolerance-ID: validate-code-x-unknown-system-extra
+Record-ID: f7e61c56-3c3c-4925-8822-f0f4e4406e3f
+
+#####Repro
+
+```bash
+####Test RxNorm version 04072025
+curl -s https://tx.fhir.org/r4/ValueSet/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "url",
+    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
+  },
+  {
+    "name": "coding",
+    "valueCoding": {
+      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+      "version": "04072025",
+      "code": "1049221"
+    }
+  }
+]
+}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
+
+####Dev (same request)
+curl -s https://tx-dev.fhir.org/r4/ValueSet/\$validate-code \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{
+"resourceType": "Parameters",
+"parameter": [
+  {
+    "name": "url",
+    "valueUri": "http://hl7.org/fhir/ValueSet/substance-code"
+  },
+  {
+    "name": "coding",
+    "valueCoding": {
+      "system": "http://www.nlm.nih.gov/research/umls/rxnorm",
+      "version": "04072025",
+      "code": "1049221"
+    }
+  }
+]
+}' | jq '.parameter[] | select(.name=="x-unknown-system" or .name=="x-caused-by-unknown-system")'
+```
+
+**Result**: Both servers now return identical responses with `x-unknown-system` parameter. The bug describes a scenario where prod did NOT return this parameter but dev did. The servers have converged — both now handle the unknown version the same way.
+
+#####What differs
+
+When validating a code against a ValueSet that includes codes from RxNorm or SNOMED CT, and the request pins a specific CodeSystem version, dev fails to resolve certain versions that prod resolves:
+
+- **RxNorm version `04072025`**: Dev returns "A definition for CodeSystem 'http://www.nlm.nih.gov/research/umls/rxnorm' version '04072025' could not be found". Prod resolves it (falls back to known version `??`) and performs actual validation, returning "code not found in valueset".
+- **SNOMED US edition version `20220301`** (`http://snomed.info/sct/731000124108/version/20220301`): Same pattern — dev can't find this version, prod resolves it.
+
+Dev returns `x-caused-by-unknown-system` parameter (e.g., `http://www.nlm.nih.gov/research/umls/rxnorm|04072025`) and a single OperationOutcome issue with code `not-found`. Prod omits `x-caused-by-unknown-system` and returns the actual validation result with issues like `this-code-not-in-vs` and `not-in-vs`.
+
+Both return `result=false`, but for completely different reasons: prod says "code not in valueset", dev says "can't validate because CodeSystem version not found."
+
+#####How widespread
+
+7 records in the deltas match this pattern (dev has `x-caused-by-unknown-system`, prod does not):
+- 4 records: RxNorm version 04072025
+- 3 records: SNOMED US edition version 20220301
+
+All are POST /r4/ValueSet/$validate-code operations.
+
+Search: `grep 'x-caused-by-unknown-system' deltas.ndjson` → 8 hits total, 7 where only dev has the parameter.
+
+#####What the tolerance covers
+
+Tolerance `validate-code-x-unknown-system-extra` matches validate-code records where dev has `x-caused-by-unknown-system` but prod does not. It normalizes dev's issues, message, and x-caused-by-unknown-system to match prod's values. Eliminates 7 records.
+
+Note: This tolerance previously existed but had a bug — it matched on parameter name `x-unknown-system` instead of the correct `x-caused-by-unknown-system`, so it matched 0 records. The fix corrects the parameter name.
+
+
+11bbc25 #1 Claude (AI Assistant) <>
+
+Updated scope: tolerance now covers 10 records (not 7). Three additional records use parameter name `x-unknown-system` (not `x-caused-by-unknown-system`) for SNOMED US version 20250301. Same root cause — dev doesn't recognize the CodeSystem version that prod resolves.
+
+Total breakdown:
+- 4 records: RxNorm version 04072025 (x-caused-by-unknown-system)
+- 3 records: SNOMED US version 20220301 (x-caused-by-unknown-system)  
+- 3 records: SNOMED US version 20250301 (x-unknown-system)
 
 ---
 
@@ -1528,9 +1933,55 @@ Tolerance `validate-code-valueset-not-found-dev-400` matches: POST validate-code
 
 ---
 
-### [ ] `4f12dda` 
+### [x] `4f12dda` Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ
+
+Records-Impacted: 198
+Tolerance-ID: expand-contains-version-skew
+Record-ID: 6f9cf4c7-e6f4-445c-bc86-323b2b6d7165
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1267.23&_format=json' \
+-H 'Accept: application/fhir+json' | jq '.expansion.contains[:3] | map({system, code, version})'
+```
+
+Prod returns SNOMED version `http://snomed.info/sct/731000124108/version/20250901` and CPT version `2026`, dev returns SNOMED version `http://snomed.info/sct/731000124108/version/20250301` and CPT version `2025`.
+
+#####What differs
+
+In $expand responses, prod and dev return the same set of codes (same system + code pairs) but with different `version` strings on `expansion.contains[]` entries:
+
+- **SNOMED CT US edition**: prod returns `http://snomed.info/sct/731000124108/version/20250901`, dev returns `http://snomed.info/sct/731000124108/version/20250301`
+- **CPT (AMA)**: prod returns `2026`, dev returns `2025`
+
+Both sides return 200 with identical code membership (280 codes in the representative record), but each code's version field reflects the loaded edition.
+
+This differs from bug 9fd2328, which covers the case where SNOMED version skew causes *different* code sets to appear. Here, the codes are the same — only the version annotations differ.
+
+#####How widespread
+
+198 expand delta records exhibit this pattern. All are the same ValueSet URL (`http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1267.23`) requested with different parameters. Each contains 280 codes with both SNOMED and CPT codes, where all codes match but version strings differ.
+
+Found via:
+```python
+####For each expand delta with same code membership,
+####check if contains[].version differs for common codes
+```
+
+#####What the tolerance covers
+
+Tolerance `expand-contains-version-skew` matches expand records where both sides return 200, the code membership is identical, but `contains[].version` strings differ for common codes. It normalizes all `contains[].version` values to prod's values. This only triggers when code sets are the same (no extra/missing codes) — the existing `expand-snomed-version-skew-content` tolerance handles cases with code membership differences.
 
 
+48fa1f2 #1 Claude (AI Assistant) <>
+
+Closing as won't-fix. SNOMED/CPT version annotations differ due to edition skew. Round-1 precedent: 5b3ae71 adjudicated by GG as 'By design — added an old version to better support VSAC'. Covered by unified version-skew equiv-autofix tolerance.
 
 ---
 
@@ -1623,46 +2074,9 @@ GG confirmed fixed: Dev crashes (500) on $expand when CodeSystem content mode pr
 
 ---
 
-### [ ] `af1ce69` validate-code: dev renders null status as literal 'null' in inactive concept message
+### [ ] `af1ce69` 
 
-Records-Impacted: 24
-Tolerance-ID: validate-code-null-status-in-message
-Record-ID: 20db1af0-c1c6-4f83-9019-2aaeff9ef549
 
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
--H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http:%2F%2Fwww.nlm.nih.gov%2Fresearch%2Fumls%2Frxnorm&code=70618&_format=json' \
--H 'Accept: application/fhir+json' | jq -r '.parameter[] | select(.name == "message") | .valueString'
-```
-
-Prod returns `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status), dev returns `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null").
-
-#####What differs
-
-In $validate-code responses for inactive concepts, the message and issues text differ in how a missing status value is rendered:
-
-- Prod: `"The concept '70618' has a status of  and its use should be reviewed"` (empty string for status)
-- Dev: `"The concept '70618' has a status of null and its use should be reviewed"` (literal word "null")
-
-Both servers agree on result=true, inactive=true, display, system, and version. The only difference is this string interpolation of a null/missing status value in the INACTIVE_CONCEPT_FOUND message.
-
-#####How widespread
-
-24 records in the current delta file, all identical: GET /r4/CodeSystem/$validate-code for RxNorm code 70618. The same underlying pattern (empty vs "null" in status message) also affects 20 NDC records already covered by a separate tolerance (ndc-validate-code-extra-inactive-params, bug 7258b41).
-
-Search: `grep 'has a status of  and' results/deltas/deltas.ndjson | wc -l` → 24
-All 24 are validate-code operations on http://www.nlm.nih.gov/research/umls/rxnorm, code 70618.
-
-#####What the tolerance covers
-
-Tolerance ID: validate-code-null-status-in-message
-Matches: validate-code Parameters responses where prod message contains "status of " (empty) and dev message contains "status of null" at the same position. Normalizes both message and issues text by replacing "status of null" with "status of " (prod's rendering) in dev. Eliminates 24 delta records.
 
 ---
 
@@ -2572,6 +2986,69 @@ Adjudicated by GG: By design — added an old version to better support VSAC
 
 ---
 
+### [x] `a62854a` Dev $expand returns empty string id on ValueSet response
+
+Records-Impacted: 690
+Tolerance-ID: expand-dev-empty-id
+Record-ID: 2bbd9519-3a6b-4f55-8309-745d9f1b16a7
+
+
+Attempted to reproduce on 2026-02-07 but the bug appears to have been **fixed** on tx-dev.fhir.org since the data was collected (2026-02-06).
+
+Tried 4 different $expand POST requests — none returned `"id":""` from dev:
+
+```bash
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://snomed.info/sct","concept":[{"code":"160245001"}]}]}}}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medicationrequest-category"}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"valueSet","resource":{"resourceType":"ValueSet","compose":{"include":[{"system":"http://loinc.org","concept":[{"code":"8480-6"}]}]}}}]}'
+```
+
+All three return a ValueSet without `"id":""`. Both inline and registered ValueSet expansions now omit `id` entirely, matching prod behavior.
+
+**Status**: No longer reproducible — likely fixed between 2026-02-06 and 2026-02-07.
+
+Dev $expand responses include `"id": ""` at the top level of the returned ValueSet resource. Prod does not include an `id` field at all.
+
+
+In all 690 $expand delta records where dev returns a successful ValueSet expansion, the dev response includes `"id": ""` (an empty string). Prod omits the `id` field entirely, which is the correct behavior — per FHIR, string values must be non-empty if present. An empty string `""` is invalid FHIR.
+
+This affects all POST /r4/ValueSet/$expand records across all code systems (SNOMED, LOINC, ICD, etc.) — it's not specific to any particular ValueSet or code system.
+
+
+```bash
+grep '"op":"expand"' jobs/2026-02-round-1/results/deltas/deltas.ndjson | python3 -c "
+import json, sys
+for line in sys.stdin:
+rec = json.loads(line)
+dev = json.loads(rec.get('devBody','{}'))
+if dev.get('id') == '': print(rec['id'])
+" | wc -l
+```
+
+
+**Dev** (incorrect):
+```json
+{"resourceType":"ValueSet","status":"active","id":"","expansion":{...}}
+```
+
+**Prod** (correct):
+```json
+{"resourceType":"ValueSet","status":"active","expansion":{...}}
+```
+
+---
+
 ### [x] `2cdb0d3` Dev $expand echoes includeDefinition=false parameter in expansion
 
 Records-Impacted: 677
@@ -2911,47 +3388,6 @@ GG confirmed fixed: Dev echoes display param on failed validate-code
 
 ---
 
-### [x] `cff4061` HCPCS CodeSystem loaded in dev but unknown in prod — 110 result-disagrees
-
-Records-Impacted: 123
-Tolerance-ID: hcpcs-codesystem-availability
-Record-ID: 238a26b7-46b6-4095-a3ba-364b1973da4d
-
-
-```bash
-curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?system=http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets&code=G0154' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?system=http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets&code=G0154' \
--H 'Accept: application/fhir+json'
-```
-
-Prod returns `result: false` with `x-caused-by-unknown-system` ("A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found"). Dev returns `result: true` with `version: "2025-01"` and `display: "health or hospice setting, each 15 minutes"`.
-
-
-For $validate-code requests involving system http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets, prod returns result=false with the error "A definition for CodeSystem 'http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets' could not be found, so the code cannot be validated" and x-caused-by-unknown-system. Dev returns result=true with version 2025-01, display text, system, and code parameters — successfully finding and validating the codes.
-
-The diagnostics confirm: prod says "CodeSystem not found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets" while dev says "CodeSystem found: http://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets|2025-01".
-
-
-123 delta records mention HCPCS (all validate-code operations):
-- 110 result-disagrees: prod=false dev=true (prod doesn't have HCPCS, dev does)
-- 4 result-disagrees: prod=true dev=false (code 33206, likely a different sub-issue)
-- 9 content-differs: same result but differences in surrounding content
-
-Searched with: grep -c 'HCPCSReleaseCodeSets' jobs/2026-02-round-1/results/deltas/deltas.ndjson
-All 110 prod=false/dev=true records have x-caused-by-unknown-system pointing to HCPCSReleaseCodeSets.
-
-
-Tolerance ID: hcpcs-codesystem-availability. Matches validate-code records where prod has x-caused-by-unknown-system for HCPCSReleaseCodeSets and dev returns result=true. Skips these records since the root cause is code system availability, not a logic bug.
-
-
-c3faf44 #1 Claude (AI Assistant) <>
-
-GG confirmed: HCPCS will be defined in tx.fhir.org next time it restarts
-
----
-
 ### [ ] `dc0b0d1` CodeSystem/$validate-code without system: different error message and severity
 
 Records-Impacted: 1
@@ -3100,45 +3536,77 @@ Tolerance `expand-iso3166-extra-reserved-codes` matches expand records where bot
 
 ---
 
-### [ ] `5f7faaa` Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'
+### [ ] `ccb86ff` Dev crashes (500) on valid $expand requests with JavaScript TypeErrors
 
-Records-Impacted: 1
-Tolerance-ID: validate-code-crash-undefined-system-code
-Record-ID: 6b937ddc-13c0-49e1-bd96-24ef10f06543
+Records-Impacted: 15
+Tolerance-ID: expand-dev-crash-on-valid
+Record-ID: 7598431b-1c90-409c-b8f2-2be8358e8be3
+
+
+Prod returns 200 with valid ValueSet expansion; dev returns 500 with OperationOutcome containing JavaScript TypeErrors. Two distinct error messages observed:
+
+1. `vs.expansion.parameter is not iterable` (1 record) — triggered when expanding `http://hl7.org/fhir/us/core/ValueSet/us-core-pregnancy-status`
+2. `exp.addParamUri is not a function` (14 records) — triggered when expanding Verily phenotype ValueSets (e.g., `http://fhir.verily.com/ValueSet/verily-phenotype-*`)
+
+Both are unhandled JS TypeErrors during the expand code path, causing 500 instead of a valid expansion.
+
+
+15 records in deltas, all `POST /r4/ValueSet/$expand` with prod=200, dev=500:
+
+```
+grep '"dev-crash-on-valid"' results/deltas/deltas.ndjson | grep expand | wc -l
+```
+
+The `addParamUri` errors are all Verily phenotype ValueSets (14 records). The `parameter is not iterable` error affects 1 US Core ValueSet.
+
+
+Tolerance `expand-dev-crash-on-valid` matches POST /r4/ValueSet/$expand where prod=200 and dev=500. Eliminates all 15 records.
+
+
+- `7598431b-1c90-409c-b8f2-2be8358e8be3` (parameter is not iterable)
+- `9ec233b5-f523-4ec4-b4f9-fcdf8b63d17f` (addParamUri)
+
+---
+
+### [ ] `7069f54` BCP-47 case-sensitive validation: dev accepts 'en-us' (lowercase), prod correctly rejects it
+
+Records-Impacted: 2
+Tolerance-ID: bcp47-case-sensitive-validation
+Record-ID: ba44d44e-929e-4b34-8d18-39ead53a68b6
 
 
 ```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-us"},{"name":"display","valueString":"English (Region=United States)"}]}'
 
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Accept: application/fhir+json" \
+-H "Content-Type: application/fhir+json" \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"urn:ietf:bcp:47"},{"name":"code","valueCode":"en-us"},{"name":"display","valueString":"English (Region=United States)"}]}'
 ```
 
-Prod returns 200 with a Parameters response (result=false, with code system version details). Dev returns 500 with OperationOutcome `"No Match for undefined|undefined"`. The bug triggers when a ValueSet has `compose.exclude` entries with only a `valueSet` reference (no `system`); dev's exclude-processing code path reads `cc.system` and `cc.version` as `undefined` from the exclude entry.
+Prod returns `result: false` with error "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47'", dev returns `result: true` with display "English (Region=United States)".
 
 
-Prod returns 200 with a successful $validate-code Parameters response (result=true, system=urn:oid:2.16.840.1.113883.6.238, code=2108-9, display="European", version="1.2"). Dev returns 500 with an OperationOutcome error: "No Match for undefined|undefined".
+Dev returns result=true for BCP-47 code "en-us" with display "English (Region=United States)". Prod returns result=false with error "Unknown code 'en-us' in the CodeSystem 'urn:ietf:bcp:47'" and informational issue "Unable to recognise part 2 (\"us\") as a valid language part".
 
-The error message "undefined|undefined" indicates that dev failed to extract the system and code parameters from the POST request body, receiving them as JavaScript `undefined` values instead.
-
-The request is POST /r4/ValueSet/$validate-code against the http://hl7.org/fhir/us/core/ValueSet/detailed-race ValueSet (US Core detailed race codes). The request body was not captured in the comparison data, but two other POST $validate-code requests involving the same ValueSet (detailed-race) succeeded on both sides, suggesting this may be related to a specific combination of request parameters rather than the ValueSet itself.
+The correct BCP-47 regional variant format is "en-US" (uppercase region code). BCP-47 is case-sensitive in FHIR (the code system has caseSensitive=true by default per the 2022 FHIR update). Prod correctly rejects the lowercase variant; dev incorrectly accepts it.
 
 
-Only 1 record in the comparison dataset exhibits this exact pattern. Searched:
-- `grep -c 'undefined|undefined' comparison.ndjson` → 1
-- All dev=500/prod=200 validate-code records → only this one
-- All detailed-race records → 3 total, 2 succeed on both sides
+2 records in deltas, both for code "en-us" in system urn:ietf:bcp:47:
+- ba44d44e-929e-4b34-8d18-39ead53a68b6: POST /r4/CodeSystem/$validate-code
+- 175c5449-c70c-4c69-9e2e-4f728d035c1f: POST /r4/ValueSet/$validate-code
+
+Search: grep 'en-us' jobs/2026-02-round-1/results/deltas/deltas.ndjson (2 matches, both result-disagrees with prodResult=false, devResult=true)
+
+Both records show the same root cause: dev's BCP-47 code lookup is case-insensitive when it should be case-sensitive.
 
 
-Tolerance `validate-code-crash-undefined-system-code` matches POST /r4/ValueSet/$validate-code where prod=200, dev=500, and dev error contains "undefined|undefined". Skips the record. Eliminates 1 record.
-
-
-6b937ddc-13c0-49e1-bd96-24ef10f06543
+Tolerance ID: bcp47-case-sensitive-validation
+Matches: result-disagrees records where system is urn:ietf:bcp:47 and prodResult=false, devResult=true.
+Eliminates 2 records.
 
 ---
 
@@ -3189,6 +3657,51 @@ Tolerance ID: `expand-too-costly-succeeds`. Matches POST /r4/ValueSet/$expand wh
 - 4fe6282f-ccf2-4340-9758-cbc70b7d2b79 (CPT grammar)
 - d1360bdd-814e-4da9-af67-e4c9e145f3f1 (BCP-13 grammar)
 - 3a9f2a04-94d7-431a-95dd-af16ff2ee3f7 (NDC too many codes)
+
+---
+
+### [x] `39d9af6` SNOMED display text differs for same edition version
+
+Records-Impacted: 59
+Tolerance-ID: snomed-same-version-display-differs
+Record-ID: 9e9e9c20-cc34-43f8-a0fa-54e8cac48e55
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?url=http://snomed.info/sct&code=48546005' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?url=http://snomed.info/sct&code=48546005' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `display: "Product containing diazepam (medicinal product)"`, dev returns `display: "Diazepam"`. Both report version `http://snomed.info/sct/900000000000207008/version/20250201`. Also confirmed with code 409063005: prod returns `"Counselling"`, dev returns `"Counseling (regime/therapy)"`.
+
+
+For SNOMED $validate-code requests where both prod and dev report the same SNOMED CT edition version (e.g., 20250201), the display text returned for certain codes differs between the two servers. Examples:
+
+- Code 10019 (Diazepam product): prod="Product containing diazepam (medicinal product)", dev="Diazepam"
+- Code 385049006 (Capsule): prod="Capsule", dev="Capsule (product)"
+- Code 44808001 (Counselling): prod="Counselling", dev="Counseling (regime/therapy)"
+- Code 15188001 (Hearing loss): prod="Hearing loss", dev="Deafness"
+- Code 46635009 (Diabetes type I): prod="Diabetes mellitus type I", dev="Insulin dependent diabetes mellitus"
+
+Both servers agree on result=true, system, code, and version. Only the display (preferred term) differs.
+
+
+59 validate-code records show this pattern. All involve http://snomed.info/sct with matching version strings (primarily 20250201). Found via:
+
+grep '"param":"display"' results/deltas/deltas.ndjson | grep 'snomed'
+
+then filtering to records where prod and dev version parameters are identical.
+
+
+Tolerance ID: snomed-same-version-display-differs. Matches SNOMED validate-code Parameters responses where versions are identical but display text differs. Normalizes both sides to prod's display value.
+
+
+329fd29 #1 Claude (AI Assistant) <>
+
+Adjudicated by GG: Fixed — but won't achieve consistency with prod, since prod has the same bug (random which it chooses)
 
 ---
 
@@ -3414,6 +3927,59 @@ Matches validate-code records where OperationOutcome has display-comment issues 
 
 ---
 
+### [ ] `0abae17` POST -code: dev missing code/system/display params and extra issues due to undefined system extraction
+
+Records-Impacted: 3
+Tolerance-ID: validate-code-undefined-system-missing-params
+Record-ID: 243e44e8-cafb-44ba-a521-de4aab9d6985
+
+
+Could not reproduce live. The original request was a POST to `/r4/ValueSet/$validate-code` with a `codeableConcept` parameter (SNOMED code 785126002) validated against the IPS medication ValueSet (`http://hl7.org/fhir/uv/ips/ValueSet/medication-uv-ips|2.0.0`). The ValueSet is not natively available on either server — it was provided inline via the test framework (likely as a `tx-resource` parameter). The request body was not stored in the comparison data, and the inline ValueSet definition is not available, so the exact request cannot be reconstructed.
+
+Attempted with a server-resident ValueSet (`http://hl7.org/fhir/ValueSet/medication-codes`), but both servers correctly return `system`, `code`, and `display` for that case — the undefined system extraction bug only manifests when the ValueSet is provided inline via the test framework's request format.
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"785126002","display":"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"}]}}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"785126002","display":"Product containing precisely methylphenidate hydrochloride 5 milligram/1 each conventional release chewable tablet"}]}}]}'
+```
+
+Both servers return matching `system`, `code`, and `display` parameters with server-resident ValueSets. The bug requires the inline ValueSet provision path used by the Java validator test framework.
+
+
+On POST /r4/ValueSet/$validate-code with codeableConcept input, dev fails to return `code`, `system`, and `display` output parameters that prod returns. Dev also returns extra OperationOutcome issues (`this-code-not-in-vs`, `not-in-vs`) that prod does not include. Both servers agree result=false (because the submitted display text is wrong).
+
+Specific differences in the normalized output:
+- **Prod returns**: code=785126002, system=http://snomed.info/sct, display="Methylphenidate hydrochloride 5 mg chewable tablet"
+- **Dev returns**: none of these three parameters
+- **Prod issues**: 1 issue (invalid-display error)
+- **Dev issues**: 3 issues (this-code-not-in-vs information, invalid-display error, not-in-vs error)
+- **Message**: Dev prepends "No valid coding was found for the value set..." to the message; prod has only the invalid-display message (already handled by invalid-display-message-format tolerance)
+
+Dev diagnostics show `Validate "[undefined#785126002 ...]"` — the system is JavaScript "undefined", confirming the same POST body extraction failure as bugs 19283df and 4cdcd85.
+
+
+3 records, all POST /r4/ValueSet/$validate-code with the same SNOMED code 785126002 validating against medication-uv-ips ValueSet:
+- 243e44e8-cafb-44ba-a521-de4aab9d6985
+- 683c85d6-b337-4460-a005-df239084339a
+- 1e7a78b8-c2ec-4819-b871-31cd30f5af28
+
+All 3 have result=false on both sides (display text is wrong), same SNOMED version. Pattern identified by searching for validate-code records where dev is missing both code and system parameters.
+
+
+Tolerance `validate-code-undefined-system-missing-params` matches POST $validate-code with result=false where prod has code/system params but dev lacks them, and dev diagnostics contain "undefined". Eliminates all 3 records.
+
+
+Same root cause as bug 19283df (result-disagrees variant, 89 records) and bug 4cdcd85 (crash variant, 1 record). All three stem from dev failing to extract system/code from POST request body.
+
+---
+
 ### [ ] `16cbe05` Dev  includes warning-experimental expansion parameter that prod omits
 
 Records-Impacted: 1
@@ -3542,55 +4108,52 @@ Tolerance ID: `read-resource-text-div-diff`. Matches read operations (resource r
 
 ---
 
-### [x] `4f824c2` validate-code: dev omits message parameter when result=true
+### [x] `de3b882` CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes
 
-Records-Impacted: 150
-Tolerance-ID: validate-code-missing-message-on-true
-Record-ID: e934228b-f819-4119-bdd2-dcf4a72988bc
+Records-Impacted: 45
+Tolerance-ID: cpt-expand-empty-results
+Record-ID: d03ce6c0-d498-4c96-9165-261fdecc484c
 
 
 ```bash
-curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-9-cm"},{"name":"code","valueCode":"441"}]}'
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt","concept":[{"code":"83036"}]}]}}'
 
-curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-9-cm"},{"name":"code","valueCode":"441"}]}'
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"ValueSet","status":"active","compose":{"include":[{"system":"http://www.ama-assn.org/go/cpt","concept":[{"code":"83036"}]}]}}'
 ```
 
-Prod returns `result: true` with a `message` parameter: "Unknown Code '441' in the CodeSystem 'http://hl7.org/fhir/sid/icd-9-cm' version '2015' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment". Dev returns `result: true` but omits the `message` parameter entirely.
+Prod returns `total: 1` with CPT code 83036 ("Hemoglobin; glycosylated (A1C)") in `expansion.contains`. Dev returns `total: 0` with no `contains` array. Both report `used-codesystem: http://www.ama-assn.org/go/cpt|2023`.
 
 
-Dev omits the `message` output parameter on $validate-code responses when `result=true`. Prod includes it. The FHIR spec explicitly states that when result is true, the message parameter "carries hints and warnings."
+Dev returns `total: 0` with no `expansion.contains` array for $expand requests involving CPT codes (`http://www.ama-assn.org/go/cpt|2023`). Prod returns `total: 1` (or more) with the expected CPT codes in `expansion.contains`.
 
-In this dataset, all 150 affected records have `result=true` and prod returns a `message` containing warnings like "Unknown Code '441' in the CodeSystem 'http://hl7.org/fhir/sid/icd-9-cm' version '2015' - note that the code system is labeled as a fragment, so the code may be valid in some other fragment."
+Example (record d03ce6c0): POST /r4/ValueSet/$expand for a ValueSet containing CPT code 83036 ("Hemoglobin; glycosylated (A1C)"). Prod returns the code in the expansion; dev returns an empty expansion with total=0.
 
-When `result=false`, dev correctly includes the `message` parameter.
-
-
-150 records in comparison.ndjson (38 in current deltas after other tolerances):
-- 111 POST /r4/ValueSet/$validate-code
-- 39 POST /r4/CodeSystem/$validate-code
-
-All 150 have `result=true` in both prod and dev. The pattern is: validate-code + result=true + prod has message + dev omits message.
-
-Search: `grep 'missing-in-dev.*message' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 48 lines (38 with actual message param diff after filtering false positives from grep matching "message" elsewhere in the line).
-
-Verified in full comparison.ndjson: all 150 records where prod has a message param and dev doesn't have dev result=true (0 with result=false, 0 with no result).
+Both servers use the same `used-codesystem` version (`http://www.ama-assn.org/go/cpt|2023`), indicating dev believes it has CPT loaded but fails to resolve any codes from it.
 
 
-Tolerance ID: validate-code-missing-message-on-true. Matches validate-code Parameters responses where result=true, prod has a message parameter, and dev does not. Normalizes by stripping the message parameter from prod (since dev doesn't have it and we can't fabricate it). This is a lossy normalization — it hides the missing warning, but the warning content is already present in the issues OperationOutcome.
+45 out of 50 $expand delta records with CPT codes show this pattern. Found via:
+```bash
+python3 -c "..." # -> 45 of 46 CPT expand deltas
+```
+
+All 45 records are POST /r4/ValueSet/$expand with `used-codesystem` of `http://www.ama-assn.org/go/cpt|2023`.
 
 
-e934228b-f819-4119-bdd2-dcf4a72988bc — POST /r4/CodeSystem/$validate-code for ICD-9-CM code 441.
+Same root cause as bug f559b53 (CPT validate-code returns "Unknown code"). Dev's CPT data appears non-functional — codes are unknown for validation and absent from expansions.
 
 
-48fc8a2 #1 Claude (AI Assistant) <>
+Tolerance `cpt-expand-empty-results` matches POST /r4/ValueSet/$expand where dev returns total=0 and prod returns total>0, and the expansion uses CPT as a code system. Skips these records entirely since comparison is meaningless when dev has no CPT data.
 
-GG: Ignored — no reproduction instructions. Tolerance removed to see if pattern recurs.
+
+ddec37b #1 Claude (AI Assistant) <>
+
+GG confirmed fixed: CPT $expand: dev returns empty expansion
 
 ---
 
@@ -3635,6 +4198,42 @@ Codes affected: 19304 (2 records), 98000 (2 records), 99201 (6 records).
 
 
 Tolerance ID: cpt-validate-code-missing-info-issue. Matches CPT validate-code records where result=false and prod has an extra informational "not found in CPT" issue. Normalizes by stripping the extra informational issue from prod and removing the corresponding message prefix. Eliminates 10 records.
+
+---
+
+### [ ] `61d43e0` Case-insensitive validate-code: dev returns extra normalized-code param, different severity and issue text
+
+Records-Impacted: 4
+Tolerance-ID: case-insensitive-code-validation-diffs
+Record-ID: b6d0a8c8-a6e9-4acb-8228-f08aad1b1c49
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/CodeSystem/\$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-10-cm"},{"name":"code","valueCode":"M80.00xA"}]}'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code' \
+-H 'Accept: application/fhir+json' \
+-H 'Content-Type: application/fhir+json' \
+-d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/sid/icd-10-cm"},{"name":"code","valueCode":"M80.00xA"}]}'
+```
+
+Prod returns severity `"warning"`, no `normalized-code` param, and bare system URI in issue text. Dev returns severity `"information"`, extra `normalized-code: "M80.00XA"` param, and versioned system URI (`http://hl7.org/fhir/sid/icd-10-cm|2024`) in issue text.
+
+When validating codes in case-insensitive code systems (ICD-10, ICD-10-CM) where the submitted code has incorrect casing (e.g., "M80.00xA" instead of "M80.00XA", or "i50" instead of "I50"):
+
+1. Dev returns an extra `normalized-code` output parameter containing the correctly-cased code. Prod omits this parameter entirely. The `normalized-code` parameter is a valid $validate-code output per the FHIR spec, so dev is arguably more informative, but the difference needs tracking.
+
+2. The OperationOutcome issue severity differs: prod returns `"warning"`, dev returns `"information"` for the CODE_CASE_DIFFERENCE issue. Both convey the same message about case differences.
+
+3. The issue details text includes the system URI version in dev but not in prod. Prod: "the code system 'http://hl7.org/fhir/sid/icd-10-cm' is case insensitive". Dev: "the code system 'http://hl7.org/fhir/sid/icd-10-cm|2024' is case insensitive".
+
+All 4 records are POST /r4/CodeSystem/$validate-code with case-insensitive code systems (2 ICD-10-CM with code M80.00xA, 2 ICD-10 with code i50). Both sides agree result=true.
+
+Search: `grep 'normalized-code' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4
+Cross-check: `grep 'CODE_CASE_DIFFERENCE' jobs/2026-02-round-1/results/deltas/deltas.ndjson | wc -l` → 4 (same records)
 
 ---
 
@@ -3730,49 +4329,6 @@ Tolerance `message-concat-missing-issues` normalizes the `message` parameter to 
 
 ---
 
-### [ ] `3b1d8dc` Prod returns duplicate entries in searchset Bundle for same resource URL
-
-Records-Impacted: 3
-Tolerance-ID: searchset-duplicate-entries
-Record-ID: 71e7b8c5-f8da-4323-b233-575727a2f583
-
-
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
--H 'Accept: application/fhir+json'
-```
-
-Prod returns `total: 2` with duplicate entries for both the ValueSet and CodeSystem searches. Dev returns `total: 1` with a single entry in each case. For the ValueSet, the two prod entries have different `meta.lastUpdated` timestamps (2024-04-29 vs 2025-10-22). For the CodeSystem, the two prod entries are identical copies. Tested 2026-02-07.
-
-
-When searching for ValueSet or CodeSystem resources by URL (e.g., `GET /r4/ValueSet?url=...`), prod returns Bundle with `total: 2` and two entries, while dev returns `total: 1` with one entry.
-
-In record 71e7b8c5, prod returns two versions of ValueSet 2.16.840.1.113762.1.4.1021.103 with different `meta.lastUpdated` (2024-04-29 vs 2025-10-22), different `purpose` text, different `resource-lastReviewDate` extension values, and different expansion timestamps/identifiers. Dev returns only the first version.
-
-In record c8adc8ae, prod returns two identical copies of CodeSystem `https://nahdo.org/sopt` version 9.2 (searched via `GET /r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`).
-
-
-3 records in comparison.ndjson show `prod total > 1` in search Bundle responses out of 503 total resource search operations:
-- 71e7b8c5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103`
-- c8adc8ae: `/r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`
-- b9db7af5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103` (same URL, different request)
-
-The pattern is: `GET /r4/{ValueSet|CodeSystem}?url=...` where prod has loaded multiple copies/versions of the same resource.
-
-
-Tolerance `searchset-duplicate-entries` matches searchset Bundles where prod returns more entries than dev. It normalizes by keeping only the first entry from prod (matching dev's single entry) and setting both totals to the minimum. Affects 3 records.
-
----
-
 ### [ ] `8ef44d0` 500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text
 
 Records-Impacted: 4
@@ -3828,56 +4384,6 @@ the same pattern.
 
 ---
 
-### [x] `4c5d0f9` Dev returns x-unknown-system for code system versions that prod recognizes
-
-Records-Impacted: 5
-Tolerance-ID: validate-code-x-unknown-system-extra
-Record-ID: e23bae38-016e-46ef-bd71-160ddb1ea35a
-
-
-```bash
-curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","version":"v1","code":"2054-5"}}]}'
-
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","version":"v1","code":"2054-5"}}]}'
-```
-
-**Not reproduced.** Both servers now return identical behavior for unknown code system versions: both return `x-caused-by-unknown-system` parameter, both return `UNKNOWN_CODESYSTEM_VERSION` issue, and both omit `display`. The original ValueSet (`omb-race-category|4.1.0`) is no longer loaded on the public servers, so the exact original request cannot be replayed, but the underlying code system version handling has converged. The parameter name has also changed from `x-unknown-system` to `x-caused-by-unknown-system` on both servers, confirming a code update that aligned the behavior.
-
-
-When validating a code against a ValueSet where the requested code system version is not found, dev and prod behave differently:
-
-1. **x-unknown-system parameter**: Dev returns an extra `x-unknown-system` parameter (e.g., `urn:oid:2.16.840.1.113883.6.238|v1`), prod does not.
-2. **Extra OperationOutcome issue**: Dev returns an additional issue with code `not-found`, message-id `UNKNOWN_CODESYSTEM_VERSION`, and text like "A definition for CodeSystem '...' version 'v1' could not be found, so the code cannot be validated. Valid versions: 1.2". Prod only returns the `not-in-vs` issue.
-3. **Message text**: Dev's message parameter prepends the unknown-system error before the not-in-vs message. Prod only includes the not-in-vs message.
-4. **Display parameter**: Prod returns a display value (e.g., "Black or African American") looked up from its known version. Dev omits display entirely since it considers the system unknown.
-5. **Version parameter**: Prod returns two version parameters — the actual known version (`1.2`) and the requested version (`v1`). Dev only returns the requested version (`v1`).
-
-Both agree `result=false`, so the validation outcome is the same. The difference is in how each server handles the unknown version — prod falls back to a known version and provides display/version details, while dev treats the version as entirely unknown.
-
-
-5 records in deltas match this pattern (all POST /r4/ValueSet/$validate-code with `x-unknown-system` in dev response):
-- 4 records involve `urn:oid:2.16.840.1.113883.6.238|v1` (CDC Race and Ethnicity)
-- 1 record involves `http://snomed.info/sct|http://snomed.info/sct/731000124108/version/20250301` (SNOMED edition)
-
-Search: `grep -c 'x-unknown-system' jobs/2026-02-round-1/results/deltas/deltas.ndjson` → 5
-Full comparison data has 21 records mentioning x-unknown-system (16 handled by existing tolerances).
-
-
-Tolerance ID: `validate-code-x-unknown-system-extra`. Matches $validate-code responses where dev has `x-unknown-system` parameter that prod lacks. Normalizes by:
-- Stripping `x-unknown-system` from dev
-- Canonicalizing message and issues to prod's values
-- Canonicalizing display and version to prod's values
-
-Eliminates 5 delta records.
-
----
-
 ### [ ] `516d895` UCUM error message formatting differs between prod and dev
 
 Records-Impacted: 1
@@ -3927,34 +4433,25 @@ Tolerance ID: `ucum-error-message-format`. Matches batch-validate-code records f
 
 ---
 
-### [x] `9f41615` POST _search with form-encoded body crashes with 500 error
+### [x] `b839c0e` Typo "conplete" in factory CodeSystem content field (read.js:107)
 
 #####Summary
 
-`POST /r4/CodeSystem/_search` with `Content-Type: application/x-www-form-urlencoded` crashes on the JS server with a 500 error. The form-encoded body is not parsed, so query parameters like `_offset` are undefined.
+In `tx/workers/read.js` line 107, the factory CodeSystem content value is set to `"conplete"` instead of `"complete"`. This affects all iterable factory CodeSystems (e.g., `x-us-states`).
 
 #####Repro
 
 ```
-curl -s -H 'Accept: application/fhir+json' \
--H 'Content-Type: application/x-www-form-urlencoded' \
--d '_count=5' \
-'https://tx-dev.fhir.org/r4/CodeSystem/_search'
+curl -s -H 'Accept: application/fhir+json' 'https://tx-dev.fhir.org/r4/CodeSystem/x-us-states' | jq .content
 ```
 
-Returns OperationOutcome with:
-- severity: error
-- diagnostics: "Cannot read properties of undefined (reading '_offset')"
+Returns: `"conplete"`
+Expected: `"complete"`
 
-#####Expected
+#####Notes
 
-Should return a search Bundle with 5 entries (same as `GET /r4/CodeSystem?_count=5`).
-
-Production (Pascal) handles this correctly and returns results.
-
-#####Root cause
-
-The Express app configures `express.raw()` and `express.json()` middleware but not `express.urlencoded()`. The FHIR _search operation requires form-encoded POST bodies per the spec (https://hl7.org/fhir/R4/search.html#Introduction).
+- Production (Pascal) returns 404 for factory CodeSystem reads — this is a JS-only feature, so no prod comparison available.
+- `"conplete"` is not a valid FHIR CodeSystem content code. Valid values: not-present, example, fragment, complete, supplement.
 
 ---
 

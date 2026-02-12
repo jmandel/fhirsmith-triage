@@ -236,6 +236,49 @@ def read_job_stats(job_dir):
     }
 
 
+def ensure_round_labels(bugs, job_dir, round_label):
+    """Add round_label to any bug referenced by this job's tolerances that lacks it.
+
+    Parses bugId values from tolerances.js and labels matching git-bug issues.
+    This ensures bugs carried forward from prior rounds get the current round label too.
+    """
+    tol_path = os.path.join(job_dir, "tolerances.js")
+    if not os.path.isfile(tol_path):
+        return
+
+    with open(tol_path) as f:
+        tol_text = f.read()
+
+    # Extract bugId values only from temp-tolerance entries (not equiv-autofix).
+    # Tolerances are objects delimited by { ... }, so split on those boundaries
+    # and only grab bugIds from blocks containing kind: 'temp-tolerance'.
+    referenced_ids = set()
+    for block in re.split(r'(?=\{)', tol_text):
+        if re.search(r"""kind:\s*['"]temp-tolerance['"]""", block):
+            for bid in re.findall(r"""bugId:\s*['"]([^'"]+)['"]""", block):
+                referenced_ids.add(bid)
+    if not referenced_ids:
+        return
+
+    labeled = 0
+    for bug in bugs:
+        hid = bug.get("human_id", "")
+        labels = bug.get("labels", [])
+        if round_label in labels:
+            continue
+        # Check if this bug's human_id matches any referenced bugId (or is a suffix)
+        if hid in referenced_ids or any(rid.endswith(hid) for rid in referenced_ids):
+            subprocess.run(
+                ["git-bug", "bug", "label", "new", hid, round_label],
+                capture_output=True
+            )
+            labels.append(round_label)  # update in-memory so build_bug_data sees it
+            labeled += 1
+
+    if labeled:
+        print(f"Added '{round_label}' label to {labeled} bug(s)", file=sys.stderr)
+
+
 def build_bug_data(bugs):
     """Build the data structure for the HTML page."""
     bug_data = []
@@ -1193,6 +1236,10 @@ def main():
                     "untriaged": sum(s["untriaged"] for s in all_stats),
                 }
         # No default round filter — show all bugs
+
+    # Ensure bugs referenced by this round's tolerances have the round label
+    if default_round_label and job_dir:
+        ensure_round_labels(bugs, job_dir, default_round_label)
 
     bug_data = build_bug_data(bugs)
     html = generate_html(bug_data, job_stats, default_round_label)

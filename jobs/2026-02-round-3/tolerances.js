@@ -1185,6 +1185,50 @@ const tolerances = [
   },
 
   {
+    id: 'expand-unclosed-extension-and-total',
+    description: 'Dev $expand omits valueset-unclosed extension that prod includes on incomplete/unclosed expansions (e.g. SNOMED is-a filter). When the expansion is unclosed, dev also sometimes includes expansion.total while prod omits it. Root cause: SNOMED provider does not override filtersNotClosed() so dev never marks these expansions as unclosed.',
+    kind: 'temp-tolerance',
+    bugId: 'f2b2cef',
+    tags: ['normalize', 'expand', 'unclosed-extension', 'total'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      // Check if prod has valueset-unclosed extension but dev doesn't
+      const prodHasUnclosed = prod.expansion.extension?.some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+      const devHasUnclosed = dev.expansion.extension?.some(
+        e => e.url === 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+      );
+      if (prodHasUnclosed && !devHasUnclosed) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Strip valueset-unclosed extension from prod
+      let prodExp = { ...prod.expansion };
+      if (prodExp.extension) {
+        const filtered = prodExp.extension.filter(
+          e => e.url !== 'http://hl7.org/fhir/StructureDefinition/valueset-unclosed'
+        );
+        if (filtered.length === 0) {
+          delete prodExp.extension;
+        } else {
+          prodExp.extension = filtered;
+        }
+      }
+      // Strip total from dev when prod doesn't have it (unclosed expansions don't report total)
+      let devExp = { ...dev.expansion };
+      if (devExp.total !== undefined && prod.expansion.total === undefined) {
+        delete devExp.total;
+      }
+      return {
+        prod: { ...prod, expansion: prodExp },
+        dev: { ...dev, expansion: devExp },
+      };
+    },
+  },
+
+  {
     id: 'expand-contains-sort-order',
     description: 'Expansion.contains code ordering differs between prod and dev. Both return the same set of codes but in different order. Code ordering in ValueSet expansion has no semantic meaning in FHIR — the expansion is a set, not a sequence. Sorts contains by system+code to normalize. Applies to all $expand operations with identical code membership but different ordering.',
     kind: 'equiv-autofix',
