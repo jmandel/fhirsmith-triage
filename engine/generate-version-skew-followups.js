@@ -74,6 +74,7 @@
  *     --per-cluster 15
  *
  * Options:
+ * - `--tolerance-ids <id,id,...>`: comma-separated tolerance IDs to treat as version-skew (default `version-skew`)
  * - `--out-dir <dir>`: output directory (default `<job>/results/version-skew-followups`)
  * - `--sample-size <n>`: total sampled records (default `200`; `0` means "use all matched")
  * - `--high-risk-share <0..1>`: fraction from high-risk stratum (default `0.85`)
@@ -173,12 +174,15 @@ if (!fs.existsSync(inputPath)) {
 }
 
 const { tolerances, getParamValue } = require(path.join(jobDir, 'tolerances'));
-const versionSkewTolerance = tolerances.find(t => t.id === 'version-skew');
-if (!versionSkewTolerance) {
-  console.error(`No tolerance with id 'version-skew' found in ${path.join(jobDir, 'tolerances.js')}`);
+const toleranceIdsRaw = getArg('--tolerance-ids', 'version-skew');
+const versionSkewIds = new Set(toleranceIdsRaw.split(',').map(s => s.trim()).filter(Boolean));
+const versionSkewTolerances = tolerances.filter(t => versionSkewIds.has(t.id));
+if (versionSkewTolerances.length === 0) {
+  console.error(`No tolerances found matching ids [${[...versionSkewIds].join(', ')}] in ${path.join(jobDir, 'tolerances.js')}`);
   process.exit(1);
 }
-const tolerancesNoVersionSkew = tolerances.filter(t => t.id !== 'version-skew');
+console.error(`Using ${versionSkewTolerances.length} version-skew tolerance(s): ${versionSkewTolerances.map(t => t.id).join(', ')}`);
+const tolerancesNoVersionSkew = tolerances.filter(t => !versionSkewIds.has(t.id));
 
 function mulberry32(a) {
   return function rng() {
@@ -1035,10 +1039,11 @@ async function main() {
     if (!rawProd || !rawDev) continue;
 
     let vsAction = null;
-    try {
-      vsAction = versionSkewTolerance.match({ record, prod: deepClone(rawProd), dev: deepClone(rawDev) });
-    } catch {
-      vsAction = null;
+    for (const vst of versionSkewTolerances) {
+      try {
+        const action = vst.match({ record, prod: deepClone(rawProd), dev: deepClone(rawDev) });
+        if (action === 'normalize') { vsAction = 'normalize'; break; }
+      } catch { /* skip */ }
     }
     if (vsAction !== 'normalize') continue;
 
@@ -1052,7 +1057,7 @@ async function main() {
     stats.categoriesWithVersionSkew[fullCmp.category] = (stats.categoriesWithVersionSkew[fullCmp.category] || 0) + 1;
     stats.categoriesWithoutVersionSkew[noVsCmp.category] = (stats.categoriesWithoutVersionSkew[noVsCmp.category] || 0) + 1;
 
-    const vsApplied = fullRun.applied.find(a => a.id === 'version-skew' && a.action === 'normalize');
+    const vsApplied = fullRun.applied.find(a => versionSkewIds.has(a.id) && a.action === 'normalize');
     const pairs = extractVersionPairs(record, rawProd, rawDev);
     const primaryPair = choosePrimaryPair(pairs);
 

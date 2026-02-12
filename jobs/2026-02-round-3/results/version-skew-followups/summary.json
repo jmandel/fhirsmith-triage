@@ -1,0 +1,64 @@
+{
+  "jobDir": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3",
+  "scanned": 9206,
+  "sampleConfig": {
+    "sampleSize": 200,
+    "sampleAllMatched": false,
+    "highRiskShare": 0.85,
+    "perCluster": 12,
+    "seed": 1,
+    "maxRecords": 0,
+    "maxSeconds": 0,
+    "maxFollowupsPerRecord": 2,
+    "versionPolicy": "common-only",
+    "probeSupport": true,
+    "probeConcurrency": 4,
+    "probeTimeoutSeconds": 20,
+    "hydratePolicy": "full",
+    "hydrateSize": 0,
+    "paramSignatureMode": "names",
+    "replayEnabled": false,
+    "prodBase": "https://tx.fhir.org",
+    "devBase": "https://tx-dev.fhir.org",
+    "replayConcurrency": 2,
+    "replayTimeoutSeconds": 30,
+    "replayOutputName": "followup-comparison.ndjson",
+    "replayActorDelayMs": 500
+  },
+  "stats": {
+    "scanned": 9206,
+    "versionSkewMatched": 3105,
+    "strata": {
+      "highRiskStillNonOk": 901,
+      "rescuedToOk": 41,
+      "noImpact": 2163,
+      "skippedByOther": 0
+    },
+    "categoriesWithVersionSkew": {
+      "OK": 2204,
+      "content-differs": 901
+    },
+    "categoriesWithoutVersionSkew": {
+      "OK": 2163,
+      "content-differs": 942
+    }
+  },
+  "poolSizes": {
+    "highRisk": 901,
+    "rescued": 41,
+    "noImpact": 2163
+  },
+  "sampledCounts": {
+    "highRisk": 170,
+    "rescued": 30,
+    "noImpact": 0,
+    "total": 200
+  },
+  "support": {
+    "probeCount": 2,
+    "systemsProbed": 1,
+    "droppedNoCommonSampledRecords": 0
+  },
+  "universeGenerated": 30,
+  "hydratedFollowups": 30
+}

@@ -1226,6 +1226,136 @@ const tolerances = [
   },
 
   {
+    id: 'prod-display-comment-default-display-lang',
+    description: 'validate-code with displayLanguage: prod returns informational display-comment issues about "is the default display" when no language-specific display exists. Dev either omits issues entirely or had its issues stripped by dev-extra-display-lang-not-found-message. Same root cause as display-lang-result-disagrees — display language handling differs between prod and dev.',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'display-comment'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== true || devResult !== true) return null;
+      // Prod has issues with display-comment about "default display"
+      const prodIssues = getParamValue(prod, 'issues');
+      if (!prodIssues?.issue) return null;
+      const hasDefaultDisplayComment = prodIssues.issue.some(iss =>
+        iss.severity === 'information' &&
+        iss.details?.coding?.some(c => c.code === 'display-comment') &&
+        /is the default display/.test(iss.details?.text || '')
+      );
+      if (!hasDefaultDisplayComment) return null;
+      // Dev has no issues (either never had them, or they were stripped)
+      const devIssues = getParamValue(dev, 'issues');
+      if (devIssues?.issue?.length > 0) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Strip prod's display-comment issues about default display
+      return {
+        prod: stripParams(prod, 'issues'),
+        dev,
+      };
+    },
+  },
+
+  {
+    id: 'display-comment-vs-invalid-display-issues',
+    description: 'validate-code with displayLanguage: prod has extra display-comment issues in its OperationOutcome that dev lacks. Dev uses invalid-display where prod uses display-comment, with different severity (information vs warning) and text. Both convey the same information — the provided display does not match a language-specific display. Same root cause as display-lang-result-disagrees. Strips display-comment issues from prod and corresponding dev-only invalid-display issues/message.',
+    kind: 'temp-tolerance',
+    bugId: 'bd89513',
+    tags: ['normalize', 'validate-code', 'display-language', 'display-comment', 'invalid-display'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodIssues = getParamValue(prod, 'issues');
+      if (!prodIssues?.issue) return null;
+      const hasDisplayComment = prodIssues.issue.some(iss =>
+        iss.details?.coding?.some(c => c.code === 'display-comment')
+      );
+      if (!hasDisplayComment) return null;
+      // Dev must also have issues (otherwise prod-display-comment-default-display-lang handles it)
+      const devIssues = getParamValue(dev, 'issues');
+      if (!devIssues?.issue?.length) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Strip display-comment issues from prod's OperationOutcome
+      function stripDisplayCommentIssues(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter(iss =>
+              !iss.details?.coding?.some(c => c.code === 'display-comment')
+            );
+            if (filtered.length === 0) {
+              // No issues left — remove the parameter entirely
+              return null;
+            }
+            return {
+              ...p,
+              resource: { ...p.resource, issue: filtered },
+            };
+          }).filter(Boolean),
+        };
+      }
+      // Strip dev-only invalid-display issues that don't exist in prod
+      // (i.e., where prod had display-comment instead)
+      function stripDevOnlyInvalidDisplay(prodBody, devBody) {
+        if (!devBody?.parameter) return devBody;
+        const prodIss = getParamValue(prodBody, 'issues');
+        const devIss = getParamValue(devBody, 'issues');
+        if (!devIss?.issue) return devBody;
+        // After stripping display-comment from prod, figure out which dev issues
+        // are "extra" invalid-display issues. We compare by issue count:
+        // if dev has more invalid-display issues than prod after stripping display-comment,
+        // the extras correspond to prod's display-comment entries.
+        const strippedProd = stripDisplayCommentIssues(prodBody);
+        const strippedProdIss = getParamValue(strippedProd, 'issues');
+        const prodIssueCount = strippedProdIss?.issue?.length || 0;
+        const devIssueCount = devIss.issue.length;
+        if (devIssueCount <= prodIssueCount) return devBody;
+        // Dev has more issues — strip the extra invalid-display issues from dev
+        // that correspond to display language resolution
+        const devInvalidDisplayIndices = [];
+        devIss.issue.forEach((iss, idx) => {
+          if (iss.details?.coding?.some(c => c.code === 'invalid-display') &&
+              /no valid display names found|Wrong Display Name/.test(iss.details?.text || '')) {
+            devInvalidDisplayIndices.push(idx);
+          }
+        });
+        // Try to find which dev invalid-display issues don't have a matching prod issue
+        // Simple approach: if there are more issues in dev than in prod, remove extra ones
+        const extraCount = devIssueCount - prodIssueCount;
+        const toRemove = new Set(devInvalidDisplayIndices.slice(0, extraCount));
+        if (toRemove.size === 0) return devBody;
+        return {
+          ...devBody,
+          parameter: devBody.parameter.map(p => {
+            if (p.name !== 'issues' || !p.resource?.issue) return p;
+            const filtered = p.resource.issue.filter((_, idx) => !toRemove.has(idx));
+            if (filtered.length === 0) return null;
+            return { ...p, resource: { ...p.resource, issue: filtered } };
+          }).filter(Boolean),
+        };
+      }
+      // Also strip dev-only message about wrong display name when prod has no message
+      function stripDevExtraMessage(prodBody, devBody) {
+        const prodMsg = getParamValue(prodBody, 'message');
+        const devMsg = getParamValue(devBody, 'message');
+        if (prodMsg || !devMsg) return devBody;
+        if (!/Wrong Display Name|no valid display names found/i.test(devMsg)) return devBody;
+        return stripParams(devBody, 'message');
+      }
+      let newProd = stripDisplayCommentIssues(prod);
+      let newDev = stripDevOnlyInvalidDisplay(newProd, dev);
+      newDev = stripDevExtraMessage(newProd, newDev);
+      return { prod: newProd, dev: newDev };
+    },
+  },
+
+  {
     id: 'display-lang-result-disagrees',
     description: 'validate-code with displayLanguage: dev returns result=false with "Wrong Display Name" error when no language-specific displays exist, prod returns result=true. Dev is stricter because it does not pass defLang to hasDisplay, causing it to reject displays that prod accepts via default language fallback.',
     kind: 'temp-tolerance',

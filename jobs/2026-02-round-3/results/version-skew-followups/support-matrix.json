@@ -1,0 +1,107 @@
+{
+  "probeCount": 2,
+  "systems": {
+    "http://loinc.org": {
+      "candidates": [
+        "2.81",
+        "2024-12-05"
+      ],
+      "commonVersions": [
+        "2.81",
+        "2024-12-05"
+      ],
+      "prodSupported": [
+        "2.81",
+        "2024-12-05"
+      ],
+      "devSupported": [
+        "2.81",
+        "2024-12-05"
+      ],
+      "rows": [
+        {
+          "system": "http://loinc.org",
+          "version": "2.81",
+          "representative": {
+            "recordId": "911ba5b4-ba47-4390-b858-9ab4358284dd",
+            "method": "POST",
+            "url": "/r4/ValueSet/$validate-code?"
+          },
+          "prod": {
+            "status": 200,
+            "support": "supported",
+            "reason": "status-200"
+          },
+          "dev": {
+            "status": 200,
+            "support": "supported",
+            "reason": "status-200"
+          },
+          "common": true
+        },
+        {
+          "system": "http://loinc.org",
+          "version": "2024-12-05",
+          "representative": {
+            "recordId": "911ba5b4-ba47-4390-b858-9ab4358284dd",
+            "method": "POST",
+            "url": "/r4/ValueSet/$validate-code?"
+          },
+          "prod": {
+            "status": 200,
+            "support": "supported",
+            "reason": "status-200"
+          },
+          "dev": {
+            "status": 200,
+            "support": "supported",
+            "reason": "status-200"
+          },
+          "common": true
+        }
+      ]
+    }
+  },
+  "rows": [
+    {
+      "system": "http://loinc.org",
+      "version": "2.81",
+      "representative": {
+        "recordId": "911ba5b4-ba47-4390-b858-9ab4358284dd",
+        "method": "POST",
+        "url": "/r4/ValueSet/$validate-code?"
+      },
+      "prod": {
+        "status": 200,
+        "support": "supported",
+        "reason": "status-200"
+      },
+      "dev": {
+        "status": 200,
+        "support": "supported",
+        "reason": "status-200"
+      },
+      "common": true
+    },
+    {
+      "system": "http://loinc.org",
+      "version": "2024-12-05",
+      "representative": {
+        "recordId": "911ba5b4-ba47-4390-b858-9ab4358284dd",
+        "method": "POST",
+        "url": "/r4/ValueSet/$validate-code?"
+      },
+      "prod": {
+        "status": 200,
+        "support": "supported",
+        "reason": "status-200"
+      },
+      "dev": {
+        "status": 200,
+        "support": "supported",
+        "reason": "status-200"
+      },
+      "common": true
+    }
+  ]
+}

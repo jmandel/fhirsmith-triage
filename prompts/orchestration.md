@@ -33,32 +33,30 @@ bash prompts/triage-loop.sh jobs/<job-name>
 
 ## Step 2: Start the commit watcher
 
-Run a continuous background watcher that reports each time a triage round commits and lists any bugs needing repro:
+Run a continuous background watcher that polls for open bugs needing repro:
 
 ```bash
-LOG=jobs/<job-name>/triage-errors.log
-SEEN=$(grep -c "committed" "$LOG" 2>/dev/null || echo 0)
 while true; do
-  sleep 5
-  COUNT=$(grep -c "committed" "$LOG" 2>/dev/null || echo 0)
-  if [ "$COUNT" -gt "$SEEN" ]; then
-    echo "=== New round committed (total commits: $COUNT, was: $SEEN) ==="
-    tail -5 "$LOG"
-    echo ""
-    echo "=== Bugs needing repro ==="
-    for bug_id in $(git-bug bug 2>/dev/null | grep "open" | awk '{print $1}'); do
-      has_label=$(git-bug bug show "$bug_id" 2>/dev/null | grep -c "reproduced\|repro-inconclusive\|not-reproduced" || true)
-      if [ "$has_label" -eq 0 ]; then
-        echo "NEEDS REPRO: $bug_id  $(git-bug bug 2>/dev/null | grep $bug_id)"
-      fi
-    done
-    echo "=== Done ==="
-    SEEN=$COUNT
-  fi
+  sleep 30
+  git-bug bug -l tx-compare -s open -f json 2>/dev/null | python3 -c "
+import sys, json
+bugs = json.load(sys.stdin)
+for bug in bugs:
+    labels = bug.get('labels', [])
+    hid = bug.get('human_id', '')
+    title = bug.get('title', '')
+    skip = ['reproduced','no-repro-needed','not-reproduced','repro-inconclusive','wont-fix']
+    if not any(l in labels for l in skip):
+        print(f'{hid}|{title}')
+" 2>/dev/null | while IFS='|' read -r hid title; do
+    echo "$(date -Is) NEEDS REPRO: $hid $title"
+  done
 done
 ```
 
-This runs as a background Bash task. Each time a round commits, it emits output which triggers a notification to the coordinating session. The watcher is continuous — no need to re-launch after each round.
+This runs as a background Bash task. When it emits output, the coordinating session gets a notification and should launch a repro agent. The watcher is continuous — no need to re-launch after each round.
+
+**Important**: `git-bug bug -f json` outputs a **JSON array**, not newline-delimited JSON. Always parse with `json.load(sys.stdin)`, never line-by-line.
 
 ## Step 3: Launch repro agents
 
@@ -79,6 +77,9 @@ Do NOT launch duplicate agents for the same bug.
 | `reproduced` | Confirmed live on servers | Bug stays open |
 | `not-reproduced` | Servers have converged, bug no longer present | Close the bug |
 | `repro-inconclusive` | Couldn't set up conditions (missing request body, custom CodeSystem no longer loaded, inline ValueSet via tx-resource) | Bug stays open |
+| `no-repro-needed` | Not a code bug — e.g., version-skew (different terminology editions loaded on prod vs dev) | Bug stays open, also add `version-skew` and `wont-fix` |
+
+The triage agent is responsible for adding `no-repro-needed` / `version-skew` / `wont-fix` at bug creation time (see triage-prompt.md). The watcher treats all of these as "handled" and won't flag them for repro.
 
 ## Step 4: Regenerate reports
 
