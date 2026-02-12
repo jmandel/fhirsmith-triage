@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_104 bugs (72 open, 32 closed)_
+_105 bugs (72 open, 33 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1044,52 +1044,9 @@ Prod returns `expansion.extension` with `valueset-unclosed: true` and no `expans
 
 ---
 
-### [ ] `801aef1` Dev adds expression field on informational OperationOutcome issues where prod omits it
+### [ ] `801aef1` 
 
-Records-Impacted: 6
-Tolerance-ID: oo-extra-expression-on-info-issues
-Record-ID: 9160e659-1af6-4bc6-9c89-e0a8b4df55cf
 
-#####Repro
-
-```bash
-####Prod
-curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
--H 'Accept: application/fhir+json' | \
-jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
-
-####Dev
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
--H 'Accept: application/fhir+json' | \
-jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
-```
-
-Prod returns `"expression": null` (field absent) on the informational issue, dev returns `"expression": ["code"]`.
-
-#####What differs
-
-In $validate-code responses, both prod and dev return OperationOutcome issues. On error-severity issues, both include `expression: ["code"]`. On information-severity issues, prod omits the `expression` field entirely while dev includes `expression: ["code"]`.
-
-For example, on `GET /r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST`:
-- Prod: informational issue has no `expression` field
-- Dev: informational issue has `"expression": ["code"]`
-
-The `expression` value is semantically correct (the issue relates to the `code` parameter), so dev is providing more complete information, but the difference in field presence is a real behavioral divergence.
-
-#####How widespread
-
-6 records across the dataset exhibit this pattern:
-- 4 SNOMED CT records (all `code=K29` variants on different FHIR version paths)
-- 1 UCUM record (`code=TEST`)
-- 1 SNOMED CT POST record (`code=freetext`)
-
-All are `$validate-code` or `$batch-validate-code` operations where the code is invalid and the informational issue provides supplementary error context (e.g., UCUM parse error, SNOMED expression parse error).
-
-Search: node script checking all 3948 delta records for issues where dev has `expression` and prod lacks it on the same positional issue.
-
-#####What the tolerance covers
-
-Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters responses where any OperationOutcome information-severity issue in dev has `expression` that prod lacks. Normalizes by removing the extra `expression` from dev to match prod. Eliminates 6 records.
 
 ---
 
@@ -4195,6 +4152,45 @@ Tolerance ID: snomed-same-version-display-differs. Matches SNOMED validate-code 
 329fd29 #1 Claude (AI Assistant) <>
 
 Adjudicated by GG: Fixed — but won't achieve consistency with prod, since prod has the same bug (random which it chooses)
+
+---
+
+### [ ] `674611c` Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code
+
+Records-Impacted: 12
+Tolerance-ID: validate-code-extra-filter-miss-message
+Record-ID: 7c3bf322-7db7-42f5-82d6-dd1ef9bd9588
+
+
+**Status: Inconclusive** -- the IPS ValueSets (e.g. `allergies-intolerances-uv-ips|2.0.0`) used in all 12 affected records are not loaded on the public tx.fhir.org / tx-dev.fhir.org servers, so the original requests cannot be replayed. The request bodies were not stored in the comparison records.
+
+Attempted:
+1. Reconstructed POST to `/r4/ValueSet/$validate-code` for SNOMED 716186003 against `http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips` (with and without version) -- both servers return "value Set could not be found"
+2. Checked 33 related delta records -- only IPS ValueSet records (not publicly available) match the exact bug pattern (result=true on both, dev extra message, prod no message)
+3. Non-IPS records (medication-form-codes, us-core-encounter-type) show a different pattern (result=false on both sides, different message content)
+
+
+On $validate-code requests against ValueSets with multiple include filters (e.g. IPS allergies-intolerances, medical-devices), when the code is valid (result=true, found in at least one filter), dev returns an extra `message` parameter containing "Code X is not in the specified filter" for each filter the code did NOT match. Prod omits the `message` parameter entirely when the overall result is true.
+
+Example (record 7c3bf322):
+- Prod: result=true, no message parameter
+- Dev: result=true, message="Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter"
+
+The code 716186003 (No known allergy) is valid in the IPS allergies ValueSet but only matches the 4th include filter (concept<<716186003). Dev reports failure messages for the 3 filters it didn't match.
+
+
+12 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=true. All involve SNOMED codes against IPS ValueSets with multiple include filters. Found via:
+```
+grep 'extra-in-dev' results/deltas/deltas.ndjson | grep '"message"' → 23 hits
+```
+Of those, 12 have this pattern (single diff: extra-in-dev:message, result=true on both sides, dev message contains "is not in the specified filter", prod has no message param).
+
+The remaining 11 are different patterns (multiple diffs, result=false, or different message content).
+
+
+Tolerance ID: validate-code-extra-filter-miss-message
+Matches: validate-code where result=true on both sides, dev has a `message` parameter that prod lacks, and the dev message matches the pattern "is not in the specified filter".
+Normalizes: strips the extra `message` parameter from dev.
 
 ---
 
