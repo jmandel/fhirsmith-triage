@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_105 bugs (72 open, 33 closed)_
+_105 bugs (73 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -2439,9 +2439,52 @@ Tolerance `missing-retired-status-check-issue` strips informational status-check
 
 ---
 
-### [ ] `dc0132b` 
+### [ ] `dc0132b` Dev SNOMED  returns URI-based name and omits most properties
 
+Records-Impacted: 2170
+Tolerance-ID: snomed-lookup-name-and-properties
+Record-ID: 1a78565a-0d41-448b-b6cc-ae96754dd093
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000' -H 'Accept: application/fhir+json'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000' -H 'Accept: application/fhir+json'
+```
+
+Prod returns `name: "SNOMED CT"` with properties `copyright`, `moduleId`, `normalForm`, `normalFormTerse`, `parent`. Dev returns `name: "http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"` with only the `inactive` property.
+
+#####What differs
+
+For SNOMED CT CodeSystem/$lookup requests, dev differs from prod in three ways:
+
+1. **`name` parameter**: Prod returns the human-readable code system name `"SNOMED CT"`. Dev returns a system|version URI like `"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201"`. Per the FHIR R4 $lookup spec, the `name` output parameter (1..1 string) is defined as "A display name for the code system", so prod's value is correct.
+
+2. **Missing properties**: Prod returns properties `copyright`, `moduleId`, `normalForm`, `normalFormTerse`, `parent` (and `child` when applicable). Dev returns only `inactive`. Per the FHIR spec, "If no properties are specified, the server chooses what to return", but dev returns significantly fewer SNOMED-specific properties than prod.
+
+3. **Missing `abstract` parameter on R5**: For R5 SNOMED lookups (2170 of 2176 R5 records), prod returns `abstract: false` but dev omits the parameter entirely.
+
+#####How widespread
+
+2186 SNOMED $lookup delta records match the name + properties pattern. The tolerance eliminates 2170 of them. The remaining 16 have additional differences beyond what this tolerance covers (e.g., designation content differences).
+
+Search: `grep '$lookup.*snomed' jobs/2026-02-round-2/results/deltas/deltas.ndjson | wc -l` → 2187 (before tolerance)
+
+All three issues co-occur on every affected record.
+
+#####What the tolerance covers
+
+Tolerance `snomed-lookup-name-and-properties` normalizes by:
+- Setting dev's `name` to prod's value (`"SNOMED CT"`)
+- Removing properties from prod that dev doesn't have (copyright, moduleId, normalForm, normalFormTerse, parent, child)
+- Removing `abstract` from prod when dev doesn't have it (R5 lookups)
+
+#####Representative record
+
+1a78565a-0d41-448b-b6cc-ae96754dd093 — `GET /r4/CodeSystem/$lookup?system=http://snomed.info/sct&code=446050000`
 
 ---
 
