@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_101 bugs (66 open, 35 closed)_
+_102 bugs (67 open, 35 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -3130,9 +3130,86 @@ GG confirmed fixed: UCUM validate-code: dev returns human-readable display
 
 ---
 
-### [ ] `5b3ae71` 
+### [x] `5b3ae71` SNOMED CT edition version skew: dev loads older editions than prod
+
+Records-Impacted: 181
+Tolerance-ID: snomed-version-skew
+Record-ID: e5716810-0ced-4937-85a5-5651fb884719
 
 
+The version skew is visible in both the metadata endpoint and $validate-code responses.
+The International edition has been partially fixed (both servers now resolve to 20250201),
+but the US edition (731000124108) still shows the bug: dev defaults to 20230301 instead
+of 20250901. Both servers have the 20250901 edition loaded, but dev picks the wrong default.
+
+
+```bash
+curl -s "https://tx.fhir.org/r4/metadata?mode=terminology" \
+-H "Accept: application/fhir+json" | \
+jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
+
+curl -s "https://tx-dev.fhir.org/r4/metadata?mode=terminology" \
+-H "Accept: application/fhir+json" | \
+jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
+```
+
+Expected: both list only `http://snomed.info/sct/731000124108/version/20250901`
+Actual: dev also has `http://snomed.info/sct/731000124108/version/20230301`
+
+
+```bash
+curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+--data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
+
+curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
+-H "Content-Type: application/fhir+json" \
+-H "Accept: application/fhir+json" \
+--data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
+```
+
+Expected: both return `"version": "http://snomed.info/sct/731000124108/version/20250901"`
+Actual: dev returns `"version": "http://snomed.info/sct/731000124108/version/20230301"`
+
+
+- 36822cee-7132-4003-bf9e-a5602f839466 (US edition, code 243796009)
+- 1796976f-3807-40ec-aa48-f8758b0fee62 (US edition, code 272379006)
+- 03fec18b-e871-4041-b9b8-5c770b2b17c7 (International edition, code 106292003)
+
+Tested: 2026-02-07
+
+Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.
+
+
+The `version` parameter in $validate-code responses contains different SNOMED CT edition URIs:
+
+- International edition (900000000000207008): prod=20250201, dev=20240201 (256 records)
+- US edition (731000124108): prod=20250901, dev=20230301 (46 records, some with reversed newer dev versions)
+- Swedish edition (45991000052106): prod=20220531, dev=20231130 (13 records)
+- Plus other national editions with smaller counts
+
+
+279 total records in the current comparison dataset show SNOMED version parameter differences:
+- 265 categorized as content-differs (version string is the only or primary diff)
+- 14 categorized as result-disagrees (validation result boolean differs — codes valid in one edition but not the other)
+
+All are $validate-code operations. The version difference also correlates with display text differences in ~80 records (display names changed between editions).
+
+Matched by: system=http://snomed.info/sct AND version parameter contains snomed.info/sct AND prod version != dev version.
+
+
+Tolerance ID: snomed-version-skew
+Normalizes the `version` parameter to prod's value on both sides when both contain snomed.info/sct URIs with different version dates. This eliminates records where version is the only diff (~190 records). Records with additional diffs (display, message, result) still surface for separate triage.
+
+
+- e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)
+- e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)
+
+
+51b43fa #1 Claude (AI Assistant) <>
+
+Adjudicated by GG: By design — added an old version to better support VSAC
 
 ---
 
@@ -4887,6 +4964,49 @@ Search: Records where prod message equals '; '.join(all issue texts) and dev mes
 
 
 Tolerance `message-concat-missing-issues` normalizes the `message` parameter to prod's concatenated value when the pattern matches (dev message equals first issue text, prod message equals all issues joined with '; '). This eliminates the 5 delta records matching this pattern.
+
+---
+
+### [ ] `3b1d8dc` Prod returns duplicate entries in searchset Bundle for same resource URL
+
+Records-Impacted: 3
+Tolerance-ID: searchset-duplicate-entries
+Record-ID: 71e7b8c5-f8da-4323-b233-575727a2f583
+
+
+```bash
+curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
+-H 'Accept: application/fhir+json'
+
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
+-H 'Accept: application/fhir+json'
+```
+
+Prod returns `total: 2` with duplicate entries for both the ValueSet and CodeSystem searches. Dev returns `total: 1` with a single entry in each case. For the ValueSet, the two prod entries have different `meta.lastUpdated` timestamps (2024-04-29 vs 2025-10-22). For the CodeSystem, the two prod entries are identical copies. Tested 2026-02-07.
+
+
+When searching for ValueSet or CodeSystem resources by URL (e.g., `GET /r4/ValueSet?url=...`), prod returns Bundle with `total: 2` and two entries, while dev returns `total: 1` with one entry.
+
+In record 71e7b8c5, prod returns two versions of ValueSet 2.16.840.1.113762.1.4.1021.103 with different `meta.lastUpdated` (2024-04-29 vs 2025-10-22), different `purpose` text, different `resource-lastReviewDate` extension values, and different expansion timestamps/identifiers. Dev returns only the first version.
+
+In record c8adc8ae, prod returns two identical copies of CodeSystem `https://nahdo.org/sopt` version 9.2 (searched via `GET /r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`).
+
+
+3 records in comparison.ndjson show `prod total > 1` in search Bundle responses out of 503 total resource search operations:
+- 71e7b8c5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103`
+- c8adc8ae: `/r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`
+- b9db7af5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103` (same URL, different request)
+
+The pattern is: `GET /r4/{ValueSet|CodeSystem}?url=...` where prod has loaded multiple copies/versions of the same resource.
+
+
+Tolerance `searchset-duplicate-entries` matches searchset Bundles where prod returns more entries than dev. It normalizes by keeping only the first entry from prod (matching dev's single entry) and setting both totals to the minimum. Affects 3 records.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "jobDir": "jobs/2026-02-round-3-unified-skew-test",
   "tolerancesPath": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3-unified-skew-test/tolerances.js",
-  "timestamp": "2026-02-12T02:35:05.125Z",
+  "timestamp": "2026-02-12T02:42:33.487Z",
   "totalRecords": 9206,
   "skipped": 56,
   "skippedByKind": {
@@ -15,8 +15,8 @@
     "version-skew": 2
   },
   "categories": {
-    "OK": 7467,
-    "content-differs": 1363,
+    "OK": 7682,
+    "content-differs": 1148,
     "status-mismatch": 248,
     "result-disagrees": 47,
     "dev-crash-on-error": 20,
@@ -26,12 +26,12 @@
   "okBreakdown": {
     "strict": 0,
     "equiv-autofix": 6451,
-    "temp-tolerance": 1016
+    "temp-tolerance": 1231
   },
   "operationBreakdown": {
     "validate-code": {
-      "OK": 6944,
-      "content-differs": 1198,
+      "OK": 7159,
+      "content-differs": 983,
       "result-disagrees": 47,
       "dev-crash-on-valid": 4,
       "status-mismatch": 39

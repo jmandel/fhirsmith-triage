@@ -1770,6 +1770,74 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'cc-validate-code-missing-known-coding-params',
+    description: 'POST CodeSystem/$validate-code with multi-coding CodeableConcept where one coding has an unknown system version: prod validates the known coding and returns system/code/display params for it plus any related informational issues. Dev omits these params entirely. Both sides agree result=false and have the same x-caused-by-unknown-system. Normalizes by copying prod\'s code/system/display params and extra issues to dev.',
+    kind: 'temp-tolerance',
+    bugId: 'b6d19d8',
+    tags: ['normalize', 'validate-code', 'multi-coding', 'missing-params', 'x-caused-by-unknown-system'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      // Both must have x-caused-by-unknown-system with same values
+      const prodXC = (prod.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical).sort();
+      const devXC = (dev.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical).sort();
+      if (prodXC.length === 0 || JSON.stringify(prodXC) !== JSON.stringify(devXC)) return null;
+      // Prod has code/system/display params that dev lacks
+      const prodHasCode = getParamValue(prod, 'code') !== undefined;
+      const devHasCode = getParamValue(dev, 'code') !== undefined;
+      const prodHasSystem = getParamValue(prod, 'system') !== undefined;
+      const devHasSystem = getParamValue(dev, 'system') !== undefined;
+      if (prodHasCode && !devHasCode && prodHasSystem && !devHasSystem) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      // Copy prod's code, system, display params to dev
+      const paramsToAdd = ['code', 'system', 'display'];
+      const prodParamsToAdd = (prod.parameter || []).filter(p => paramsToAdd.includes(p.name));
+      // For issues: prod may have extra informational issues that dev lacks.
+      // Canonicalize dev's issues to match prod's.
+      const prodIssues = getParamValue(prod, 'issues');
+      let newDevParams = [...(dev.parameter || [])];
+      // Add missing params from prod
+      for (const pp of prodParamsToAdd) {
+        const existing = newDevParams.find(p => p.name === pp.name);
+        if (!existing) {
+          newDevParams.push({ ...pp });
+        }
+      }
+      // Replace dev's issues with prod's if they differ
+      if (prodIssues) {
+        const devHasIssues = newDevParams.some(p => p.name === 'issues');
+        if (devHasIssues) {
+          newDevParams = newDevParams.map(p =>
+            p.name === 'issues' ? (prod.parameter || []).find(pp => pp.name === 'issues') || p : p
+          );
+        } else {
+          const prodIssuesParam = (prod.parameter || []).find(p => p.name === 'issues');
+          if (prodIssuesParam) newDevParams.push({ ...prodIssuesParam });
+        }
+      }
+      // Sort by name for consistency
+      newDevParams.sort((a, b) => {
+        const nameCmp = (a.name || '').localeCompare(b.name || '');
+        if (nameCmp !== 0) return nameCmp;
+        return JSON.stringify(a).localeCompare(JSON.stringify(b));
+      });
+      const newProdParams = [...(prod.parameter || [])].sort((a, b) => {
+        const nameCmp = (a.name || '').localeCompare(b.name || '');
+        if (nameCmp !== 0) return nameCmp;
+        return JSON.stringify(a).localeCompare(JSON.stringify(b));
+      });
+      return {
+        prod: { ...prod, parameter: newProdParams },
+        dev: { ...dev, parameter: newDevParams },
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };
