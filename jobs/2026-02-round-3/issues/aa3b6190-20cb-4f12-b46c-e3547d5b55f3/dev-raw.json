@@ -1,0 +1,149 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "8310-5"
+    },
+    {
+      "name": "display",
+      "valueString": "Körpertemperatur"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "276885007",
+            "display": "Core body temperature"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150368",
+            "display": "MDC_TEMP_CORE"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8329-5",
+            "display": "Body temperature - Core"
+          }
+        ],
+        "text": "Körpertemperatur"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://snomed.info/sct#276885007 ('Core body temperature')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[1].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'urn:iso:std:iso:11073:10101#150368 ('MDC_TEMP_CORE')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[2].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ]
+            },
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ]
+          },
+          {
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "text": "The provided code 'http://loinc.org#8329-5 ('Body temperature - Core')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[3].code"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0ms tx-op\n1ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Analysing http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1 for validation purposes\n1ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Prepare include[0]: \"()\"\n2ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: CodeSystem found: \"http://loinc.org|2.81\"\n2ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Validate \"[undefined#8310-5 (\"undefined\"), undefined#276885007 (\"Core body temperature\"), undefined#150368 (\"MDC_TEMP_CORE\"), undefined#8329-5 (\"Body temperature - Core\")]\"\n2ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"http://loinc.org#8310-5\"\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: CodeSystem found: http://loinc.org|2.81 for http://loinc.org\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: check code in () at CodeableConcept.coding[0]\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Code \"8310-5\" found in http://loinc.org|2.81\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"http://snomed.info/sct#276885007\"\n4ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"urn:iso:std:iso:11073:10101#150368\"\n5ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: Check \"http://loinc.org#8329-5\"\n7ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: CodeSystem found: http://loinc.org|2.81 for http://loinc.org\n7ms http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1: check code in () at CodeableConcept.coding[3]"
+    }
+  ]
+}

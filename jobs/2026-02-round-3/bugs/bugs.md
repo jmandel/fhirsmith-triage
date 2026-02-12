@@ -4555,52 +4555,39 @@ Eliminates: 2 records.
 
 ### [ ] `d70be11` CodeSystem/-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params
 
-Records-Impacted: 3
+Records-Impacted: 22
 Tolerance-ID: multi-coding-cc-system-code-version-disagree
-Record-ID: 65fabdc4-930b-49e8-9ff1-60c176cbbfee
+Record-ID: 40b1ef6a-5a08-4bf8-a34f-53ae336441d9
 
+#####What differs
 
-The custom CodeSystem `http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs` is no longer loaded on either server, so the original request conditions cannot be recreated. Both servers now return `result=false` with "A definition for CodeSystem could not be found".
+When POST $validate-code (CodeSystem or ValueSet level) is called with a CodeableConcept containing 2-3 codings, the scalar output parameters (system, code, version) disagree on which coding to report as the "primary" one. Both servers agree on the result boolean. This occurs in two scenarios:
 
-```bash
-curl -s "https://tx.fhir.org/r4/CodeSystem/$validate-code" \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs","code":"physical.evaluation.alertnessAndOrientation.disorientatedtime","display":"Patient is not alert & oriented to time"},{"system":"http://snomed.info/sct","code":"19657006","display":"Disorientated in time (finding)"}]}}]}'
+1. **result=true** (3 records from round 1): Both validate successfully, but prod picks one coding (e.g., SNOMED) while dev picks another (e.g., custom CodeSystem). GG adjudicated: "not sure I care."
 
-curl -s "https://tx-dev.fhir.org/r4/CodeSystem/$validate-code" \
--H "Accept: application/fhir+json" \
--H "Content-Type: application/fhir+json" \
--d '{"resourceType":"Parameters","parameter":[{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs","code":"physical.evaluation.alertnessAndOrientation.disorientatedtime","display":"Patient is not alert & oriented to time"},{"system":"http://snomed.info/sct","code":"19657006","display":"Disorientated in time (finding)"}]}}]}'
+2. **result=false** (19 records from round 3): Both fail validation (e.g., due to an unknown SNOMED version), but prod picks LOINC as the "primary" coding and dev picks MDC (urn:iso:std:iso:11073:10101), or prod picks SNOMED and dev picks LOINC. Both sides have identical x-caused-by-unknown-system values. The most common pattern is 3-coding CodeableConcepts (MDC + SNOMED + LOINC) where the SNOMED version is unavailable on both servers.
+
+#####How widespread
+
+22 records total across rounds 1 and 3. All are POST $validate-code with multi-coding CodeableConcepts. Breakdown:
+- 18 records: prod=LOINC, dev=MDC (3-coding CC with MDC/SNOMED/LOINC)
+- 3 records: prod=SNOMED, dev=custom CS (2-coding CC, round 1 data)
+- 1 record: prod=SNOMED, dev=LOINC (2-coding CC, wrong display name)
+
+Found by searching for validate-code records where system param differs between prod and dev:
+```
+grep '"value-differs"' deltas.ndjson | grep '"param":"code"' | grep '"param":"system"'
 ```
 
-Both servers now return `result=false` with unknown CodeSystem error. The bug cannot be reproduced live because the custom CodeSystem package is no longer loaded.
+#####Tolerances
 
+- **multi-coding-cc-system-code-version-disagree**: Matches POST $validate-code where both results agree, system differs, and CodeableConcept has ≥2 codings. For result=false, also requires matching x-caused-by-unknown-system. Normalizes system/code/version to prod values. Eliminates 19 records in round 3 (3 from round 1 were in a different dataset).
 
-When POST /r4/CodeSystem/$validate-code is called with a CodeableConcept containing two codings (one from a custom CodeSystem `http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs` and one from SNOMED CT), both servers return result=true and return identical codeableConcept parameters. However, the scalar output parameters (system, code, version) disagree on which coding to report:
+#####Representative records
 
-- **Prod** reports the SNOMED coding: system=http://snomed.info/sct, code=19657006, version=http://snomed.info/sct/900000000000207008/version/20250201
-- **Dev** reports the custom CodeSystem coding: system=http://fhir.essilorluxottica.com/fhir/CodeSystem/el-observation-code-cs, code=physical.evaluation.alertnessAndOrientation.disorientatedtime, version=1.0.0
-
-
-3 records, all POST /r4/CodeSystem/$validate-code? with CodeableConcept containing one el-observation-code-cs coding and one SNOMED coding. Found by searching for validate-code records where prod and dev return different system parameter values:
-
-```
-grep 'el-observation-code-cs' comparison.ndjson | wc -l  # 3
-```
-
-All 3 are currently in deltas. All involve the same custom CodeSystem paired with SNOMED.
-
-
-Tolerance ID: multi-coding-cc-system-code-version-disagree
-Matches: POST $validate-code where result=true, both sides have codeableConcept with >1 coding, and system param differs between prod and dev.
-Normalizes system, code, and version params to prod values on both sides.
-Eliminates 3 records.
-
-
-- 65fabdc4-930b-49e8-9ff1-60c176cbbfee (SNOMED 19657006 / el-observation-code-cs disorientatedtime)
-- db568fd1-e0b1-4188-b29f-4fe9f7b2529b (SNOMED 85828009 / el-observation-code-cs autoimmune)
-- 2e0dea57-4d5f-4442-99b8-881d1177f561 (SNOMED 26329005 / el-observation-code-cs cognitiveStatusNotNormal)
+- 40b1ef6a-5a08-4bf8-a34f-53ae336441d9 (MDC/SNOMED/LOINC, result=false, prod=LOINC, dev=MDC)
+- 76ce8632-cd73-48d7-970a-4da238b79be8 (LOINC/SNOMED, result=false, wrong display, prod=SNOMED, dev=LOINC)
+- 65fabdc4-930b-49e8-9ff1-60c176cbbfee (custom CS/SNOMED, result=true, from round 1)
 
 ---
 

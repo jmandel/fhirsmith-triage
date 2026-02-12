@@ -1,0 +1,195 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    },
+    {
+      "name": "version",
+      "valueString": "2024-12-05"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "8310-5"
+    },
+    {
+      "name": "display",
+      "valueString": "Körpertemperatur"
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Body temperature - Core' for http://loinc.org#8329-5. Valid display is one of  choices: 'Body temperature - Core' (en-US), 'Body temperature - Core' (en-US), 'Bdy temp Core' (en-US), 'Core temperature' (en-US), 'temperatura corporal:temperatura:punto en el tiempo:centro:cuantitativo:' (es-AR), 'Temperatura corporal:Centro :Punto temporal:Temperatura:Cuantitativo:' (es-MX) or 'Bdy temp Core' (pt-BR) (for the language(s) 'de')"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "code": "8310-5"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "code": "276885007",
+            "display": "Core body temperature"
+          },
+          {
+            "system": "urn:iso:std:iso:11073:10101",
+            "code": "150368",
+            "display": "MDC_TEMP_CORE"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8329-5",
+            "display": "Body temperature - Core"
+          }
+        ],
+        "text": "Körpertemperatur"
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#276885007 ('Core body temperature')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "location": [
+              "CodeableConcept.coding[1].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ],
+              "text": "The provided code 'urn:iso:std:iso:11073:10101#150368 ('MDC_TEMP_CORE')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "location": [
+              "CodeableConcept.coding[2].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[2].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "MSG_DRAFT"
+              }
+            ],
+            "severity": "information",
+            "code": "business-rule",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "status-check"
+                }
+              ],
+              "text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0"
+            }
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "None_of_the_provided_codes_are_in_the_value_set_one"
+              }
+            ],
+            "severity": "information",
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "this-code-not-in-vs"
+                }
+              ],
+              "text": "The provided code 'http://loinc.org#8329-5 ('Body temperature - Core')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "location": [
+              "CodeableConcept.coding[3].code"
+            ],
+            "expression": [
+              "CodeableConcept.coding[3].code"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "Wrong Display Name 'Body temperature - Core' for http://loinc.org#8329-5. Valid display is one of  choices: 'Body temperature - Core' (en-US), 'Body temperature - Core' (en-US), 'Bdy temp Core' (en-US), 'Core temperature' (en-US), 'temperatura corporal:temperatura:punto en el tiempo:centro:cuantitativo:' (es-AR), 'Temperatura corporal:Centro :Punto temporal:Temperatura:Cuantitativo:' (es-MX) or 'Bdy temp Core' (pt-BR) (for the language(s) 'de')"
+            },
+            "location": [
+              "CodeableConcept.coding[3].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[3].display"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n16 16   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1 for validation purposes\r\n16 0    : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\r\n16 0    : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n16 0    : 0ms  : Prepare include: \"(http://loinc.org)(85353-1,9279-1,8867-4,2708-6,8310-5,8302-2,9843-4,29463-7,39156-5,85354-9,8480-6,8462-4,8478-0)\"\r\n16 0    : 0ms  : CodeSystem found: \"http://loinc.org|2.81\"\r\n16 0    : 0ms  : Validate \"[http://loinc.org#8310-5 (\"\"), http://snomed.info/sct#276885007 (\"Core body temperature\"), urn:iso:std:iso:11073:10101#150368 (\"MDC_TEMP_CORE\"), http://loinc.org#8329-5 (\"Body temperature - Core\")]\"\r\n16 0    : 0ms  : Check \"http://loinc.org#8310-5\"\r\n16 0    : 0ms  : CodeSystem found: http://loinc.org|2.81 for http://loinc.org\r\n16 0    : 0ms  : check code in (http://loinc.org)(85353-1,9279-1,8867-4,2708-6,8310-5,8302-2,9843-4,29463-7,39156-5,85354-9,8480-6,8462-4,8478-0) at CodeableConcept.coding[0]\r\n16 0    : 0ms  : Code \"8310-5\" found in http://loinc.org|2.81\r\n31 15   : 15ms : Check \"http://snomed.info/sct#276885007\"\r\n31 0    : 15ms : Check \"urn:iso:std:iso:11073:10101#150368\"\r\n47 16   : 31ms : Check \"http://loinc.org#8329-5\"\r\n47 0    : 31ms : CodeSystem found: http://loinc.org|2.81 for http://loinc.org\r\n47 0    : 31ms : check code in (http://loinc.org)(85353-1,9279-1,8867-4,2708-6,8310-5,8302-2,9843-4,29463-7,39156-5,85354-9,8480-6,8462-4,8478-0) at CodeableConcept.coding[3]\r\n"
+    }
+  ]
+}
