@@ -793,6 +793,27 @@ const tolerances = [
   },
 
   {
+    id: 'expand-dev-missing-total',
+    description: 'Dev $expand omits expansion.total when prod includes it. The total field tells clients how many concepts exist in a paged expansion — without it, clients cannot determine page count. Affects expansions across multiple code systems (ISO 3166-2, UCUM, BCP-47).',
+    kind: 'temp-tolerance',
+    bugId: '2ed80bd',
+    tags: ['normalize', 'expand', 'missing-total'],
+    match({ prod, dev }) {
+      if (prod?.resourceType !== 'ValueSet' || dev?.resourceType !== 'ValueSet') return null;
+      if (!prod?.expansion || !dev?.expansion) return null;
+      if (prod.expansion.total !== undefined && dev.expansion.total === undefined) return 'normalize';
+      return null;
+    },
+    normalize({ prod, dev }) {
+      const { total, ...restExpansion } = prod.expansion;
+      return {
+        prod: { ...prod, expansion: restExpansion },
+        dev,
+      };
+    },
+  },
+
+  {
     id: 'expand-dev-extra-contact-metadata',
     description: 'Dev $expand includes ValueSet contact field (publisher contact info) that prod omits (GG adjudicated: "won\'t fix"). Normalizes by stripping contact from dev.',
     kind: 'equiv-autofix',
