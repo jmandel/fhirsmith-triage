@@ -1,0 +1,66 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "severity": "error",
+            "code": "not-found",
+            "details": {
+              "text": "A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81",
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "not-found"
+                }
+              ]
+            },
+            "expression": [
+              "CodeableConcept.coding[0].system"
+            ],
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "UNKNOWN_CODESYSTEM_VERSION"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "message",
+      "valueString": "A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "version": "2.77",
+            "code": "29463-7",
+            "display": "Body weight"
+          },
+          {
+            "system": "http://snomed.info/sct",
+            "version": "http://snomed.info/sct/11000274103/version/20231115",
+            "code": "27113001",
+            "display": "Body weight (observable entity)"
+          }
+        ]
+      }
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://loinc.org|2.77"
+    }
+  ]
+}

@@ -1276,6 +1276,44 @@ const tolerances = [
     },
   },
 
+  {
+    id: 'validate-code-xcaused-unknown-system-disagree',
+    description: 'validate-code with result=false on both sides: prod and dev disagree on which system/version is unknown (x-caused-by-unknown-system differs). Caused by version skew or content differences — each server fails on a different coding. This also causes downstream diffs in code/display/system/version/message/issues params. Filed under b6d19d8 (dev omits params for known codings when unknown system present).',
+    kind: 'temp-tolerance',
+    bugId: 'b6d19d8',
+    tags: ['normalize', 'validate-code', 'x-caused-by-unknown-system', 'version-skew'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const prodResult = getParamValue(prod, 'result');
+      const devResult = getParamValue(dev, 'result');
+      if (prodResult !== false || devResult !== false) return null;
+      // Collect all x-caused-by-unknown-system values from each side
+      const prodXCaused = (prod.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical);
+      const devXCaused = (dev.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical);
+      // At least one side must have it, and they must differ (values or count)
+      if (prodXCaused.length === 0 && devXCaused.length === 0) return null;
+      if (JSON.stringify(prodXCaused.sort()) === JSON.stringify(devXCaused.sort())) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      // Normalize all params that follow from the disagreement to prod's values
+      // Some params (x-caused-by-unknown-system) can appear multiple times
+      const paramsToCanon = new Set(['code', 'display', 'system', 'version', 'message', 'issues', 'x-caused-by-unknown-system', 'x-unknown-system']);
+      // Collect all prod params to canonicalize (preserving duplicates)
+      const prodCanonParams = (prod.parameter || []).filter(p => paramsToCanon.has(p.name));
+      // Build new dev params: keep non-canon params, drop all canon params
+      let newDevParams = (dev.parameter || []).filter(p => !paramsToCanon.has(p.name));
+      // Add all prod canon params
+      newDevParams.push(...prodCanonParams);
+      // Re-sort by name to stay consistent with sort-parameters-by-name
+      newDevParams.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      return {
+        prod,
+        dev: { ...dev, parameter: newDevParams },
+      };
+    },
+  },
+
 ];
 
 module.exports = { tolerances, getParamValue };

@@ -242,21 +242,14 @@ def ensure_round_labels(bugs, job_dir, round_label):
     Parses bugId values from tolerances.js and labels matching git-bug issues.
     This ensures bugs carried forward from prior rounds get the current round label too.
     """
+    # Extract all bugId values from tolerances.js
     tol_path = os.path.join(job_dir, "tolerances.js")
     if not os.path.isfile(tol_path):
         return
 
     with open(tol_path) as f:
         tol_text = f.read()
-
-    # Extract bugId values only from temp-tolerance entries (not equiv-autofix).
-    # Tolerances are objects delimited by { ... }, so split on those boundaries
-    # and only grab bugIds from blocks containing kind: 'temp-tolerance'.
-    referenced_ids = set()
-    for block in re.split(r'(?=\{)', tol_text):
-        if re.search(r"""kind:\s*['"]temp-tolerance['"]""", block):
-            for bid in re.findall(r"""bugId:\s*['"]([^'"]+)['"]""", block):
-                referenced_ids.add(bid)
+    referenced_ids = set(re.findall(r"""bugId:\s*['"]([^'"]+)['"]""", tol_text))
     if not referenced_ids:
         return
 

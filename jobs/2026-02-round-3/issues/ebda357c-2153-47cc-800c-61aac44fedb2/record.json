@@ -1,0 +1,54 @@
+{
+  "id": "ebda357c-2153-47cc-800c-61aac44fedb2",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 4150,
+    "hash": "94caea8e1cb5fc6b8ccc11109aef48c0"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 1196,
+    "hash": "4c57eb432ee71d92379b1b90e7fc72cc"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "code"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "display"
+      },
+      {
+        "type": "value-differs",
+        "param": "issues"
+      },
+      {
+        "type": "value-differs",
+        "param": "message"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "system"
+      },
+      {
+        "type": "missing-in-dev",
+        "param": "version"
+      },
+      {
+        "type": "value-differs",
+        "param": "x-caused-by-unknown-system"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : false},{\"name\" : \"system\",\"valueUri\" : \"http://loinc.org\"},{\"name\" : \"x-caused-by-unknown-system\",\"valueCanonical\" : \"http://snomed.info/sct|http://snomed.info/sct/11000274103/version/20231115\"},{\"name\" : \"code\",\"valueCode\" : \"29463-7\"},{\"name\" : \"version\",\"valueString\" : \"2.77\"},{\"name\" : \"display\",\"valueString\" : \"Body weight\"},{\"name\" : \"message\",\"valueString\" : \"A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/11000274103/version/20231115' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://loinc.org\",\"version\" : \"2.77\",\"code\" : \"29463-7\",\"display\" : \"Body weight\"},{\"system\" : \"http://snomed.info/sct\",\"version\" : \"http://snomed.info/sct/11000274103/version/20231115\",\"code\" : \"27113001\",\"display\" : \"Body weight (observable entity)\"}]}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"UNKNOWN_CODESYSTEM_VERSION\"}],\"severity\" : \"error\",\"code\" : \"not-found\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"not-found\"}],\"text\" : \"A definition for CodeSystem 'http://snomed.info/sct' version 'http://snomed.info/sct/11000274103/version/20231115' could not be found, so the code cannot be validated. Valid versions: http://snomed.info/sct/11000146104/version/20240930,http://snomed.info/sct/11000172109/version/20231115,http://snomed.info/sct/2011000195101/version/20230607,http://snomed.info/sct/32506021000036107/version/20230731,http://snomed.info/sct/449081005/version/20250510,http://snomed.info/sct/45991000052106/version/20220531,http://snomed.info/sct/45991000052106/version/20231130,http://snomed.info/sct/554471000005108/version/20250930,http://snomed.info/sct/731000124108/version/20250901,http://snomed.info/sct/827022005/version/20241216,http://snomed.info/sct/83821000000107/version/20230412,http://snomed.info/sct/900000000000207008/version/20240201,http://snomed.info/sct/900000000000207008/version/20240801,http://snomed.info/sct/900000000000207008/version/20250201,http://snomed.info/xsct/900000000000207008/version/20250814\"},\"location\" : [\"CodeableConcept.coding[1].system\"],\"expression\" : [\"CodeableConcept.coding[1].system\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=en-US, default-to-latest\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://loinc.org|2.77#29463-7 (\\\"Body weight\\\"), http://snomed.info/sct|http://snomed.info/sct/11000274103/version/20231115#27113001 (\\\"Body weight (observable entity)\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://loinc.org|2.77#29463-7\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://loinc.org|2.77\\\" (content = complete)\\r\\n0 0     : 0ms  : Check \\\"http://snomed.info/sct|http://snomed.info/sct/11000274103/version/20231115#27113001\\\"\\r\\n0 0     : 0ms  : Didn't find CodeSystem \\\"http://snomed.info/sct|http://snomed.info/sct/11000274103/version/20231115\\\"\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"not-found\",\"details\":{\"text\":\"A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"not-found\"}]},\"expression\":[\"CodeableConcept.coding[0].system\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"UNKNOWN_CODESYSTEM_VERSION\"}]}]}},{\"name\":\"result\",\"valueBoolean\":false},{\"name\":\"message\",\"valueString\":\"A definition for CodeSystem 'http://loinc.org' version '2.77' could not be found, so the code cannot be validated. Valid versions: 2.81\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://loinc.org\",\"version\":\"2.77\",\"code\":\"29463-7\",\"display\":\"Body weight\"},{\"system\":\"http://snomed.info/sct\",\"version\":\"http://snomed.info/sct/11000274103/version/20231115\",\"code\":\"27113001\",\"display\":\"Body weight (observable entity)\"}]}},{\"name\":\"x-caused-by-unknown-system\",\"valueCanonical\":\"http://loinc.org|2.77\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://loinc.org\",\"version\":\"2.77\",\"code\":\"29463-7\",\"display\":\"Body weight\"},{\"system\":\"http://snomed.info/sct\",\"version\":\"http://snomed.info/sct/11000274103/version/20231115\",\"code\":\"27113001\",\"display\":\"Body weight (observable entity)\"}]}},{\"name\":\"displayLanguage\",\"valueString\":\"en-US\"},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"0da084cb-e932-4f01-a002-d17a258a82bf\"},{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}
