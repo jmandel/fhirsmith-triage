@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_105 bugs (72 open, 33 closed)_
+_105 bugs (73 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1044,9 +1044,52 @@ Prod returns `expansion.extension` with `valueset-unclosed: true` and no `expans
 
 ---
 
-### [ ] `801aef1` 
+### [ ] `801aef1` Dev adds expression field on informational OperationOutcome issues where prod omits it
 
+Records-Impacted: 6
+Tolerance-ID: oo-extra-expression-on-info-issues
+Record-ID: 9160e659-1af6-4bc6-9c89-e0a8b4df55cf
 
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
+-H 'Accept: application/fhir+json' | \
+jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST' \
+-H 'Accept: application/fhir+json' | \
+jq '.parameter[] | select(.name == "issues") | .resource.issue[] | select(.severity == "information") | {severity, code, expression}'
+```
+
+Prod returns `"expression": null` (field absent) on the informational issue, dev returns `"expression": ["code"]`.
+
+#####What differs
+
+In $validate-code responses, both prod and dev return OperationOutcome issues. On error-severity issues, both include `expression: ["code"]`. On information-severity issues, prod omits the `expression` field entirely while dev includes `expression: ["code"]`.
+
+For example, on `GET /r4/CodeSystem/$validate-code?system=http%3A%2F%2Funitsofmeasure.org&code=TEST`:
+- Prod: informational issue has no `expression` field
+- Dev: informational issue has `"expression": ["code"]`
+
+The `expression` value is semantically correct (the issue relates to the `code` parameter), so dev is providing more complete information, but the difference in field presence is a real behavioral divergence.
+
+#####How widespread
+
+6 records across the dataset exhibit this pattern:
+- 4 SNOMED CT records (all `code=K29` variants on different FHIR version paths)
+- 1 UCUM record (`code=TEST`)
+- 1 SNOMED CT POST record (`code=freetext`)
+
+All are `$validate-code` or `$batch-validate-code` operations where the code is invalid and the informational issue provides supplementary error context (e.g., UCUM parse error, SNOMED expression parse error).
+
+Search: node script checking all 3948 delta records for issues where dev has `expression` and prod lacks it on the same positional issue.
+
+#####What the tolerance covers
+
+Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters responses where any OperationOutcome information-severity issue in dev has `expression` that prod lacks. Normalizes by removing the extra `expression` from dev to match prod. Eliminates 6 records.
 
 ---
 
