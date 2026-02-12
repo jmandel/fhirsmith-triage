@@ -1200,6 +1200,23 @@ def main():
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
+    # Also write JSON alongside HTML
+    json_path = re.sub(r'\.html$', '.json', out_path)
+    if json_path != out_path:
+        json_out = {
+            "generated": datetime.now().isoformat(),
+            "stats": {
+                "total": len(bug_data),
+                "open": sum(1 for b in bug_data if b["status"] == "open"),
+                "closed": sum(1 for b in bug_data if b["status"] != "open"),
+                "pipeline": job_stats,
+            },
+            "bugs": bug_data,
+        }
+        with open(json_path, "w", encoding="utf-8") as f:
+            json.dump(json_out, f, indent=2, ensure_ascii=False)
+        print(f"Wrote {json_path}", file=sys.stderr)
+
     print(f"Wrote {out_path}", file=sys.stderr)
 
 

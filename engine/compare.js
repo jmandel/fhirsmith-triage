@@ -5,10 +5,11 @@
  * Comparison engine: reads comparison.ndjson, applies the unified tolerance
  * pipeline, categorizes deltas by priority, writes results.
  *
- * Tolerances are loaded from <job>/tolerances.js.
+ * Tolerances are loaded from <job>/tolerances.js by default, or from
+ * an explicit path via --tolerances.
  *
  * Usage:
- *   node engine/compare.js --job jobs/<round-name>
+ *   node engine/compare.js --job jobs/<round-name> [--tolerances /path/to/tolerances.js]
  *
  * The job directory must contain:
  *   - comparison.ndjson (input data)
@@ -28,12 +29,20 @@ function getArg(flag, def) {
 
 const JOB_DIR = getArg('--job', null);
 if (!JOB_DIR) {
-  console.error('Usage: node engine/compare.js --job <job-directory>');
+  console.error('Usage: node engine/compare.js --job <job-directory> [--tolerances <path-to-tolerances.js>]');
   process.exit(1);
 }
 
 const jobDir = path.resolve(JOB_DIR);
-const { tolerances, getParamValue } = require(path.join(jobDir, 'tolerances'));
+const tolerancesArg = getArg('--tolerances', null);
+const tolerancesPath = tolerancesArg
+  ? path.resolve(tolerancesArg)
+  : path.join(jobDir, 'tolerances.js');
+if (!fs.existsSync(tolerancesPath)) {
+  console.error(`Tolerances file not found: ${tolerancesPath}`);
+  process.exit(1);
+}
+const { tolerances, getParamValue } = require(tolerancesPath);
 const inputPath = path.join(jobDir, 'comparison.ndjson');
 const outDir = path.join(jobDir, 'results');
 
@@ -205,6 +214,7 @@ class OutputWriter {
 
 async function main() {
   console.log(`Job directory: ${jobDir}`);
+  console.log(`Tolerances: ${tolerancesPath}`);
   console.log(`Loaded ${tolerances.length} tolerances`);
 
   fs.mkdirSync(outDir, { recursive: true });
@@ -212,6 +222,7 @@ async function main() {
   const writers = new OutputWriter(outDir);
   const summary = {
     jobDir: JOB_DIR,
+    tolerancesPath,
     timestamp: new Date().toISOString(),
     totalRecords: 0,
     skipped: 0,

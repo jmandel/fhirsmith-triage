@@ -1,0 +1,41 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:3166"
+    },
+    {
+      "name": "code",
+      "valueCode": "FR"
+    },
+    {
+      "name": "version",
+      "valueString": "2018"
+    },
+    {
+      "name": "display",
+      "valueString": "France"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "urn:iso:std:iso:3166",
+            "code": "FR",
+            "display": "FRANCE"
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n31 31   : 0ms  : Analysing http://hl7.org/fhir/ValueSet/jurisdiction|4.0.1 for validation purposes\r\n31 0    : 0ms  : Parameters: disp-lang=fr-FR, default-to-latest\r\n31 0    : 0ms  : Prepare include: \"(urn:iso:std:iso:3166)\"\r\n31 0    : 0ms  : CodeSystem found: \"urn:iso:std:iso:3166|2018\"\r\n31 0    : 0ms  : Prepare include: \"(urn:iso:std:iso:3166:-2)\"\r\n31 0    : 0ms  : CodeSystem found: \"urn:iso:std:iso:3166:-2|2021 (from fhir.tx.support.r4#0.32.0)\"\r\n31 0    : 0ms  : Prepare include: \"(http://unstats.un.org/unsd/methods/m49/m49.htm)(class=region)\"\r\n31 0    : 0ms  : CodeSystem found: \"http://unstats.un.org/unsd/methods/m49/m49.htm|\"\r\n31 0    : 0ms  : Validate \"[urn:iso:std:iso:3166#FR (\"FRANCE\")]\"\r\n31 0    : 0ms  : Check \"urn:iso:std:iso:3166#FR\"\r\n31 0    : 0ms  : CodeSystem found: urn:iso:std:iso:3166|2018 for urn:iso:std:iso:3166\r\n31 0    : 0ms  : check code in (urn:iso:std:iso:3166) at CodeableConcept.coding[0]\r\n31 0    : 0ms  : Code \"FR\" found in urn:iso:std:iso:3166|2018\r\n"
+    }
+  ]
+}

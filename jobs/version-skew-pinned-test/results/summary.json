@@ -1,0 +1,38 @@
+{
+  "jobDir": "jobs/version-skew-pinned-test",
+  "timestamp": "2026-02-09T03:13:21.245Z",
+  "totalRecords": 600,
+  "skipped": 422,
+  "skippedByKind": {
+    "equiv-autofix": 422
+  },
+  "skippedReasons": {
+    "skip-prod-xml": 422
+  },
+  "categories": {
+    "status-mismatch": 74,
+    "OK": 79,
+    "content-differs": 23,
+    "dev-crash-on-error": 2
+  },
+  "okBreakdown": {
+    "strict": 0,
+    "equiv-autofix": 79,
+    "temp-tolerance": 0
+  },
+  "operationBreakdown": {
+    "lookup": {
+      "status-mismatch": 66
+    },
+    "expand": {
+      "OK": 42,
+      "status-mismatch": 8,
+      "content-differs": 16
+    },
+    "validate-code": {
+      "OK": 37,
+      "content-differs": 7,
+      "dev-crash-on-error": 2
+    }
+  }
+}

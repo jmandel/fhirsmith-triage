@@ -1,0 +1,31 @@
+{
+  "jobDir": "jobs/version-skew-pinned-v3",
+  "tolerancesPath": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3/tolerances.js",
+  "timestamp": "2026-02-09T04:13:28.949Z",
+  "totalRecords": 1617,
+  "skipped": 0,
+  "skippedByKind": {},
+  "skippedReasons": {},
+  "categories": {
+    "OK": 1047,
+    "content-differs": 570
+  },
+  "okBreakdown": {
+    "strict": 0,
+    "equiv-autofix": 1047,
+    "temp-tolerance": 0
+  },
+  "operationBreakdown": {
+    "expand": {
+      "OK": 642,
+      "content-differs": 451
+    },
+    "validate-code": {
+      "OK": 405,
+      "content-differs": 117
+    },
+    "lookup": {
+      "content-differs": 2
+    }
+  }
+}

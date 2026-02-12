@@ -215,6 +215,7 @@ Issue directories are keyed by the record's `id` field (a UUID assigned during d
 - `engine/next-record.js` - Sequential record picker, creates issue directories
 - `engine/stream-filter.py` - Claude stream-json output filter
 - `engine/dump-bugs.sh`, `engine/dump-bugs-html.py` - Bug report generators
+- `engine/generate-version-skew-followups.js` - Builds version-skew follow-up replay sets and can replay them to `comparison.ndjson` format
 
 ### Prompts and orchestration (`prompts/`)
 - `prompts/triage-prompt.md` - Triage agent prompt
@@ -250,6 +251,28 @@ Each triage round lives in its own job directory, created by `prompts/start-tria
   - `analysis.md` - Agent's analysis (existence = "analyzed")
 - `triage-logs/` - Per-round log files from the triage loop
 - `triage-errors.log` - Error/status log
+
+### Version-skew enrichment workflow
+
+Use `engine/generate-version-skew-followups.js` when analyzing blast radius of the unified `version-skew` tolerance.
+
+- Input is the job's `comparison.ndjson`; output is always in a separate folder (do not append to source dataset)
+- Preferred policy is `--version-policy common-only`:
+  - Probe candidate versions per system on both prod/dev
+  - Replay only versions supported by both servers
+  - Drop records with no known common version (`droppedNoCommonSampledRecords` in summary)
+- `--sample-size 0` means "use all version-skew matched records"
+- Hydration controls replay selection from full candidate universe:
+  - `full` = replay everything in universe
+  - `cover-system-params` = at least one request per terminology + unique filter/param signature
+  - `cover-system-version-params` = at least one request per terminology + version + filter/param signature
+- Replay defaults are intentionally conservative: concurrency `2`, actor delay `500ms`
+- Main artifacts in output dir:
+  - `summary.json`
+  - `support-matrix.json`
+  - `followup-universe.ndjson`
+  - `followup-requests.ndjson`
+  - `followup-comparison.ndjson` (if `--replay`)
 
 ## Every Record Gets a Tolerance
 

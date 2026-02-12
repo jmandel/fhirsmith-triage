@@ -1,26 +1,26 @@
 {
   "jobDir": "jobs/2026-02-round-2",
-  "timestamp": "2026-02-08T04:46:25.982Z",
+  "timestamp": "2026-02-09T01:48:28.938Z",
   "totalRecords": 32233,
-  "skipped": 4907,
+  "skipped": 4901,
   "skippedByKind": {
-    "temp-tolerance": 4613,
-    "equiv-autofix": 294
+    "temp-tolerance": 4819,
+    "equiv-autofix": 82
   },
   "skippedReasons": {
     "expand-422-vs-404-codesystem-not-found": 1401,
     "error-status-422-vs-400": 1897,
     "v3-valueset-validate-code-result-disagrees": 187,
-    "expand-v3-hierarchical-incomplete": 246,
+    "expand-v3-hierarchical-incomplete": 240,
     "skip-prod-xml": 36,
     "cpt-validate-code-result-disagrees": 17,
     "expand-too-costly-succeeds": 90,
     "expand-dev-crash-on-error": 352,
     "snomed-implicit-valueset-expand-404": 36,
     "skip-prod-hgvs-timeout": 62,
-    "validate-code-undefined-system-result-disagrees": 258,
+    "validate-code-undefined-system-result-disagrees": 213,
     "expand-toocostly-grammar-400": 12,
-    "snomed-version-skew-validate-code-result-disagrees": 1,
+    "version-skew": 46,
     "validate-code-valueset-not-found-dev-400": 10,
     "validate-code-no-system-422": 133,
     "expand-filter-crash": 58,
@@ -38,19 +38,19 @@
     "cpt-expand-empty-results": 1
   },
   "categories": {
-    "OK": 27326
+    "OK": 27332
   },
   "okBreakdown": {
     "strict": 0,
-    "equiv-autofix": 12091,
-    "temp-tolerance": 15235
+    "equiv-autofix": 17587,
+    "temp-tolerance": 9745
   },
   "operationBreakdown": {
     "validate-code": {
       "OK": 22360
     },
     "expand": {
-      "OK": 1864
+      "OK": 1870
     },
     "lookup": {
       "OK": 2990

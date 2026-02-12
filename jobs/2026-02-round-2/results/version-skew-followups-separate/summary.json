@@ -1,0 +1,49 @@
+{
+  "jobDir": "/tmp/round2-vs-enrich",
+  "scanned": 32233,
+  "sampleConfig": {
+    "sampleSize": 300,
+    "highRiskShare": 0.9,
+    "perCluster": 15,
+    "seed": 22,
+    "maxRecords": 0,
+    "maxSeconds": 0,
+    "maxFollowupsPerRecord": 2,
+    "replayEnabled": true,
+    "prodBase": "https://tx.fhir.org",
+    "devBase": "https://tx-dev.fhir.org",
+    "replayConcurrency": 2,
+    "replayTimeoutSeconds": 30,
+    "replayOutputName": "followup-comparison.ndjson",
+    "replayActorDelayMs": 500
+  },
+  "stats": {
+    "scanned": 32233,
+    "versionSkewMatched": 1623,
+    "strata": {
+      "highRiskStillNonOk": 1329,
+      "rescuedToOk": 294,
+      "noImpact": 0,
+      "skippedByOther": 0
+    },
+    "categoriesWithVersionSkew": {
+      "OK": 294,
+      "content-differs": 1329
+    },
+    "categoriesWithoutVersionSkew": {
+      "content-differs": 1623
+    }
+  },
+  "poolSizes": {
+    "highRisk": 1329,
+    "rescued": 294,
+    "noImpact": 0
+  },
+  "sampledCounts": {
+    "highRisk": 270,
+    "rescued": 30,
+    "noImpact": 0,
+    "total": 300
+  },
+  "followupsGenerated": 600
+}

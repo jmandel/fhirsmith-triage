@@ -1,0 +1,65 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "FR"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "FR",
+            "display": "FRANCE",
+            "system": "urn:iso:std:iso:3166"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "France"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'FRANCE' for urn:iso:std:iso:3166#FR. There are no valid display names found for language(s) 'fr-FR'. Default display is 'France'"
+            },
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "severity": "error"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'FRANCE' for urn:iso:std:iso:3166#FR. There are no valid display names found for language(s) 'fr-FR'. Default display is 'France'"
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "urn:iso:std:iso:3166"
+    },
+    {
+      "name": "version",
+      "valueString": "2018"
+    }
+  ],
+  "resourceType": "Parameters"
+}

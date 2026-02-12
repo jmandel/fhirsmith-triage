@@ -1,0 +1,102 @@
+[
+  {
+    "round2_id": "2337986",
+    "round2_title": "Dev returns 404 instead of 422 when ValueSet not found for $expand",
+    "round1_id": "0d164f0",
+    "round1_title": "Dev returns 404 instead of 422 for expand when referenced CodeSystem is not found",
+    "round1_adjudication": "GG confirmed fixed",
+    "relationship": "same-root-cause",
+    "explanation": "Both bugs describe the same pattern: dev returns HTTP 404 instead of HTTP 422 for $expand operations when a resource (CodeSystem or ValueSet) cannot be found. Round-1 was about CodeSystem not found, round-2 is about ValueSet not found, but the underlying issue is the same — dev uses res.status(404) with issue code 'not-found' in expand.js where prod uses HTTP 422 with issue code 'unknown'. The round-1 fix was confirmed, suggesting the CodeSystem path was fixed but the ValueSet path (expand.js line 1670) was not.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "cd4b7d1",
+    "round2_title": "Dev returns 400 instead of 422 for error responses across validate-code and expand operations",
+    "round1_id": "0d164f0",
+    "round1_title": "Dev returns 404 instead of 422 for expand when referenced CodeSystem is not found",
+    "round1_adjudication": "GG confirmed fixed",
+    "relationship": "related",
+    "explanation": "Both bugs are about dev using the wrong HTTP error status code for terminology operation errors. Round-1 was 404-vs-422 for expand; round-2 is 400-vs-422 across validate-code and expand. The root cause is similar — dev's error handlers use different status codes (400, 404) where prod uniformly uses 422 for all terminology errors. The round-1 fix likely only addressed the specific 404 case, not the broader 400-vs-422 pattern across 1897 records.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "6edc96c",
+    "round2_title": "Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod",
+    "round1_id": "be888eb",
+    "round1_title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation",
+    "round1_adjudication": "GG: Dev is correct",
+    "relationship": "same-root-cause",
+    "explanation": "Both bugs are about dev loading different versions of HL7 terminology CodeSystems than prod. Round-1 was specifically about v2-0360 (version 3.0.0 vs 2.0.0), while round-2 covers a broader set of terminology.hl7.org CodeSystems (consentcategorycodes, observation-category, condition-clinical, etc.) with version mismatches. The root cause is the same: dev and prod load different editions of HL7 terminology packages. Round-1 adjudication was 'dev is correct', meaning the version dev loads is acceptable. The same adjudication likely applies to the broader set of version differences in round-2, as dev may be loading the canonical/current versions while prod has older ones.",
+    "recommendation": "needs-discussion"
+  },
+  {
+    "round2_id": "9fd2328",
+    "round2_title": "Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing different code sets",
+    "round1_id": "5b3ae71",
+    "round1_title": "SNOMED CT edition version skew: dev loads older editions than prod",
+    "round1_adjudication": "GG: By design — added an old version to better support VSAC",
+    "relationship": "same-root-cause",
+    "explanation": "Both bugs describe SNOMED CT edition version skew between dev and prod. Round-1 noted dev loads older SNOMED editions; round-2 shows dev has International edition 20240201 vs prod's 20250201, and US edition 20250301 vs prod's 20250901. The exact versions have changed between rounds (reflecting server updates), but the root cause is identical: dev intentionally runs older SNOMED editions. Round-1 was adjudicated as 'by design' because older versions were added to better support VSAC.",
+    "recommendation": "close-as-wontfix"
+  },
+  {
+    "round2_id": "4f12dda",
+    "round2_title": "Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ",
+    "round1_id": "5b3ae71",
+    "round1_title": "SNOMED CT edition version skew: dev loads older editions than prod",
+    "round1_adjudication": "GG: By design — added an old version to better support VSAC",
+    "relationship": "same-root-cause",
+    "explanation": "Round-2 bug 4f12dda is about SNOMED CT US edition (20250301 vs 20250901) and CPT (2025 vs 2026) version strings differing in expand contains[].version. This is a direct manifestation of the same SNOMED/terminology version skew that round-1 bug 5b3ae71 described. The only difference is that 4f12dda also includes CPT version skew (2025 vs 2026), which is the same pattern applied to a different terminology. The code membership is identical — only version annotations differ.",
+    "recommendation": "close-as-wontfix"
+  },
+  {
+    "round2_id": "f9f6206",
+    "round2_title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
+    "round1_id": "6c31e76",
+    "round1_title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
+    "round1_adjudication": "GG confirmed fixed",
+    "relationship": "same-root-cause",
+    "explanation": "Both bugs are about dev rendering JavaScript undefined/null values as literal strings in error messages instead of handling them gracefully. Round-1 was 'and undefined' appearing in version lists; round-2 is 'undefined' and 'null' appearing as literal strings in 'Unknown code' messages when code or version are absent. The root cause is the same class of bug: JavaScript template literals or string concatenation not guarding against null/undefined values. Round-1 was confirmed fixed, but the fix was apparently specific to the version list path and did not address all null/undefined rendering sites.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "af1ce69",
+    "round2_title": "validate-code: dev renders null status as literal 'null' in inactive concept message",
+    "round1_id": "6c31e76",
+    "round1_title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
+    "round1_adjudication": "GG confirmed fixed",
+    "relationship": "same-root-cause",
+    "explanation": "Both bugs are about dev rendering null/undefined as literal strings. Round-1: 'and undefined' in version lists. Round-2: literal 'null' in inactive concept status messages (e.g., 'status of null' instead of 'status of '). Same class of JavaScript null/undefined-to-string conversion bug. The round-1 fix only addressed the specific version list case, not the broader null-rendering pattern across all message templates.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "f33ebd3",
+    "round2_title": "validate-code: prod reports UNKNOWN_CODESYSTEM, dev reports UNKNOWN_CODESYSTEM_VERSION when system-version pins unavailable SNOMED edition",
+    "round1_id": "5b3ae71",
+    "round1_title": "SNOMED CT edition version skew: dev loads older editions than prod",
+    "round1_adjudication": "GG: By design — added an old version to better support VSAC",
+    "relationship": "related",
+    "explanation": "Round-2 bug f33ebd3 involves the Canadian SNOMED edition (sct/20611000087101) which neither server has loaded. Prod treats the entire CodeSystem as unknown (UNKNOWN_CODESYSTEM), while dev recognizes SNOMED is loaded but the specific edition is unavailable (UNKNOWN_CODESYSTEM_VERSION). This is tangentially related to 5b3ae71's version skew theme, but the core issue is about error classification for unavailable editions, not about which editions are loaded. Dev's behavior (reporting UNKNOWN_CODESYSTEM_VERSION with a list of valid versions) is arguably more helpful and correct.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "801aef1",
+    "round2_title": "Dev adds expression field on informational OperationOutcome issues where prod omits it",
+    "round1_id": "1fff165",
+    "round1_title": "Dev returns empty-string expression/location in OperationOutcome issues",
+    "round1_adjudication": "closed, no explicit reason found",
+    "relationship": "related",
+    "explanation": "Both bugs relate to how dev handles the 'expression' field on OperationOutcome issues. Round-1 was about dev returning empty-string expression/location fields. Round-2 is about dev adding expression fields (e.g., 'code') on informational issues where prod omits them entirely. The root cause is related — dev's OperationOutcome issue construction includes expression fields more aggressively than prod. However, the specific manifestations differ: round-1 was empty strings, round-2 is non-empty but unwanted values.",
+    "recommendation": "keep-open"
+  },
+  {
+    "round2_id": "1e5268a",
+    "round2_title": "validate-code: dev renders empty status in INACTIVE_DISPLAY_FOUND message where prod shows 'inactive'",
+    "round1_id": "6c31e76",
+    "round1_title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
+    "round1_adjudication": "GG confirmed fixed",
+    "relationship": "same-root-cause",
+    "explanation": "Same class of null/undefined rendering bug as round-1 6c31e76. Round-2 1e5268a shows dev rendering an empty string for the status field in INACTIVE_DISPLAY_FOUND messages where prod correctly shows 'inactive'. Dev fails to look up the concept's inactive status and renders it as empty, while prod correctly retrieves and displays the status. This is the same pattern of dev not properly handling missing/null values in message templates. The round-1 fix only addressed the specific 'and undefined' case in version lists.",
+    "recommendation": "keep-open"
+  }
+]

@@ -29,6 +29,7 @@ jobs:
             round=$(basename "$job")
             mkdir -p "_site/$round"
             [ -f "$job/bugs/bugs.html" ] && cp "$job/bugs/bugs.html" "_site/$round/bugs.html"
+            [ -f "$job/bugs/bugs.json" ] && cp "$job/bugs/bugs.json" "_site/$round/bugs.json"
             [ -f "$job/tolerances.js" ] && cp "$job/tolerances.js" "_site/$round/tolerances.js"
             if [ -d "$job/coverage" ] && [ -f "$job/coverage/index.html" ]; then
               mkdir -p "_site/$round/coverage"
@@ -39,6 +40,7 @@ jobs:
 
           # Copy all-rounds bug report if present
           [ -f "jobs/bugs-all.html" ] && cp "jobs/bugs-all.html" "_site/bugs-all.html"
+          [ -f "jobs/bugs-all.json" ] && cp "jobs/bugs-all.json" "_site/bugs-all.json"
 
           # Generate index
           cat > _site/index.html << 'HTMLEOF'
