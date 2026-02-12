@@ -537,6 +537,39 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-display-text-differs',
+    description: 'validate-code: display text differs for LOINC, ISO 3166, UCUM, BCP-13 codes with same version. Both servers agree on result, system, code, version — only the display parameter differs. Same class of issue as snomed-same-version-display-differs but for non-SNOMED, non-BCP47 systems. Normalizes both sides to prod display value.',
+    kind: 'temp-tolerance',
+    bugId: 'b9034b0',
+    tags: ['normalize', 'display-text', 'validate-code'],
+    match({ prod, dev }) {
+      if (!isParameters(prod) || !isParameters(dev)) return null;
+      const system = getParamValue(prod, 'system');
+      // Skip systems already handled by other tolerances
+      if (system === 'http://snomed.info/sct') return null;
+      if (system === 'urn:ietf:bcp:47') return null;
+      const prodDisplay = getParamValue(prod, 'display');
+      const devDisplay = getParamValue(dev, 'display');
+      if (!prodDisplay || !devDisplay) return null;
+      if (prodDisplay === devDisplay) return null;
+      return 'normalize';
+    },
+    normalize({ prod, dev }) {
+      const prodDisplay = getParamValue(prod, 'display');
+      function setDisplay(body) {
+        if (!body?.parameter) return body;
+        return {
+          ...body,
+          parameter: body.parameter.map(p =>
+            p.name === 'display' ? { ...p, valueString: prodDisplay } : p
+          ),
+        };
+      }
+      return { prod: setDisplay(prod), dev: setDisplay(dev) };
+    },
+  },
+
+  {
     id: 'batch-validate-snomed-display-differs',
     description: 'Batch $validate-code: SNOMED display text differs even with same edition version. Same root cause as snomed-same-version-display-differs — fixed in dev, but both sides randomly pick from synonyms (GG adjudicated).',
     kind: 'equiv-autofix',

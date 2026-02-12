@@ -4611,5 +4611,50 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "b9034b08a87b8e940f430fa235a8a50ac1319341fb1b90bed49f52b38c276db7",
+        "human_id": "b9034b0",
+        "create_time": {
+            "timestamp": 1770862017,
+            "time": "2026-02-11T20:06:57-06:00",
+            "lamport": 102
+        },
+        "edit_time": {
+            "timestamp": 1770862041,
+            "time": "2026-02-11T20:07:21-06:00",
+            "lamport": 724
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "round:2026-02-round-3",
+            "tx-compare"
+        ],
+        "title": "validate-code: display text differs for LOINC, ISO 3166, UCUM, BCP-13 codes with same version",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]

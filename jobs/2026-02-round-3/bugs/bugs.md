@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_100 bugs (65 open, 35 closed)_
+_101 bugs (66 open, 35 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -5356,6 +5356,48 @@ Tolerance ID: `validate-code-missing-extra-version-params`
 Matches validate-code records where prod has more `version` parameters than dev.
 Normalizes by adding the missing version values from prod to dev, then applying stable sort by name+value on both sides for consistent ordering.
 Eliminates 148 records directly. Normalizes version params on ~311 additional records (reducing noise for other tolerance passes).
+
+---
+
+### [ ] `b9034b0` validate-code: display text differs for LOINC, ISO 3166, UCUM, BCP-13 codes with same version
+
+Records-Impacted: 275
+Tolerance-ID: validate-code-display-text-differs
+Record-ID: 4da8e1fd-f8a0-4474-b81b-57cbd5b0b4b6
+
+#####What differs
+
+In $validate-code responses, the `display` parameter returned for the same code and same version differs between prod and dev. Both servers agree on result, system, code, and version — only the display text (the human-readable name) differs.
+
+Examples:
+- LOINC 8478-0 (v2.81): prod="Mean blood pressure", dev="Mean arterial pressure"
+- LOINC 8480-6 (v2.81, de-DE displayLanguage): prod="Blutdruck systolisch", dev="Systolischer Blutdruck"
+- LOINC 718-7 (v2.81, de-DE): prod="Hämoglobin", dev="Hämoglobin [Masse/Volumen] in Blut"
+- ISO 3166 DE (v2018): prod="Deutschland", dev="Germany"
+- UCUM mL (v2.2): prod="ml", dev="mL"
+- BCP-13 application/pdf: prod="PDF", dev="application/pdf"
+
+Prod tends to return a shorter/common name, dev returns a different designation (sometimes longer, sometimes different language, sometimes different case).
+
+#####How widespread
+
+275 validate-code delta records where `display` is the only difference. Breakdown by system:
+- http://loinc.org: 261 records
+- urn:iso:std:iso:3166: 10 records
+- http://unitsofmeasure.org: 2 records
+- urn:ietf:bcp:13: 2 records
+
+Found via: `grep '"type":"value-differs","param":"display"' results/deltas/deltas.ndjson` then filtering to records where display is the sole diff.
+
+This is the same class of issue as the previously filed and closed SNOMED display text bug (39d9af6) — both servers load the same version of each code system but pick different designations/display names for the same code.
+
+#####What the tolerance covers
+
+Tolerance ID: `validate-code-display-text-differs`. Matches validate-code Parameters responses where both sides are Parameters, the system is NOT http://snomed.info/sct (already handled by snomed-same-version-display-differs) and NOT urn:ietf:bcp:47 (already handled by bcp47-display-format), the display values differ, but everything else matches. Normalizes both sides to prod's display value.
+
+#####Representative records
+
+- 4da8e1fd-f8a0-4474-b81b-57cbd5b0b4b6 (LOINC 8478-0, "Mean blood pressure" vs "Mean arterial pressure")
 
 ---
 

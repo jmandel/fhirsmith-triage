@@ -2,4 +2,5 @@ strip-diagnostics: normalize
 sort-parameters-by-name: normalize
 strip-oo-message-id-extension: normalize
 oo-missing-location-field: normalize
+validate-code-display-text-differs: normalize
 validate-code-missing-extra-version-params: normalize
