@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_104 bugs (72 open, 32 closed)_
+_105 bugs (73 open, 32 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -5619,6 +5619,39 @@ Tolerance `result-disagrees-unknown-system-version` matches validate-code record
 
 Representative record IDs:
 - 52ed1799-856b-4f9f-9c57-5fe9033847ab (LOINC 2.77, CodeSystem/$validate-code)
+
+---
+
+### [ ] `b3c97a1` Dev emits duplicate MSG_DRAFT status-check issues for draft CodeSystems with multiple codings
+
+Records-Impacted: 6
+Tolerance-ID: duplicate-draft-codesystem-status-check
+Record-ID: 58504e01-4a61-49d1-9fb0-d19b8c05c752
+
+#####What differs
+
+When validating a CodeableConcept containing multiple codings from `urn:iso:std:iso:11073:10101` (a draft CodeSystem), dev emits one MSG_DRAFT `status-check` informational issue per coding from that system, while prod correctly emits just one per unique CodeSystem reference. For example, with 2 codings from ISO 11073 (codes 150364 and 150368), dev returns two identical issues:
+
+```json
+{"severity": "information", "code": "business-rule", "details": {"text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0", "coding": [{"code": "status-check"}]}}
+{"severity": "information", "code": "business-rule", "details": {"text": "Reference to draft CodeSystem urn:iso:std:iso:11073:10101|2024-12-05 from fhir.tx.support.r4#0.32.0", "coding": [{"code": "status-check"}]}}
+```
+
+Prod returns only one such issue.
+
+#####How widespread
+
+12 records in the dataset have duplicate status-check issues in dev, all involving validate-code on CodeableConcepts with 2 codings from `urn:iso:std:iso:11073:10101`. 6 of these 12 are fully resolved by this tolerance (the duplicate was their only remaining difference). The other 6 have additional differences (missing invalid-display issues, "Unknown code ''" vs "Unknown code 'undefined'") that are separate bugs.
+
+#####What the tolerance covers
+
+Tolerance `duplicate-draft-codesystem-status-check` deduplicates status-check issues in dev's OperationOutcome where the same details.text appears more than once, keeping only the first occurrence. Eliminates 6 records.
+
+#####Representative record IDs
+
+- 58504e01-4a61-49d1-9fb0-d19b8c05c752 (POST /r4/CodeSystem/$validate-code)
+- 81e6cbf7-003c-442a-b6cb-c63182804886 (POST /r4/ValueSet/$validate-code)
+- ecb0a4c6-9494-448e-b9d7-b82c8e604fdb (POST /r4/CodeSystem/$validate-code)
 
 ---
 
