@@ -1,0 +1,72 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "74043-1"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "15167005",
+            "display": "Schädlicher Gebrauch von Alkohol",
+            "system": "http://snomed.info/sct",
+            "version": "http://snomed.info/sct/11000274103/version/20231115"
+          },
+          {
+            "code": "74043-1",
+            "display": "Alcohol use disorder",
+            "system": "http://loinc.org",
+            "version": "2.77"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Alcohol use disorder"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "There are no valid display names found for the code http://loinc.org#74043-1 for language(s) 'de'. The display is 'Alcohol use disorder' the default language display"
+            },
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": false
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.77"
+    },
+    {
+      "name": "x-caused-by-unknown-system",
+      "valueCanonical": "http://snomed.info/sct|http://snomed.info/sct/11000274103/version/20231115"
+    }
+  ],
+  "resourceType": "Parameters"
+}

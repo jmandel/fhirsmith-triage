@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_102 bugs (67 open, 35 closed)_
+_101 bugs (66 open, 35 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -1095,13 +1095,13 @@ Tolerance `oo-extra-expression-on-info-issues` matches validate-code Parameters 
 
 ### [ ] `bd89513` Dev returns extra message/issues for display language resolution on validate-code result=true
 
-Records-Impacted: 525+
-Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-result-disagrees
-Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20
+Records-Impacted: 603+
+Tolerance-ID: dev-extra-display-lang-not-found-message, prod-display-comment-default-display-lang, display-comment-vs-invalid-display-issues, display-lang-invalid-display-different-coding, display-lang-result-disagrees
+Record-ID: 299d1b7f-b8f7-4cee-95ab-fa83da75ea80, c9f3b468-dc3d-47f5-a305-0346bf5b4cab, 92e9d6ed-f142-49e9-9bf1-3451af87c593, 71ec4cbd-849a-447d-94a4-5ed9565baf20, 1b420213-1e39-4839-96e8-77cc1f98ca44
 
 #####What differs
 
-When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod. This manifests in four variants:
+When $validate-code is called with a `displayLanguage` parameter, dev handles "no valid display names found for the requested language" differently from prod. The root cause is that dev does not pass `defLang` to `hasDisplay` in the `checkDisplays` method, making display validation stricter than prod. This manifests in five variants:
 
 **Variant 1 — extra message/issues (dev-extra-display-lang-not-found-message):** Both servers agree result=true. Prod omits message/issues entirely. Dev returns extra `message` ("There are no valid display names found for the code ...") and `issues` (OperationOutcome with informational severity, tx-issue-type=`invalid-display`). Affected systems: SNOMED, ISO 3166, M49 regions.
 
@@ -1111,17 +1111,18 @@ When $validate-code is called with a `displayLanguage` parameter, dev handles "n
 
 **Variant 4 — result-disagrees (display-lang-result-disagrees):** Prod returns result=true. Dev returns result=false with "Wrong Display Name" error. When the provided display doesn't exactly match the default display AND no language-specific displays exist, dev rejects it while prod accepts via default language fallback. Most severe manifestation.
 
+**Variant 5 — invalid-display on different codings (display-lang-invalid-display-different-coding, 78 records):** Both agree result=true, both have same number of issues after earlier tolerances strip display-comment. But the remaining `invalid-display` issues reference different codings — prod flags one coding (e.g., LOINC at coding[1]) while dev flags a different one (e.g., SNOMED at coding[0]). The non-invalid-display issues (status-check, etc.) are identical. This is a multi-coding CodeableConcept pattern where displayLanguage causes each server to flag a different coding for the display warning.
+
 #####How widespread
 
-525+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM).
-
-Search: `grep 'display-comment' jobs/2026-02-round-3/results/deltas/deltas.ndjson | wc -l` (before tolerances).
+603+ records across round 3, affecting validate-code operations with `displayLanguage` parameter across multiple code systems (SNOMED, LOINC, ISO 3166, M49 regions, UCUM, ISO 11073).
 
 #####Tolerances
 
 - `dev-extra-display-lang-not-found-message`: Matches validate-code where result=true on both sides, prod has no message, dev has message containing "no valid display names found". Strips dev's extra message/issues.
 - `prod-display-comment-default-display-lang`: Matches when prod has display-comment issues about "is the default display" and dev has no issues (after earlier tolerances ran). Strips prod's display-comment issues. Eliminates 372 records.
 - `display-comment-vs-invalid-display-issues`: Matches when prod has display-comment issues and dev also has issues (not yet stripped). Strips display-comment from prod, strips extra dev-only invalid-display issues, and strips dev's extra wrong-display-name message. Eliminates 153 records.
+- `display-lang-invalid-display-different-coding`: Matches when both sides have same number of issues but invalid-display issues differ in text/expression (referencing different codings). Normalizes dev's invalid-display issues to prod values. Eliminates 78 records.
 - `display-lang-result-disagrees`: Matches when prod result=true, dev result=false, and dev's message contains "Wrong Display Name" + "no valid display names found". Normalizes dev's result to true and strips error message/issues.
 
 #####Repro
@@ -3129,86 +3130,9 @@ GG confirmed fixed: UCUM validate-code: dev returns human-readable display
 
 ---
 
-### [x] `5b3ae71` SNOMED CT edition version skew: dev loads older editions than prod
-
-Records-Impacted: 181
-Tolerance-ID: snomed-version-skew
-Record-ID: e5716810-0ced-4937-85a5-5651fb884719
+### [ ] `5b3ae71` 
 
 
-The version skew is visible in both the metadata endpoint and $validate-code responses.
-The International edition has been partially fixed (both servers now resolve to 20250201),
-but the US edition (731000124108) still shows the bug: dev defaults to 20230301 instead
-of 20250901. Both servers have the 20250901 edition loaded, but dev picks the wrong default.
-
-
-```bash
-curl -s "https://tx.fhir.org/r4/metadata?mode=terminology" \
--H "Accept: application/fhir+json" | \
-jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
-
-curl -s "https://tx-dev.fhir.org/r4/metadata?mode=terminology" \
--H "Accept: application/fhir+json" | \
-jq '.codeSystem[] | select(.uri=="http://snomed.info/sct") | .version[].code | select(contains("731000124108"))'
-```
-
-Expected: both list only `http://snomed.info/sct/731000124108/version/20250901`
-Actual: dev also has `http://snomed.info/sct/731000124108/version/20230301`
-
-
-```bash
-curl -s "https://tx.fhir.org/r4/CodeSystem/\$validate-code" \
--H "Content-Type: application/fhir+json" \
--H "Accept: application/fhir+json" \
---data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
-
-curl -s "https://tx-dev.fhir.org/r4/CodeSystem/\$validate-code" \
--H "Content-Type: application/fhir+json" \
--H "Accept: application/fhir+json" \
---data-raw '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://snomed.info/sct"},{"name":"code","valueCode":"243796009"},{"name":"version","valueString":"http://snomed.info/sct/731000124108"}]}'
-```
-
-Expected: both return `"version": "http://snomed.info/sct/731000124108/version/20250901"`
-Actual: dev returns `"version": "http://snomed.info/sct/731000124108/version/20230301"`
-
-
-- 36822cee-7132-4003-bf9e-a5602f839466 (US edition, code 243796009)
-- 1796976f-3807-40ec-aa48-f8758b0fee62 (US edition, code 272379006)
-- 03fec18b-e871-4041-b9b8-5c770b2b17c7 (International edition, code 106292003)
-
-Tested: 2026-02-07
-
-Dev returns different (generally older) SNOMED CT edition versions than prod across multiple modules.
-
-
-The `version` parameter in $validate-code responses contains different SNOMED CT edition URIs:
-
-- International edition (900000000000207008): prod=20250201, dev=20240201 (256 records)
-- US edition (731000124108): prod=20250901, dev=20230301 (46 records, some with reversed newer dev versions)
-- Swedish edition (45991000052106): prod=20220531, dev=20231130 (13 records)
-- Plus other national editions with smaller counts
-
-
-279 total records in the current comparison dataset show SNOMED version parameter differences:
-- 265 categorized as content-differs (version string is the only or primary diff)
-- 14 categorized as result-disagrees (validation result boolean differs — codes valid in one edition but not the other)
-
-All are $validate-code operations. The version difference also correlates with display text differences in ~80 records (display names changed between editions).
-
-Matched by: system=http://snomed.info/sct AND version parameter contains snomed.info/sct AND prod version != dev version.
-
-
-Tolerance ID: snomed-version-skew
-Normalizes the `version` parameter to prod's value on both sides when both contain snomed.info/sct URIs with different version dates. This eliminates records where version is the only diff (~190 records). Records with additional diffs (display, message, result) still surface for separate triage.
-
-
-- e5716810-0ced-4937-85a5-5651fb884719 (International edition, version-only diff)
-- e85ce5f3-b23f-41c0-892e-5f7b2aa672ef (result-disagrees, code 116154003)
-
-
-51b43fa #1 Claude (AI Assistant) <>
-
-Adjudicated by GG: By design — added an old version to better support VSAC
 
 ---
 
@@ -4963,49 +4887,6 @@ Search: Records where prod message equals '; '.join(all issue texts) and dev mes
 
 
 Tolerance `message-concat-missing-issues` normalizes the `message` parameter to prod's concatenated value when the pattern matches (dev message equals first issue text, prod message equals all issues joined with '; '). This eliminates the 5 delta records matching this pattern.
-
----
-
-### [ ] `3b1d8dc` Prod returns duplicate entries in searchset Bundle for same resource URL
-
-Records-Impacted: 3
-Tolerance-ID: searchset-duplicate-entries
-Record-ID: 71e7b8c5-f8da-4323-b233-575727a2f583
-
-
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet?_format=json&url=http%3A%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.113762.1.4.1021.103' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
--H 'Accept: application/fhir+json'
-
-curl -s 'https://tx-dev.fhir.org/r4/CodeSystem?_format=json&url=https%3A%2F%2Fnahdo.org%2Fsopt&version=9.2' \
--H 'Accept: application/fhir+json'
-```
-
-Prod returns `total: 2` with duplicate entries for both the ValueSet and CodeSystem searches. Dev returns `total: 1` with a single entry in each case. For the ValueSet, the two prod entries have different `meta.lastUpdated` timestamps (2024-04-29 vs 2025-10-22). For the CodeSystem, the two prod entries are identical copies. Tested 2026-02-07.
-
-
-When searching for ValueSet or CodeSystem resources by URL (e.g., `GET /r4/ValueSet?url=...`), prod returns Bundle with `total: 2` and two entries, while dev returns `total: 1` with one entry.
-
-In record 71e7b8c5, prod returns two versions of ValueSet 2.16.840.1.113762.1.4.1021.103 with different `meta.lastUpdated` (2024-04-29 vs 2025-10-22), different `purpose` text, different `resource-lastReviewDate` extension values, and different expansion timestamps/identifiers. Dev returns only the first version.
-
-In record c8adc8ae, prod returns two identical copies of CodeSystem `https://nahdo.org/sopt` version 9.2 (searched via `GET /r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`).
-
-
-3 records in comparison.ndjson show `prod total > 1` in search Bundle responses out of 503 total resource search operations:
-- 71e7b8c5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103`
-- c8adc8ae: `/r4/CodeSystem?url=https://nahdo.org/sopt&version=9.2`
-- b9db7af5: `/r4/ValueSet?url=http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103` (same URL, different request)
-
-The pattern is: `GET /r4/{ValueSet|CodeSystem}?url=...` where prod has loaded multiple copies/versions of the same resource.
-
-
-Tolerance `searchset-duplicate-entries` matches searchset Bundles where prod returns more entries than dev. It normalizes by keeping only the first entry from prod (matching dev's single entry) and setting both totals to the minimum. Affects 3 records.
 
 ---
 
