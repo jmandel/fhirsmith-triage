@@ -1,0 +1,70 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "8478-0"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "8478-0",
+            "display": "Mean blood pressure",
+            "system": "http://loinc.org"
+          },
+          {
+            "code": "6797001",
+            "display": "Mean blood pressure (observable entity)",
+            "system": "http://snomed.info/sct"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Mean blood pressure"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "code-invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "this-code-not-in-vs",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "The provided code 'http://snomed.info/sct#6797001 ('Mean blood pressure (observable entity)')' was not found in the value set 'http://hl7.org/fhir/ValueSet/observation-vitalsignresult|4.0.1'"
+            },
+            "expression": [
+              "CodeableConcept.coding[1].code"
+            ],
+            "severity": "information"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "version",
+      "valueString": "http://snomed.info/sct/900000000000207008/version/20250201"
+    }
+  ],
+  "resourceType": "Parameters"
+}

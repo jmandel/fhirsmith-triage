@@ -27,3 +27,5 @@ Matches validate-code records where prod has more `version` parameters than dev.
 Eliminates 148 records (those where version count was the only remaining difference after the full pipeline). An additional ~311 records have their version params normalized but remain as deltas due to other differences.
 
 Validated by sampling 10 eliminated records — all confirmed to have version param count as the only semantic difference, with other superficial diffs (OO key order, location field, diagnostics) handled by earlier tolerances.
+
+Additionally, `sort-parameters-by-name` was enhanced to use parameter values as a secondary sort key when names are equal, producing deterministic ordering for duplicate-named parameters (e.g., multiple `version` entries). This is a defensive improvement — the comparison engine's `sortKeysDeep` + `deepEqual` already handles key ordering, so this had zero net impact on delta counts.
