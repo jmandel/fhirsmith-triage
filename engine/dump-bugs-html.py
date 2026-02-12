@@ -1017,6 +1017,9 @@ function renderBugList() {{
             <button class="copy-btn" title="Copy title and ID" onclick="event.stopPropagation(); copyBug(this, '${{bug.id}}')">
               <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z"/><path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"/></svg>
             </button>
+            <button class="copy-btn" title="Copy deep link" onclick="event.stopPropagation(); shareBug(this, '${{bug.id}}')">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95l-1.25 1.25zm-.8 9.45a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25z"/></svg>
+            </button>
             <span class="pill ${{statusClass}}">${{bug.status}}</span>
             ${{labels}}
             ${{impactPill}}
@@ -1042,6 +1045,14 @@ function copyBug(btn, bugId) {{
   if (!bug) return;
   const text = bug.title + " (" + bugId + ")";
   navigator.clipboard.writeText(text).then(() => {{
+    btn.classList.add("copied");
+    setTimeout(() => btn.classList.remove("copied"), 1500);
+  }});
+}}
+
+function shareBug(btn, bugId) {{
+  const url = location.origin + location.pathname + "#bug-" + bugId;
+  navigator.clipboard.writeText(url).then(() => {{
     btn.classList.add("copied");
     setTimeout(() => btn.classList.remove("copied"), 1500);
   }});
