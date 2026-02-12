@@ -1,0 +1,70 @@
+{
+  "parameter": [
+    {
+      "name": "code",
+      "valueCode": "8336-0"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "code": "1153592008",
+            "display": "Weight for age percentile",
+            "system": "http://snomed.info/sct"
+          },
+          {
+            "code": "8336-0",
+            "display": "Body weight [Percentile] Per age",
+            "system": "http://loinc.org"
+          }
+        ]
+      }
+    },
+    {
+      "name": "display",
+      "valueString": "Körpergewicht [Perzentil] pro Alter"
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "issue": [
+          {
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "code": "invalid-display",
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type"
+                }
+              ],
+              "text": "Wrong Display Name 'Body weight [Percentile] Per age' for http://loinc.org#8336-0. Valid display is 'Körpergewicht [Perzentil] pro Alter' (de-DE) (for the language(s) 'de')"
+            },
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "severity": "warning"
+          }
+        ],
+        "resourceType": "OperationOutcome"
+      }
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Body weight [Percentile] Per age' for http://loinc.org#8336-0. Valid display is 'Körpergewicht [Perzentil] pro Alter' (de-DE) (for the language(s) 'de')"
+    },
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    }
+  ],
+  "resourceType": "Parameters"
+}

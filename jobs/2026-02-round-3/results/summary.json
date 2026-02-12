@@ -1,7 +1,7 @@
 {
   "jobDir": "jobs/2026-02-round-3",
   "tolerancesPath": "/home/jmandel/hobby/FHIRsmith-main/triage/jobs/2026-02-round-3/tolerances.js",
-  "timestamp": "2026-02-12T03:03:34.502Z",
+  "timestamp": "2026-02-12T03:08:24.677Z",
   "totalRecords": 9206,
   "skipped": 97,
   "skippedByKind": {
@@ -15,9 +15,9 @@
     "skip-prod-xml": 5
   },
   "categories": {
-    "OK": 7989,
+    "OK": 8005,
     "status-mismatch": 248,
-    "content-differs": 841,
+    "content-differs": 825,
     "result-disagrees": 6,
     "dev-crash-on-error": 20,
     "dev-crash-on-valid": 4,
@@ -26,12 +26,12 @@
   "okBreakdown": {
     "strict": 0,
     "equiv-autofix": 4356,
-    "temp-tolerance": 3633
+    "temp-tolerance": 3649
   },
   "operationBreakdown": {
     "validate-code": {
-      "OK": 7408,
-      "content-differs": 734,
+      "OK": 7424,
+      "content-differs": 718,
       "result-disagrees": 6,
       "dev-crash-on-valid": 4,
       "status-mismatch": 39

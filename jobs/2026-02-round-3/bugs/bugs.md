@@ -1,6 +1,6 @@
 # tx-compare Bug Report
 
-_102 bugs (67 open, 35 closed)_
+_104 bugs (69 open, 35 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
@@ -5546,6 +5546,76 @@ Tolerance `expand-missing-limited-expansion` matches $expand responses where pro
 #####Representative record IDs
 
 - `5b67c797-72f0-45ff-b8ca-a9b57e6fddb1`: POST /r4/ValueSet/$expand — LOINC observation-codes, count=1000, _incomplete=true
+
+---
+
+### [ ] `3482632` Dev returns x-caused-by-unknown-system for systems/versions prod recognizes (LOINC 2.77, fhir.by ValueSets, old SNOMED editions)
+
+Records-Impacted: 334
+Tolerance-ID: dev-x-unknown-system-extra
+Record-ID: (from round-3 deltas grep)
+
+#####What differs
+
+Dev returns `x-caused-by-unknown-system` or `x-unknown-system` parameter on validate-code responses where prod does not. Prod resolves the system/version and performs actual validation; dev fails at the CodeSystem-not-found level. Both agree `result=false` but for different reasons.
+
+Directly matches 105 records; resolves 334 total (normalizing x-unknown-system enables downstream tolerances to match).
+
+Affected systems:
+- 34 records: LOINC version 2.77 (dev only has 2.81)
+- 44 records: fhir.by custom ValueSets (not loaded on dev)
+- 10 records: SNOMED CT version 20200131 (old edition dev doesn't have)
+- 3 records: BCP-47 versions 1.0/2.0.0
+- 14 records: other custom/versioned systems
+
+Root cause is a mix of version skew (dev has fewer/newer editions) and missing custom resources (fhir.by ValueSets only on prod).
+
+#####How widespread
+
+105 direct matches, 334 records resolved to OK after full pipeline. All are validate-code with both result=false. Pattern: dev has x-caused-by-unknown-system param, prod does not.
+
+#####What the tolerance covers
+
+Tolerance `dev-x-unknown-system-extra` matches validate-code Parameters responses where dev has x-caused-by-unknown-system or x-unknown-system but prod does not. Normalizes by stripping those params from dev and canonicalizing message/issues to prod values.
+
+Related to closed bug 1bc5e64 (same pattern but different systems — that one was RxNorm/SNOMED US specific and was fixed).
+
+---
+
+### [ ] `c0fe696` validate-code result-disagrees: dev returns false with x-caused-by-unknown-system for versions prod resolves
+
+Records-Impacted: 43
+Tolerance-ID: result-disagrees-unknown-system-version
+Record-ID: 52ed1799-856b-4f9f-9c57-5fe9033847ab
+
+#####What differs
+
+When `$validate-code` is called with a code system version that prod has loaded but dev does not, the result boolean disagrees:
+
+- **Prod**: Returns `result: true` — validates the code against the version it has loaded, returns system/code/version/display parameters and any informational issues (e.g., display language warnings).
+- **Dev**: Returns `result: false` with `x-caused-by-unknown-system` parameter — it doesn't recognize the code system version at all, so it can't validate the code. Returns error-level OperationOutcome issue with `UNKNOWN_CODESYSTEM_VERSION` and message like "A definition for CodeSystem '...' version '...' could not be found, so the code cannot be validated. Valid versions: ..."
+
+The request often includes `default-to-latest-version: true`, but dev still fails because it doesn't have the specific version referenced in the request.
+
+#####How widespread
+
+43 records in the deltas match this pattern (prod `result: true`, dev `result: false`, dev has `x-caused-by-unknown-system`):
+
+- 34 records: LOINC version 2.77 (prod has 2.77, dev only has 2.81)
+- 6 records: SNOMED CT International version 20200131 (prod has it, dev doesn't)
+- 2 records: BCP-47 version 2.0.0
+- 1 record: BCP-47 version 1.0
+
+All are `$validate-code` operations (both CodeSystem and ValueSet endpoints, both `/r4/` and `/r5/` prefixes).
+
+Search used: `grep 'x-caused-by-unknown-system' deltas.ndjson`, then filtered to records where prodResult=true and devResult=false in the comparison metadata.
+
+#####What the tolerance covers
+
+Tolerance `result-disagrees-unknown-system-version` matches validate-code records where prod `result=true`, dev `result=false`, and dev includes `x-caused-by-unknown-system`. It skips these records since the entire response differs due to the version not being loaded on dev. Eliminates 43 records.
+
+Representative record IDs:
+- 52ed1799-856b-4f9f-9c57-5fe9033847ab (LOINC 2.77, CodeSystem/$validate-code)
 
 ---
 

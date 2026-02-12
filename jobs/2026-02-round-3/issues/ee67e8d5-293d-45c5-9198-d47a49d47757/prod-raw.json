@@ -1,0 +1,108 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "8336-0"
+    },
+    {
+      "name": "version",
+      "valueString": "2.81"
+    },
+    {
+      "name": "display",
+      "valueString": "Körpergewicht [Perzentil] pro Alter"
+    },
+    {
+      "name": "message",
+      "valueString": "Wrong Display Name 'Body weight [Percentile] Per age' for http://loinc.org#8336-0. Valid display is 'Körpergewicht [Perzentil] pro Alter' (de-DE) (for the language(s) 'de')"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "1153592008",
+            "display": "Weight for age percentile"
+          },
+          {
+            "system": "http://loinc.org",
+            "code": "8336-0",
+            "display": "Body weight [Percentile] Per age"
+          }
+        ]
+      }
+    },
+    {
+      "name": "issues",
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "NO_VALID_DISPLAY_FOUND_LANG_NONE"
+              }
+            ],
+            "severity": "information",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "display-comment"
+                }
+              ],
+              "text": "'Weight for age percentile' is the default display; the code system http://snomed.info/sct has no Display Names for the language de"
+            },
+            "location": [
+              "CodeableConcept.coding[0].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[0].display"
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueString": "Display_Name_for__should_be_one_of__instead_of"
+              }
+            ],
+            "severity": "warning",
+            "code": "invalid",
+            "details": {
+              "coding": [
+                {
+                  "system": "http://hl7.org/fhir/tools/CodeSystem/tx-issue-type",
+                  "code": "invalid-display"
+                }
+              ],
+              "text": "Wrong Display Name 'Body weight [Percentile] Per age' for http://loinc.org#8336-0. Valid display is 'Körpergewicht [Perzentil] pro Alter' (de-DE) (for the language(s) 'de')"
+            },
+            "location": [
+              "CodeableConcept.coding[1].display"
+            ],
+            "expression": [
+              "CodeableConcept.coding[1].display"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "diagnostics",
+      "valueString": "0 0 : start\r\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\r\n0 0     : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\r\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\r\n0 0     : 0ms  : Prepare include: \"()\"\r\n0 0     : 0ms  : Validate \"[http://snomed.info/sct#1153592008 (\"Weight for age percentile\"), http://loinc.org#8336-0 (\"Body weight [Percentile] Per age\")]\"\r\n0 0     : 0ms  : Check \"http://snomed.info/sct#1153592008\"\r\n15 15   : 15ms : Using CodeSystem \"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\" (content = complete)\r\n15 0    : 15ms : Check \"http://loinc.org#8336-0\"\r\n15 0    : 15ms : Using CodeSystem \"http://loinc.org|2.81\" (content = complete)\r\n"
+    }
+  ]
+}

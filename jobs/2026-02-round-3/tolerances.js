@@ -1409,9 +1409,10 @@ const tolerances = [
                   const issIsInvalidDisplay = iss.details?.coding?.some(c => c.code === 'invalid-display');
                   const prodIsInvalidDisplay = prodIss.details?.coding?.some(c => c.code === 'invalid-display');
                   if (!issIsInvalidDisplay || !prodIsInvalidDisplay) return iss;
-                  // Canonicalize to prod's text and expression
+                  // Canonicalize to prod's text, expression, and severity
                   return {
                     ...iss,
+                    severity: prodIss.severity,
                     details: { ...iss.details, text: prodIss.details?.text },
                     expression: prodIss.expression,
                   };

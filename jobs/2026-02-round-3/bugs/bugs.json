@@ -4709,5 +4709,101 @@
         },
         "comments": 1,
         "metadata": {}
+    },
+    {
+        "id": "3482632f53a477f711f9fabb41189791b9aea6f53f4e6408a2a9337ad11a1cfb",
+        "human_id": "3482632",
+        "create_time": {
+            "timestamp": 1770865216,
+            "time": "2026-02-11T21:00:16-06:00",
+            "lamport": 104
+        },
+        "edit_time": {
+            "timestamp": 1770865526,
+            "time": "2026-02-11T21:05:26-06:00",
+            "lamport": 753
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "no-repro-needed",
+            "round:2026-02-round-3",
+            "tx-compare",
+            "version-skew",
+            "wont-fix"
+        ],
+        "title": "Dev returns x-caused-by-unknown-system for systems/versions prod recognizes (LOINC 2.77, fhir.by ValueSets, old SNOMED editions)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c0fe69665c27b76bc86e878a90944843003cc374c44e959f7a6425d726bb8477",
+        "human_id": "c0fe696",
+        "create_time": {
+            "timestamp": 1770865221,
+            "time": "2026-02-11T21:00:21-06:00",
+            "lamport": 105
+        },
+        "edit_time": {
+            "timestamp": 1770865526,
+            "time": "2026-02-11T21:05:26-06:00",
+            "lamport": 754
+        },
+        "status": "open",
+        "labels": [
+            "no-repro-needed",
+            "result-disagrees",
+            "round:2026-02-round-3",
+            "tx-compare",
+            "version-skew",
+            "wont-fix"
+        ],
+        "title": "validate-code result-disagrees: dev returns false with x-caused-by-unknown-system for versions prod resolves",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
     }
 ]
