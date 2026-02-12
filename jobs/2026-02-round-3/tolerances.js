@@ -995,7 +995,7 @@ const tolerances = [
 
   {
     id: 'multi-coding-cc-system-code-version-disagree',
-    description: 'POST CodeSystem/$validate-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params. Both agree result=true and return identical codeableConcept. Which coding to report is arbitrary (GG adjudicated: "not sure I care"). Normalizes to prod values.',
+    description: 'POST $validate-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params. Covers both result=true (both agree) and result=false (both agree, same x-caused-by-unknown-system). Which coding to report is arbitrary (GG adjudicated: "not sure I care"). Normalizes system/code/version to prod values.',
     kind: 'equiv-autofix',
     adjudication: ['gg'],
     tags: ['normalize', 'validate-code', 'multi-coding', 'system-code-disagree'],
@@ -1003,13 +1003,19 @@ const tolerances = [
       if (!isParameters(prod) || !isParameters(dev)) return null;
       const prodResult = getParamValue(prod, 'result');
       const devResult = getParamValue(dev, 'result');
-      if (prodResult !== true || devResult !== true) return null;
+      if (prodResult !== devResult) return null;
       const prodSystem = getParamValue(prod, 'system');
       const devSystem = getParamValue(dev, 'system');
       if (!prodSystem || !devSystem || prodSystem === devSystem) return null;
       // Check that codeableConcept has multiple codings
       const cc = getParamValue(prod, 'codeableConcept') || getParamValue(dev, 'codeableConcept');
       if (!cc?.coding || cc.coding.length < 2) return null;
+      // For result=false, require x-caused-by-unknown-system to match if present
+      if (prodResult === false) {
+        const prodXC = (prod.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical).sort();
+        const devXC = (dev.parameter || []).filter(p => p.name === 'x-caused-by-unknown-system').map(p => p.valueCanonical).sort();
+        if (JSON.stringify(prodXC) !== JSON.stringify(devXC)) return null;
+      }
       return 'normalize';
     },
     normalize({ prod, dev }) {
