@@ -1,0 +1,22 @@
+{
+  "id": "66d9936f-34f5-4d83-97c3-396be1bfc399",
+  "url": "/r4/ValueSet/$batch-validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 454,
+    "hash": "e4bb007b68375b5fce9420c968d4bedf"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 422,
+    "hash": "2291ba81cbbd1db19bc1010167575170"
+  },
+  "comparison": {
+    "category": "parse-error",
+    "op": "batch-validate-code"
+  },
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"validation\",\"resource\":{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"coding\",\"valueCoding\":{\"system\":\"http://snomed.info/sct\",\"code\":\"413885003\",\"display\":\"Colorimetric laboratory test\"}},{\"name\":\"x-system-cache-id\",\"valueString\":\"dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"defaultDisplayLanguage\",\"valueCode\":\"en-US\"},{\"name\":\"displayLanguage\",\"valueString\":\"en, en-US\"},{\"name\":\"lenient-display-validation\",\"valueBoolean\":true},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true}]}}]}"
+}

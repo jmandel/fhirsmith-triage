@@ -1,0 +1,4475 @@
+[
+    {
+        "id": "e18fdef59504916f146bea3cd239c8d09ca39f3c823d55952211d8f733a24d9f",
+        "human_id": "e18fdef",
+        "create_time": {
+            "timestamp": 1770498647,
+            "time": "2026-02-07T15:10:47-06:00",
+            "lamport": 2
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 568
+        },
+        "status": "closed",
+        "labels": [
+            "missing-resource",
+            "not-reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns 404 for LOINC answer list ValueSet $expand (appends |4.0.1 to canonical URL)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "a9cf20cf018667a9414d1c7051aae062265f6aa953c76b7c500d231f0b459701",
+        "human_id": "a9cf20c",
+        "create_time": {
+            "timestamp": 1770498781,
+            "time": "2026-02-07T15:13:01-06:00",
+            "lamport": 3
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 557
+        },
+        "status": "closed",
+        "labels": [
+            "code-defect",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev omits deprecated location field on OperationOutcome issues",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 3,
+        "metadata": {}
+    },
+    {
+        "id": "2337986f8c55a7e7d163782260327de670383fe8adf26bb588a43654496eb4b6",
+        "human_id": "2337986",
+        "create_time": {
+            "timestamp": 1770499031,
+            "time": "2026-02-07T15:17:11-06:00",
+            "lamport": 4
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 538
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 404 instead of 422 when ValueSet not found for $expand",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "cd4b7d1601fdd08284c4e9682ce541ec021b464ceeccb8ea58fc03ebcb08f1b0",
+        "human_id": "cd4b7d1",
+        "create_time": {
+            "timestamp": 1770499378,
+            "time": "2026-02-07T15:22:58-06:00",
+            "lamport": 5
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 563
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 instead of 422 for error responses across validate-code and expand operations",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "167be81b77f8ea7cb431bb2f61742331f7e0926f9c07bee82a46f28d2e5af083",
+        "human_id": "167be81",
+        "create_time": {
+            "timestamp": 1770499680,
+            "time": "2026-02-07T15:28:00-06:00",
+            "lamport": 6
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 534
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns result=false for valid v3 terminology codes in ValueSet $validate-code",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "6edc96c3f55a15b11b80fe9e2eee95f5c6112ab454a4407b39f407e05eff8a47",
+        "human_id": "6edc96c",
+        "create_time": {
+            "timestamp": 1770500014,
+            "time": "2026-02-07T15:33:34-06:00",
+            "lamport": 7
+        },
+        "edit_time": {
+            "timestamp": 1770601787,
+            "time": "2026-02-08T19:49:47-06:00",
+            "lamport": 681
+        },
+        "status": "closed",
+        "labels": [
+            "config-issue",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare",
+            "won't-fix"
+        ],
+        "title": "Dev loads different versions of HL7 terminology CodeSystems (terminology.hl7.org) than prod",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 5,
+        "metadata": {}
+    },
+    {
+        "id": "4336772672340872069d94336eb1f77be6e1ad9e869a08ce8da979ba32ccde01",
+        "human_id": "4336772",
+        "create_time": {
+            "timestamp": 1770500740,
+            "time": "2026-02-07T15:45:40-06:00",
+            "lamport": 8
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 543
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev  returns only root concept for v3 hierarchical ValueSets (missing child codes)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f2b2ceff471c67940514fe998c387df816ff13927a6965d52cf947e4b8d05994",
+        "human_id": "f2b2cef",
+        "create_time": {
+            "timestamp": 1770501152,
+            "time": "2026-02-07T15:52:32-06:00",
+            "lamport": 9
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 570
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev : missing valueset-unclosed extension and spurious expansion.total on incomplete expansions",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "801aef1abd21202dc7ae1377598b69f8d68fca952e3bb18d381197d98dca965e",
+        "human_id": "801aef1",
+        "create_time": {
+            "timestamp": 1770501556,
+            "time": "2026-02-07T15:59:16-06:00",
+            "lamport": 10
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 554
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev adds expression field on informational OperationOutcome issues where prod omits it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "bd89513a2037faa19ab77a8303238bdaf86624bc1ddcebf0309e6335546492fc",
+        "human_id": "bd89513",
+        "create_time": {
+            "timestamp": 1770501931,
+            "time": "2026-02-07T16:05:31-06:00",
+            "lamport": 11
+        },
+        "edit_time": {
+            "timestamp": 1770858537,
+            "time": "2026-02-11T19:08:57-06:00",
+            "lamport": 692
+        },
+        "status": "open",
+        "labels": [
+            "code-defect",
+            "content-differs",
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns extra message/issues for display language resolution on validate-code result=true",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "b6d19d82e59c1d10602e90fe8a6b5176b850d584c239d884423e3589d727c08f",
+        "human_id": "b6d19d8",
+        "create_time": {
+            "timestamp": 1770502337,
+            "time": "2026-02-07T16:12:17-06:00",
+            "lamport": 12
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 560
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev omits system/code/version/display params on CodeSystem/$validate-code with codeableConcept containing unknown system",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2ed80bd2d6bf284f3a0322d151c3a784b6b7ca0900296d43dfb32fc0ed8fe6d4",
+        "human_id": "2ed80bd",
+        "create_time": {
+            "timestamp": 1770502724,
+            "time": "2026-02-07T16:18:44-06:00",
+            "lamport": 13
+        },
+        "edit_time": {
+            "timestamp": 1770858938,
+            "time": "2026-02-11T19:15:38-06:00",
+            "lamport": 695
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev  omits expansion.total when prod includes it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c7004d34b2d72ef446ebbafc4f561e145350d8759ee034e08bbb5cbcb8f6faac",
+        "human_id": "c7004d3",
+        "create_time": {
+            "timestamp": 1770503128,
+            "time": "2026-02-07T16:25:28-06:00",
+            "lamport": 14
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 562
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev omits valueset-toocostly extension and adds spurious used-codesystem on  for grammar-based code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3103b019c8251918d363ebbeb554c204d332477159bb6e25185532dd3da45a87",
+        "human_id": "3103b01",
+        "create_time": {
+            "timestamp": 1770503446,
+            "time": "2026-02-07T16:30:46-06:00",
+            "lamport": 15
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 541
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns extra informational HGVS syntax issue in $validate-code for varnomen.hgvs.org",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "36da92832b377221c0e061ab165aaa64e0064dc9dfac314c539870aa9f8846fd",
+        "human_id": "36da928",
+        "create_time": {
+            "timestamp": 1770503844,
+            "time": "2026-02-07T16:37:24-06:00",
+            "lamport": 16
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 542
+        },
+        "status": "open",
+        "labels": [
+            "missing-resource",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns 404 for SNOMED CT implicit ValueSet  (fhir_vs URLs)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e02b03eff461603f476fe9f23485d1012d9e6a16f412e13639bc0193c35a58f5",
+        "human_id": "e02b03e",
+        "create_time": {
+            "timestamp": 1770504588,
+            "time": "2026-02-07T16:49:48-06:00",
+            "lamport": 17
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 566
+        },
+        "status": "open",
+        "labels": [
+            "config-issue",
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Prod HGVS timeout: 62 records have prod=500 due to external service timeout, comparison invalid",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "80ce6b20ebc2ee58e53e1c127a453b834b8941e544e859f2ff26bdcf6856eb9c",
+        "human_id": "80ce6b2",
+        "create_time": {
+            "timestamp": 1770505771,
+            "time": "2026-02-07T17:09:31-06:00",
+            "lamport": 18
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 555
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev message parameter omits issue texts when validating CodeableConcept with multiple coding errors",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "b36a12bc75c59b8085c368ac74ce291727c09a17c340cb2619297a39ac0f2d86",
+        "human_id": "b36a12b",
+        "create_time": {
+            "timestamp": 1770506156,
+            "time": "2026-02-07T17:15:56-06:00",
+            "lamport": 19
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 559
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "repro-inconclusive",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: unknown version message says 'no versions known' when valid versions exist",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "9fd23281c28c7533e883346a38f84ad749941064681170be85f24771ac4e40e3",
+        "human_id": "9fd2328",
+        "create_time": {
+            "timestamp": 1770506555,
+            "time": "2026-02-07T17:22:35-06:00",
+            "lamport": 20
+        },
+        "edit_time": {
+            "timestamp": 1770601795,
+            "time": "2026-02-08T19:49:55-06:00",
+            "lamport": 684
+        },
+        "status": "closed",
+        "labels": [
+            "config-issue",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "to-discuss",
+            "tx-compare",
+            "won't-fix"
+        ],
+        "title": "Dev loads older SNOMED CT edition (20240201) than prod (20250201), causing  to return different code sets",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "f33161f36f5897a327a6a6bcf7700b38ecc80cac50e504a4e2a23a12c8362cbb",
+        "human_id": "f33161f",
+        "create_time": {
+            "timestamp": 1770506926,
+            "time": "2026-02-07T17:28:46-06:00",
+            "lamport": 21
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 571
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 error instead of 200 toocostly expansion for grammar-based code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "44d191626345e578c625ffe63efc4694bb5cb46da2367a764cfac7816f47434f",
+        "human_id": "44d1916",
+        "create_time": {
+            "timestamp": 1770507293,
+            "time": "2026-02-07T17:34:53-06:00",
+            "lamport": 22
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 545
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 200 expansion instead of 422 too-costly for large code systems (LOINC, MIME types)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1bc5e64d7e752e88f0248b3b6ffc338a9c6e63971fe83a0b079179bb081d70a3",
+        "human_id": "1bc5e64",
+        "create_time": {
+            "timestamp": 1770507777,
+            "time": "2026-02-07T17:42:57-06:00",
+            "lamport": 23
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 536
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "not-reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns x-caused-by-unknown-system for CodeSystem versions that prod resolves (RxNorm 04072025, SNOMED US 20220301)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "44d6f078f017f7c46ae1dd8be29e6992dace6061e86250a8ba708565fbf6407e",
+        "human_id": "44d6f07",
+        "create_time": {
+            "timestamp": 1770508214,
+            "time": "2026-02-07T17:50:14-06:00",
+            "lamport": 24
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 546
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "not-reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev truncates BCP-47 language tag region in expand displayLanguage parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4aebc149c4fb24826a4edadc46fcde1e9f405eb9b8eedae9340e6ed995b33069",
+        "human_id": "4aebc14",
+        "create_time": {
+            "timestamp": 1770508638,
+            "time": "2026-02-07T17:57:18-06:00",
+            "lamport": 25
+        },
+        "edit_time": {
+            "timestamp": 1770598111,
+            "time": "2026-02-08T18:48:31-06:00",
+            "lamport": 678
+        },
+        "status": "closed",
+        "labels": [
+            "config-issue",
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-2",
+            "to-discuss",
+            "tx-compare"
+        ],
+        "title": "Dev -code result=false for SNOMED codes valid in prod due to older SNOMED edition",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "1433eb601c3ab5b9f62e43c914575143af521ca5166c92e38dc92116a0da2cc9",
+        "human_id": "1433eb6",
+        "create_time": {
+            "timestamp": 1770508974,
+            "time": "2026-02-07T18:02:54-06:00",
+            "lamport": 26
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 532
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 400 ValueSet-not-found for validate-code requests that prod handles successfully (10 records)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "1932f81bf024f8a4fae75ffe12fd0968536f416021e700242305088eb734cf19",
+        "human_id": "1932f81",
+        "create_time": {
+            "timestamp": 1770509471,
+            "time": "2026-02-07T18:11:11-06:00",
+            "lamport": 27
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 535
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns SQLITE_MISUSE error on RxNorm-related $expand requests",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4f12ddae78815daead142b83f3ee04312d6378067788187d3d94471bcd48c221",
+        "human_id": "4f12dda",
+        "create_time": {
+            "timestamp": 1770509880,
+            "time": "2026-02-07T18:18:00-06:00",
+            "lamport": 28
+        },
+        "edit_time": {
+            "timestamp": 1770601802,
+            "time": "2026-02-08T19:50:02-06:00",
+            "lamport": 687
+        },
+        "status": "closed",
+        "labels": [
+            "config-issue",
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "to-discuss",
+            "tx-compare",
+            "won't-fix"
+        ],
+        "title": "Dev loads older SNOMED CT and CPT editions, causing expand contains[].version to differ",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "f73e4880fcfc88d500108e68ce6584d8c50d539e3ce87e8bd1df3286319090b9",
+        "human_id": "f73e488",
+        "create_time": {
+            "timestamp": 1770510345,
+            "time": "2026-02-07T18:25:45-06:00",
+            "lamport": 29
+        },
+        "edit_time": {
+            "timestamp": 1770572986,
+            "time": "2026-02-08T11:49:46-06:00",
+            "lamport": 600
+        },
+        "status": "closed",
+        "labels": [
+            "code-defect",
+            "dev-crash-on-error",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on GET  when CodeSystem content mode prevents expansion",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "af1ce697e80a707942d0d072a37d444ebc53a32fd2fdf10d8da464a2f84c596c",
+        "human_id": "af1ce69",
+        "create_time": {
+            "timestamp": 1770511986,
+            "time": "2026-02-07T18:53:06-06:00",
+            "lamport": 30
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 558
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders null status as literal 'null' in inactive concept message",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e4e45bceec0b47eab2e3c8525d90764e3ffb06801f2a67d9aeb6a74017cda238",
+        "human_id": "e4e45bc",
+        "create_time": {
+            "timestamp": 1770512210,
+            "time": "2026-02-07T18:56:50-06:00",
+            "lamport": 31
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 569
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev returns 200 instead of 422 for validate-code with code but no system parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "7716e08b909b6830cb70a8f0aa24fec92f31b320db3dbef9015466e6309fa7e6",
+        "human_id": "7716e08",
+        "create_time": {
+            "timestamp": 1770512695,
+            "time": "2026-02-07T19:04:55-06:00",
+            "lamport": 32
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 552
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev uses R5-style property instead of R4 extension for deprecated status in expand contains",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d05a4a6329f7db6c7e68839addcce1f12178838db83b956aaa5148d250e2bd6f",
+        "human_id": "d05a4a6",
+        "create_time": {
+            "timestamp": 1770513026,
+            "time": "2026-02-07T19:10:26-06:00",
+            "lamport": 33
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 564
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev omits retired status-check informational issues in validate-code OperationOutcome",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "dc0132b22279509304bff47231a84cbd5ded06c7dd00eb5209196a7708b59a12",
+        "human_id": "dc0132b",
+        "create_time": {
+            "timestamp": 1770514254,
+            "time": "2026-02-07T19:30:54-06:00",
+            "lamport": 34
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 565
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev SNOMED  returns URI-based name and omits most properties",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "7b445b05e615fb807b55e424f649657e6ac91a5685b02d1c0420dfa3ab50f302",
+        "human_id": "7b445b0",
+        "create_time": {
+            "timestamp": 1770514835,
+            "time": "2026-02-07T19:40:35-06:00",
+            "lamport": 35
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 553
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "SNOMED $lookup: dev returns Synonym designation use type where prod returns Inactive",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "6b3169444ff41015dc289c55c7c282bf4cc45f3c67dbbfcac4cce8ab08e569da",
+        "human_id": "6b31694",
+        "create_time": {
+            "timestamp": 1770515185,
+            "time": "2026-02-07T19:46:25-06:00",
+            "lamport": 36
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 550
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on GET  with filter parameter: searchText.toLowerCase is not a function",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "44136eb5aba71c59b32e106958eb579ab83c21da123b37b7c3eb52925fe20b3d",
+        "human_id": "44136eb",
+        "create_time": {
+            "timestamp": 1770515631,
+            "time": "2026-02-07T19:53:51-06:00",
+            "lamport": 37
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 544
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "Dev returns expansion codes when prod marks expansion as too-costly (both HTTP 200)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "15f5ce0e0d8dd2c30b2e880c66e049cd6685b7ef5a8223691f79b9b332e21bb9",
+        "human_id": "15f5ce0",
+        "create_time": {
+            "timestamp": 1770516729,
+            "time": "2026-02-07T20:12:09-06:00",
+            "lamport": 38
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 533
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "GET /r5/CodeSystem/$subsumes returns 400 despite valid system parameter",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f9f6206eadba17f5e1865d4ae54eb648bf29c6f71b80bfc08dddd6eda6f8a5f0",
+        "human_id": "f9f6206",
+        "create_time": {
+            "timestamp": 1770517049,
+            "time": "2026-02-07T20:17:29-06:00",
+            "lamport": 39
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 574
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders JavaScript undefined/null as literal strings when code/version absent",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "5f3b796d662e55aeb44da52131d5de37cc1c9f880d52a3fa225b06eae436e5ed",
+        "human_id": "5f3b796",
+        "create_time": {
+            "timestamp": 1770517852,
+            "time": "2026-02-07T20:30:52-06:00",
+            "lamport": 40
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 549
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "LOINC $lookup: dev returns extra designations, RELATEDNAMES2 properties, and different CLASSTYPE format",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f33ebd3ebe8614751d69dac4f8ba00b933f0d5d494cebaac0072a59b4ca0e735",
+        "human_id": "f33ebd3",
+        "create_time": {
+            "timestamp": 1770518315,
+            "time": "2026-02-07T20:38:35-06:00",
+            "lamport": 41
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 572
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: prod reports UNKNOWN_CODESYSTEM, dev reports UNKNOWN_CODESYSTEM_VERSION when system-version pins unavailable SNOMED edition",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e1073429f3e586c824351d9378c78e537e6f4ad19466f59a390ec54de3457ee9",
+        "human_id": "e107342",
+        "create_time": {
+            "timestamp": 1770525193,
+            "time": "2026-02-07T22:33:13-06:00",
+            "lamport": 42
+        },
+        "edit_time": {
+            "timestamp": 1770569577,
+            "time": "2026-02-08T10:52:57-06:00",
+            "lamport": 567
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-2",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "SNOMED $lookup: prod returns 400 where dev returns 404 for unknown code",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2f5929eb60493155d2a48970ecffbb13074728dc6278003710dba7aaa22b92bb",
+        "human_id": "2f5929e",
+        "create_time": {
+            "timestamp": 1770525423,
+            "time": "2026-02-07T22:37:03-06:00",
+            "lamport": 43
+        },
+        "edit_time": {
+            "timestamp": 1770569576,
+            "time": "2026-02-08T10:52:56-06:00",
+            "lamport": 540
+        },
+        "status": "open",
+        "labels": [
+            "missing-resource",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "expand: dev returns 404 for unknown ISO 3166 version that prod resolves by fallback",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "fdc587a9bb7bd2ddf12775bc7a508432717246642111e7444ad98054640224b1",
+        "human_id": "fdc587a",
+        "create_time": {
+            "timestamp": 1770525634,
+            "time": "2026-02-07T22:40:34-06:00",
+            "lamport": 44
+        },
+        "edit_time": {
+            "timestamp": 1770598050,
+            "time": "2026-02-08T18:47:30-06:00",
+            "lamport": 676
+        },
+        "status": "open",
+        "labels": [
+            "not-reproduced",
+            "result-disagrees",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev returns result=false for ISO 3166 user-assigned code AA that prod considers valid",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "1e5268a34ebe6ff97c58bacaad2761555920dc39d6a646b8b1ec45137578dcd5",
+        "human_id": "1e5268a",
+        "create_time": {
+            "timestamp": 1770525935,
+            "time": "2026-02-07T22:45:35-06:00",
+            "lamport": 45
+        },
+        "edit_time": {
+            "timestamp": 1770569575,
+            "time": "2026-02-08T10:52:55-06:00",
+            "lamport": 537
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev renders empty status in INACTIVE_DISPLAY_FOUND message where prod shows 'inactive'",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3e1d117e53443af287000c18994f3539000869c428c5b41acd7c8c690a5cb91e",
+        "human_id": "3e1d117",
+        "create_time": {
+            "timestamp": 1770526509,
+            "time": "2026-02-07T22:55:09-06:00",
+            "lamport": 46
+        },
+        "edit_time": {
+            "timestamp": 1770569615,
+            "time": "2026-02-08T10:53:35-06:00",
+            "lamport": 576
+        },
+        "status": "closed",
+        "labels": [
+            "repro-inconclusive",
+            "round:2026-02-round-2",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev returns result=false with 'undefined' system when dev cache not warm at comparison start",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "be888eba66fb593b92d875a9e56b98e79e671c9cac87c300a410ffc34c0e365d",
+        "human_id": "be888eb",
+        "create_time": {
+            "timestamp": 1770569552,
+            "time": "2026-02-08T10:52:32-06:00",
+            "lamport": 47
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 653
+        },
+        "status": "closed",
+        "labels": [
+            "P6",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "v2-0360 $lookup returns version 3.0.0 vs prod 2.0.0 with extra definition/designation",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "1fff165aacef05e5dcc08a806e34c37687d2f3554527fe9bfdb0eb0e0636bcd5",
+        "human_id": "1fff165",
+        "create_time": {
+            "timestamp": 1770569552,
+            "time": "2026-02-08T10:52:32-06:00",
+            "lamport": 48
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 654
+        },
+        "status": "closed",
+        "labels": [
+            "P6",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev returns empty-string expression/location in OperationOutcome issues",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c3069e32d825508b3838174c6e7593184a1f8769a06135b4931f2e045d283e7e",
+        "human_id": "c3069e3",
+        "create_time": {
+            "timestamp": 1770569553,
+            "time": "2026-02-08T10:52:33-06:00",
+            "lamport": 49
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 655
+        },
+        "status": "closed",
+        "labels": [
+            "P6",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Wrong Display Name message format differs: different display option count, formatting, and language tags",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "b77d7cdd7ec4b7782f700dc4a60842924e3e1544503197243c1647945ee7a334",
+        "human_id": "b77d7cd",
+        "create_time": {
+            "timestamp": 1770569553,
+            "time": "2026-02-08T10:52:33-06:00",
+            "lamport": 50
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 656
+        },
+        "status": "closed",
+        "labels": [
+            "P6",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "BCP-47 display text format: dev returns 'Region=...' instead of standard format",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2905420f50700a69ac2f7c7b9cafc221a7e1da3d64cd1e4b58069837fce073d4",
+        "human_id": "2905420",
+        "create_time": {
+            "timestamp": 1770569553,
+            "time": "2026-02-08T10:52:33-06:00",
+            "lamport": 51
+        },
+        "edit_time": {
+            "timestamp": 1770579478,
+            "time": "2026-02-08T13:37:58-06:00",
+            "lamport": 625
+        },
+        "status": "open",
+        "labels": [
+            "P3",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "DICOM CID 29 AcquisitionModality ValueSet missing from dev",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4fa9a6e84d6b870c6422748cc258c4093c12cd88a1894f7777df18399f144552",
+        "human_id": "4fa9a6e",
+        "create_time": {
+            "timestamp": 1770569553,
+            "time": "2026-02-08T10:52:33-06:00",
+            "lamport": 52
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 657
+        },
+        "status": "closed",
+        "labels": [
+            "P6",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Searchset Bundle formatting: empty entry array, extra pagination links, absolute URLs",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "0d164f0a5edcd1b5e09c2265abd5dabc6d65582b55ce0f57a1ea5b5c6c75d54b",
+        "human_id": "0d164f0",
+        "create_time": {
+            "timestamp": 1770569554,
+            "time": "2026-02-08T10:52:34-06:00",
+            "lamport": 53
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 658
+        },
+        "status": "closed",
+        "labels": [
+            "P4",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev returns 404 instead of 422 for  when referenced CodeSystem is not found",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "56d28d095095f352e82ea6f08e0e03ec12ba51351ff942a47b61ce28bfd14347",
+        "human_id": "56d28d0",
+        "create_time": {
+            "timestamp": 1770569554,
+            "time": "2026-02-08T10:52:34-06:00",
+            "lamport": 54
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 659
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "UCUM -code: dev returns human-readable display instead of code-as-display",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "5b3ae714745e14d6a5dc3c75d4ccdc4af09f31e7582a792dc4c7c232dda8efbd",
+        "human_id": "5b3ae71",
+        "create_time": {
+            "timestamp": 1770569554,
+            "time": "2026-02-08T10:52:34-06:00",
+            "lamport": 55
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 660
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "SNOMED CT edition version skew: dev loads older editions than prod",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "dfd179a5986a4ad783fa4628794c02ced3286b25cd65f9b36c1f3f2081fd22f2",
+        "human_id": "dfd179a",
+        "create_time": {
+            "timestamp": 1770569554,
+            "time": "2026-02-08T10:52:34-06:00",
+            "lamport": 56
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 626
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev fails to process VSAC ValueSets with vsacOpModifier extension",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "a62854ae501a814c2affdec0ff18470dbf58f12684c2a0d89352e0091fcdbe7c",
+        "human_id": "a62854a",
+        "create_time": {
+            "timestamp": 1770569555,
+            "time": "2026-02-08T10:52:35-06:00",
+            "lamport": 57
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 661
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev $expand returns empty string id on ValueSet response",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2cdb0d3b45930cc4af7349667b795bb11f580dbf6df0f01dc85c3dbeefda3b80",
+        "human_id": "2cdb0d3",
+        "create_time": {
+            "timestamp": 1770569555,
+            "time": "2026-02-08T10:52:35-06:00",
+            "lamport": 58
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 662
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev $expand echoes includeDefinition=false parameter in expansion",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "ebcb5a62812b91674b169b777bc5b0e131ad4c3436f21af4aa1a49d1ff636284",
+        "human_id": "ebcb5a6",
+        "create_time": {
+            "timestamp": 1770569555,
+            "time": "2026-02-08T10:52:35-06:00",
+            "lamport": 59
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 663
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev $expand reports different used-codesystem versions than prod",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "c66245de6e6d68fb859dc0fdb349c98afd127732e5bda24b2205a2787617134e",
+        "human_id": "c66245d",
+        "create_time": {
+            "timestamp": 1770569555,
+            "time": "2026-02-08T10:52:35-06:00",
+            "lamport": 60
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 627
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-error",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on $expand when CodeSystem content mode prevents expansion",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d5bac5bd2952700649c0b23a893adba01db17eaa1f6d6cc683aa1bc598f5f0bc",
+        "human_id": "d5bac5b",
+        "create_time": {
+            "timestamp": 1770569556,
+            "time": "2026-02-08T10:52:36-06:00",
+            "lamport": 61
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 628
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Draft CodeSystem message missing provenance suffix in dev",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "43d7ea3393680c6a3c356ea4a10dc5b4504a196a7579337066e3979defa5a02d",
+        "human_id": "43d7ea3",
+        "create_time": {
+            "timestamp": 1770569556,
+            "time": "2026-02-08T10:52:36-06:00",
+            "lamport": 62
+        },
+        "edit_time": {
+            "timestamp": 1770601810,
+            "time": "2026-02-08T19:50:10-06:00",
+            "lamport": 690
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare",
+            "won't-fix"
+        ],
+        "title": "NDC validate-code: dev returns inactive/version/message/issues params that prod omits",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "16f1bf296ba88cf754af4ebf73772f6b295a19516e933d6508fb8415fc91d250",
+        "human_id": "16f1bf2",
+        "create_time": {
+            "timestamp": 1770569556,
+            "time": "2026-02-08T10:52:36-06:00",
+            "lamport": 63
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 630
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev $expand includes extra ValueSet metadata (contact) that prod omits",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "f588f806d8f4af8a86f924d5ae47171951645748eac7cd864fb007cc195094cb",
+        "human_id": "f588f80",
+        "create_time": {
+            "timestamp": 1770569556,
+            "time": "2026-02-08T10:52:36-06:00",
+            "lamport": 64
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 664
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev echoes display param on failed validate-code when CodeSystem unknown",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "cff4061593c1ab49b84de8cdeca3d05b7a0f657f9ad59893c1ff4955c1c74204",
+        "human_id": "cff4061",
+        "create_time": {
+            "timestamp": 1770569557,
+            "time": "2026-02-08T10:52:37-06:00",
+            "lamport": 65
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 665
+        },
+        "status": "closed",
+        "labels": [
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "HCPCS CodeSystem loaded in dev but unknown in prod — 110 result-disagrees",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "dc0b0d1f2c9fb215c8033fce4711102394945d8aaec7b6a47805d85aa9480fc8",
+        "human_id": "dc0b0d1",
+        "create_time": {
+            "timestamp": 1770569557,
+            "time": "2026-02-08T10:52:37-06:00",
+            "lamport": 66
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 631
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CodeSystem/$validate-code without system: different error message and severity",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "a8818230f2f26aeaaa7ce8d411b1847e9187a3f425c2ca12209ae90cf5b9247e",
+        "human_id": "a881823",
+        "create_time": {
+            "timestamp": 1770569557,
+            "time": "2026-02-08T10:52:37-06:00",
+            "lamport": 67
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 666
+        },
+        "status": "closed",
+        "labels": [
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CPT -code: dev fails to recognize valid CPT codes (result=false)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "6c31e7619c356f47e1a3b619d570abb40d81b9731e6d6668b88e581352c2a703",
+        "human_id": "6c31e76",
+        "create_time": {
+            "timestamp": 1770569557,
+            "time": "2026-02-08T10:52:37-06:00",
+            "lamport": 68
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 667
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev appends 'and undefined' to valid version list in UNKNOWN_CODESYSTEM_VERSION messages",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "f45a4bcfe4e635b3f95fa5f15c047174bd7b4836b6ff5953958049204ac0db74",
+        "human_id": "f45a4bc",
+        "create_time": {
+            "timestamp": 1770569558,
+            "time": "2026-02-08T10:52:38-06:00",
+            "lamport": 69
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 668
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Expand display text differs between prod and dev for same codes",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "4bd627168ee1daf064eb5809c0d55b03dd4b93717a966212dddb0def933f0ee4",
+        "human_id": "4bd6271",
+        "create_time": {
+            "timestamp": 1770569558,
+            "time": "2026-02-08T10:52:38-06:00",
+            "lamport": 70
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 632
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "ISO 3166 : prod includes 42 reserved/user-assigned codes that dev omits",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "ccb86ff87a87618b14f198a5a7b66751cc03426c520d4b274a2b4b41f88a7c14",
+        "human_id": "ccb86ff",
+        "create_time": {
+            "timestamp": 1770569558,
+            "time": "2026-02-08T10:52:38-06:00",
+            "lamport": 71
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 633
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "repro-inconclusive",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on valid $expand requests with JavaScript TypeErrors",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "5f7faaa361c9a54da1ef8940bc7dea173d459cce5e46ef7d0aa01482225746ce",
+        "human_id": "5f7faaa",
+        "create_time": {
+            "timestamp": 1770569558,
+            "time": "2026-02-08T10:52:38-06:00",
+            "lamport": 72
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 634
+        },
+        "status": "open",
+        "labels": [
+            "dev-crash-on-valid",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "7069f5461dadbc7eb32b158a63fd9e534815b0a5b2aa5ed0ccddcc74a1a9173e",
+        "human_id": "7069f54",
+        "create_time": {
+            "timestamp": 1770569558,
+            "time": "2026-02-08T10:52:38-06:00",
+            "lamport": 73
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 635
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "result-disagrees",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "BCP-47 case-sensitive validation: dev accepts 'en-us' (lowercase), prod correctly rejects it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c31a8fe3b2d027d3c32d73fd4f460ec9c9b772dac45a095fa0a2c25614b66099",
+        "human_id": "c31a8fe",
+        "create_time": {
+            "timestamp": 1770569559,
+            "time": "2026-02-08T10:52:39-06:00",
+            "lamport": 74
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 636
+        },
+        "status": "open",
+        "labels": [
+            "reproduced",
+            "round:2026-02-round-1",
+            "status-mismatch",
+            "tx-compare"
+        ],
+        "title": "Dev  succeeds (200) where prod refuses with too-costly (422) for grammar/large code systems",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "39d9af675901842e62a5965a3cc3137054623edd5ccf4a6638a49b7e7859e1f2",
+        "human_id": "39d9af6",
+        "create_time": {
+            "timestamp": 1770569559,
+            "time": "2026-02-08T10:52:39-06:00",
+            "lamport": 75
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 669
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "SNOMED display text differs for same edition version",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "674611c6422139d0423027facc9a561810a0bb7f64e04c2d518b116e590f22d0",
+        "human_id": "674611c",
+        "create_time": {
+            "timestamp": 1770569559,
+            "time": "2026-02-08T10:52:39-06:00",
+            "lamport": 76
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 637
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "repro-inconclusive",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "2938dc72a3635ed982d74b017012d223416b7d28e660cd93a91106d2864da8d1",
+        "human_id": "2938dc7",
+        "create_time": {
+            "timestamp": 1770569559,
+            "time": "2026-02-08T10:52:39-06:00",
+            "lamport": 77
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 638
+        },
+        "status": "open",
+        "labels": [
+            "repro-inconclusive",
+            "result-disagrees",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "POST -code: dev returns result=false due to undefined system in request body extraction",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d444de774f7552d9f024b0aacaa3b9a82e5e0572ac866c3358b1acd983ebe8ee",
+        "human_id": "d444de7",
+        "create_time": {
+            "timestamp": 1770569560,
+            "time": "2026-02-08T10:52:40-06:00",
+            "lamport": 78
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 670
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev prepends filter-miss details to validate-code message when result=false",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "3b864c652a90c9e06a32a322c0a55ab1a1542002c2222ad9f2ac63b4e3641dee",
+        "human_id": "3b864c6",
+        "create_time": {
+            "timestamp": 1770569560,
+            "time": "2026-02-08T10:52:40-06:00",
+            "lamport": 79
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 639
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "SNOMED inactive display message lists extra synonyms vs prod",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "0abae17ff6f976fbe3a820a86c50f3dbe76f6dfd2ef7820a67cac99d57da1d64",
+        "human_id": "0abae17",
+        "create_time": {
+            "timestamp": 1770569560,
+            "time": "2026-02-08T10:52:40-06:00",
+            "lamport": 80
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 640
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "repro-inconclusive",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "POST -code: dev missing code/system/display params and extra issues due to undefined system extraction",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "16cbe0519307b17ce663518d56a4f5d9e71167e7884d8629090600d505d8696f",
+        "human_id": "16cbe05",
+        "create_time": {
+            "timestamp": 1770569561,
+            "time": "2026-02-08T10:52:41-06:00",
+            "lamport": 81
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 641
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev  includes warning-experimental expansion parameter that prod omits",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "399b41329f80154e152fb77bffb6edd87616a123d42bd0ec218c145b6acfc878",
+        "human_id": "399b413",
+        "create_time": {
+            "timestamp": 1770569561,
+            "time": "2026-02-08T10:52:41-06:00",
+            "lamport": 82
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 642
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "SNOMED expression parse error message differs: wording and character offset",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "d70be111ed4ddf63d7eb188622808f1a405b947e9cfc0debc0f393d1ba57731c",
+        "human_id": "d70be11",
+        "create_time": {
+            "timestamp": 1770569561,
+            "time": "2026-02-08T10:52:41-06:00",
+            "lamport": 83
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 643
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "repro-inconclusive",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CodeSystem/-code with multi-coding CodeableConcept: prod and dev report different coding in system/code/version output params",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "0b7549de9c86e56163d592769fac6b6705fe277bc6043865b31bf608b5d83350",
+        "human_id": "0b7549d",
+        "create_time": {
+            "timestamp": 1770569561,
+            "time": "2026-02-08T10:52:41-06:00",
+            "lamport": 84
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 644
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Resource read: prod omits text.div when text.status=generated, dev includes it",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "de3b882760d6a6353055698899c6628200b229162810987ee0f28732080fb62b",
+        "human_id": "de3b882",
+        "create_time": {
+            "timestamp": 1770569562,
+            "time": "2026-02-08T10:52:42-06:00",
+            "lamport": 85
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 671
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CPT $expand: dev returns empty expansion (total=0) for ValueSets containing CPT codes",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "4f824c23710441646e78b069a4397b78ea9f06ed338b975368b84a335afa9333",
+        "human_id": "4f824c2",
+        "create_time": {
+            "timestamp": 1770569562,
+            "time": "2026-02-08T10:52:42-06:00",
+            "lamport": 86
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 672
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "validate-code: dev omits message parameter when result=true",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 2,
+        "metadata": {}
+    },
+    {
+        "id": "1d450605274f0edb9cf7abaaf943e21744f21acd770e165d5af6a3af38717e01",
+        "human_id": "1d45060",
+        "create_time": {
+            "timestamp": 1770569562,
+            "time": "2026-02-08T10:52:42-06:00",
+            "lamport": 87
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 645
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CPT validate-code: dev omits informational 'Code X not found in CPT' issue",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "61d43e0309abdd7e00764fcecb32329467f330d3ead9bfaa4481fd79fcf0e80a",
+        "human_id": "61d43e0",
+        "create_time": {
+            "timestamp": 1770569562,
+            "time": "2026-02-08T10:52:42-06:00",
+            "lamport": 88
+        },
+        "edit_time": {
+            "timestamp": 1770579479,
+            "time": "2026-02-08T13:37:59-06:00",
+            "lamport": 646
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Case-insensitive validate-code: dev returns extra normalized-code param, different severity and issue text",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "c59229b7bcba8ff6da59b7685e59db3d4c49610fb2a4f884f68e8bd4fe8a37f0",
+        "human_id": "c59229b",
+        "create_time": {
+            "timestamp": 1770569563,
+            "time": "2026-02-08T10:52:43-06:00",
+            "lamport": 89
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 647
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "CPT validate-code: dev says 'Unknown code' while prod says 'Wrong Display Name' for same CPT codes",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "0a23e86313e6843be30d86ba76aea07e773197565b73e430f86c3770ab57fd43",
+        "human_id": "0a23e86",
+        "create_time": {
+            "timestamp": 1770569563,
+            "time": "2026-02-08T10:52:43-06:00",
+            "lamport": 90
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 648
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev stringifies undefined code as literal 'undefined' in validate-code error messages",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "23b3e84271920d0288a00d0fc68057c7a12339142884cf8b06a287ccbccd3e28",
+        "human_id": "23b3e84",
+        "create_time": {
+            "timestamp": 1770569563,
+            "time": "2026-02-08T10:52:43-06:00",
+            "lamport": 91
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 649
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "validate-code message parameter only includes first issue text instead of all",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "3b1d8dca723f4b662f84ff4ff48ed2645d257d72ac98740b49953013d907c4ae",
+        "human_id": "3b1d8dc",
+        "create_time": {
+            "timestamp": 1770569564,
+            "time": "2026-02-08T10:52:44-06:00",
+            "lamport": 92
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 650
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Prod returns duplicate entries in searchset Bundle for same resource URL",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "8ef44d05c5da496c3ba1a7f387ab6cc867b9781b415ff173c7b36727e1032f50",
+        "human_id": "8ef44d0",
+        "create_time": {
+            "timestamp": 1770569564,
+            "time": "2026-02-08T10:52:44-06:00",
+            "lamport": 93
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 651
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "repro-inconclusive",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "500 OperationOutcome structural differences: missing issue.code on prod, extra diagnostics/text",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "4c5d0f977468c0b79b139b7dab040152e36c578c565b08e943022b3d530cd41d",
+        "human_id": "4c5d0f9",
+        "create_time": {
+            "timestamp": 1770569564,
+            "time": "2026-02-08T10:52:44-06:00",
+            "lamport": 94
+        },
+        "edit_time": {
+            "timestamp": 1770579481,
+            "time": "2026-02-08T13:38:01-06:00",
+            "lamport": 673
+        },
+        "status": "closed",
+        "labels": [
+            "content-differs",
+            "not-reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "Dev returns x-unknown-system for code system versions that prod recognizes",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "516d8950f8f14f48b9b50eef4ec917a4f6019d1742ac414752d9d918f74c5346",
+        "human_id": "516d895",
+        "create_time": {
+            "timestamp": 1770569565,
+            "time": "2026-02-08T10:52:45-06:00",
+            "lamport": 95
+        },
+        "edit_time": {
+            "timestamp": 1770579480,
+            "time": "2026-02-08T13:38:00-06:00",
+            "lamport": 652
+        },
+        "status": "open",
+        "labels": [
+            "content-differs",
+            "reproduced",
+            "round:2026-02-round-1",
+            "tx-compare"
+        ],
+        "title": "UCUM error message formatting differs between prod and dev",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "b839c0e05b0a11a5a45ed5bd2274229f3201a1f873172352f1061bd2517abebd",
+        "human_id": "b839c0e",
+        "create_time": {
+            "timestamp": 1770572499,
+            "time": "2026-02-08T11:41:39-06:00",
+            "lamport": 96
+        },
+        "edit_time": {
+            "timestamp": 1770858988,
+            "time": "2026-02-11T19:16:28-06:00",
+            "lamport": 696
+        },
+        "status": "closed",
+        "labels": [
+            "round:2026-02-round-3",
+            "tx-compare"
+        ],
+        "title": "Typo \"conplete\" in factory CodeSystem content field (read.js:107)",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "9f41615c3eaf564f6502cbd4d0040a03537ca7a3b68b1a60ff384a85fcbe3c82",
+        "human_id": "9f41615",
+        "create_time": {
+            "timestamp": 1770572501,
+            "time": "2026-02-08T11:41:41-06:00",
+            "lamport": 97
+        },
+        "edit_time": {
+            "timestamp": 1770858574,
+            "time": "2026-02-11T19:09:34-06:00",
+            "lamport": 693
+        },
+        "status": "closed",
+        "labels": [
+            "round:2026-02-round-3",
+            "tx-compare"
+        ],
+        "title": "POST _search with form-encoded body crashes with 500 error",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    },
+    {
+        "id": "e3866e46fa701e676ecd7f108876a95f3d43d5fc1a92c6ecd8ab38616ba47ac9",
+        "human_id": "e3866e4",
+        "create_time": {
+            "timestamp": 1770572505,
+            "time": "2026-02-08T11:41:45-06:00",
+            "lamport": 98
+        },
+        "edit_time": {
+            "timestamp": 1770858574,
+            "time": "2026-02-11T19:09:34-06:00",
+            "lamport": 694
+        },
+        "status": "closed",
+        "labels": [
+            "round:2026-02-round-3",
+            "tx-compare"
+        ],
+        "title": "_count=0 returns 20 results instead of summary-only response",
+        "actors": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "participants": [
+            {
+                "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+                "human_id": "f818f50",
+                "name": "Claude (AI Assistant)",
+                "login": ""
+            }
+        ],
+        "author": {
+            "id": "f818f50ce6c20a13358300495cea937cd1c60fdd7a12deaa9b97ed22b2e1398e",
+            "human_id": "f818f50",
+            "name": "Claude (AI Assistant)",
+            "login": ""
+        },
+        "comments": 1,
+        "metadata": {}
+    }
+]

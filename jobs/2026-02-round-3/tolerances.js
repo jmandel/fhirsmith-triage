@@ -84,6 +84,15 @@ const tolerances = [
       return record.prodBody && record.prodBody.trimStart().startsWith('<') ? 'skip' : null;
     },
   },
+  {
+    id: 'skip-missing-bodies',
+    description: 'Data collection artifact: response bodies not captured (normMatch=true in source). Both prodBody and devBody are absent, so comparison engine parses both as null and flags parse-error. Safe to skip — the collection pipeline already determined these match after normalization.',
+    kind: 'equiv-autofix',
+    tags: ['skip', 'data-collection-artifact'],
+    match({ record }) {
+      return (!record.prodBody && !record.devBody) ? 'skip' : null;
+    },
+  },
   // Normalizations
   {
     id: 'strip-diagnostics',
