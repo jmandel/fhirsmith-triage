@@ -1,0 +1,12 @@
+{
+  "issue": [
+    {
+      "code": "invalid",
+      "details": {
+        "text": "No ValueSet specified - provide url parameter or valueSet resource"
+      },
+      "severity": "error"
+    }
+  ],
+  "resourceType": "OperationOutcome"
+}

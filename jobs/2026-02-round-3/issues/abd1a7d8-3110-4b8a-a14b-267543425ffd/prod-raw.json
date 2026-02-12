@@ -1,0 +1,44 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [
+    {
+      "name": "result",
+      "valueBoolean": true
+    },
+    {
+      "name": "system",
+      "valueUri": "http://loinc.org"
+    },
+    {
+      "name": "code",
+      "valueCode": "8480-6"
+    },
+    {
+      "name": "version",
+      "valueString": "2.77"
+    },
+    {
+      "name": "display",
+      "valueString": "Systolic blood pressure"
+    },
+    {
+      "name": "codeableConcept",
+      "valueCodeableConcept": {
+        "coding": [
+          {
+            "system": "http://loinc.org",
+            "version": "2.77",
+            "code": "8867-4",
+            "display": "Heart rate"
+          },
+          {
+            "system": "http://loinc.org",
+            "version": "2.77",
+            "code": "8480-6",
+            "display": "Systolic blood pressure"
+          }
+        ]
+      }
+    }
+  ]
+}

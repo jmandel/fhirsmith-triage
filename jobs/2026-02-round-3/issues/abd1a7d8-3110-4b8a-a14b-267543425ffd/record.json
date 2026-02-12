@@ -1,0 +1,26 @@
+{
+  "id": "abd1a7d8-3110-4b8a-a14b-267543425ffd",
+  "url": "/r4/ValueSet/$validate-code",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 559,
+    "hash": "a28f1dcf6b799e5b0d985ec0c012e0b8"
+  },
+  "dev": {
+    "status": 400,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 171,
+    "hash": "236fcc05ea73850564e85a7c52251219"
+  },
+  "comparison": {
+    "category": "status-mismatch",
+    "op": "validate-code",
+    "prodStatus": 200,
+    "devStatus": 400
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://loinc.org\"},{\"name\" : \"code\",\"valueCode\" : \"8480-6\"},{\"name\" : \"version\",\"valueString\" : \"2.77\"},{\"name\" : \"display\",\"valueString\" : \"Systolic blood pressure\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://loinc.org\",\"version\" : \"2.77\",\"code\" : \"8867-4\",\"display\" : \"Heart rate\"},{\"system\" : \"http://loinc.org\",\"version\" : \"2.77\",\"code\" : \"8480-6\",\"display\" : \"Systolic blood pressure\"}]}}]}",
+  "devBody": "{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"invalid\",\"details\":{\"text\":\"No ValueSet specified - provide url parameter or valueSet resource\"}}]}",
+  "requestBody": "{\r\n    \"resourceType\": \"Parameters\",\r\n    \"parameter\": [\r\n        {\r\n            \"name\": \"codeableConcept\",\r\n            \"valueCodeableConcept\": {\r\n                \"coding\": [\r\n                    {\r\n                        \"system\": \"http://loinc.org\",\r\n                        \"version\": \"2.77\",\r\n                        \"code\": \"8867-4\",\r\n                        \"display\": \"Heart rate\"\r\n                    },\r\n                    {\r\n                        \"system\": \"http://loinc.org\",\r\n                        \"version\": \"2.77\",\r\n                        \"code\": \"8480-6\",\r\n                        \"display\": \"Systolic blood pressure\"\r\n                    }\r\n                ]\r\n            }\r\n        }\r\n    ]\r\n}"
+}

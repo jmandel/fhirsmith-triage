@@ -1303,6 +1303,25 @@ const tolerances = [
   },
 
   {
+    id: 'validate-code-no-valueset-codeableconcept',
+    description: 'POST /r4/ValueSet/$validate-code with only codeableConcept (no url/context/valueSet): prod returns 200 and validates against the CodeSystem, dev returns 400 "No ValueSet specified". Dev is stricter per spec (url/context/valueSet required at type level), but prod handles it gracefully.',
+    kind: 'temp-tolerance',
+    bugId: 'd45bc62',
+    tags: ['skip', 'validate-code', 'status-mismatch', 'no-valueset'],
+    match({ record, prod, dev }) {
+      if (record.method !== 'POST') return null;
+      if (!record.url.includes('ValueSet/$validate-code')) return null;
+      if (record.prod.status !== 200 || record.dev.status !== 400) return null;
+      if (dev?.resourceType !== 'OperationOutcome') return null;
+      const hasNoVsMsg = dev.issue?.some(i =>
+        (i.details?.text || '').includes('No ValueSet specified')
+      );
+      if (!hasNoVsMsg) return null;
+      return 'skip';
+    },
+  },
+
+  {
     id: 'version-not-found-skew',
     description: 'validate-code with result=false on both sides: issues about "could not be found, so the code cannot be validated" differ due to version skew — different Valid versions lists, or dev reports extra not-found issues for code system versions that prod has loaded. Both servers agree result=false; differences are only in explanatory details about which editions are available.',
     kind: 'temp-tolerance',

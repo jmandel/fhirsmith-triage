@@ -6,3 +6,4 @@
 {"pickedAt":"2026-02-12T01:27:34.518Z","recordId":"ebda357c-2153-47cc-800c-61aac44fedb2","total":2542,"analyzed":0,"remaining":2542,"category":"content-differs"}
 {"pickedAt":"2026-02-12T01:35:55.320Z","recordId":"91de2c9c-52d4-4038-b525-d2ace69ec62e","total":2531,"analyzed":0,"remaining":2531,"category":"content-differs"}
 {"pickedAt":"2026-02-12T01:42:30.327Z","recordId":"91de2c9c-52d4-4038-b525-d2ace69ec62e","total":2610,"analyzed":1,"remaining":2609,"category":"content-differs"}
+{"pickedAt":"2026-02-12T01:51:41.207Z","recordId":"abd1a7d8-3110-4b8a-a14b-267543425ffd","total":2591,"analyzed":1,"remaining":2590,"category":"status-mismatch"}

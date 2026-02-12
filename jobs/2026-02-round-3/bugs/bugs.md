@@ -1,13 +1,13 @@
 # tx-compare Bug Report
 
-_96 bugs (62 open, 34 closed)_
+_98 bugs (61 open, 37 closed)_
 
 | Priority | Count | Description |
 |----------|-------|-------------|
 | P3 | 1 | Missing resources |
 | P4 | 1 | Status code mismatch |
 | P6 | 5 | Content differences |
-| TEMP | 2 | Temporary tolerances (real bugs, suppressed for triage) |
+| TEMP | 3 | Temporary tolerances (real bugs, suppressed for triage) |
 
 ---
 
@@ -381,6 +381,74 @@ GG: Jose is looking into search. Tolerance removed to track progress.
 ---
 
 ## Temporary tolerances (real bugs, suppressed for triage)
+
+### [x] `a9cf20c` Dev omits deprecated location field on OperationOutcome issues
+
+Records-Impacted: ~3316
+Record-ID: 59eff7c6-9fd2-45b2-8f27-c790368bcc54, 1697b0cd-971b-475c-8075-f249215b1205, 199de988-2772-45c3-83cb-5ff1de1f01ce
+Tolerance-ID: oo-missing-location-field, oo-missing-location-post-version-skew
+
+#####Repro
+
+```bash
+####Prod
+curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.114222.4.11.1066&code=1223P0106X&_format=json&system=http:%2F%2Fnucc.org%2Fprovider-taxonomy' \
+-H 'Accept: application/fhir+json' | jq '.parameter[] | select(.name == "issues") | .resource.issue[0] | {severity, code, location, expression}'
+
+####Dev
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code?url=http:%2F%2Fcts.nlm.nih.gov%2Ffhir%2FValueSet%2F2.16.840.1.114222.4.11.1066&code=1223P0106X&_format=json&system=http:%2F%2Fnucc.org%2Fprovider-taxonomy' \
+-H 'Accept: application/fhir+json' | jq '.parameter[] | select(.name == "issues") | .resource.issue[0] | {severity, code, location, expression}'
+```
+
+Prod returns `"location": ["system"]`, dev returns `"location": null` (field is omitted).
+
+#####Root Cause
+
+**Classification**: code-level defect
+
+**Prod** populates both `location` and `expression` with the same path value on every OperationOutcome issue:
+[`library/fhir4/fhir4_common.pas#L1480-L1492`](https://github.com/HealthIntersections/fhirserver/blob/ec46dff3fe631ddeeaa000a3ca9530e0dd8c9eac/library/fhir4/fhir4_common.pas#L1480-L1492)
+— The `addIssue` method (line 1487-1488) adds the path to both `iss.locationList` and `iss.expressionList`. The same pattern appears in `addIssueNoId` at lines 1457-1458.
+
+**Dev** only sets `expression`, never sets `location`:
+[`tx/library/operation-outcome.js#L25-L46`](https://github.com/HealthIntersections/FHIRsmith/blob/6440990b4d0f5ca87b48093bad6ac2868067a49e/tx/library/operation-outcome.js#L25-L46)
+— The `asIssue()` method (line 33-35) sets `res.expression = [this.path]` but has no corresponding `res.location = [this.path]` line.
+
+**Fix**: In `tx/library/operation-outcome.js`, add `res.location = [this.path]` alongside the existing `res.expression = [this.path]` in the `asIssue()` method (after line 34).
+
+#####Tolerances
+
+######1. `oo-missing-location-field` (~3069 records)
+
+**What it handles**: Strips `location` from prod's OperationOutcome issues when dev lacks it and `location` equals `expression`. Handles both flat `$validate-code` responses (top-level issues parameter) and nested `$batch-validate-code` responses (issues inside `validation` parameter entries).
+
+**Representative records**:
+- `59eff7c6-9fd2-45b2-8f27-c790368bcc54` (flat validate-code, NUCC provider-taxonomy)
+- `1697b0cd-971b-475c-8075-f249215b1205` (batch-validate-code, nested validation structure)
+
+**Details**: Of the ~3069 affected records, ~2555 are fully eliminated from deltas (location was the only remaining difference). The remaining ~514 still have other differences but the location diff is normalized away. The batch-validate-code subset accounts for ~38 records where the nested response structure required additional handling.
+
+######2. `oo-missing-location-post-version-skew` (~247 records)
+
+**What it handles**: Same root cause, but catches records where `oo-missing-location-field` misses the difference due to pipeline ordering. Specifically, when HL7 terminology version-skew tolerances (`hl7-terminology-cs-version-skew`) strip extra `status-check` informational issues from prod, the OperationOutcome issue arrays only become aligned after those normalizations run. Since `oo-missing-location-field` runs earlier in the pipeline, the misaligned arrays prevent index-based comparison from detecting the location difference. This tolerance runs later to catch those remaining records.
+
+**Representative record**: `199de988-2772-45c3-83cb-5ff1de1f01ce` (validate-code against `condition-category` CodeSystem, prod has extra status-check issue stripped by version-skew tolerance)
+
+#####Total impact
+
+~3316 records across both tolerances (~34% of all deltas). All are `$validate-code` or `$batch-validate-code` operations.
+
+
+ac90cff #1 Claude (AI Assistant) <>
+
+(Consolidated into comment #0.)
+
+
+a29dcff #2 Claude (AI Assistant) <>
+
+Closing: GG adjudicated as won't fix. The `location` field is deprecated in FHIR R4 and prod has been populating it incorrectly — stopping populating it altogether is the correct behavior. Tolerances `oo-missing-location-field` and `oo-missing-location-post-version-skew` reclassified from temp-tolerance to equiv-autofix with adjudication: ['gg'].
+
+---
 
 ### [x] `3e1d117` validate-code: dev returns result=false with 'undefined' system when dev cache not warm at comparison start
 
@@ -1743,72 +1811,9 @@ Total breakdown:
 
 ---
 
-### [x] `44d6f07` Dev truncates BCP-47 language tag region in expand displayLanguage parameter
-
-Records-Impacted: 2
-Tolerance-ID: expand-displayLanguage-region-truncated
-Record-ID: 4bd05003-c9ae-4886-9009-3f794f2690a1
+### [ ] `44d6f07` 
 
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{
-  "resourceType": "Parameters",
-  "parameter": [
-    {"name": "displayLanguage", "valueCode": "fr-FR"},
-    {"name": "excludeNested", "valueBoolean": true},
-    {"name": "count", "valueInteger": 10},
-    {"name": "valueSet", "resource": {
-      "resourceType": "ValueSet",
-      "status": "active",
-      "compose": {
-        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
-      }
-    }}
-  ]
-}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{
-  "resourceType": "Parameters",
-  "parameter": [
-    {"name": "displayLanguage", "valueCode": "fr-FR"},
-    {"name": "excludeNested", "valueBoolean": true},
-    {"name": "count", "valueInteger": 10},
-    {"name": "valueSet", "resource": {
-      "resourceType": "ValueSet",
-      "status": "active",
-      "compose": {
-        "include": [{"system": "http://loinc.org", "concept": [{"code": "11369-6"}]}]
-      }
-    }}
-  ]
-}' | jq '.expansion.parameter[] | select(.name == "displayLanguage")'
-```
-
-**Result**: Both servers now return `{"name": "displayLanguage", "valueCode": "fr-FR"}`. The bug has been fixed - dev no longer truncates the region subtag.
-
-
-In $expand responses, the `displayLanguage` expansion parameter echoed back by dev truncates the BCP-47 language tag to just the language code, dropping the region subtag. When the request specifies `displayLanguage=fr-FR`, prod echoes back `fr-FR` in the expansion parameters, but dev echoes back `fr`.
-
-The actual expansion content (codes, display text) is identical between prod and dev — the difference is only in the echoed `displayLanguage` parameter value.
-
-
-2 records in the current comparison show this pattern. Both are POST /r4/ValueSet/$expand requests with `displayLanguage=fr-FR` in the request body.
-
-Search: grep for records where both prod and dev have a `displayLanguage` expansion parameter but with different values — found only these 2 records (IDs: 4bd05003-c9ae-4886-9009-3f794f2690a1, 57537a3f-f65b-4f96-b9d7-3354772c3973).
-
-There are an additional 62 records with a different displayLanguage mismatch pattern (prod has displayLanguage=en or en-US but dev omits it entirely), which is a separate issue.
-
-
-Tolerance `expand-displayLanguage-region-truncated` normalizes the displayLanguage expansion parameter to the prod value when both sides have a displayLanguage parameter but the values differ only by region subtag truncation (e.g., fr-FR vs fr). This eliminates 2 records.
-
-
-`grep -n '4bd05003-c9ae-4886-9009-3f794f2690a1' jobs/2026-02-round-2/comparison.ndjson`
 
 ---
 
@@ -3934,45 +3939,9 @@ Tolerance `expand-dev-crash-on-valid` matches POST /r4/ValueSet/$expand where pr
 
 ---
 
-### [ ] `5f7faaa` Dev crashes (500) on POST /r4/ValueSet/$validate-code with 'No Match for undefined|undefined'
-
-Records-Impacted: 1
-Tolerance-ID: validate-code-crash-undefined-system-code
-Record-ID: 6b937ddc-13c0-49e1-bd96-24ef10f06543
+### [ ] `5f7faaa` 
 
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"coding","valueCoding":{"system":"urn:oid:2.16.840.1.113883.6.238","code":"2108-9","display":"EUROPEAN"}},{"name":"valueSet","resource":{"resourceType":"ValueSet","url":"http://hl7.org/fhir/us/core/ValueSet/detailed-race","version":"6.1.0","status":"active","compose":{"include":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.1.11.14914"]},{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113762.1.4.1021.103"]}],"exclude":[{"valueSet":["http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.2074.1.1.3"]}]}}}]}'
-```
-
-Prod returns 200 with a Parameters response (result=false, with code system version details). Dev returns 500 with OperationOutcome `"No Match for undefined|undefined"`. The bug triggers when a ValueSet has `compose.exclude` entries with only a `valueSet` reference (no `system`); dev's exclude-processing code path reads `cc.system` and `cc.version` as `undefined` from the exclude entry.
-
-
-Prod returns 200 with a successful $validate-code Parameters response (result=true, system=urn:oid:2.16.840.1.113883.6.238, code=2108-9, display="European", version="1.2"). Dev returns 500 with an OperationOutcome error: "No Match for undefined|undefined".
-
-The error message "undefined|undefined" indicates that dev failed to extract the system and code parameters from the POST request body, receiving them as JavaScript `undefined` values instead.
-
-The request is POST /r4/ValueSet/$validate-code against the http://hl7.org/fhir/us/core/ValueSet/detailed-race ValueSet (US Core detailed race codes). The request body was not captured in the comparison data, but two other POST $validate-code requests involving the same ValueSet (detailed-race) succeeded on both sides, suggesting this may be related to a specific combination of request parameters rather than the ValueSet itself.
-
-
-Only 1 record in the comparison dataset exhibits this exact pattern. Searched:
-- `grep -c 'undefined|undefined' comparison.ndjson` → 1
-- All dev=500/prod=200 validate-code records → only this one
-- All detailed-race records → 3 total, 2 succeed on both sides
-
-
-Tolerance `validate-code-crash-undefined-system-code` matches POST /r4/ValueSet/$validate-code where prod=200, dev=500, and dev error contains "undefined|undefined". Skips the record. Eliminates 1 record.
-
-
-6b937ddc-13c0-49e1-bd96-24ef10f06543
 
 ---
 
@@ -4113,42 +4082,9 @@ Adjudicated by GG: Fixed — but won't achieve consistency with prod, since prod
 
 ---
 
-### [ ] `674611c` Dev returns extra 'message' parameter with filter-miss warnings on successful validate-code
-
-Records-Impacted: 12
-Tolerance-ID: validate-code-extra-filter-miss-message
-Record-ID: 7c3bf322-7db7-42f5-82d6-dd1ef9bd9588
+### [ ] `674611c` 
 
 
-**Status: Inconclusive** -- the IPS ValueSets (e.g. `allergies-intolerances-uv-ips|2.0.0`) used in all 12 affected records are not loaded on the public tx.fhir.org / tx-dev.fhir.org servers, so the original requests cannot be replayed. The request bodies were not stored in the comparison records.
-
-Attempted:
-1. Reconstructed POST to `/r4/ValueSet/$validate-code` for SNOMED 716186003 against `http://hl7.org/fhir/uv/ips/ValueSet/allergies-intolerances-uv-ips` (with and without version) -- both servers return "value Set could not be found"
-2. Checked 33 related delta records -- only IPS ValueSet records (not publicly available) match the exact bug pattern (result=true on both, dev extra message, prod no message)
-3. Non-IPS records (medication-form-codes, us-core-encounter-type) show a different pattern (result=false on both sides, different message content)
-
-
-On $validate-code requests against ValueSets with multiple include filters (e.g. IPS allergies-intolerances, medical-devices), when the code is valid (result=true, found in at least one filter), dev returns an extra `message` parameter containing "Code X is not in the specified filter" for each filter the code did NOT match. Prod omits the `message` parameter entirely when the overall result is true.
-
-Example (record 7c3bf322):
-- Prod: result=true, no message parameter
-- Dev: result=true, message="Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter; Code 716186003 is not in the specified filter"
-
-The code 716186003 (No known allergy) is valid in the IPS allergies ValueSet but only matches the 4th include filter (concept<<716186003). Dev reports failure messages for the 3 filters it didn't match.
-
-
-12 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=true. All involve SNOMED codes against IPS ValueSets with multiple include filters. Found via:
-```
-grep 'extra-in-dev' results/deltas/deltas.ndjson | grep '"message"' → 23 hits
-```
-Of those, 12 have this pattern (single diff: extra-in-dev:message, result=true on both sides, dev message contains "is not in the specified filter", prod has no message param).
-
-The remaining 11 are different patterns (multiple diffs, result=false, or different message content).
-
-
-Tolerance ID: validate-code-extra-filter-miss-message
-Matches: validate-code where result=true on both sides, dev has a `message` parameter that prod lacks, and the dev message matches the pattern "is not in the specified filter".
-Normalizes: strips the extra `message` parameter from dev.
 
 ---
 
@@ -4234,57 +4170,9 @@ Tolerance `validate-code-undefined-system-result-disagrees` matches POST $valida
 
 ---
 
-### [x] `d444de7` Dev prepends filter-miss details to validate-code message when result=false
-
-Records-Impacted: 32
-Tolerance-ID: validate-code-filter-miss-message-prefix
-Record-ID: 6d44fc66-34dd-4ebe-889e-02cf345990f3
+### [ ] `d444de7` 
 
 
-```bash
-curl -s 'https://tx.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-form-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"385049006","display":"Capsule"}]}}]}'
-
-curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$validate-code' \
--H 'Accept: application/fhir+json' \
--H 'Content-Type: application/fhir+json' \
--d '{"resourceType":"Parameters","parameter":[{"name":"url","valueUri":"http://hl7.org/fhir/ValueSet/medication-form-codes"},{"name":"codeableConcept","valueCodeableConcept":{"coding":[{"system":"http://snomed.info/sct","code":"385049006","display":"Capsule"}]}}]}'
-```
-
-Prod message: `"No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"`, dev message: `"Code 385049006 is not in the specified filter; No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"`. Dev prepends the filter-miss detail exactly as described.
-
-
-On $validate-code requests against ValueSets with include filters, when the code is not found (result=false on both sides), dev prepends "Code X is not in the specified filter; " to its `message` parameter. Prod returns only the standard error message (e.g. "No valid coding was found for the value set '...'").
-
-Example (record 6d44fc66):
-- Prod message: "No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"
-- Dev message: "Code 385049006 is not in the specified filter; No valid coding was found for the value set 'http://hl7.org/fhir/ValueSet/medication-form-codes|4.0.1'"
-
-Dev repeats the filter-miss prefix once per include filter in the ValueSet. Some records have 17+ repetitions (e.g. IPS results-coded-values-laboratory-pathology with 17 include filters).
-
-Both sides agree on result=false. The only difference is dev's message has extraneous filter-checking details prepended. This is the result=false variant of bug eaeccdd (which covers result=true, where prod omits message entirely).
-
-
-32 records in deltas.ndjson, all POST /r4/ValueSet/$validate-code with result=false on both sides. Found via:
-```
-grep 'is not in the specified filter' results/deltas/deltas.ndjson | wc -l  → 32
-```
-
-All are validate-code / content-differs. 30 have message as the only diff; 2 also have a version diff (SNOMED version skew, separate issue).
-
-ValueSets affected include medication-form-codes, problems-uv-ips, vaccines-uv-ips, results-coded-values-laboratory-pathology-uv-ips, and others with SNOMED include filters.
-
-
-Tolerance ID: validate-code-filter-miss-message-prefix
-Matches: validate-code where result=false on both sides, dev's message ends with prod's message, and the extra prefix contains "is not in the specified filter".
-Normalizes: sets dev's message to prod's message value.
-
-
-d54c4b4 #1 Claude (AI Assistant) <>
-
-GG confirmed fixed: Dev prepends filter-miss details to validate-code message
 
 ---
 
@@ -5167,6 +5055,39 @@ count = parseInt(count) || 20
 ```
 
 Since `parseInt("0")` returns `0` and `0` is falsy in JS, it falls through to the default of 20. Should use `parseInt(count) ?? 20` or explicit null check.
+
+---
+
+### [ ] `f9e35f6` validate-code: version-not-found issue text and count differ due to code system version skew
+
+Records-Impacted: 19
+Tolerance-ID: version-not-found-skew
+Record-ID: 91de2c9c-52d4-4038-b525-d2ace69ec62e
+
+#####What differs
+
+When `$validate-code` returns `result: false` and includes issues about unknown code system versions ("A definition for CodeSystem '...' version '...' could not be found, so the code cannot be validated. Valid versions: ..."), prod and dev differ in two ways:
+
+1. **Valid versions lists differ**: The "Valid versions: ..." text lists different available editions. For example, for SNOMED CT, prod lists editions like `449081005/version/20250510` and `900000000000207008/version/20240801` that dev doesn't have, while dev lists `731000124108/version/20230301` that prod doesn't.
+
+2. **Extra not-found issues on dev**: Dev sometimes reports additional not-found errors for code system versions that prod considers valid. For example, dev reports LOINC version 2.77 as "could not be found" (only knows 2.81), while prod has both 2.77 and 2.81 loaded.
+
+Both servers agree `result=false`. The differences are only in the explanatory details about which versions are available, caused by different code system editions loaded on each server.
+
+Affected code systems include: SNOMED CT, LOINC, ICD-11, observation-category, PHIN VS, and various other code systems where available versions differ between prod and dev.
+
+#####How widespread
+
+19 records eliminated by this tolerance. All are content-differs validate-code (both CodeSystem and ValueSet endpoints), all with both prod and dev returning result=false. Found via: `content-differs validate-code with both result=false and "could not be found, so the code cannot be validated" in issues, where stripping those issues and the message param makes prod and dev identical`.
+
+#####What the tolerance covers
+
+Tolerance `version-not-found-skew` matches validate-code records where both result=false and at least one issue contains "could not be found, so the code cannot be validated". Normalizes by stripping all such issues and the message parameter from both sides. After stripping, the remaining issues are identical between prod and dev, confirming these are pure version-skew differences.
+
+Representative record IDs:
+- 91de2c9c-52d4-4038-b525-d2ace69ec62e (LOINC 2.77 + SNOMED version skew)
+- 49648ad8-3e20-4181-82d8-... (SNOMED-only version skew)
+- 05fc8815-b9cc-4fdd-b0ed-... (scc_primary code system)
 
 ---
 
