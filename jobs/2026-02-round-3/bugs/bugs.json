@@ -946,14 +946,15 @@
             "lamport": 22
         },
         "edit_time": {
-            "timestamp": 1770569576,
-            "time": "2026-02-08T10:52:56-06:00",
-            "lamport": 545
+            "timestamp": 1770862373,
+            "time": "2026-02-11T20:12:53-06:00",
+            "lamport": 727
         },
         "status": "open",
         "labels": [
             "reproduced",
             "round:2026-02-round-2",
+            "round:2026-02-round-3",
             "status-mismatch",
             "tx-compare"
         ],

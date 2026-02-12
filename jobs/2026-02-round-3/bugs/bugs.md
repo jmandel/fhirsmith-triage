@@ -1672,47 +1672,52 @@ Tolerance ID: `expand-toocostly-grammar-400`. Matches $expand requests where pro
 
 ### [ ] `44d1916` Dev returns 200 expansion instead of 422 too-costly for large code systems (LOINC, MIME types)
 
-Records-Impacted: 17
+Records-Impacted: 40
 Tolerance-ID: expand-too-costly-succeeds
-Record-ID: d9734f68-d8b4-475d-9204-632c9b4ccbf0
+Record-ID: 02653c32-ee08-4d24-b687-36574afddaf3
 
+#####Repro
 
 ```bash
-curl -s 'https://tx.fhir.org/r5/ValueSet/$expand' \
+curl -s 'https://tx.fhir.org/r4/ValueSet/$expand' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
 -d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
 
-curl -s 'https://tx-dev.fhir.org/r5/ValueSet/$expand' \
+curl -s 'https://tx-dev.fhir.org/r4/ValueSet/$expand' \
 -H 'Accept: application/fhir+json' \
 -H 'Content-Type: application/fhir+json' \
 -d '{"resourceType":"Parameters","parameter":[{"name":"count","valueInteger":1000},{"name":"offset","valueInteger":0},{"name":"valueSet","resource":{"resourceType":"ValueSet","status":"active","compose":{"inactive":true,"include":[{"system":"http://loinc.org"}]}}}]}'
 ```
 
-Prod returns HTTP 422 with OperationOutcome: `{"resourceType":"OperationOutcome", "issue":[{"severity":"error","code":"too-costly","details":{"text":"The value set '' expansion has too many codes to display (>10000)"}}]}`.
+Prod returns HTTP 422 with OperationOutcome `{"issue":[{"severity":"error","code":"too-costly","details":{"text":"The value set '' expansion has too many codes to display (>10000)"}}]}`. Dev returns HTTP 200 with a ValueSet containing 1000 LOINC codes.
 
-Dev returns HTTP 200 with a ValueSet containing 1000 LOINC codes in the expansion (respecting the `count` parameter for pagination).
+#####What differs
 
+For $expand of ValueSets including large code systems, prod returns HTTP 422 with an OperationOutcome containing `issue.code: "too-costly"`. Dev returns HTTP 200 with a ValueSet expansion. Prod correctly enforces an expansion size guard — refusing to expand code systems with >10000 codes even when pagination parameters (count/offset) are present. Dev does not enforce this guard and instead returns a paginated result or empty expansion.
 
-When expanding ValueSets that include very large code systems (all of LOINC via `http://loinc.org`, or MIME types via `http://hl7.org/fhir/ValueSet/mimetypes`), prod returns HTTP 422 with an OperationOutcome containing `issue.code: "too-costly"` and message "The value set '' expansion has too many codes to display (>10000)". Dev returns HTTP 200 with a ValueSet containing up to 1000 codes (honoring the count parameter for pagination).
+Prod's error messages fall into two patterns:
+- "The value set '' expansion has too many codes to display (>10000)" — for LOINC and BCP-13/MIME type expansions
+- "The code System has a grammar, and cannot be enumerated directly" — for CPT and some MIME type expansions (covered by bug c31a8fe)
 
-Prod correctly enforces an expansion size guard — refusing to expand code systems with >10000 codes even when pagination parameters are present. Dev does not enforce this guard and instead returns a paginated result.
+#####How widespread
 
+40 records in the round-3 comparison dataset (jobs/2026-02-round-3) match this pattern:
+- 20 records: `http://loinc.org` — dev returns 1000 codes in expansion
+- 20 records: `urn:ietf:bcp:13` (MIME types) — dev returns empty expansion (total=0)
+- Both /r4/ and /r5/ FHIR versions affected (32 /r4/, 8 /r5/)
 
-17 records in the comparison dataset show this pattern:
-- 6 records: POST `/r5/ValueSet/$expand` expanding all of LOINC (`http://loinc.org`, with `inactive: true`)
-- 11 records: GET `/r4/ValueSet/$expand?url=http%3A%2F%2Fhl7.org%2Ffhir%2FValueSet%2Fmimetypes` expanding MIME types
+Search: `grep '"too-costly"' deltas.ndjson` in the pre-tolerance delta file, filtered to status-mismatch with prod=422 dev=200, yields 40 records.
 
-Search method: `grep 'too-costly' deltas.ndjson` finds 273 records total; filtering to `status-mismatch` category (prod=422, dev=200) yields 17. The remaining 256 are `dev-crash-on-error` (prod=422, dev=500) — same root cause but different symptom (dev crashes rather than succeeding).
+#####Tolerance
 
-Additionally, there are likely records already eliminated by the prior `expand-too-costly-succeeds` tolerance (bug e3fb3f6, which appears to have been removed from git-bug). The current tolerance was scoped too narrowly (exact URL match on `/r4/ValueSet/$expand` only, missing GET requests with query params and /r5/ requests).
+Tolerance `expand-too-costly-succeeds` matches any $expand request where prod returns 422 with OperationOutcome containing `issue.code: "too-costly"` and dev returns 200. Skips these records since the responses are fundamentally incomparable (error vs success). Eliminates all 40 records. Validated with 12-record sample — all legitimate.
 
+#####Representative records
 
-Tolerance ID: `expand-too-costly-succeeds`. Matches any $expand request (any FHIR version, GET or POST) where prod returns 422 with an OperationOutcome containing `issue.code: "too-costly"` and dev returns 200. Skips these records entirely since the responses are fundamentally incomparable (error vs success).
-
-
-- `d9734f68-d8b4-475d-9204-632c9b4ccbf0` (LOINC, POST /r5/ValueSet/$expand)
-- `3a2672db-cb0d-4312-87f1-5d6b685fbfe0` (MIME types, GET /r4/ValueSet/$expand?url=...mimetypes)
+- `02653c32-ee08-4d24-b687-36574afddaf3` (LOINC, POST /r4/ValueSet/$expand, round-3)
+- `d9734f68-d8b4-475d-9204-632c9b4ccbf0` (LOINC, POST /r5/ValueSet/$expand, round-2)
+- `3a2672db-cb0d-4312-87f1-5d6b685fbfe0` (MIME types, GET /r4/ValueSet/$expand?url=...mimetypes, round-2)
 
 ---
 
