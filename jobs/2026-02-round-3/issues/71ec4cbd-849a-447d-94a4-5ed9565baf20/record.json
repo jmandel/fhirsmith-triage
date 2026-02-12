@@ -1,0 +1,30 @@
+{
+  "id": "71ec4cbd-849a-447d-94a4-5ed9565baf20",
+  "url": "/r4/CodeSystem/$validate-code?",
+  "method": "POST",
+  "prod": {
+    "status": 200,
+    "contentType": "application/fhir+json",
+    "size": 1843,
+    "hash": "b3350c3f41ed3a7e999ca2ee244d3036"
+  },
+  "dev": {
+    "status": 200,
+    "contentType": "application/fhir+json; charset=utf-8",
+    "size": 2265,
+    "hash": "6daeaaac7a23bcc3599e278ab9928ebb"
+  },
+  "comparison": {
+    "category": "content-differs",
+    "op": "validate-code",
+    "diffs": [
+      {
+        "type": "missing-in-dev",
+        "param": "issues"
+      }
+    ]
+  },
+  "prodBody": "{\"resourceType\" : \"Parameters\",\"parameter\" : [{\"name\" : \"result\",\"valueBoolean\" : true},{\"name\" : \"system\",\"valueUri\" : \"http://snomed.info/sct\"},{\"name\" : \"code\",\"valueCode\" : \"256262001\"},{\"name\" : \"version\",\"valueString\" : \"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\" : \"display\",\"valueString\" : \"Silver birch pollen\"},{\"name\" : \"codeableConcept\",\"valueCodeableConcept\" : {\"coding\" : [{\"system\" : \"http://snomed.info/sct\",\"code\" : \"256262001\",\"display\" : \"Betula pendula pollen\"}]}},{\"name\" : \"issues\",\"resource\" : {\"resourceType\" : \"OperationOutcome\",\"issue\" : [{\"extension\" : [{\"url\" : \"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\" : \"NO_VALID_DISPLAY_FOUND_LANG_NONE\"}],\"severity\" : \"information\",\"code\" : \"invalid\",\"details\" : {\"coding\" : [{\"system\" : \"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\" : \"display-comment\"}],\"text\" : \"'Betula pendula pollen' is the default display; the code system http://snomed.info/sct has no Display Names for the language de\"},\"location\" : [\"CodeableConcept.coding[0].display\"],\"expression\" : [\"CodeableConcept.coding[0].display\"]}]}},{\"name\" : \"diagnostics\",\"valueString\" : \"0 0 : start\\r\\n0 0     : 0ms  : Analysing http://hl7.org/fhir/ValueSet/@all for validation purposes\\r\\n0 0     : 0ms  : Parameters: disp-lang=de, default-to-latest, display-warning\\r\\n0 0     : 0ms  : Version Rules: system-version:http://snomed.info/sct#http://snomed.info/sct/900000000000207008\\r\\n0 0     : 0ms  : Prepare include: \\\"()\\\"\\r\\n0 0     : 0ms  : Validate \\\"[http://snomed.info/sct#256262001 (\\\"Betula pendula pollen\\\")]\\\"\\r\\n0 0     : 0ms  : Check \\\"http://snomed.info/sct#256262001\\\"\\r\\n0 0     : 0ms  : Using CodeSystem \\\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\\" (content = complete)\\r\\n\"}]}",
+  "devBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"result\",\"valueBoolean\":true},{\"name\":\"system\",\"valueUri\":\"http://snomed.info/sct\"},{\"name\":\"code\",\"valueCode\":\"256262001\"},{\"name\":\"version\",\"valueString\":\"http://snomed.info/sct/900000000000207008/version/20250201\"},{\"name\":\"display\",\"valueString\":\"Silver birch pollen\"},{\"name\":\"message\",\"valueString\":\"Wrong Display Name 'Betula pendula pollen' for http://snomed.info/sct#256262001. There are no valid display names found for language(s) 'de'. Default display is 'Silver birch pollen'\"},{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"256262001\",\"display\":\"Betula pendula pollen\"}]}},{\"name\":\"issues\",\"resource\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"warning\",\"code\":\"invalid\",\"details\":{\"text\":\"Wrong Display Name 'Betula pendula pollen' for http://snomed.info/sct#256262001. There are no valid display names found for language(s) 'de'. Default display is 'Silver birch pollen'\",\"coding\":[{\"system\":\"http://hl7.org/fhir/tools/CodeSystem/tx-issue-type\",\"code\":\"invalid-display\"}]},\"expression\":[\"CodeableConcept.coding[0].display\"],\"extension\":[{\"url\":\"http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id\",\"valueString\":\"NO_VALID_DISPLAY_FOUND_NONE_FOR_LANG_ERR\"}]}]}},{\"name\":\"diagnostics\",\"valueString\":\"0ms tx-op\\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Validate \\\"[undefined#256262001 (\\\"Betula pendula pollen\\\")]\\\"\\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Check \\\"http://snomed.info/sct#256262001\\\"\\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: CodeSystem found: http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201 for http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: check code in () at CodeableConcept.coding[0]\\n1ms http://snomed.info/sct/vs|http://snomed.info/sct/900000000000207008/version/20250201: Code \\\"256262001\\\" found in http://snomed.info/sct|http://snomed.info/sct/900000000000207008/version/20250201\"}]}",
+  "requestBody": "{\"resourceType\":\"Parameters\",\"parameter\":[{\"name\":\"codeableConcept\",\"valueCodeableConcept\":{\"coding\":[{\"system\":\"http://snomed.info/sct\",\"code\":\"256262001\",\"display\":\"Betula pendula pollen\"}]}},{\"name\":\"displayLanguage\",\"valueString\":\"de\"},{\"name\":\"lenient-display-validation\",\"valueBoolean\":true},{\"name\":\"default-to-latest-version\",\"valueBoolean\":true},{\"name\":\"cache-id\",\"valueId\":\"682b9794-e6ca-4120-b516-17382b3aff31\"},{\"name\":\"profile-url\",\"valueString\":\"http://hl7.org/fhir/ExpansionProfile/dc8fd4bc-091a-424a-8a3b-6198ef146891\"},{\"name\":\"system-version\",\"valueCanonical\":\"http://snomed.info/sct|http://snomed.info/sct/900000000000207008\"},{\"name\":\"mode\",\"valueString\":\"lenient-display-validation\"},{\"name\":\"diagnostics\",\"valueBoolean\":true}]}"
+}
